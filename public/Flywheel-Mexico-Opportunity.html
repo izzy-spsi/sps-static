@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Flywheel Technologies — Mexico Expansion Opportunity</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --red:#CC1A1A;--red-lt:#E83030;--red-pale:#FFF0F0;
+    --charcoal:#1A1A1A;--dark:#2C2C2C;
+    --gray:#555;--gray-lt:#888;--border:#E5E5E5;
+    --bg:#F9F9F9;--white:#FFFFFF;
+    --gold:#C9A052;
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+    background:#DADADA;
+    color:var(--charcoal);
+  }
+
+  .page{
+    width:1280px;height:820px;
+    background:white;
+    margin:28px auto;
+    box-shadow:0 12px 60px rgba(0,0,0,.2);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    position:relative;
+  }
+
+  /* ── TOP BAND ── */
+  .top-band{
+    background:var(--charcoal);
+    padding:0 52px;
+    height:68px;
+    display:flex;align-items:center;justify-content:space-between;
+    flex-shrink:0;
+    border-bottom:3px solid var(--red);
+  }
+  .top-left{display:flex;align-items:center;gap:14px;}
+  .logo-img{height:32px;width:auto;}
+  .brand-divider{width:1px;height:28px;background:rgba(255,255,255,.2);}
+  .brand-label{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.55);}
+  .top-right{display:flex;align-items:center;gap:18px;}
+  .conf-tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+    color:var(--red);border:1px solid rgba(204,26,26,.4);padding:4px 12px;border-radius:20px;}
+  .date-tag{font-size:11px;color:rgba(255,255,255,.35);}
+
+  /* ── HERO STATEMENT ── */
+  .hero{
+    background:linear-gradient(135deg,#1A1A1A 0%,#2C1010 60%,#3A1515 100%);
+    padding:22px 52px 18px;
+    text-align:center;
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-40px;right:-40px;
+    width:200px;height:200px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(204,26,26,.18) 0%,transparent 70%);
+  }
+  .hero-eye{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+    color:var(--red);margin-bottom:8px;}
+  .hero-h1{font-size:22px;font-weight:800;color:white;line-height:1.25;letter-spacing:-.3px;}
+  .hero-h1 em{color:var(--red);font-style:normal;}
+  .hero-sub{font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;font-weight:300;}
+
+  /* ── STAT ROW ── */
+  .stat-row{
+    display:flex;border-bottom:1px solid var(--border);
+    flex-shrink:0;
+    background:var(--bg);
+  }
+  .stat-cell{
+    flex:1;padding:16px 24px;
+    border-right:1px solid var(--border);
+    display:flex;align-items:center;gap:14px;
+  }
+  .stat-cell:last-child{border-right:none;}
+  .stat-icon{font-size:28px;flex-shrink:0;}
+  .stat-num{font-size:30px;font-weight:900;color:var(--red);line-height:1;letter-spacing:-1px;}
+  .stat-label{font-size:11px;font-weight:700;color:var(--charcoal);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+  .stat-sub{font-size:11px;color:var(--gray-lt);margin-top:2px;line-height:1.4;}
+
+  /* ── BODY ── */
+  .body{
+    flex:1;display:grid;
+    grid-template-columns:1fr 1fr 280px;
+    gap:0;
+    overflow:hidden;
+  }
+
+  .col{padding:20px 24px;border-right:1px solid var(--border);}
+  .col:last-child{border-right:none;}
+  .col-title{
+    font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--red);margin-bottom:12px;padding-bottom:8px;
+    border-bottom:2px solid var(--red);display:inline-block;
+  }
+
+  .sub-head{font-size:12px;font-weight:700;color:var(--charcoal);margin:12px 0 6px;}
+  .sub-head:first-of-type{margin-top:0;}
+
+  ul.points{list-style:none;display:flex;flex-direction:column;gap:5px;}
+  ul.points li{
+    font-size:12px;color:var(--gray);line-height:1.5;
+    padding-left:14px;position:relative;
+  }
+  ul.points li::before{
+    content:'';position:absolute;left:0;top:7px;
+    width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;
+  }
+  ul.points li strong{color:var(--charcoal);}
+
+  /* GMV TABLE */
+  .gmv-table{width:100%;border-collapse:collapse;margin-top:10px;}
+  .gmv-table th{
+    font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    color:var(--gray-lt);padding:5px 8px;text-align:left;
+    border-bottom:1px solid var(--border);
+  }
+  .gmv-table td{
+    font-size:12px;padding:6px 8px;border-bottom:1px solid #F0F0F0;
+    color:var(--charcoal);
+  }
+  .gmv-table tr.total td{
+    font-weight:800;color:var(--red);font-size:13px;
+    border-top:2px solid var(--red);border-bottom:none;
+  }
+  .gmv-table td:last-child{text-align:right;font-weight:600;}
+  .gmv-table tr.total td:last-child{color:var(--red);}
+
+  /* RIGHT COL — PARTICIPATE */
+  .col.right-col{background:var(--charcoal);padding:20px 22px;border-right:none;}
+  .col.right-col .col-title{color:rgba(255,255,255,.9);border-bottom-color:var(--red);}
+
+  .part-block{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+    border-radius:8px;padding:14px 14px;margin-bottom:10px;
+  }
+  .part-block:last-child{margin-bottom:0;}
+  .part-icon{font-size:20px;margin-bottom:6px;}
+  .part-title{font-size:12px;font-weight:700;color:white;margin-bottom:6px;}
+  .part-body{font-size:11px;color:rgba(255,255,255,.5);line-height:1.55;}
+  .part-body strong{color:rgba(255,255,255,.8);}
+
+  /* ── FOOTER ── */
+  .footer{
+    background:var(--charcoal);
+    height:44px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 52px;
+    flex-shrink:0;
+    border-top:2px solid var(--red);
+  }
+  .footer-left{font-size:11px;color:rgba(255,255,255,.4);}
+  .footer-left strong{color:rgba(255,255,255,.7);}
+  .footer-right{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.5px;}
+
+  @media print{
+    @page{size:1280px 820px;margin:0;}
+    body{background:white;}
+    .page{margin:0;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP BAND -->
+  <div class="top-band">
+    <div class="top-left">
+      <img class="logo-img" src="data:image/jpeg;base64,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" alt="Flywheel">
+      <div class="brand-divider"></div>
+      <div class="brand-label">Mexico Expansion Opportunity</div>
+    </div>
+    <div class="top-right">
+      <span class="conf-tag">Confidential</span>
+      <span class="date-tag">June 2026</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eye">The Opportunity</div>
+    <div class="hero-h1">Mexico has <em>400,000+ licensed taxis</em> and an estimated <em>5–7 million daily trips.</em><br>Less than 1% are on Uber. Flywheel is already there — <em>contracted, installed, and live.</em></div>
+  </div>
+
+  <!-- STAT ROW -->
+  <div class="stat-row">
+    <div class="stat-cell">
+      <div class="stat-icon">🚕</div>
+      <div>
+        <div class="stat-num">1,825</div>
+        <div class="stat-label">Vehicles Contracted</div>
+        <div class="stat-sub">Cancún · Tulum · Playa del Carmen</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-icon">⚙️</div>
+      <div>
+        <div class="stat-num">450</div>
+        <div class="stat-label">Live with Hardware Installed</div>
+        <div class="stat-sub">80% of drivers onboarded</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-icon">📍</div>
+      <div>
+        <div class="stat-num">10,000+</div>
+        <div class="stat-label">Pipeline — 5 Priority Cities</div>
+        <div class="stat-sub">Quintana Roo · CDMX · GDL · Puebla · Mérida</div>
+      </div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-icon">🤝</div>
+      <div>
+        <div class="stat-num" style="font-size:20px;padding-top:4px;">Uber Deal</div>
+        <div class="stat-label">Term Sheet Signed</div>
+        <div class="stat-sub">Non-binding · June 2026 · 3-year term</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- LEFT — THE OPPORTUNITY -->
+    <div class="col">
+      <div class="col-title">The Opportunity</div>
+
+      <div class="sub-head">Why Mexico, Why Now</div>
+      <ul class="points">
+        <li><strong>400,000+ licensed taxis</strong> nationally — less than 1% on rideshare (INEGI 2024)</li>
+        <li><strong>CDMX alone:</strong> 50,000–60,000 active taxis — largest taxi market in the Americas (SEMOVI 2025)</li>
+        <li><strong>Quintana Roo:</strong> ~40,000 taxi concessions — high-value tourist corridor</li>
+        <li>Uber signed a non-binding term sheet with Flywheel — <strong>June 2026</strong></li>
+        <li>No dominant competitor — the market is open</li>
+      </ul>
+
+      <div class="sub-head">The Uber Deal</div>
+      <ul class="points">
+        <li><strong>Phase 1 — Riviera Maya:</strong> Cancún · Tulum · Playa del Carmen · Puerto Morelos · Akumal · Bacalar — <strong>1,825 vehicles</strong></li>
+        <li><strong>Phase 2:</strong> Mérida (Yucatán) · Mexico City (CDMX) · Guadalajara</li>
+        <li>Service fee: <strong>2.5% base → up to 4.0%</strong> with performance bonuses</li>
+        <li><strong>Daily settlement</strong> — cash flow from day one of activation</li>
+        <li>3-year term, auto-renewal, protected first 12 months</li>
+      </ul>
+
+      <div class="sub-head">5-Year GMV Projection</div>
+      <table class="gmv-table">
+        <tr><th>Market</th><th style="text-align:right;">5-Year GMV</th></tr>
+        <tr><td>Quintana Roo (Wave 1)</td><td>~$150M</td></tr>
+        <tr><td>Mérida (Yucatán)</td><td>~$80M</td></tr>
+        <tr><td>Mexico City (CDMX)</td><td>~$400M+</td></tr>
+        <tr class="total"><td>Combined Mexico (5-Year)</td><td>$630M+</td></tr>
+      </table>
+    </div>
+
+    <!-- CENTER — WHAT WE'VE BUILT -->
+    <div class="col">
+      <div class="col-title">What We've Built</div>
+
+      <div class="sub-head">On the Ground Today</div>
+      <ul class="points">
+        <li><strong>1,825 vehicles contracted</strong> across Quintana Roo</li>
+        <li><strong>450 taxis live</strong> with payment hardware + Flywheel branding installed</li>
+        <li>App live on <strong>iOS & Android</strong> in Cancún</li>
+        <li>Zone-based taximeter live in Tulum</li>
+        <li><strong>80% of installed drivers</strong> fully onboarded</li>
+        <li>Payment processing tested and proven</li>
+        <li>NASCAR Mexico sponsorship — brand visible at April 2026 Tulum race</li>
+      </ul>
+
+      <div class="sub-head">The Pipeline</div>
+      <ul class="points">
+        <li><strong>Riviera Maya expansion:</strong> Puerto Morelos, Akumal, Bacalar + 8 additional Quintana Roo cities ready to activate</li>
+        <li><strong>Phase 2:</strong> Mérida, Mexico City, Guadalajara — <strong>60,000+ addressable taxis</strong></li>
+        <li>CDMX: 50,000–60,000 active taxis (SEMOVI 2025) — Phase 2 unlock with Uber</li>
+      </ul>
+
+      <div class="sub-head">The Platform</div>
+      <ul class="points">
+        <li>Flywheel connects licensed taxi drivers to <strong>Uber + 1P demand</strong></li>
+        <li>In-vehicle hardware: tablet, taximeter, payment terminal, dual camera</li>
+        <li>Driver app: real-time earnings, incentives, trip management</li>
+        <li><strong>No disruption</strong> to existing concessions or unions</li>
+        <li>Proven in 53 US cities · 120 fleets · 35,000+ taxis on platform</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT — PARTICIPATE -->
+    <div class="col right-col">
+      <div class="col-title">Two Ways to Participate</div>
+
+      <div class="part-block">
+        <div class="part-icon">💼</div>
+        <div class="part-title">As an Investor</div>
+        <div class="part-body">
+          Enter at the ground floor of Mexico's largest mobility digitization play.<br><br>
+          Flywheel is raising capital to accelerate Phase 2. <strong>Established Uber contract, active fleet, clear path to B+ GMV.</strong><br><br>
+          Entry price on a path to a <strong>M–B strategic exit.</strong>
+        </div>
+      </div>
+
+      <div class="part-block">
+        <div class="part-icon">🤝</div>
+        <div class="part-title">As a Strategic Partner</div>
+        <div class="part-body">
+          A partner with deep Mexico reach accelerates everything:<br><br>
+          <strong>Retail network</strong> → driver recruitment + device installation<br>
+          <strong>Financial services</strong> → driver equipment financing<br>
+          <strong>Payment rails</strong> → daily driver settlements<br>
+          <strong>Customer base</strong> → Flywheel's driver demographic<br><br>
+          The right partner owns the infrastructure layer of Mexico's mobility revolution.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Isabelo "Izzy" Aala</strong> — CEO, Flywheel Technologies &nbsp;·&nbsp; izzy@flywheel.com &nbsp;·&nbsp; flywheel.com
+    </div>
+    <div class="footer-right">CONFIDENTIAL — FOR DISCUSSION PURPOSES ONLY</div>
+  </div>
+
+</div>
+</body>
+</html>

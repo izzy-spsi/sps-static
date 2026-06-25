@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel Technologies — Partner Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--red:#CC1A1A;--bg:#0C0C0C;--bg2:#161616;--bg3:#1e1e1e;--border:#2a2a2a;--text:#f0f0f0;--muted:#888;--card:#1a1a1a;--sidebar-w:220px}
+.light-mode{--bg:#f5f5f5;--bg2:#ffffff;--bg3:#efefef;--border:#ddd;--text:#111;--muted:#666;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;transition:background .3s,color .3s}
+#gate{position:fixed;inset:0;background:#0C0C0C;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:20px}
+#gate h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;color:#f0f0f0}
+#gate p{color:#888;font-size:.9rem}
+#gate-form{display:flex;gap:10px;margin-top:8px}
+#gate-logo{font-family:'Space Grotesk',sans-serif;font-size:2rem;color:#CC1A1A;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+#gate-input{padding:10px 18px;border-radius:6px;border:1px solid #333;background:#1a1a1a;color:#f0f0f0;font-size:1rem;width:220px;outline:none}
+#gate-input:focus{border-color:#CC1A1A}
+#gate-btn{padding:10px 24px;background:#CC1A1A;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+#gate-btn:hover{background:#e01c1c}
+#gate-err{color:#CC1A1A;font-size:.85rem;display:none}
+#app{display:none;height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;padding:16px 0;overflow-y:auto}
+.sidebar-logo{padding:8px 16px 16px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;color:var(--red);font-weight:700;cursor:pointer}
+.sidebar-item{padding:8px 16px;font-size:.78rem;cursor:pointer;color:var(--muted);transition:all .15s;line-height:1.3;border-left:3px solid transparent}
+.sidebar-item:hover{color:var(--text);background:var(--bg3)}
+.sidebar-item.active{color:var(--red);border-left-color:var(--red);background:var(--bg3);font-weight:500}
+.sidebar-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);margin-right:6px}
+.main{margin-left:var(--sidebar-w);height:100vh;position:relative;overflow:hidden}
+.slides-container{height:100%;position:relative}
+.slide{position:absolute;inset:0;padding:48px 60px;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .3s;background:var(--bg)}
+.slide.active{opacity:1;pointer-events:auto}
+.topbar{position:fixed;top:16px;right:16px;display:flex;align-items:center;gap:10px;z-index:200}
+.topbar button{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.topbar button:hover{border-color:var(--red);color:var(--red)}
+.bottom-nav{position:fixed;bottom:20px;right:20px;display:flex;align-items:center;gap:8px;z-index:200}
+.nav-btn{width:40px;height:40px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nav-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+.slide-counter{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);padding:0 4px}
+.slide-num-bg{position:fixed;bottom:20px;left:calc(var(--sidebar-w) + 20px);font-family:'JetBrains Mono',monospace;font-size:4rem;color:var(--border);opacity:.5;pointer-events:none;z-index:50;font-weight:700}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.8rem;line-height:1.1}
+h2{font-family:'Space Grotesk',sans-serif;font-size:2rem;margin-bottom:32px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin-bottom:12px}
+.label{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.red{color:var(--red)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
+.card-grid{display:grid;gap:16px}
+.card-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.card-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.card-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+.divider{width:48px;height:3px;background:var(--red);margin-bottom:24px;border-radius:2px}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:2rem;color:var(--red)}
+.stat-label{font-size:.8rem;color:var(--muted);margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.cover-wrap{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:80vh;text-align:center;gap:20px}
+.cover-brand{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;color:var(--red);font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.cover-headline{font-family:'Space Grotesk',sans-serif;font-size:3.2rem;line-height:1.05;max-width:800px}
+.cover-badge{font-family:'Space Grotesk',sans-serif;font-size:1rem;color:var(--red);background:rgba(204,26,26,.1);border:1px solid rgba(204,26,26,.3);padding:8px 24px;border-radius:8px;letter-spacing:.06em}
+.cover-sub{font-size:1.05rem;color:var(--muted);max-width:600px;line-height:1.6}
+.cover-meta{display:flex;gap:24px;margin-top:8px}
+.cover-meta-item{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);letter-spacing:.08em}
+.problem-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border)}
+.problem-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--red);min-width:24px;padding-top:2px}
+.tier-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;border-top:3px solid var(--red)}
+.tier-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin-bottom:8px}
+.asset-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:8px}
+.badge-heavy{background:rgba(204,26,26,.15);color:#CC1A1A;border:1px solid rgba(204,26,26,.3)}
+.badge-light{background:rgba(200,160,80,.12);color:#C8A050;border:1px solid rgba(200,160,80,.3)}
+.badge-zero{background:rgba(100,180,100,.1);color:#60b060;border:1px solid rgba(100,180,100,.3)}
+.ss-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:160px;text-align:center}
+.ss-icon{font-size:2rem;margin-bottom:4px}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;gap:16px;align-items:flex-start}
+.team-av{width:52px;height:52px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:1.3rem;color:#fff;flex-shrink:0}
+.team-name{font-family:'Space Grotesk',sans-serif;font-size:1rem}
+.team-role{color:var(--red);font-size:.78rem;margin:3px 0 7px}
+.team-bio{font-size:.82rem;color:var(--muted);line-height:1.5}
+.cta-block{background:linear-gradient(135deg,rgba(204,26,26,.12) 0%,transparent 60%);border:1px solid rgba(204,26,26,.3);border-radius:12px;padding:32px;text-align:center;margin-top:24px}
+.chart-wrap{position:relative;height:240px}
+@media print{body{background:#fff!important;color:#111!important}.sidebar,.topbar,.bottom-nav,.slide-num-bg{display:none!important}.main{margin-left:0!important}.slide{position:relative!important;opacity:1!important;pointer-events:auto!important;page-break-after:always;padding:40px!important}#gate{display:none!important}#app{display:block!important}}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}
+.mb-8{margin-bottom:8px}.mb-16{margin-bottom:16px}.mb-24{margin-bottom:24px}
+.gap-16{gap:16px}.gap-24{gap:24px}.flex{display:flex}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div id="gate-logo">FLYWHEEL</div>
+  <h2>Partner Access</h2>
+  <p>Enter your access code to continue</p>
+  <div id="gate-form">
+    <input type="password" id="gate-input" placeholder="Access code" autocomplete="off" onkeydown="if(event.key==='Enter')checkGate()">
+    <button id="gate-btn" onclick="checkGate()">Enter →</button>
+  </div>
+  <span id="gate-err">Incorrect access code. Please try again.</span>
+  <p style="margin-top:24px;font-size:.75rem;color:#444">Flywheel Technologies · Partner Overview · Confidential</p>
+</div>
+
+<div id="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand" onclick="goSlide(0)">FLYWHEEL</div>
+  </div>
+  <div id="nav-items"></div>
+</nav>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button onclick="toggleMode()">☀ / ☾</button>
+  <button onclick="window.print()">⎙ Print</button>
+</div>
+
+<!-- SLIDE NUM BG -->
+<div class="slide-num-bg" id="slide-num-bg">01</div>
+
+<!-- MAIN -->
+<div class="main">
+<div class="slides-container">
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<div class="slide active" data-index="0">
+  <div class="cover-wrap">
+    <div class="cover-brand">FLYWHEEL</div>
+    <div style="width:48px;height:3px;background:var(--red);border-radius:2px;margin-bottom:4px"></div>
+    <div class="cover-headline">The Operating System<br>for Professional Taxi</div>
+    <div class="cover-badge">PARTNER OVERVIEW — MEXICO</div>
+    <div class="cover-sub">Supercharging professional mobility through technology, Uber integration, and the world's first Direct-to-Driver platform</div>
+    <div class="cover-meta">
+      <span class="cover-meta-item">FOUNDED: 2017</span>
+      <span class="cover-meta-item">·</span>
+      <span class="cover-meta-item">PARTNER OVERVIEW</span>
+      <span class="cover-meta-item">·</span>
+      <span class="cover-meta-item">CONFIDENTIAL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: EXECUTIVE SUMMARY ==================== -->
+<div class="slide" data-index="1">
+  <span class="label">02 — Overview</span>
+  <h2 style="margin-top:8px">Mexico Market Opportunity</h2>
+  <div class="divider"></div>
+  <div class="card-grid cols-3" style="margin-bottom:20px">
+    <div class="card">
+      <div class="stat-val">450</div>
+      <div class="stat-label">Live taxis on Uber · Cancún, Tulum, Playa del Carmen</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">1,500+</div>
+      <div class="stat-label">Taxis signed & ready to activate</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">~150,000</div>
+      <div class="stat-label">Total addressable taxis in Mexico pipeline</div>
+    </div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:16px">
+    <div class="label mb-8">Key Facts</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;font-size:.9rem">
+      <li>🤝 <strong>Uber partner since 2022</strong> — taxi rides reclassified, increasing driver income on every trip</li>
+      <li>🌎 <strong>Mexico operations live since 2023</strong> — Riviera Maya corridor established and growing</li>
+      <li>🚖 <strong>WorkLevel is Flywheel's regional partner</strong> in the Riviera Maya corridor — first-mover advantage</li>
+      <li>🚀 <strong>Direct-to-Driver launching 1H 2027</strong> — smartphone only, zero hardware, scales overnight</li>
+      <li>📈 <strong>Expanding to CDMX, Mérida, and beyond</strong> — 150K+ taxis addressable in Mexico alone</li>
+    </ul>
+  </div>
+  <div class="card" style="background:rgba(204,26,26,.06);border-color:rgba(204,26,26,.25)">
+    <div class="label mb-8">The WorkLevel Opportunity</div>
+    <p style="font-size:.9rem;color:var(--muted);line-height:1.6">WorkLevel's established presence in the Riviera Maya taxi market positions you as the natural regional operating partner for Flywheel's Mexico expansion. Together we've built the blueprint — now we scale it.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: PROBLEM ==================== -->
+<div class="slide" data-index="2">
+  <span class="label">03 — Problem</span>
+  <h2 style="margin-top:8px">The Industry Is Broken</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);margin-bottom:28px;font-size:.95rem">The $36B taxi industry has been left behind — fragmented, hardware-locked, and shut out of modern ride demand. Mexico is no exception.</p>
+  <div style="max-width:720px">
+    <div class="problem-item">
+      <div class="problem-num">01</div>
+      <div><strong>Taxi drivers can't access Uber demand</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">Until Flywheel, taxis had zero access to Uber's 12M daily trips — the largest demand channel in the world. Mexico's 150K+ taxis were locked out.</p></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">02</div>
+      <div><strong>Complex hardware locks out drivers</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">Fleet operators must navigate fragmented meter, dispatch, and tablet systems with no unified solution — especially in emerging markets.</p></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">03</div>
+      <div><strong>Individual drivers locked out entirely</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">All competitor solutions are fleet-only. Independent licensed taxi drivers — the majority in Mexico — have no path in.</p></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">04</div>
+      <div><strong>No earnings transparency or driver tools</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">Drivers operate blind — no real-time incentive data, no earnings analytics, no upfront pricing. Driver churn is high.</p></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">05</div>
+      <div><strong>No unified platform OS for taxi operations</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">Each city runs a different dispatch platform. No operator has built a cross-city taxi OS — until Flywheel.</p></div>
+    </div>
+    <div class="problem-item" style="border-bottom:none">
+      <div class="problem-num">06</div>
+      <div><strong>Regional partners have no scalable infrastructure</strong>
+        <p style="font-size:.85rem;color:var(--muted);margin-top:4px">Local partners like WorkLevel have market access and driver relationships but lack the technology layer to monetize them at scale.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: TAXIOS + ASSET SPECTRUM ==================== -->
+<div class="slide" data-index="3">
+  <span class="label">04 — Platform</span>
+  <h2 style="margin-top:8px">TaxiOS Platform</h2>
+  <div class="divider"></div>
+  <div class="card" style="border:1px solid rgba(204,26,26,.35);background:rgba(204,26,26,.06);margin-bottom:20px;padding:16px 20px">
+    <p style="font-size:.9rem;line-height:1.6"><strong style="color:var(--red)">TaxiOS</strong> is Flywheel's unified operating system for professional taxi — connecting drivers, fleets, and partners to Uber demand, earnings tools, incentives, compliance, and payments. One platform. Every asset tier.</p>
+  </div>
+  <div style="font-family:'JetBrains Mono',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px">Hardware Asset Spectrum</div>
+  <div class="card-grid cols-3" style="margin-bottom:20px">
+    <div class="tier-card">
+      <div class="asset-badge badge-heavy">Heavy Asset</div>
+      <div class="tier-title">Flywheel Advantage</div>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Full in-vehicle suite. Enterprise fleets.</p>
+      <ul style="list-style:none;font-size:.8rem;color:var(--muted);line-height:2">
+        <li>🔴 AI Camera</li>
+        <li>🔴 POS Hardware (backseat)</li>
+        <li>🔴 Wireless Bluetooth Printer</li>
+        <li>🔴 OBD2 Port Connection</li>
+        <li>🔴 Top Light Controller</li>
+      </ul>
+      <div style="margin-top:10px;font-size:.75rem;color:var(--red)">Maximum data · Maximum control</div>
+    </div>
+    <div class="tier-card" style="border-top-color:#C8A050">
+      <div class="asset-badge badge-light">Light Asset</div>
+      <div class="tier-title">Flywheel Direct Driver</div>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Software only. No hardware. Launching 1H 2027.</p>
+      <ul style="list-style:none;font-size:.8rem;color:var(--muted);line-height:2">
+        <li>🟡 Driver Smartphone App</li>
+        <li>🟡 No hardware required</li>
+        <li>🟡 Any licensed taxi driver</li>
+        <li>🟡 Instant onboarding</li>
+      </ul>
+      <div style="margin-top:10px;font-size:.75rem;color:#C8A050">Scales overnight · Zero install</div>
+    </div>
+    <div class="tier-card" style="border-top-color:#60b060">
+      <div class="asset-badge badge-zero">No Asset</div>
+      <div class="tier-title">Flywheel Connect</div>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Zero footprint. 3rd-party dispatch integration.</p>
+      <ul style="list-style:none;font-size:.8rem;color:var(--muted);line-height:2">
+        <li>🟢 No hardware in vehicle</li>
+        <li>🟢 No Flywheel software in car</li>
+        <li>🟢 API-based integration</li>
+        <li>🟢 Existing dispatch systems</li>
+      </ul>
+      <div style="margin-top:10px;font-size:.75rem;color:#60b060">Works with any system</div>
+    </div>
+  </div>
+  <div class="card-grid cols-2">
+    <div class="card" style="font-size:.84rem">
+      <div class="label mb-8">Competitive Moat</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;color:var(--muted)">
+        <li>✓ Only authorized Uber 3P taxi partner at scale</li>
+        <li>✓ 7-year head start on Direct-to-Driver architecture</li>
+        <li>✓ Deep regulatory relationships across 53 cities</li>
+      </ul>
+    </div>
+    <div class="card" style="font-size:.84rem">
+      <div class="label mb-8">Additional Capabilities</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;color:var(--muted)">
+        <li>✓ Upfront pricing via proprietary data</li>
+        <li>✓ Real-time driver incentives & earnings</li>
+        <li>✓ Government & municipal contracts</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: PRODUCT SCREENSHOTS ==================== -->
+<div class="slide" data-index="4">
+  <span class="label">05 — Technology</span>
+  <h2 style="margin-top:8px">In-Vehicle Experience</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);margin-bottom:24px;font-size:.9rem">Real screens. Real drivers. The TaxiOS interface in action — from Uber trip offers to earnings dashboards and incentive alerts.</p>
+  <div class="card-grid cols-3" style="margin-bottom:20px">
+    <div class="ss-box">
+      <div class="ss-icon">📱</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin-bottom:4px">Uber Trip Offer</div>
+      <div style="font-size:.78rem;color:var(--muted)">Real-time Uber 3P guaranteed offer — driver sees trip value before accepting</div>
+    </div>
+    <div class="ss-box">
+      <div class="ss-icon">🚗</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin-bottom:4px">Flywheel 1P Dispatch</div>
+      <div style="font-size:.78rem;color:var(--muted)">Native Flywheel ride requests alongside Uber — one screen, all demand</div>
+    </div>
+    <div class="ss-box">
+      <div class="ss-icon">📊</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin-bottom:4px">Earnings Dashboard</div>
+      <div style="font-size:.78rem;color:var(--muted)">30-day earnings breakdown by channel — drivers always know their numbers</div>
+    </div>
+  </div>
+  <div class="card-grid cols-2">
+    <div class="ss-box">
+      <div class="ss-icon">🎯</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin-bottom:4px">Incentive Dashboard</div>
+      <div style="font-size:.78rem;color:var(--muted)">Live bonus progress — drives behavior and keeps drivers active on platform</div>
+    </div>
+    <div class="ss-box">
+      <div class="ss-icon">🔔</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin-bottom:4px">Uber Incentive Alerts</div>
+      <div style="font-size:.78rem;color:var(--muted)">Real-time push alerts when Uber incentives trigger — maximizes driver income</div>
+    </div>
+  </div>
+  <div class="card mt-16" style="background:rgba(204,26,26,.06);border-color:rgba(204,26,26,.2);text-align:center;padding:14px">
+    <p style="font-size:.85rem;color:var(--muted)">Mexico screenshots available upon partner NDA. Live demo available on request.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: UBER PARTNERSHIP ==================== -->
+<div class="slide" data-index="5">
+  <span class="label">06 — Uber Partnership</span>
+  <h2 style="margin-top:8px">The Uber Advantage</h2>
+  <div class="divider"></div>
+  <div class="card-grid cols-3" style="margin-bottom:24px">
+    <div class="card">
+      <div class="stat-val">$15</div>
+      <div class="stat-label">Average Uber ride value (GMV)</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">2022</div>
+      <div class="stat-label">Official Uber 3P partner since</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">Only one</div>
+      <div class="stat-label">Flywheel is the ONLY authorized Uber 3P taxi partner at scale</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="label mb-8">Platform GMV Model — Mexico</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th>Avg Ride GMV</th>
+          <th>Active Taxis (Target)</th>
+          <th>Daily Trips</th>
+          <th>Monthly GMV</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Uber 3P</strong></td>
+          <td>$15</td>
+          <td>1,500</td>
+          <td>6,000</td>
+          <td style="color:var(--red);font-weight:500">$2.7M</td>
+        </tr>
+        <tr>
+          <td>Street Hail</td>
+          <td>$22</td>
+          <td>1,500</td>
+          <td>9,000</td>
+          <td>$5.9M</td>
+        </tr>
+        <tr>
+          <td>eHail</td>
+          <td>$19</td>
+          <td>1,500</td>
+          <td>1,500</td>
+          <td>$855K</td>
+        </tr>
+        <tr style="background:rgba(204,26,26,.05)">
+          <td><strong>Combined</strong></td>
+          <td>—</td>
+          <td><strong>1,500</strong></td>
+          <td><strong>16,500</strong></td>
+          <td><strong style="color:var(--red)">$9.5M</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="border-left:3px solid var(--red)">
+    <div class="label mb-8">Why Flywheel + Uber Works</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:.88rem">
+      <li>✓ <strong>Taxi rides reclassified as taxi</strong> — Uber's liability model changes, making taxis the preferred supply</li>
+      <li>✓ <strong>Driver income increases 30–50%</strong> by adding Uber demand on top of existing street hail</li>
+      <li>✓ <strong>Curb copied Flywheel's integration approach</strong> — but cannot replicate Direct-to-Driver. Only Flywheel has this.</li>
+      <li>✓ <strong>Uber Mexico deal in progress</strong> — active discussions with Uber Mexico team for expanded partnership</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: MEXICO MARKET ==================== -->
+<div class="slide" data-index="6">
+  <span class="label">07 — Mexico Market</span>
+  <h2 style="margin-top:8px">Mexico Market Opportunity</h2>
+  <div class="divider"></div>
+  <div style="text-align:center;margin-bottom:24px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:3rem;color:var(--red)">~150,000</div>
+    <div style="color:var(--muted);font-size:1rem">Professional licensed taxis in Mexico — the largest untapped taxi market in the Americas</div>
+  </div>
+  <div class="card-grid cols-2" style="margin-bottom:20px">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="label mb-8">Current Footprint ✅</div>
+      <ul style="list-style:none;font-size:.88rem;line-height:2;color:var(--muted)">
+        <li>📍 <strong style="color:var(--text)">Cancún, Tulum, Playa del Carmen</strong></li>
+        <li>🚖 450 taxis live on Uber</li>
+        <li>✍️ 1,500+ taxis signed & ready</li>
+        <li>📅 Operations running since 2023</li>
+        <li>🤝 WorkLevel — established regional partner</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #555">
+      <div class="label mb-8">Expansion Pipeline 🚀</div>
+      <ul style="list-style:none;font-size:.88rem;line-height:2;color:var(--muted)">
+        <li>🏙️ <strong style="color:var(--text)">CDMX (Mexico City)</strong> — ~140,000 taxis</li>
+        <li>🌵 <strong style="color:var(--text)">Mérida</strong> — ~8,000 taxis</li>
+        <li>🌊 <strong style="color:var(--text)">Riviera Maya corridor</strong> — ~5,000 taxis</li>
+        <li>🏘️ <strong style="color:var(--text)">Chetumal</strong> — ~1,000 taxis</li>
+        <li>🤝 Uber Mexico: active deal in progress</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="background:rgba(204,26,26,.06);border-color:rgba(204,26,26,.25)">
+    <div class="label mb-8">WorkLevel Partnership — The Blueprint</div>
+    <p style="font-size:.9rem;color:var(--muted);line-height:1.6">The Flywheel + WorkLevel partnership in the Riviera Maya corridor is the <strong style="color:var(--text)">proof of concept for regional expansion across Mexico</strong>. WorkLevel brings local operator relationships, driver trust, and market access. Flywheel brings the technology, Uber integration, and platform infrastructure. Together, we've built something no competitor can replicate — and the next market is CDMX.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: PARTNER ECONOMICS ==================== -->
+<div class="slide" data-index="7">
+  <span class="label">08 — Partner Economics</span>
+  <h2 style="margin-top:8px">How Partners Earn</h2>
+  <div class="divider"></div>
+  <div class="card-grid cols-3" style="margin-bottom:24px">
+    <div class="card">
+      <div class="stat-val">Per Trip</div>
+      <div class="stat-label">Revenue model — partners earn on every completed ride</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">$15</div>
+      <div class="stat-label">Average Uber GMV per trip flowing through the platform</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">Scale</div>
+      <div class="stat-label">More active taxis = more trips = more partner revenue</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="label mb-8">What Partners Get vs What Flywheel Provides</div>
+    <table>
+      <thead>
+        <tr><th>Partner Value</th><th>Flywheel Provides</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Access to Uber demand network</td><td>Official Uber 3P integration & certification</td></tr>
+        <tr><td>Driver earnings uplift (30–50%)</td><td>TaxiOS platform + driver app + incentive engine</td></tr>
+        <tr><td>Regional market exclusivity (by agreement)</td><td>Compliance, regulatory relationships, licensing</td></tr>
+        <tr><td>Per-trip revenue share</td><td>Technology, infrastructure & ongoing development</td></tr>
+        <tr><td>Driver onboarding & activation tools</td><td>Training materials, support, and QA</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="border-left:3px solid var(--red)">
+    <div class="label mb-8">The Partner Flywheel</div>
+    <p style="font-size:.88rem;color:var(--muted);line-height:1.7">More drivers activated → more trips per day → more GMV flowing through the platform → more revenue for both Flywheel and the regional partner → more resources to onboard more drivers. <strong style="color:var(--text)">Growth compounds.</strong></p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: TRACTION ==================== -->
+<div class="slide" data-index="8">
+  <span class="label">09 — Traction</span>
+  <h2 style="margin-top:8px">Proof It Works</h2>
+  <div class="divider"></div>
+  <div class="card-grid cols-3" style="margin-bottom:20px">
+    <div class="card">
+      <div class="stat-val">$480M+</div>
+      <div class="stat-label">Cumulative platform GMV since 2017</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">35,000+</div>
+      <div class="stat-label">Taxis on platform across 53 cities</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">12,000+</div>
+      <div class="stat-label">Active drivers earning on Flywheel today</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">$25.3M</div>
+      <div class="stat-label">Gross revenue TTM — platform is profitable</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">1,500</div>
+      <div class="stat-label">Live on Uber · 8,500+ signed & ready to activate</div>
+    </div>
+    <div class="card">
+      <div class="stat-val">US + MX + CA</div>
+      <div class="stat-label">Uber partnership live across 3 countries</div>
+    </div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--red)">
+    <div class="label mb-8">Platform Milestones</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:.88rem">
+      <li>⚡ <strong>Founded 2017</strong> — built TaxiOS from the ground up over 7 years</li>
+      <li>🤝 <strong>Uber partner since 2022</strong> — only company to achieve this at scale</li>
+      <li>🌎 <strong>Mexico live since 2023</strong> — Riviera Maya corridor operational with WorkLevel</li>
+      <li>🚀 <strong>Direct-to-Driver launching 1H 2027</strong> — opens 150K+ individual taxi drivers in Mexico overnight</li>
+      <li>📈 <strong>Uber Mexico expansion</strong> — active negotiations for CDMX, Mérida, and corridor expansion</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: MEXICO PROJECTIONS ==================== -->
+<div class="slide" data-index="9">
+  <span class="label">10 — Mexico Projections</span>
+  <h2 style="margin-top:8px">Mexico Platform GMV Opportunity</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);margin-bottom:20px;font-size:.9rem">Based on Mexico market data. Assumptions: avg 4 Uber trips/taxi/day · $15 avg GMV/trip · 30 operating days/month.</p>
+  <div class="card-grid cols-4" style="margin-bottom:20px">
+    <div class="card" style="border-top:3px solid #555">
+      <div class="label mb-8">Today</div>
+      <div class="stat-val" style="font-size:1.5rem">$810K</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:4px">Monthly GMV</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--muted)">450 live taxis<br>Riviera Maya only</div>
+    </div>
+    <div class="card" style="border-top:3px solid #884444">
+      <div class="label mb-8">2026</div>
+      <div class="stat-val" style="font-size:1.5rem">$2.7M</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:4px">Monthly GMV</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--muted)">1,500 active taxis<br>Riviera Maya + expansion</div>
+    </div>
+    <div class="card" style="border-top:3px solid #CC4444">
+      <div class="label mb-8">2027</div>
+      <div class="stat-val" style="font-size:1.5rem">$10.8M</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:4px">Monthly GMV</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--muted)">6,000 active taxis<br>+ CDMX pilot + Mérida</div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="label mb-8">2028</div>
+      <div class="stat-val" style="font-size:1.5rem">$45M</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:4px">Monthly GMV</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--muted)">25,000 active taxis<br>Full Mexico footprint</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="label mb-8">GMV Growth — Mexico (Monthly, USD)</div>
+    <div class="chart-wrap">
+      <canvas id="mxChart"></canvas>
+    </div>
+  </div>
+  <div class="card" style="background:rgba(204,26,26,.06);border-color:rgba(204,26,26,.2);text-align:center;padding:14px">
+    <p style="font-size:.85rem;color:var(--muted)">⚠️ Projections are illustrative. Actual results depend on fleet activation pace, Uber market conditions, and regional expansion timelines.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: TEAM ==================== -->
+<div class="slide" data-index="10">
+  <span class="label">11 — Team</span>
+  <h2 style="margin-top:8px">Leadership</h2>
+  <div class="divider"></div>
+  <div class="card-grid cols-2" style="margin-bottom:20px">
+    <div class="team-card">
+      <div class="team-av">IA</div>
+      <div>
+        <div class="team-name">Izzy Aala</div>
+        <div class="team-role">CEO & Founder</div>
+        <div class="team-bio">35+ years in professional transportation. Founded Cabconnect (1989), a pioneer in taxi technology. Motorola engineer background. Architected Flywheel's Uber partnership and Direct-to-Driver strategy. Deep regulatory relationships across 53 markets.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">HK</div>
+      <div>
+        <div class="team-name">Hansu Kim</div>
+        <div class="team-role">Co-Founder</div>
+        <div class="team-bio">Co-architect of the TaxiOS platform. Deep technical and operational expertise in building taxi technology infrastructure across multiple markets.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">CO</div>
+      <div>
+        <div class="team-name">Carlos Olamendi</div>
+        <div class="team-role">Mexico Operations Lead</div>
+        <div class="team-bio">On-the-ground leadership for Flywheel Mexico. Managing fleet relationships, driver activation, and partner coordination across Cancún, Tulum, and Playa del Carmen.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">ENG</div>
+      <div>
+        <div class="team-name">Engineering Team</div>
+        <div class="team-role">Product & Infrastructure</div>
+        <div class="team-bio">Dedicated engineering team managing TaxiOS platform, Uber API integration, driver app, and Direct-to-Driver build-out. 7 years of proprietary taxi-tech IP.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="border-left:3px solid var(--red)">
+    <div class="label mb-8">Why This Team Wins</div>
+    <p style="font-size:.88rem;color:var(--muted);line-height:1.6">Flywheel is the <strong style="color:var(--text)">only company</strong> with an active Uber 3P taxi partnership at scale, a proven 7-year head start on Direct-to-Driver architecture, and operational presence in Mexico. This team built the playbook — no one else can replicate it.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: CTA ==================== -->
+<div class="slide" data-index="11">
+  <span class="label">12 — Next Steps</span>
+  <h2 style="margin-top:8px">Let's Build Mexico Together</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);font-size:1rem;margin-bottom:28px;max-width:640px">Flywheel is actively expanding its regional partner network across Mexico. WorkLevel has the market presence, the driver relationships, and the operational credibility. We have the technology. Together, we scale.</p>
+  <div class="card-grid cols-3" style="margin-bottom:24px">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--red);margin-bottom:8px">STEP 01</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:8px">Partner Agreement</div>
+      <p style="font-size:.82rem;color:var(--muted);line-height:1.5">Define your market territory, revenue share structure, and exclusivity terms. We work from an established template.</p>
+    </div>
+    <div class="card" style="border-top:3px solid #884444">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#884444;margin-bottom:8px">STEP 02</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:8px">Pilot Launch</div>
+      <p style="font-size:.82rem;color:var(--muted);line-height:1.5">2–3 pilot call takers. 1–2 weeks. Old systems stay live throughout — zero risk. Target: 20 successful end-to-end rides.</p>
+    </div>
+    <div class="card" style="border-top:3px solid #555">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);margin-bottom:8px">STEP 03</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:8px">Scale</div>
+      <p style="font-size:.82rem;color:var(--muted);line-height:1.5">Full deployment once pilot confirms. Activate all signed taxis. Expand to new corridors. Build the flywheel.</p>
+    </div>
+  </div>
+  <div class="cta-block">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;margin-bottom:12px">Ready to expand the partnership?</div>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:.95rem">Let's talk about your market, your fleet, and what we can build together.</p>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--red);margin-bottom:4px">Izzy Aala · CEO</div>
+    <div style="font-size:.9rem;color:var(--muted)">izzy@flywheel.com</div>
+    <div style="margin-top:20px;font-size:.75rem;color:#444;font-family:'JetBrains Mono',monospace">Flywheel Technologies · Partner Overview · Confidential</div>
+  </div>
+</div>
+
+</div><!-- slides-container -->
+</div><!-- main -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn" onclick="goSlide(current-1)">←</button>
+  <span class="slide-counter" id="slide-counter">01 / 12</span>
+  <button class="nav-btn" onclick="goSlide(current+1)">→</button>
+</div>
+
+</div><!-- app -->
+
+<script>
+const PASS = 'flywheel2026';
+const SLIDES = ['Cover','Executive Summary','The Problem','TaxiOS Platform','Product Screenshots','Uber Partnership','Mexico Market','Partner Economics','Traction','Mexico Projections','Team','Next Steps'];
+let current = 0;
+let lightMode = false;
+
+function checkGate() {
+  const v = document.getElementById('gate-input').value;
+  if (v === PASS) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    buildNav(); goSlide(0); buildChart();
+  } else {
+    document.getElementById('gate-err').style.display = 'block';
+  }
+}
+
+function buildNav() {
+  const c = document.getElementById('nav-items');
+  SLIDES.forEach((name,i) => {
+    const d = document.createElement('div');
+    d.className = 'sidebar-item' + (i===0?' active':'');
+    d.innerHTML = '<span class="sidebar-num">' + String(i+1).padStart(2,'0') + '</span>' + name;
+    d.onclick = () => goSlide(i);
+    c.appendChild(d);
+  });
+}
+
+function goSlide(n) {
+  if (n < 0 || n >= SLIDES.length) return;
+  document.querySelectorAll('.slide')[current].classList.remove('active');
+  document.querySelectorAll('.sidebar-item')[current].classList.remove('active');
+  current = n;
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  document.querySelectorAll('.sidebar-item')[current].classList.add('active');
+  const num = String(current+1).padStart(2,'0');
+  document.getElementById('slide-counter').textContent = num + ' / ' + String(SLIDES.length).padStart(2,'0');
+  document.getElementById('slide-num-bg').textContent = num;
+}
+
+function toggleMode() {
+  lightMode = !lightMode;
+  document.body.classList.toggle('light-mode', lightMode);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') goSlide(current+1);
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp') goSlide(current-1);
+});
+
+function buildChart() {
+  const ctx = document.getElementById('mxChart');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Today\n(450 taxis)', '2026\n(1,500)', '2027\n(6,000)', '2028\n(25,000)'],
+      datasets: [{
+        label: 'Monthly GMV (USD)',
+        data: [810000, 2700000, 10800000, 45000000],
+        backgroundColor: ['rgba(204,26,26,.35)','rgba(204,26,26,.5)','rgba(204,26,26,.7)','rgba(204,26,26,.95)'],
+        borderColor: '#CC1A1A',
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: '#2a2a2a' } },
+        y: {
+          ticks: {
+            color: '#888', font: { size: 11 },
+            callback: v => v >= 1000000 ? '$' + (v/1000000).toFixed(1) + 'M' : '$' + (v/1000).toFixed(0) + 'K'
+          },
+          grid: { color: '#2a2a2a' }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paro Wellness — Executive Summary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --espresso: #2C2420;
+  --terracotta: #B85C38;
+  --honey: #D4A574;
+  --driftwood: #8A7A6C;
+  --linen: #F7F3EE;
+  --cream: #FBF9F6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--linen);
+  color: var(--espresso);
+  min-height: 100vh;
+}
+
+/* PASSWORD GATE */
+#gate {
+  position: fixed; inset:0;
+  background: var(--espresso);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 28px; z-index: 9999;
+}
+#gate .g-logo { font-family:'Instrument Serif',serif; font-size:80px; color:var(--linen); letter-spacing:-3px; }
+#gate .g-label { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--driftwood); }
+#gate .g-line { width:48px; height:2px; background:var(--terracotta); }
+#gate input {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(247,243,238,0.15);
+  color:var(--linen); font-family:'Outfit',sans-serif; font-size:16px;
+  padding:14px 24px; border-radius:8px; width:300px; outline:none;
+  text-align:center; letter-spacing:2px;
+}
+#gate input:focus { border-color:var(--terracotta); }
+#gate button {
+  background:var(--terracotta); color:var(--linen); border:none;
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:600;
+  padding:14px 40px; border-radius:8px; cursor:pointer; width:300px;
+}
+#gate button:hover { opacity:0.88; }
+#gate .g-err { color:var(--terracotta); font-family:'JetBrains Mono',monospace; font-size:12px; min-height:18px; }
+
+/* MAIN DOC */
+#doc { display:none; }
+
+/* ACTION BAR */
+.action-bar {
+  position: fixed; top:0; right:0; left:0;
+  height: 52px;
+  background: var(--espresso);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; z-index: 100;
+}
+.action-logo { font-family:'Instrument Serif',serif; font-size:22px; color:var(--linen); }
+.action-btns { display:flex; gap:10px; }
+.action-btn {
+  background:none; border:1px solid rgba(247,243,238,0.2); color:var(--linen);
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; padding:7px 14px; border-radius:5px; cursor:pointer;
+  transition:all 0.2s;
+}
+.action-btn:hover { border-color:var(--terracotta); color:var(--terracotta); }
+.action-btn.primary { background:var(--terracotta); border-color:var(--terracotta); }
+.action-btn.primary:hover { opacity:0.88; }
+
+/* DOCUMENT PAGE */
+.doc-page {
+  margin-top: 52px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--cream);
+  box-shadow: 0 8px 80px rgba(44,36,32,0.12), 0 2px 16px rgba(44,36,32,0.06);
+  min-height: calc(100vh - 52px);
+}
+
+/* HEADER BAND */
+.doc-header {
+  background: var(--espresso);
+  padding: 48px 64px 40px;
+}
+.doc-eyebrow {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--driftwood); margin-bottom:20px;
+}
+.doc-wordmark {
+  font-family:'Instrument Serif',serif;
+  font-size:88px; color:var(--linen);
+  letter-spacing:-4px; line-height:1;
+  margin-bottom:12px;
+}
+.doc-tagline {
+  font-family:'Instrument Serif',serif;
+  font-style:italic; font-size:20px;
+  color:var(--honey); margin-bottom:8px;
+}
+.doc-conf {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(247,243,238,0.35); margin-top:20px;
+}
+
+/* BODY LAYOUT */
+.doc-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 0;
+}
+@media (max-width: 720px) {
+  .doc-body { grid-template-columns: 1fr; }
+  .doc-metrics { border-left:none; border-top:1px solid rgba(44,36,32,0.08); }
+}
+
+/* LEFT COLUMN */
+.doc-narrative {
+  padding: 52px 52px 52px 64px;
+  border-right: 1px solid rgba(44,36,32,0.07);
+}
+
+.section-eyebrow {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--terracotta); margin-bottom:10px; display:block;
+}
+.section-heading {
+  font-family:'Instrument Serif',serif;
+  font-size:26px; color:var(--espresso);
+  margin-bottom:14px; line-height:1.2;
+}
+.section-body {
+  font-size:14px; line-height:1.75;
+  color:var(--espresso); margin-bottom:32px;
+}
+.section-body strong { color:var(--espresso); font-weight:600; }
+
+.doc-divider { height:1px; background:rgba(44,36,32,0.07); margin:28px 0; }
+
+/* SKU TABLE */
+.sku-table { width:100%; border-collapse:collapse; margin:16px 0 24px; font-size:13px; }
+.sku-table th {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--driftwood); padding:10px 12px;
+  text-align:left; border-bottom:2px solid rgba(44,36,32,0.1);
+}
+.sku-table td {
+  padding:11px 12px; border-bottom:1px solid rgba(44,36,32,0.05);
+  color:var(--espresso);
+}
+.sku-table td:last-child { color:var(--terracotta); font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; }
+.sku-table tr:last-child td { border-bottom:none; }
+
+/* JOURNEY */
+.journey {
+  display:flex; gap:0; align-items:stretch;
+  margin:16px 0 24px; overflow:hidden; border-radius:10px;
+}
+.journey-step {
+  flex:1; padding:16px 14px; background:rgba(44,36,32,0.04);
+  border-right:1px solid rgba(44,36,32,0.08);
+  text-align:center;
+}
+.journey-step:last-child { border-right:none; }
+.journey-step.active { background:var(--terracotta); }
+.journey-step .j-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:1px; text-transform:uppercase;
+  color:var(--driftwood); margin-bottom:4px;
+}
+.journey-step.active .j-label { color:rgba(247,243,238,0.7); }
+.journey-step .j-name { font-size:12px; font-weight:600; color:var(--espresso); }
+.journey-step.active .j-name { color:var(--linen); }
+
+/* ASK BOX */
+.ask-box {
+  background: var(--espresso);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-top: 8px;
+}
+.ask-eyebrow {
+  font-family:'JetBrains Mono',monospace; font-size:10px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--terracotta); margin-bottom:16px;
+}
+.ask-amount {
+  font-family:'Instrument Serif',serif; font-size:40px;
+  color:var(--linen); margin-bottom:4px; letter-spacing:-1px;
+}
+.ask-desc { font-size:13px; color:var(--driftwood); margin-bottom:20px; }
+.use-of-funds { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.fund-item {
+  background:rgba(255,255,255,0.05); border-radius:8px;
+  padding:12px 14px;
+}
+.fund-pct {
+  font-family:'JetBrains Mono',monospace; font-size:18px;
+  font-weight:600; color:var(--terracotta); line-height:1;
+}
+.fund-label { font-size:11px; color:rgba(247,243,238,0.5); margin-top:4px; }
+
+/* RIGHT COLUMN METRICS */
+.doc-metrics {
+  padding: 40px 32px;
+  background: var(--cream);
+}
+.metric-group { margin-bottom:32px; }
+.metric-group-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--driftwood); margin-bottom:16px; display:block;
+  padding-bottom:8px; border-bottom:1px solid rgba(44,36,32,0.08);
+}
+.big-metric { margin-bottom:20px; }
+.big-number {
+  font-family:'Instrument Serif',serif;
+  font-size:52px; color:var(--terracotta);
+  letter-spacing:-2px; line-height:1;
+}
+.big-unit {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--driftwood); margin-top:4px;
+}
+
+.stat-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:10px 0; border-bottom:1px solid rgba(44,36,32,0.06);
+}
+.stat-row:last-child { border-bottom:none; }
+.stat-label { font-size:12px; color:var(--driftwood); }
+.stat-val {
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  font-weight:600; color:var(--espresso);
+}
+.stat-val.accent { color:var(--terracotta); }
+
+/* CLINICAL BOX */
+.clinical-box {
+  background: var(--espresso);
+  border-radius:12px; padding:24px;
+  margin-bottom:24px;
+}
+.clinical-box .cbox-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--terracotta); margin-bottom:16px;
+}
+.cbox-stat {
+  text-align:center; padding:12px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.cbox-stat:last-child { border-bottom:none; }
+.cbox-num {
+  font-family:'Instrument Serif',serif;
+  font-size:36px; color:var(--linen);
+  letter-spacing:-1px; line-height:1;
+}
+.cbox-desc { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--driftwood); margin-top:4px; }
+
+/* MOAT BADGE */
+.moat-badge {
+  background:rgba(184,92,56,0.1); border:1px solid rgba(184,92,56,0.25);
+  border-radius:8px; padding:14px 16px; margin-bottom:12px;
+  font-size:12px; color:var(--espresso); line-height:1.5;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.moat-icon { color:var(--terracotta); font-size:16px; flex-shrink:0; margin-top:1px; }
+
+/* CONTACT BAND */
+.doc-footer {
+  background:var(--espresso);
+  padding:28px 64px;
+  display:grid; grid-template-columns:1fr 1fr; gap:32px;
+  align-items:center;
+}
+@media (max-width:600px) { .doc-footer { grid-template-columns:1fr; padding:24px 32px; } }
+.contact-item { }
+.contact-name { font-family:'Outfit',sans-serif; font-weight:600; font-size:14px; color:var(--linen); margin-bottom:2px; }
+.contact-title { font-size:12px; color:var(--driftwood); }
+.contact-email { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--terracotta); margin-top:4px; }
+.legal-footer {
+  padding:20px 64px;
+  background:var(--espresso);
+  border-top:1px solid rgba(255,255,255,0.06);
+  text-align:center;
+}
+.legal-footer p {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:1px; text-transform:uppercase;
+  color:rgba(247,243,238,0.25); line-height:1.7;
+}
+
+/* SPS mark */
+.sps-mark {
+  position:fixed; bottom:16px; right:16px;
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--driftwood); opacity:0.3; z-index:50;
+}
+
+/* PRINT */
+@media print {
+  body { background:var(--cream) !important; }
+  .action-bar, .sps-mark { display:none !important; }
+  #doc { display:block !important; }
+  #gate { display:none !important; }
+  .doc-page { margin-top:0; box-shadow:none; max-width:100%; }
+  .doc-body { grid-template-columns: 1fr 300px; }
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="g-logo">PARO</div>
+  <div class="g-label">Executive Summary · Confidential</div>
+  <div class="g-line"></div>
+  <input type="password" id="pw" placeholder="Enter passphrase" onkeydown="if(event.key==='Enter')go()">
+  <button onclick="go()">Access Document</button>
+  <div class="g-err" id="err"></div>
+</div>
+
+<!-- DOC -->
+<div id="doc">
+  <div class="action-bar">
+    <div class="action-logo">PARO</div>
+    <div class="action-btns">
+      <button class="action-btn" onclick="toggleMode()">☀ Toggle</button>
+      <button class="action-btn primary" onclick="window.print()">⬡ Print / PDF</button>
+    </div>
+  </div>
+
+  <div class="doc-page">
+    <!-- HEADER -->
+    <div class="doc-header">
+      <div class="doc-eyebrow">Paro Wellness Inc. · A Super Power Studios Portfolio Company</div>
+      <div class="doc-wordmark">PARO</div>
+      <div class="doc-tagline">Prepared by nature. Proven by science.</div>
+      <div class="doc-conf">Confidential Executive Summary · June 2026 · For Qualified Investors Only</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="doc-body">
+
+      <!-- LEFT: NARRATIVE -->
+      <div class="doc-narrative">
+
+        <!-- THE OPPORTUNITY -->
+        <span class="section-eyebrow">The Opportunity</span>
+        <div class="section-heading">A $410M market with no clinical leader.</div>
+        <div class="section-body">
+          The wellness shots sub-category is a <strong>$410M market growing at 7.6% annually</strong> — with Suja ($327M), 
+          So Good So You ($100M+), and every major brand making inflammation and immunity claims on zero clinical evidence. 
+          The top two brands control 70%+ of market share. Both are PE-backed, retail-built, and science-free. 
+          <strong>Paro changes that.</strong>
+        </div>
+
+        <div class="doc-divider"></div>
+
+        <!-- THE DIFFERENTIATION -->
+        <span class="section-eyebrow">The Differentiation</span>
+        <div class="section-heading">The world's only clinical-data-backed ginger shot.</div>
+        <div class="section-body">
+          Paro is the only wellness shot brand built on <strong>Evithé Biotechnology's patented, Phase 1-validated 
+          ginger extract</strong> — the only ginger extract in the world with human clinical data.
+          <br><br>
+          <strong>50 participants. 7 validated inflammatory biomarkers. 0 adverse events. 3 patents.</strong>
+          <br><br>
+          Evithé's proprietary hormesis process stresses ginger to force release of defense compounds, 
+          producing an extract standardized to ~20% gingerols/shogaols — delivering <strong>100mg active phenolics 
+          per shot, 30–50× more bioavailable</strong> than commodity alternatives. 
+          This is not a marketing story. It is a scientific moat.
+        </div>
+
+        <div class="doc-divider"></div>
+
+        <!-- THE PRODUCTS -->
+        <span class="section-eyebrow">The Products</span>
+        <div class="section-heading">Three SKUs. Subscription-first.</div>
+        <table class="sku-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Format</th>
+              <th>Subscription</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Paro Daily Shot</strong></td>
+              <td>2oz amber glass vial · 12/mo</td>
+              <td>$79.99/mo</td>
+            </tr>
+            <tr>
+              <td><strong>Paro Daily Capsules</strong></td>
+              <td>60ct · 2/day (30-day supply)</td>
+              <td>$49.99/mo</td>
+            </tr>
+            <tr>
+              <td><strong>Daily Defense Bundle</strong></td>
+              <td>Shot + Capsules</td>
+              <td>$114.99/mo</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="doc-divider"></div>
+
+        <!-- GO TO MARKET -->
+        <span class="section-eyebrow">Go-to-Market</span>
+        <div class="section-heading">Clinical brand. Four phases.</div>
+        <div class="journey">
+          <div class="journey-step active">
+            <div class="j-label">Phase 1</div>
+            <div class="j-name">DTC</div>
+          </div>
+          <div class="journey-step">
+            <div class="j-label">Phase 2</div>
+            <div class="j-name">Erewhon</div>
+          </div>
+          <div class="journey-step">
+            <div class="j-label">Phase 3</div>
+            <div class="j-name">WF/Sprouts</div>
+          </div>
+          <div class="journey-step">
+            <div class="j-label">Phase 4</div>
+            <div class="j-name">Mass</div>
+          </div>
+        </div>
+        <div class="section-body" style="margin-bottom:0;">
+          DTC Shopify launches proof-of-concept and builds subscriber LTV. Erewhon exclusive (Month 4–8) validates 
+          premium retail velocity. Whole Foods + Sprouts (Month 8–12) add scale. Clinical brand builds through 
+          proof, not shelf space.
+        </div>
+
+        <div class="doc-divider"></div>
+
+        <!-- THE ASK -->
+        <span class="section-eyebrow">The Ask</span>
+        <div class="ask-box">
+          <div class="ask-eyebrow">SAFE Round</div>
+          <div class="ask-amount">$1.3M – $2.0M</div>
+          <div class="ask-desc">Seed / SAFE · Use of Funds:</div>
+          <div class="use-of-funds">
+            <div class="fund-item">
+              <div class="fund-pct">40%</div>
+              <div class="fund-label">Manufacturing</div>
+            </div>
+            <div class="fund-item">
+              <div class="fund-pct">35%</div>
+              <div class="fund-label">Marketing / CAC</div>
+            </div>
+            <div class="fund-item">
+              <div class="fund-pct">15%</div>
+              <div class="fund-label">Regulatory</div>
+            </div>
+            <div class="fund-item">
+              <div class="fund-pct">10%</div>
+              <div class="fund-label">Operations</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: METRICS -->
+      <div class="doc-metrics">
+
+        <!-- Clinical Data -->
+        <div class="clinical-box">
+          <div class="cbox-label">Phase 1 Clinical Data</div>
+          <div class="cbox-stat">
+            <div class="cbox-num">50</div>
+            <div class="cbox-desc">Participants</div>
+          </div>
+          <div class="cbox-stat">
+            <div class="cbox-num">7</div>
+            <div class="cbox-desc">Biomarkers Validated</div>
+          </div>
+          <div class="cbox-stat">
+            <div class="cbox-num">0</div>
+            <div class="cbox-desc">Adverse Events</div>
+          </div>
+          <div class="cbox-stat">
+            <div class="cbox-num">3</div>
+            <div class="cbox-desc">Patents</div>
+          </div>
+        </div>
+
+        <!-- Market -->
+        <div class="metric-group">
+          <span class="metric-group-label">Market</span>
+          <div class="big-metric">
+            <div class="big-number">$410M</div>
+            <div class="big-unit">Wellness Shots Market</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Annual Growth</span>
+            <span class="stat-val accent">7.6%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Clinical Competitors</span>
+            <span class="stat-val accent">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Top 2 Share</span>
+            <span class="stat-val">70%+</span>
+          </div>
+        </div>
+
+        <!-- Moat -->
+        <div class="metric-group">
+          <span class="metric-group-label">Scientific Moat</span>
+          <div class="moat-badge">
+            <div class="moat-icon">⚗</div>
+            <div>30–50× more bioavailable than commodity ginger</div>
+          </div>
+          <div class="moat-badge">
+            <div class="moat-icon">⚗</div>
+            <div>100mg active phenolics — minimum therapeutic dose per literature</div>
+          </div>
+          <div class="moat-badge">
+            <div class="moat-icon">⚗</div>
+            <div>North America exclusive license · Evithé Biotechnology NZ</div>
+          </div>
+        </div>
+
+        <!-- Unit Economics -->
+        <div class="metric-group">
+          <span class="metric-group-label">Unit Economics</span>
+          <div class="stat-row">
+            <span class="stat-label">Gross Margin (launch)</span>
+            <span class="stat-val accent">~65%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Gross Margin (scale)</span>
+            <span class="stat-val accent">72–75%</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Target LTV</span>
+            <span class="stat-val">~$960</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">DTC CAC (target)</span>
+            <span class="stat-val">$100–150</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">LTV:CAC</span>
+            <span class="stat-val accent">~6:1</span>
+          </div>
+        </div>
+
+        <!-- Month 18 -->
+        <div class="metric-group">
+          <span class="metric-group-label">Month 18 Target</span>
+          <div class="big-metric">
+            <div class="big-number" style="font-size:40px;">10K</div>
+            <div class="big-unit">Subscribers</div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">ARR Run Rate</span>
+            <span class="stat-val accent">$7M+</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Break-even</span>
+            <span class="stat-val">Month 16–20</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONTACT BAND -->
+    <div class="doc-footer">
+      <div class="contact-item">
+        <div class="contact-name">Justin Lai</div>
+        <div class="contact-title">Founder · Paro Wellness Inc.</div>
+        <div class="contact-email">paro.co (TBD)</div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-name">Izzy Aala</div>
+        <div class="contact-title">Super Power Studios · Incubator</div>
+        <div class="contact-email">izzy@spsi.ai</div>
+      </div>
+    </div>
+
+    <div class="legal-footer">
+      <p>Paro Wellness Inc. · A Super Power Studios Portfolio Company · Confidential — For Qualified Investors Only</p>
+      <p>This document contains forward-looking statements. All market data sourced from publicly available sources as of June 2026.</p>
+      <p>*These statements have not been evaluated by the FDA. Clinical data references Evithé Biotechnology Phase 1 trial (n=50).</p>
+    </div>
+
+  </div><!-- /doc-page -->
+
+  <div class="sps-mark">SPS · Super Power Studios</div>
+</div>
+
+<script>
+function go() {
+  if (document.getElementById('pw').value === 'Paro@2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('doc').style.display = 'block';
+  } else {
+    const e = document.getElementById('err');
+    e.textContent = 'Incorrect passphrase.';
+    document.getElementById('pw').value = '';
+    setTimeout(() => e.textContent = '', 2500);
+  }
+}
+document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+
+let lightMode = true;
+function toggleMode() {
+  lightMode = !lightMode;
+  document.body.style.background = lightMode ? 'var(--linen)' : 'var(--espresso)';
+  document.querySelector('.doc-page').style.background = lightMode ? 'var(--cream)' : 'rgba(255,255,255,0.05)';
+}
+</script>
+</body>
+</html>

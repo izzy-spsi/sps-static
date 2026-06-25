@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 Hour Golf — Pro Forma Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --midnight: #080E0A;
+    --deep:     #0D1510;
+    --surface:  #1C2B22;
+    --electric: #00C853;
+    --edim:     rgba(0,200,83,0.12);
+    --ghost:    #F0F4F1;
+    --muted:    #6B8070;
+    --gold:     #C9A84C;
+    --crimson:  #D72729;
+    --bg:       #F2F4F2;
+    --card:     #FFFFFF;
+    --border:   #E2E8E3;
+    --text:     #0D150F;
+    --sub:      #5A6B60;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH */
+  #auth-gate {
+    position: fixed; inset: 0; background: var(--midnight);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .auth-box {
+    background: var(--surface); border: 1px solid rgba(0,200,83,0.2);
+    border-radius: 16px; padding: 48px 40px; width: 360px; text-align: center;
+  }
+  .auth-logo { font-family: 'Oswald', sans-serif; font-size: 26px; font-weight: 700; color: var(--electric); letter-spacing: 1px; margin-bottom: 4px; }
+  .auth-sub  { font-size: 11px; color: var(--muted); margin-bottom: 32px; letter-spacing: 1px; text-transform: uppercase; }
+  .auth-box input {
+    width: 100%; padding: 12px 16px; border: 1px solid rgba(0,200,83,0.3);
+    border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif;
+    outline: none; margin-bottom: 12px; background: var(--deep); color: var(--ghost);
+  }
+  .auth-box input:focus { border-color: var(--electric); }
+  .auth-btn {
+    width: 100%; padding: 12px; background: var(--electric); color: var(--midnight);
+    border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: 'Oswald', sans-serif; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .auth-btn:hover { opacity: 0.88; }
+  .auth-error { color: var(--crimson); font-size: 12px; margin-top: 8px; display: none; }
+  #app { display: none; }
+
+  /* HEADER */
+  .header {
+    background: var(--midnight); color: var(--ghost);
+    padding: 0 32px; display: flex; align-items: center; justify-content: space-between;
+    height: 56px; position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(0,200,83,0.15);
+  }
+  .hdr-left  { display: flex; align-items: center; gap: 14px; }
+  .hdr-logo  { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+  .hdr-logo span { color: var(--electric); }
+  .hdr-badge {
+    background: var(--edim); color: var(--electric); padding: 3px 10px;
+    border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; border: 1px solid rgba(0,200,83,0.25);
+  }
+  .hdr-right { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* LAYOUT */
+  .main { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 56px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: white; border-right: 1px solid var(--border);
+    padding: 20px; overflow-y: auto;
+    position: sticky; top: 56px; height: calc(100vh - 56px);
+  }
+  .s-head {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--electric);
+    margin: 22px 0 10px; border-bottom: 1px solid var(--edim); padding-bottom: 5px;
+  }
+  .s-head:first-child { margin-top: 0; }
+  .field { margin-bottom: 11px; }
+  .field label {
+    display: block; font-size: 10px; font-weight: 600; color: var(--sub);
+    margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .field input[type="number"] {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif;
+    outline: none; color: var(--text); background: #F9FBF9; transition: border 0.15s;
+  }
+  .field input[type="number"]:focus { border-color: var(--electric); }
+  .field input[type="range"] {
+    width: 100%; accent-color: var(--electric); cursor: pointer; margin-top: 2px;
+  }
+  .range-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1px; }
+  .range-label { font-size: 10px; color: var(--sub); }
+  .range-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--electric); font-weight: 600; }
+  .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* CONTENT */
+  .content { padding: 24px; overflow-y: auto; }
+
+  /* KPI STRIP */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 24px; }
+  .kpi {
+    background: var(--midnight); border-radius: 10px; padding: 18px 16px;
+    border: 1px solid rgba(0,200,83,0.1);
+  }
+  .kpi-lbl {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--electric); margin-bottom: 7px;
+  }
+  .kpi-val { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: var(--ghost); }
+  .kpi-note { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* PANEL */
+  .panel { background: white; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 18px; overflow: hidden; }
+  .p-head {
+    padding: 12px 18px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .p-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .p-sub { font-size: 11px; color: var(--sub); font-family: 'JetBrains Mono', monospace; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
+    letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+    text-align: left; padding: 8px 14px; border-bottom: 1px solid var(--border);
+  }
+  th.r { text-align: right; }
+  td { padding: 10px 14px; border-bottom: 1px solid #F0F4F0; vertical-align: middle; }
+  td.r { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  tr:last-child td { border-bottom: none; }
+  .lbl  { font-weight: 500; }
+  .note { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .grn  { color: #00C853; font-weight: 600; }
+  .gld  { color: var(--gold); font-weight: 600; }
+  .red  { color: var(--crimson); font-weight: 600; }
+  .ttl  { background: #F5FAF6; }
+  .ttl td { font-weight: 700; border-top: 2px solid var(--border) !important; }
+
+  /* BAR */
+  .bw { display: inline-block; background: #EEF2EE; border-radius: 3px; height: 5px; width: 80px; vertical-align: middle; margin-left: 6px; }
+  .bf { background: var(--electric); height: 100%; border-radius: 3px; }
+
+  /* GAUGE */
+  .gauge-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .gauge-bar { flex: 1; background: #EEF2EE; border-radius: 8px; height: 10px; }
+  .gauge-fill { height: 100%; border-radius: 8px; transition: width 0.4s, background 0.4s; }
+  .gauge-pct { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; min-width: 55px; text-align: right; }
+
+  /* GROWTH TABLE */
+  .growth-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; }
+  .growth-col { border-right: 1px solid var(--border); }
+  .growth-col:last-child { border-right: none; }
+  .growth-hdr {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--sub);
+    padding: 10px 14px; border-bottom: 1px solid var(--border); background: #F9FBF9;
+  }
+  .growth-val { padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .growth-lbl { padding: 10px 14px; font-size: 11px; font-weight: 500; background: #F9FBF9; border-bottom: 1px solid var(--border); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  @media print {
+    .sidebar { display: none; }
+    .main { grid-template-columns: 1fr; }
+    .header { display: none; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="auth-box">
+    <div class="auth-logo">24 HOUR GOLF</div>
+    <div class="auth-sub">Pro Forma Portal · Internal</div>
+    <input type="password" id="pw" placeholder="Password" onkeydown="if(event.key==='Enter')auth()">
+    <button class="auth-btn" onclick="auth()">Enter</button>
+    <div class="auth-error" id="auth-err">Incorrect password</div>
+  </div>
+</div>
+
+<div id="app">
+<div class="header">
+  <div class="hdr-left">
+    <div class="hdr-logo">24 HOUR <span>GOLF</span></div>
+    <div class="hdr-badge">Pro Forma · Membership Model</div>
+  </div>
+  <div class="hdr-right" id="ts">—</div>
+</div>
+
+<div class="main">
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+
+  <div class="s-head">Membership Tiers</div>
+
+  <div class="f2">
+    <div class="field"><label>Member #</label><input type="number" id="m1" value="80" min="0" oninput="calc()"></div>
+    <div class="field"><label>Price / mo</label><input type="number" id="p1" value="149" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Performance #</label><input type="number" id="m2" value="50" min="0" oninput="calc()"></div>
+    <div class="field"><label>Price / mo</label><input type="number" id="p2" value="249" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Champion #</label><input type="number" id="m3" value="30" min="0" oninput="calc()"></div>
+    <div class="field"><label>Price / mo</label><input type="number" id="p3" value="499" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Elite #</label><input type="number" id="m4" value="10" min="0" oninput="calc()"></div>
+    <div class="field"><label>Price / mo</label><input type="number" id="p4" value="999" min="0" oninput="calc()"></div>
+  </div>
+
+  <div class="s-head">Churn & Growth</div>
+  <div class="field">
+    <label>Monthly Churn Rate</label>
+    <input type="range" id="churn" min="0" max="15" step="0.5" value="3" oninput="calc();document.getElementById('churn-v').textContent=this.value+'%'">
+    <div class="range-row"><span class="range-label">0%</span><span class="range-val" id="churn-v">3%</span><span class="range-label">15%</span></div>
+  </div>
+  <div class="field">
+    <label>Monthly New Members (Growth)</label>
+    <input type="number" id="new-mo" value="15" min="0" oninput="calc()">
+  </div>
+
+  <div class="s-head">Ancillary Revenue / mo</div>
+  <div class="f2">
+    <div class="field"><label>Day Passes</label><input type="number" id="a1" value="3000" min="0" oninput="calc()"></div>
+    <div class="field"><label>AI Coaching</label><input type="number" id="a2" value="2500" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Events / Leagues</label><input type="number" id="a3" value="1500" min="0" oninput="calc()"></div>
+    <div class="field"><label>F&B / Vending</label><input type="number" id="a4" value="1200" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Merch</label><input type="number" id="a5" value="500" min="0" oninput="calc()"></div>
+    <div class="field"><label>Other</label><input type="number" id="a6" value="0" min="0" oninput="calc()"></div>
+  </div>
+
+  <div class="s-head">Operating Costs / mo</div>
+  <div class="field"><label>Rent / Lease</label><input type="number" id="c1" value="18000" min="0" oninput="calc()"></div>
+  <div class="f2">
+    <div class="field"><label>Utilities</label><input type="number" id="c2" value="3500" min="0" oninput="calc()"></div>
+    <div class="field"><label>Software / Tech</label><input type="number" id="c3" value="2500" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Insurance</label><input type="number" id="c4" value="1200" min="0" oninput="calc()"></div>
+    <div class="field"><label>Marketing</label><input type="number" id="c5" value="2000" min="0" oninput="calc()"></div>
+  </div>
+  <div class="f2">
+    <div class="field"><label>Maintenance</label><input type="number" id="c6" value="1500" min="0" oninput="calc()"></div>
+    <div class="field"><label>Staffing</label><input type="number" id="c7" value="0" min="0" oninput="calc()"></div>
+  </div>
+  <div class="field"><label>Other / Misc</label><input type="number" id="c8" value="1000" min="0" oninput="calc()"></div>
+
+  <div class="s-head">Scale</div>
+  <div class="field"><label>Number of Locations</label><input type="number" id="locs" value="1" min="1" max="500" oninput="calc()"></div>
+
+</div><!-- /sidebar -->
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+  <!-- KPI STRIP -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-lbl">MRR</div>
+      <div class="kpi-val" id="k-mrr">—</div>
+      <div class="kpi-note">Membership only</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Total Monthly Rev</div>
+      <div class="kpi-val" id="k-rev">—</div>
+      <div class="kpi-note">MRR + ancillary</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Monthly EBITDA</div>
+      <div class="kpi-val" id="k-ebitda">—</div>
+      <div class="kpi-note" id="k-margin">—% margin</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Annual Revenue</div>
+      <div class="kpi-val" id="k-arr">—</div>
+      <div class="kpi-note" id="k-loc-note">1 location</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Total Members</div>
+      <div class="kpi-val" id="k-mem">—</div>
+      <div class="kpi-note" id="k-arpu">— ARPU</div>
+    </div>
+  </div>
+
+  <!-- MEMBERSHIP TABLE + REVENUE MIX -->
+  <div class="two-col">
+
+    <div class="panel">
+      <div class="p-head">
+        <div class="p-title">Membership Revenue</div>
+        <div class="p-sub" id="ph-mrr">—/mo MRR</div>
+      </div>
+      <table>
+        <thead><tr><th>Tier</th><th class="r">Members</th><th class="r">Price</th><th class="r">MRR</th><th class="r">ARR</th></tr></thead>
+        <tbody id="mem-rows"></tbody>
+        <tfoot>
+          <tr class="ttl"><td class="lbl">Total</td><td class="r" id="t-mem">—</td><td class="r">—</td><td class="r grn" id="t-mrr">—</td><td class="r grn" id="t-arr-mem">—</td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="p-head">
+        <div class="p-title">Revenue Mix</div>
+        <div class="p-sub" id="ph-rev">—/mo total</div>
+      </div>
+      <table>
+        <thead><tr><th>Stream</th><th class="r">Monthly</th><th class="r">% of Total</th><th></th></tr></thead>
+        <tbody id="mix-rows"></tbody>
+        <tfoot>
+          <tr class="ttl"><td class="lbl">Total Revenue</td><td class="r grn" id="t-rev">—</td><td class="r">100%</td><td></td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- P&L + MARGIN -->
+  <div class="two-col">
+
+    <div class="panel">
+      <div class="p-head"><div class="p-title">P&amp;L Summary</div></div>
+      <table>
+        <thead><tr><th>Line</th><th class="r">Monthly</th><th class="r">Annual</th><th class="r">Margin</th></tr></thead>
+        <tbody id="pl-rows"></tbody>
+      </table>
+      <div style="padding:16px 18px;border-top:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">EBITDA Margin</div>
+        <div class="gauge-row">
+          <div class="gauge-bar"><div class="gauge-fill" id="gfill"></div></div>
+          <div class="gauge-pct" id="gpct">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="p-head"><div class="p-title">Break-Even Analysis</div></div>
+      <table>
+        <thead><tr><th>Metric</th><th class="r">Value</th></tr></thead>
+        <tbody id="be-rows"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- MEMBERSHIP CHURN/GROWTH MODEL -->
+  <div class="panel">
+    <div class="p-head">
+      <div class="p-title">Membership Growth Projection</div>
+      <div class="p-sub">12-month trajectory</div>
+    </div>
+    <table>
+      <thead><tr><th>Month</th><th class="r">Members (Start)</th><th class="r">New Members</th><th class="r">Churned</th><th class="r">Members (End)</th><th class="r">MRR</th><th class="r">Cumulative MRR</th></tr></thead>
+      <tbody id="growth-rows"></tbody>
+    </table>
+  </div>
+
+  <!-- SCALE MODEL -->
+  <div class="panel">
+    <div class="p-head">
+      <div class="p-title">Network Scale Model</div>
+      <div class="p-sub" id="ph-scale">1 location</div>
+    </div>
+    <table>
+      <thead><tr><th>Metric</th><th class="r">Per Location</th><th class="r" id="net-hdr">Network</th></tr></thead>
+      <tbody id="scale-rows"></tbody>
+    </table>
+  </div>
+
+  <!-- UNIT ECONOMICS -->
+  <div class="panel">
+    <div class="p-head"><div class="p-title">Unit Economics</div></div>
+    <table>
+      <thead><tr><th>Metric</th><th class="r">Value</th><th>Notes</th></tr></thead>
+      <tbody id="unit-rows"></tbody>
+    </table>
+  </div>
+
+  <div style="font-size:10px;color:var(--muted);text-align:center;padding:16px 0;font-family:'JetBrains Mono',monospace;">
+    24 Hour Golf — Pro Forma Portal · Membership Model · v1.1 · Internal Use Only
+  </div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+function auth() {
+  if (document.getElementById('pw').value === '24HG@2026') {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    calc();
+  } else {
+    document.getElementById('auth-err').style.display = 'block';
+  }
+}
+
+const $ = id => document.getElementById(id);
+const n = id => +$(id).value || 0;
+const fmt = v => {
+  const a = Math.abs(v);
+  if (a >= 1e6) return (v < 0 ? '-' : '') + '$' + (a/1e6).toFixed(2) + 'M';
+  if (a >= 1e3) return (v < 0 ? '-$' : '$') + Math.round(a).toLocaleString();
+  return (v < 0 ? '-$' : '$') + Math.round(a).toLocaleString();
+};
+const pct = (v, t) => t ? (v/t*100).toFixed(1)+'%' : '0%';
+const bar = (v, t) => {
+  const w = t ? Math.min(100, v/t*100) : 0;
+  return `<div class="bw"><div class="bf" style="width:${w}%"></div></div>`;
+};
+
+function calc() {
+  // ── MEMBERSHIPS ──
+  const tiers = [
+    { name:'Member',      m: n('m1'), p: n('p1') },
+    { name:'Performance', m: n('m2'), p: n('p2') },
+    { name:'Champion',    m: n('m3'), p: n('p3') },
+    { name:'Elite',       m: n('m4'), p: n('p4') },
+  ];
+  tiers.forEach(t => { t.mrr = t.m * t.p; t.arr = t.mrr * 12; });
+  const totalMembers = tiers.reduce((s,t) => s + t.m, 0);
+  const totalMRR     = tiers.reduce((s,t) => s + t.mrr, 0);
+  const arpu         = totalMembers ? totalMRR / totalMembers : 0;
+
+  // ── ANCILLARY ──
+  const anc = [
+    { name:'Day Passes',         v: n('a1') },
+    { name:'AI Coaching',        v: n('a2') },
+    { name:'Events / Leagues',   v: n('a3') },
+    { name:'F&B / Vending',      v: n('a4') },
+    { name:'Merchandise',        v: n('a5') },
+    { name:'Other',              v: n('a6') },
+  ];
+  const totalAnc = anc.reduce((s,a) => s + a.v, 0);
+  const totalRev  = totalMRR + totalAnc;
+
+  // ── COSTS ──
+  const costs = [
+    { name:'Rent / Lease',     v: n('c1') },
+    { name:'Utilities',        v: n('c2') },
+    { name:'Software / Tech',  v: n('c3') },
+    { name:'Insurance',        v: n('c4') },
+    { name:'Marketing',        v: n('c5') },
+    { name:'Maintenance',      v: n('c6') },
+    { name:'Staffing',         v: n('c7') },
+    { name:'Other / Misc',     v: n('c8') },
+  ];
+  const totalCosts = costs.reduce((s,c) => s + c.v, 0);
+  const ebitda     = totalRev - totalCosts;
+  const margin     = totalRev ? ebitda / totalRev * 100 : 0;
+
+  // ── SCALE ──
+  const locs = n('locs') || 1;
+
+  // ── KPIs ──
+  $('k-mrr').textContent  = fmt(totalMRR);
+  $('k-rev').textContent  = fmt(totalRev);
+  $('k-ebitda').textContent = fmt(ebitda);
+  $('k-ebitda').style.color = ebitda >= 0 ? '#00C853' : '#D72729';
+  $('k-margin').textContent = margin.toFixed(1) + '% margin';
+  $('k-arr').textContent  = fmt(totalRev * 12 * locs);
+  $('k-loc-note').textContent = locs === 1 ? '1 location' : locs + ' locations';
+  $('k-mem').textContent  = (totalMembers * locs).toLocaleString();
+  $('k-arpu').textContent = fmt(arpu) + ' ARPU';
+
+  // ── MEMBERSHIP TABLE ──
+  $('ph-mrr').textContent = fmt(totalMRR) + '/mo MRR';
+  let mHTML = '';
+  tiers.forEach(t => {
+    mHTML += `<tr>
+      <td class="lbl">${t.name}</td>
+      <td class="r">${t.m.toLocaleString()}</td>
+      <td class="r">${fmt(t.p)}</td>
+      <td class="r grn">${fmt(t.mrr)}</td>
+      <td class="r grn">${fmt(t.arr)}</td>
+    </tr>`;
+  });
+  $('mem-rows').innerHTML = mHTML;
+  $('t-mem').textContent  = totalMembers.toLocaleString();
+  $('t-mrr').textContent  = fmt(totalMRR);
+  $('t-arr-mem').textContent = fmt(totalMRR * 12);
+
+  // ── REVENUE MIX ──
+  $('ph-rev').textContent = fmt(totalRev) + '/mo total';
+  const mixRows = [
+    { name:'Membership MRR', v: totalMRR, note:'Recurring · anchor revenue' },
+    ...anc.filter(a => a.v > 0).map(a => ({ name: a.name, v: a.v, note:'Ancillary' })),
+  ];
+  let mixHTML = '';
+  mixRows.forEach(r => {
+    mixHTML += `<tr>
+      <td class="lbl">${r.name}<div class="note">${r.note}</div></td>
+      <td class="r grn">${fmt(r.v)}</td>
+      <td class="r">${pct(r.v, totalRev)}</td>
+      <td>${bar(r.v, totalRev)}</td>
+    </tr>`;
+  });
+  $('mix-rows').innerHTML = mixHTML;
+  $('t-rev').textContent  = fmt(totalRev);
+
+  // ── P&L ──
+  const plData = [
+    { lbl:'Total Revenue',    mo: totalRev,   yr: totalRev*12,   m:'100%',             cls:'grn' },
+    { lbl:'  → Membership MRR', mo: totalMRR, yr: totalMRR*12,   m: pct(totalMRR,totalRev), cls:'' },
+    { lbl:'  → Ancillary',    mo: totalAnc,   yr: totalAnc*12,   m: pct(totalAnc,totalRev), cls:'' },
+    { lbl:'Total Costs',      mo: totalCosts, yr: totalCosts*12, m: pct(totalCosts,totalRev), cls:'red' },
+    { lbl:'EBITDA',           mo: ebitda,     yr: ebitda*12,     m: margin.toFixed(1)+'%', cls: ebitda>=0?'grn':'red' },
+  ];
+  let plHTML = '';
+  plData.forEach(r => {
+    plHTML += `<tr>
+      <td class="lbl">${r.lbl}</td>
+      <td class="r ${r.cls}">${fmt(r.mo)}</td>
+      <td class="r ${r.cls}">${fmt(r.yr)}</td>
+      <td class="r ${r.cls}">${r.m}</td>
+    </tr>`;
+  });
+  $('pl-rows').innerHTML = plHTML;
+
+  // Gauge
+  const gColor = margin >= 30 ? '#00C853' : margin >= 15 ? '#C9A84C' : '#D72729';
+  $('gfill').style.width      = Math.max(0, Math.min(100, margin)) + '%';
+  $('gfill').style.background = gColor;
+  $('gpct').textContent  = margin.toFixed(1) + '%';
+  $('gpct').style.color  = gColor;
+
+  // ── BREAK-EVEN ──
+  const beMem   = arpu > 0 ? Math.ceil(totalCosts / arpu) : '—';
+  const mrrBE   = totalCosts;
+  const mrrGap  = totalMRR - mrrBE;
+  const beHTML = [
+    ['Fixed Costs / mo',        fmt(totalCosts),  ''],
+    ['Avg ARPU',                fmt(arpu),         'Blended across all tiers'],
+    ['Members to Cover Costs',  typeof beMem==='number' ? beMem.toLocaleString() : beMem, 'At current ARPU'],
+    ['Current Members',         totalMembers.toLocaleString(), ''],
+    ['MRR vs Break-Even',       fmt(mrrGap),       mrrGap >= 0 ? '✅ Above break-even' : '⚠️ Below break-even'],
+    ['MRR as % of Costs',       totalCosts > 0 ? (totalMRR/totalCosts*100).toFixed(1)+'%' : '—', 'Membership coverage ratio'],
+  ].map(([l,v,n]) => `<tr><td class="lbl">${l}<div class="note">${n}</div></td><td class="r gld">${v}</td></tr>`).join('');
+  $('be-rows').innerHTML = beHTML;
+
+  // ── GROWTH PROJECTION ──
+  const churnRate = n('churn') / 100;
+  const newPerMo  = n('new-mo');
+  let mem = totalMembers;
+  let cumMRR = 0;
+  let growHTML = '';
+  for (let mo = 1; mo <= 12; mo++) {
+    const start   = mem;
+    const churned = Math.round(start * churnRate);
+    const end     = Math.max(0, start + newPerMo - churned);
+    const moMRR   = end * arpu;
+    cumMRR += moMRR;
+    const growCls = end > start ? 'grn' : end < start ? 'red' : '';
+    growHTML += `<tr>
+      <td class="lbl">Month ${mo}</td>
+      <td class="r">${start.toLocaleString()}</td>
+      <td class="r grn">+${newPerMo}</td>
+      <td class="r red">-${churned}</td>
+      <td class="r ${growCls}">${end.toLocaleString()}</td>
+      <td class="r">${fmt(moMRR)}</td>
+      <td class="r gld">${fmt(cumMRR)}</td>
+    </tr>`;
+    mem = end;
+  }
+  $('growth-rows').innerHTML = growHTML;
+
+  // ── SCALE ──
+  $('ph-scale').textContent    = locs === 1 ? '1 location' : locs + ' locations';
+  $('net-hdr').textContent     = `Network (${locs} loc${locs>1?'s':''})`;
+  const scaleData = [
+    ['Monthly Revenue',   fmt(totalRev),    fmt(totalRev*locs)   ],
+    ['MRR (Members)',     fmt(totalMRR),    fmt(totalMRR*locs)   ],
+    ['Annual Revenue',    fmt(totalRev*12), fmt(totalRev*12*locs)],
+    ['Monthly EBITDA',    fmt(ebitda),      fmt(ebitda*locs)     ],
+    ['Annual EBITDA',     fmt(ebitda*12),   fmt(ebitda*12*locs)  ],
+    ['Total Members',     totalMembers.toLocaleString(), (totalMembers*locs).toLocaleString()],
+  ];
+  $('scale-rows').innerHTML = scaleData.map(([l,per,net]) =>
+    `<tr><td class="lbl">${l}</td><td class="r">${per}</td><td class="r grn">${net}</td></tr>`
+  ).join('');
+
+  // ── UNIT ECONOMICS ──
+  const revPerMem   = totalMembers ? totalRev / totalMembers : 0;
+  const costPerMem  = totalMembers ? totalCosts / totalMembers : 0;
+  const ltv         = churnRate > 0 && arpu > 0 ? arpu / churnRate : 0;
+  const payback     = arpu > 0 ? costPerMem / arpu : 0;
+  const unitData = [
+    ['Blended ARPU',          fmt(arpu),          'Weighted avg across tiers'],
+    ['Revenue per Member/mo', fmt(revPerMem),      'Incl. ancillary share'],
+    ['Cost per Member/mo',    fmt(costPerMem),     'Total costs ÷ members'],
+    ['EBITDA per Member/mo',  fmt(revPerMem - costPerMem), ''],
+    ['LTV (avg member)',       ltv > 0 ? fmt(ltv) : '—', `At ${(churnRate*100).toFixed(1)}% monthly churn`],
+    ['Annual MRR',            fmt(totalMRR * 12), 'Membership-only ARR'],
+  ];
+  $('unit-rows').innerHTML = unitData.map(([l,v,note]) =>
+    `<tr><td class="lbl">${l}</td><td class="r gld">${v}</td><td style="font-size:10px;color:var(--muted)">${note}</td></tr>`
+  ).join('');
+
+  $('ts').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+window.onload = () => {};
+</script>
+</body>
+</html>

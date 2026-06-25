@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flywheel — May 2026 All-Hands</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Outfit:wght@400;600&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0C0C0C;
+      --bg2:    #1C1C1E;
+      --bg3:    #2A2A2E;
+      --text:   #F0EDE8;
+      --muted:  #8A8882;
+      --red:    #CC1A1A;
+      --red-hi: #E52525;
+      --border: rgba(240,237,232,0.07);
+      --card:   rgba(255,255,255,0.04);
+    }
+    [data-theme="light"] {
+      --bg:     #F8F5F0;
+      --bg2:    #EDEAE4;
+      --bg3:    #E0DDD8;
+      --text:   #1C1C1E;
+      --muted:  #6A6862;
+      --border: rgba(28,28,30,0.09);
+      --card:   rgba(0,0,0,0.035);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ───── Controls ───── */
+    #controls {
+      position: fixed; top: 24px; right: 32px;
+      display: flex; gap: 10px; z-index: 200;
+    }
+    .ctrl-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 8px 16px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ctrl-btn:hover { background: var(--bg3); border-color: var(--red); }
+
+    /* ───── Nav ───── */
+    #nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 56px; display: flex; align-items: center; justify-content: center; gap: 20px;
+      background: rgba(12,12,12,0.92); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border); z-index: 200;
+    }
+    [data-theme="light"] #nav { background: rgba(248,245,240,0.92); }
+    .nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--bg3); border-color: var(--red); }
+    .nav-btn:disabled { opacity: 0.25; cursor: default; }
+    #slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--muted); width: 56px; text-align: center;
+    }
+
+    /* ───── Slides ───── */
+    #deck { width: 100%; height: 100%; position: relative; }
+    .slide {
+      position: absolute; inset: 0;
+      padding: 56px 80px 80px;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .slide.active { opacity: 1; pointer-events: all; }
+
+    /* ───── Slide decoration ───── */
+    .slide-num {
+      position: absolute; bottom: 64px; right: 80px;
+      font-family: 'JetBrains Mono', monospace; font-size: 56px;
+      color: var(--border); line-height: 1; pointer-events: none; user-select: none;
+    }
+    .s-mark {
+      position: absolute; bottom: 64px; left: 80px;
+      width: 24px; height: 24px; border: 2px solid var(--border);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700;
+      color: var(--border);
+    }
+
+    /* ───── Typography ───── */
+    .label {
+      font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .label-red { color: var(--red) !important; }
+    .slide-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 44px; line-height: 1.05; margin-bottom: 6px;
+    }
+    .slide-sub {
+      font-size: 15px; color: var(--muted); font-weight: 300;
+      margin-bottom: 36px;
+    }
+    .divider { width: 40px; height: 3px; background: var(--red); margin-bottom: 28px; }
+
+    .hero-num {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 52px; color: var(--red); line-height: 1;
+    }
+    .hero-num-xl {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 72px; color: var(--red); line-height: 0.95;
+    }
+    .hero-label {
+      font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 300;
+    }
+
+    /* ───── Grids ───── */
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .col-6040 { grid-template-columns: 6fr 4fr; }
+    .col-4060 { grid-template-columns: 4fr 6fr; }
+    .col-5050 { grid-template-columns: 1fr 1fr; }
+
+    /* ───── Cards ───── */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 28px;
+    }
+    .card-red {
+      border-color: rgba(204,26,26,0.25);
+      background: rgba(204,26,26,0.06);
+    }
+    .card-highlight {
+      border-color: rgba(204,26,26,0.4);
+      background: rgba(204,26,26,0.08);
+    }
+
+    /* ───── Tables ───── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .data-table th {
+      font-family: 'Outfit', sans-serif; font-size: 9.5px; font-weight: 600;
+      letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
+      padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+    [data-theme="light"] .data-table tr:hover td { background: rgba(0,0,0,0.02); }
+    .data-table .num { font-family: 'JetBrains Mono', monospace; text-align: right; }
+    .red-text { color: var(--red); font-weight: 600; }
+    .muted-text { color: var(--muted); }
+
+    /* ───── Bar charts ───── */
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .bar-label { font-size: 11.5px; color: var(--muted); flex-shrink: 0; width: 110px; }
+    .bar-track { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; background: var(--red); }
+    .bar-fill-gray { background: var(--muted); }
+    .bar-fill-light { background: rgba(204,26,26,0.35); }
+    .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); width: 52px; text-align: right; }
+
+    /* ───── Badges ───── */
+    .badge {
+      display: inline-flex; font-family: 'Outfit', sans-serif;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      padding: 3px 9px; border-radius: 20px; text-transform: uppercase;
+    }
+    .badge-red  { background: rgba(204,26,26,0.15); color: var(--red); }
+    .badge-gray { background: var(--bg3); color: var(--muted); }
+
+    /* ───── Callout chip ───── */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(204,26,26,0.1); border: 1px solid rgba(204,26,26,0.2);
+      border-radius: 6px; padding: 5px 12px;
+      font-family: 'Outfit', sans-serif; font-size: 11.5px; font-weight: 600;
+      color: var(--red); letter-spacing: 0.04em;
+    }
+
+    /* ───── Logo ───── */
+    .fw-logo { display: flex; align-items: center; gap: 11px; margin-bottom: 44px; }
+    .fw-icon {
+      width: 38px; height: 38px; background: var(--red); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; color: #fff;
+    }
+    .fw-wordmark {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 18px; letter-spacing: 0.04em;
+    }
+
+    /* ───── Donut ───── */
+    .donut-wrap { display: flex; align-items: center; gap: 36px; justify-content: center; }
+    .legend-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+    .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .legend-dot-red { background: var(--red); }
+    .legend-dot-gray { background: var(--muted); }
+    .legend-title { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 700; }
+    .legend-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ───── Slide 1 specifics ───── */
+    #s1-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+    .s1-main { display: flex; flex-direction: column; justify-content: flex-end; }
+    .s1-stat { display: flex; flex-direction: column; justify-content: flex-end; }
+
+    /* ───── Priority cards (slide 7) ───── */
+    .priority-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .priority-num {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 32px; color: rgba(204,26,26,0.25);
+    }
+    .priority-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 18px; line-height: 1.2;
+    }
+    .priority-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ───── Print ───── */
+    @media print {
+      html, body { overflow: visible; height: auto; }
+      .slide {
+        position: relative !important; opacity: 1 !important;
+        pointer-events: all !important; page-break-after: always;
+        min-height: 100vh;
+      }
+      #nav, #controls { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Controls -->
+<div id="controls">
+  <button class="ctrl-btn" onclick="toggleTheme()">◑ &nbsp;Theme</button>
+  <button class="ctrl-btn" onclick="printDeck()">↓ &nbsp;Print PDF</button>
+</div>
+
+<div id="deck">
+
+  <!-- ╔══════════════════════════════╗ -->
+  <!-- ║  SLIDE 1 — Platform Numbers  ║ -->
+  <!-- ╚══════════════════════════════╝ -->
+  <div class="slide active" id="slide-1">
+    <div class="fw-logo">
+      <div class="fw-icon">F</div>
+      <div class="fw-wordmark">FLYWHEEL</div>
+    </div>
+
+    <div id="s1-grid">
+      <!-- Main title block -->
+      <div class="s1-main">
+        <p class="label label-red">All-Hands · May 2026</p>
+        <div class="slide-title" style="font-size:52px;">The platform<br>is moving.</div>
+        <p class="slide-sub" style="margin-top:12px;">Last 30 days — Redash L30D · as of 2026-05-28</p>
+        <div class="divider"></div>
+        <div style="display:flex; flex-wrap:wrap; gap:32px; margin-bottom:8px;">
+          <div>
+            <div class="hero-num-xl">$2.32M</div>
+            <div class="hero-label">Total GMV (L30D)</div>
+          </div>
+          <div>
+            <div class="hero-num-xl" style="color:var(--text);">80,315</div>
+            <div class="hero-label">Total trips (L30D)</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; margin-top:16px;">
+          <span class="chip">6 Uber 3P markets</span>
+          <span class="chip">9 Flywheel 1P markets</span>
+          <span class="chip">296 earning drivers</span>
+        </div>
+      </div>
+
+      <!-- Flywheel 1P card -->
+      <div class="s1-stat">
+        <div class="card card-red" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+          <p class="label label-red">Flywheel 1P</p>
+          <div class="hero-num">$1.59M</div>
+          <div class="hero-label">GMV</div>
+          <div style="margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700;">38,056</div>
+          <div class="hero-label">trips</div>
+          <div style="margin-top:20px;">
+            <span class="badge badge-red">68.5% of total</span>
+          </div>
+          <div style="margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:20px;">$41.71</div>
+          <div class="hero-label">avg fare</div>
+        </div>
+      </div>
+
+      <!-- Uber 3P card -->
+      <div class="s1-stat">
+        <div class="card" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+          <p class="label">Uber 3P</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:36px; color:var(--text);">$731K</div>
+          <div class="hero-label">GMV</div>
+          <div style="margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--text);">42,259</div>
+          <div class="hero-label">trips</div>
+          <div style="margin-top:20px;">
+            <span class="badge badge-gray">31.5% of total</span>
+          </div>
+          <div style="margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:20px; color:var(--text);">$17.32</div>
+          <div class="hero-label">avg fare</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">01</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 2 — Uber 3P Dispatch      ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-2">
+    <p class="label label-red">Uber 3P · Dispatch Engine</p>
+    <div class="slide-title">Flywheel as Uber's<br>supply-side partner.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-6040" style="flex:1; align-items:start;">
+      <!-- Left: tables + trend -->
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <!-- Period table -->
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">Offer volume &amp; completions</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th class="num">Offers</th>
+                <th class="num">Completed</th>
+                <th class="num">Fill rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Yesterday</td>
+                <td class="num">32,387</td>
+                <td class="num">965</td>
+                <td class="num">3.3%</td>
+              </tr>
+              <tr>
+                <td>L7D</td>
+                <td class="num">307,826</td>
+                <td class="num">10,496</td>
+                <td class="num">3.8%</td>
+              </tr>
+              <tr class="red-text">
+                <td>L30D</td>
+                <td class="num">1,472,611</td>
+                <td class="num">42,233</td>
+                <td class="num">3.5%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Offer outcomes -->
+        <div class="card">
+          <p class="label" style="margin-bottom:14px;">Offer outcomes — L30D</p>
+          <div class="bar-row">
+            <span class="bar-label">Timed out</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-gray" style="width:57.7%"></div></div>
+            <span class="bar-val">57.7%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Declined</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:28.9%"></div></div>
+            <span class="bar-val">28.9%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Accepted</span>
+            <div class="bar-track"><div class="bar-fill" style="width:5%"></div></div>
+            <span class="bar-val">5.0%</span>
+          </div>
+        </div>
+
+        <!-- Period-over-period -->
+        <div class="grid grid-2" style="gap:14px;">
+          <div class="card" style="text-align:center; padding:18px;">
+            <div class="label" style="margin-bottom:6px;">Trips vs prior 30d</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:var(--red);">+5.0%</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">40,232 → 42,237</div>
+          </div>
+          <div class="card" style="text-align:center; padding:18px;">
+            <div class="label" style="margin-bottom:6px;">GMV vs prior 30d</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:var(--red);">+7.3%</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">$681K → $731K</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: key stats -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-highlight" style="text-align:center; padding:32px 20px;">
+          <div class="label label-red" style="margin-bottom:10px;">Hero stat</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:var(--red); line-height:1;">1.47M</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:8px;">Uber offers received<br>in 30 days</div>
+        </div>
+        <div class="card" style="text-align:center; padding:24px 20px;">
+          <div class="label" style="margin-bottom:8px;">Dispatch efficiency</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:44px; font-weight:700; color:var(--text);">34.83</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:6px;">offers per completed trip</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px;">
+          <div class="label" style="margin-bottom:6px;">Avg fare trend</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:20px; color:var(--text);">$16.95 → <span style="color:var(--red);">$17.32</span></div>
+          <div style="font-size:11px; color:var(--muted); margin-top:4px;">GMV growing faster than trips</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">02</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 3 — Market Footprint      ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-3">
+    <p class="label label-red">Uber 3P · Market Footprint</p>
+    <div class="slide-title">6 active markets.<br>Each telling a different story.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-6040" style="flex:1; align-items:start; gap:24px;">
+      <!-- Market table -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Offers</th>
+                <th class="num">Completed</th>
+                <th class="num">Acceptance</th>
+                <th class="num">Completion %</th>
+                <th class="num">Drivers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>San Diego</strong> <span class="badge badge-red" style="margin-left:6px;">Volume</span></td>
+                <td class="num">732,284</td>
+                <td class="num">33,549</td>
+                <td class="num">6.9%</td>
+                <td class="num">75.0%</td>
+                <td class="num">186</td>
+              </tr>
+              <tr>
+                <td>Las Vegas <span class="badge badge-gray" style="margin-left:6px; font-size:9px;">3P partner</span></td>
+                <td class="num">575,110</td>
+                <td class="num">8,648</td>
+                <td class="num muted-text">2.0%</td>
+                <td class="num">77.3%</td>
+                <td class="num muted-text">—</td>
+              </tr>
+              <tr>
+                <td>San Francisco</td>
+                <td class="num">77,791</td>
+                <td class="num">3,960</td>
+                <td class="num">7.7%</td>
+                <td class="num">76.3%</td>
+                <td class="num">37</td>
+              </tr>
+              <tr>
+                <td>Fort Lauderdale</td>
+                <td class="num">72,541</td>
+                <td class="num">3,139</td>
+                <td class="num">6.2%</td>
+                <td class="num">81.7%</td>
+                <td class="num">42</td>
+              </tr>
+              <tr>
+                <td><strong>Palm Springs</strong> <span class="badge badge-red" style="margin-left:6px;">Efficient</span></td>
+                <td class="num">12,897</td>
+                <td class="num">1,546</td>
+                <td class="num red-text">20.1%</td>
+                <td class="num">79.2%</td>
+                <td class="num">26</td>
+              </tr>
+              <tr>
+                <td>Houston <span class="badge badge-gray" style="margin-left:6px; font-size:9px;">Early</span></td>
+                <td class="num muted-text">140</td>
+                <td class="num muted-text">8</td>
+                <td class="num">7.3%</td>
+                <td class="num">88.9%</td>
+                <td class="num muted-text">5</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Acceptance rate bars -->
+        <div class="card">
+          <p class="label" style="margin-bottom:14px;">Acceptance rate by market</p>
+          <div class="bar-row">
+            <span class="bar-label">Palm Springs</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <span class="bar-val red-text">20.1%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">San Francisco</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:38.3%"></div></div>
+            <span class="bar-val">7.7%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">San Diego</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:34.3%"></div></div>
+            <span class="bar-val">6.9%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Fort Lauderdale</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:30.8%"></div></div>
+            <span class="bar-val">6.2%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Las Vegas</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-gray" style="width:10%"></div></div>
+            <span class="bar-val muted-text">2.0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: 3 callout cards -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-red" style="padding:24px;">
+          <p class="label label-red">Volume engine</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">San Diego</div>
+          <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--red);">49.7%</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">of all Uber 3P offers</div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">186 active drivers · 180.5 trips/driver/mo</div>
+        </div>
+        <div class="card" style="padding:24px;">
+          <p class="label label-red">Efficiency standout</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">Palm Springs</div>
+          <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--red);">20.1%</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">acceptance rate vs 2–7% elsewhere</div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">Signal worth studying — supply density, offer targeting</div>
+        </div>
+        <div class="card" style="padding:24px; opacity:0.8;">
+          <p class="label">Launch status</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">Houston</div>
+          <div style="margin-top:12px; font-size:28px; font-weight:700; font-family:'JetBrains Mono',monospace; color:var(--muted);">5 drivers</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">140 offers · 8 completed rides</div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">Not yet a scale story — activation phase</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">03</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 4 — Driver Impact         ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-4">
+    <p class="label label-red">Driver Impact</p>
+    <div class="slide-title">Real earnings.<br>Real people.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-4060" style="flex:1; align-items:start; gap:24px;">
+      <!-- Left: headline earnings card -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-highlight" style="text-align:center; padding:32px 24px;">
+          <div class="label label-red" style="margin-bottom:12px;">Gross earnings — L30D</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:60px; font-weight:700; color:var(--red); line-height:1;">$730K</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:6px;">paid to 296 drivers</div>
+          <div style="margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; color:var(--text);">$2,469</div>
+          <div style="font-size:12px; color:var(--muted);">avg per earning driver</div>
+          <div style="margin-top:16px; font-size:11px; color:var(--muted); line-height:1.5;">
+            Confirmed net earnings —<br>Flywheel takes no share of Uber 3P payouts
+          </div>
+        </div>
+        <div class="grid grid-2" style="gap:12px;">
+          <div class="card" style="text-align:center; padding:16px;">
+            <div class="label" style="margin-bottom:6px;">Base fare</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;">$665K</div>
+            <div style="font-size:11px; color:var(--muted);">91%</div>
+          </div>
+          <div class="card" style="text-align:center; padding:16px;">
+            <div class="label" style="margin-bottom:6px;">Tips</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--red);">$64.6K</div>
+            <div style="font-size:11px; color:var(--muted);">$218 avg/driver</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: productivity + top earner -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <!-- Productivity table -->
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">Driver productivity by market</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Drivers</th>
+                <th class="num">Trips / driver / mo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>San Diego</strong></td>
+                <td class="num">186</td>
+                <td class="num red-text">180.5</td>
+              </tr>
+              <tr>
+                <td>San Francisco</td>
+                <td class="num">37</td>
+                <td class="num">107.1</td>
+              </tr>
+              <tr>
+                <td>Fort Lauderdale</td>
+                <td class="num">42</td>
+                <td class="num">75.0</td>
+              </tr>
+              <tr>
+                <td>Palm Springs</td>
+                <td class="num">26</td>
+                <td class="num">59.6</td>
+              </tr>
+              <tr>
+                <td class="muted-text">Houston</td>
+                <td class="num muted-text">5</td>
+                <td class="num muted-text">1.6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Top earner spotlight -->
+        <div class="card card-red" style="padding:24px;">
+          <p class="label label-red" style="margin-bottom:14px;">Top earner spotlight — L30D</p>
+          <div style="display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:var(--red);">$8,477</div>
+            <div style="font-size:13px; color:var(--muted);">#1 driver · 434 trips · $731 in tips</div>
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:16px;">Artemio Gatan-N · National / Veterans</div>
+          <div style="display:flex; gap:24px; flex-wrap:wrap;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;">10</div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">drivers cleared $7,000+</div>
+            </div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--red);">$75,946</div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">top 10 combined earnings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">04</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 5 — Flywheel 1P           ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-5">
+    <p class="label label-red">Flywheel 1P · Our Marketplace</p>
+    <div class="slide-title">The taxi marketplace.<br>Higher fares, 9 markets.</div>
+    <div class="divider"></div>
+
+    <!-- Hero 3-up -->
+    <div class="grid grid-3" style="gap:16px; margin-bottom:20px;">
+      <div class="card card-red" style="text-align:center; padding:20px;">
+        <div class="label label-red" style="margin-bottom:8px;">Trips (L30D)</div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:var(--red);">38,276</div>
+      </div>
+      <div class="card card-red" style="text-align:center; padding:20px;">
+        <div class="label label-red" style="margin-bottom:8px;">GMV (L30D)</div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:var(--red);">$1.60M</div>
+      </div>
+      <div class="card card-red" style="text-align:center; padding:20px;">
+        <div class="label label-red" style="margin-bottom:8px;">Avg fare</div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:var(--red);">$41.71</div>
+        <div style="font-size:11px; color:var(--muted); margin-top:4px;">vs $17.32 Uber 3P</div>
+      </div>
+    </div>
+
+    <div class="grid col-5050" style="flex:1; align-items:start; gap:20px;">
+      <!-- Left: market table -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">GMV by market (L30D)</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Trips</th>
+                <th class="num">GMV</th>
+                <th class="num">Cash %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>San Diego</td>
+                <td class="num">10,203</td>
+                <td class="num red-text">$420,300</td>
+                <td class="num">95.9%</td>
+              </tr>
+              <tr>
+                <td>Fort Lauderdale</td>
+                <td class="num">8,686</td>
+                <td class="num">$307,801</td>
+                <td class="num">65.6%</td>
+              </tr>
+              <tr>
+                <td>Palm Springs</td>
+                <td class="num">6,782</td>
+                <td class="num">$312,918</td>
+                <td class="num">72.7%</td>
+              </tr>
+              <tr>
+                <td>San Francisco</td>
+                <td class="num">6,522</td>
+                <td class="num">$232,133</td>
+                <td class="num">83.2%</td>
+              </tr>
+              <tr>
+                <td>Sacramento</td>
+                <td class="num">3,041</td>
+                <td class="num">$184,114</td>
+                <td class="num">28.2%</td>
+              </tr>
+              <tr>
+                <td>Reno</td>
+                <td class="num">1,339</td>
+                <td class="num">$92,309</td>
+                <td class="num">92.6%</td>
+              </tr>
+              <tr>
+                <td>Houston</td>
+                <td class="num">514</td>
+                <td class="num">$37,603</td>
+                <td class="num">100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: channel mix + payment -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <!-- Channel mix -->
+        <div class="card">
+          <p class="label" style="margin-bottom:14px;">Trip channel — L30D</p>
+          <div class="bar-row">
+            <span class="bar-label">Street hail</span>
+            <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            <span class="bar-val red-text">90%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">FW Dispatch</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:9%"></div></div>
+            <span class="bar-val">9%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">eHail</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-gray" style="width:1.4%"></div></div>
+            <span class="bar-val">1.4%</span>
+          </div>
+        </div>
+
+        <!-- Payment mix -->
+        <div class="card">
+          <p class="label" style="margin-bottom:14px;">Payment type — L30D</p>
+          <div class="bar-row">
+            <span class="bar-label">Cash</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-gray" style="width:74.7%"></div></div>
+            <span class="bar-val">74.7%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Card</span>
+            <div class="bar-track"><div class="bar-fill" style="width:19.9%"></div></div>
+            <span class="bar-val red-text">19.9%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Prepaid</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:2.2%"></div></div>
+            <span class="bar-val">2.2%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">QR Code</span>
+            <div class="bar-track"><div class="bar-fill bar-fill-light" style="width:0.5%"></div></div>
+            <span class="bar-val">0.5%</span>
+          </div>
+          <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border);">
+            <div style="font-size:11.5px; color:var(--muted);">Card avg fare: <span style="color:var(--text); font-family:'JetBrains Mono',monospace;">$51.99</span> &nbsp;·&nbsp; Cash avg: <span style="font-family:'JetBrains Mono',monospace;">$40.96</span></div>
+          </div>
+        </div>
+
+        <!-- Fare distribution callout -->
+        <div class="card" style="padding:18px;">
+          <p class="label" style="margin-bottom:10px;">Fare distribution — L30D</p>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:var(--red);">42.6%</div>
+              <div style="font-size:10px; color:var(--muted);">$20–50</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700;">25.5%</div>
+              <div style="font-size:10px; color:var(--muted);">$50–100</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700;">5.5%</div>
+              <div style="font-size:10px; color:var(--muted);">$100+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">05</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 6 — Combined Platform     ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-6">
+    <p class="label label-red">Combined Platform · GMV</p>
+    <div class="slide-title">Two engines.<br>One platform.</div>
+    <div class="divider"></div>
+
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:36px;">
+      <!-- Big headline -->
+      <div style="text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--muted); margin-bottom:8px;">Total GMV · L30D</div>
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:88px; font-weight:700; color:var(--red); line-height:1;">$2,320,878</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:20px; color:var(--muted); margin-top:8px;">80,315 completed trips</div>
+      </div>
+
+      <!-- Donut + legend -->
+      <div class="donut-wrap">
+        <!-- SVG Donut -->
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="70" fill="none" stroke="var(--bg3)" stroke-width="28"/>
+          <!-- Flywheel 1P: 68.5% of circumference = 439.82 / 502.65 -->
+          <circle cx="90" cy="90" r="70" fill="none" stroke="var(--red)" stroke-width="28"
+            stroke-dasharray="344.3 158.35" stroke-dashoffset="125.66"
+            stroke-linecap="butt"/>
+          <!-- Uber 3P: 31.5% -->
+          <circle cx="90" cy="90" r="70" fill="none" stroke="var(--muted)" stroke-width="28"
+            stroke-dasharray="158.33 344.32" stroke-dashoffset="-218.64"
+            stroke-linecap="butt" opacity="0.5"/>
+          <text x="90" y="84" text-anchor="middle" fill="var(--text)"
+            font-family="Space Grotesk, sans-serif" font-size="16" font-weight="700">80,315</text>
+          <text x="90" y="102" text-anchor="middle" fill="var(--muted)"
+            font-family="DM Sans, sans-serif" font-size="11">trips</text>
+        </svg>
+
+        <!-- Legend -->
+        <div>
+          <div class="legend-item">
+            <div class="legend-dot legend-dot-red" style="margin-top:6px;"></div>
+            <div>
+              <div class="legend-title">Flywheel 1P</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--red); margin-top:2px;">$1,589,172</div>
+              <div class="legend-sub">38,056 trips · $41.71 avg · 68.5% of GMV</div>
+            </div>
+          </div>
+          <div class="legend-item" style="margin-bottom:0;">
+            <div class="legend-dot legend-dot-gray" style="margin-top:6px; opacity:0.5;"></div>
+            <div>
+              <div class="legend-title" style="color:var(--muted);">Uber 3P</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--muted); margin-top:2px;">$731,706</div>
+              <div class="legend-sub">42,259 trips · $17.32 avg · 31.5% of GMV</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key insight -->
+      <div class="card" style="max-width:680px; width:100%; text-align:center; padding:20px 36px;">
+        <div style="font-size:14px; color:var(--muted); line-height:1.7;">
+          Uber 3P delivers <strong style="color:var(--text);">similar trip volume</strong> to Flywheel 1P — but taxi fares average
+          <strong style="color:var(--red);">2.4× higher</strong>. Volume alone doesn't tell the full story.
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">06</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 7 — What's Next           ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-7">
+    <p class="label label-red">What's Next</p>
+    <div class="slide-title">Four things to move<br>in the next 30 days.</div>
+    <div class="divider"></div>
+
+    <div class="grid grid-2" style="flex:1; align-items:start; gap:20px;">
+
+      <div class="priority-card">
+        <div class="priority-num">01</div>
+        <div class="priority-title">Reduce offers-per-ride</div>
+        <div class="priority-body">
+          Every completed Uber 3P trip requires <strong>34.83 offers</strong>. Improving driver engagement,
+          offer targeting, and response rates is the highest-leverage dispatch improvement available.
+          A 20% reduction in offers-per-ride would meaningfully increase throughput without adding drivers.
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">02</div>
+        <div class="priority-title">Unlock Las Vegas</div>
+        <div class="priority-body">
+          Las Vegas received <strong>575K offers</strong> — the second-largest market by volume — but
+          has only a <strong>2.0% acceptance rate</strong> vs 6–7% elsewhere. It operates through a 3P supply partner.
+          Understanding why and improving driver-offer fit here is a major growth unlock.
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">03</div>
+        <div class="priority-title">Activate Houston</div>
+        <div class="priority-body">
+          Houston has <strong>5 drivers, 8 completed rides</strong> — live but pre-scale.
+          The market activation playbook from San Diego and Palm Springs should apply here.
+          Set a 90-day target: 30+ active drivers, 1,000+ monthly trips.
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">04</div>
+        <div class="priority-title">Shift 1P to digital payments</div>
+        <div class="priority-body">
+          <strong>74.7% of Flywheel 1P trips are cash</strong>. Card and QR code trips average
+          $51.99 and $60.66 respectively vs $40.96 for cash — and digital payments unlock data,
+          retention tools, and Uber integration pathways. Sacramento is already at 71.8% digital.
+          That's the model to replicate.
+        </div>
+      </div>
+
+    </div>
+
+    <span class="slide-num">07</span>
+    <span class="s-mark">S</span>
+  </div>
+
+</div>
+
+<!-- Nav -->
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#8592;</button>
+  <span id="slide-counter">01 / 07</span>
+  <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#8594;</button>
+</div>
+
+<script>
+  let current = 0;
+  const TOTAL = 7;
+  const slides = document.querySelectorAll('.slide');
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, TOTAL - 1));
+    slides[current].classList.add('active');
+    document.getElementById('slide-counter').textContent =
+      String(current + 1).padStart(2, '0') + ' / 07';
+    document.getElementById('prev-btn').disabled = current === 0;
+    document.getElementById('next-btn').disabled = current === TOTAL - 1;
+  }
+
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevSlide();
+  });
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  function printDeck() {
+    document.documentElement.dataset.theme = 'light';
+    window.print();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CardONE Service Agreement — CabConnect, Inc.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #f4f5f7;
+    }
+
+    .page-wrapper {
+      max-width: 860px;
+      margin: 32px auto;
+      background: #fff;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.10);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .doc-header {
+      background: #1B2A4A;
+      color: #fff;
+      padding: 36px 48px 28px;
+    }
+
+    .doc-header .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand-wordmark {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #fff;
+    }
+
+    .brand-wordmark span {
+      color: #5FA8D3;
+    }
+
+    .divider-line {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .doc-header .product-tag {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.70);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .doc-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .doc-header .subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ── META BAR ── */
+    .meta-bar {
+      background: #2C3F63;
+      padding: 10px 48px;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .meta-bar .meta-item {
+      font-size: 12px;
+      color: rgba(255,255,255,0.80);
+    }
+
+    .meta-bar .meta-item strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* ── BODY ── */
+    .doc-body {
+      padding: 44px 48px 52px;
+    }
+
+    /* Preamble */
+    .preamble {
+      background: #f8f9fb;
+      border-left: 4px solid #1B2A4A;
+      padding: 16px 20px;
+      margin-bottom: 36px;
+      font-size: 13.5px;
+      color: #2e2e2e;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .preamble p + p { margin-top: 10px; }
+
+    /* Sections */
+    .section {
+      margin-bottom: 34px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1B2A4A;
+      border-bottom: 2px solid #1B2A4A;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .section-number {
+      font-size: 11px;
+      background: #1B2A4A;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      flex-shrink: 0;
+    }
+
+    .section p {
+      margin-bottom: 10px;
+      font-size: 13.5px;
+      color: #2a2a2a;
+    }
+
+    .section p:last-child { margin-bottom: 0; }
+
+    /* Sub-sections */
+    .subsection {
+      margin: 10px 0 10px 18px;
+    }
+
+    .subsection-title {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: #1B2A4A;
+      margin-bottom: 4px;
+    }
+
+    /* Definition list */
+    dl.definitions {
+      margin: 4px 0 4px 0;
+    }
+
+    dl.definitions dt {
+      font-weight: 600;
+      color: #1B2A4A;
+      margin-top: 10px;
+      font-size: 13.5px;
+    }
+
+    dl.definitions dd {
+      margin-left: 20px;
+      font-size: 13.5px;
+      color: #2a2a2a;
+    }
+
+    /* Fee table */
+    table.fee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+
+    table.fee-table thead tr {
+      background: #1B2A4A;
+      color: #fff;
+    }
+
+    table.fee-table thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    table.fee-table tbody tr:nth-child(even) {
+      background: #f4f6fa;
+    }
+
+    table.fee-table tbody td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #e5e8ef;
+      color: #2a2a2a;
+      vertical-align: top;
+    }
+
+    table.fee-table tbody td:last-child {
+      font-weight: 500;
+      color: #1B2A4A;
+    }
+
+    /* Inline highlight */
+    .highlight {
+      background: #eef3fb;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-weight: 600;
+      color: #1B2A4A;
+    }
+
+    /* Placeholder style */
+    .ph {
+      color: #b34a00;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    /* ── SIGNATURE BLOCK ── */
+    .signature-section {
+      margin-top: 44px;
+      border-top: 2px solid #1B2A4A;
+      padding-top: 28px;
+    }
+
+    .sig-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #1B2A4A;
+      margin-bottom: 24px;
+    }
+
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .sig-block {
+      border: 1px solid #d0d5e0;
+      border-radius: 6px;
+      padding: 20px 22px 16px;
+    }
+
+    .sig-block .party-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: #1B2A4A;
+      margin-bottom: 14px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #e5e8ef;
+    }
+
+    .sig-field {
+      margin-bottom: 14px;
+    }
+
+    .sig-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .sig-line {
+      border-bottom: 1px solid #aaa;
+      min-height: 28px;
+      width: 100%;
+      font-size: 13px;
+      color: #1a1a1a;
+      padding-bottom: 2px;
+    }
+
+    .sig-line.prefilled {
+      color: #1B2A4A;
+      font-weight: 500;
+    }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      background: #f4f5f7;
+      border-top: 1px solid #dde1eb;
+      padding: 16px 48px;
+      font-size: 11.5px;
+      color: #777;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── PRINT STYLES ── */
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .page-wrapper { box-shadow: none; border-radius: 0; margin: 0; max-width: 100%; }
+      .doc-header { background: #fff !important; color: #000 !important; border-bottom: 2px solid #000; padding: 16px 24px; }
+      .brand-wordmark { color: #000 !important; }
+      .brand-wordmark span { color: #000 !important; }
+      .doc-header h1 { color: #000 !important; }
+      .doc-header .subtitle, .doc-header .product-tag { color: #444 !important; }
+      .meta-bar { background: #eee !important; padding: 8px 24px; }
+      .meta-bar .meta-item, .meta-bar .meta-item strong { color: #000 !important; }
+      .doc-body { padding: 24px; }
+      .section-title { border-bottom-color: #000; color: #000; }
+      .section-number { background: #000; color: #fff; }
+      .preamble { border-left-color: #000; background: #f9f9f9; }
+      table.fee-table thead tr { background: #333 !important; }
+      .doc-footer { background: #fff; }
+      .sig-block { border-color: #000; }
+      a { color: #000; text-decoration: none; }
+      .page-break { page-break-before: always; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="brand-row">
+      <div class="brand-wordmark">Cab<span>Connect</span></div>
+      <div class="divider-line"></div>
+      <div class="product-tag">Card<strong style="color:#fff;">ONE</strong> Platform</div>
+    </div>
+    <h1>CardONE Service Agreement</h1>
+    <div class="subtitle">Limited Use License &amp; Service Terms</div>
+  </div>
+
+  <!-- META BAR -->
+  <div class="meta-bar">
+    <div class="meta-item"><strong>Licensor:</strong> CabConnect, Inc.</div>
+    <div class="meta-item"><strong>Effective Date:</strong> <span class="ph">[EFFECTIVE DATE]</span></div>
+    <div class="meta-item"><strong>Document Version:</strong> 1.0</div>
+    <div class="meta-item"><strong>Governing Law:</strong> State of California</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="doc-body">
+
+    <!-- PREAMBLE -->
+    <div class="preamble">
+      <p>This <strong>CardONE Service Agreement</strong> (this <strong>"Agreement"</strong>) is entered into as of <span class="ph">[EFFECTIVE DATE]</span> (the <strong>"Effective Date"</strong>) by and between <strong>CabConnect, Inc.</strong>, a California corporation with its principal place of business in San Diego, California (<strong>"CabConnect"</strong>), and <span class="ph">[MUNICIPALITY/ORGANIZATION NAME]</span>, a <span class="ph">[STATE]</span> <span class="ph">[municipality/township/county]</span> (<strong>"Licensee"</strong>). CabConnect and Licensee are each a <strong>"Party"</strong> and together the <strong>"Parties."</strong></p>
+      <p>WHEREAS, CabConnect has developed and operates the CardONE System, a proprietary debit card management platform for paratransit ride credit programs; and WHEREAS, Licensee desires to obtain a limited license to use the CardONE System to administer its paratransit ride credit program under the terms and conditions set forth herein;</p>
+      <p>NOW, THEREFORE, in consideration of the mutual covenants and agreements contained herein, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the Parties agree as follows:</p>
+    </div>
+
+    <!-- SECTION 1: DEFINITIONS -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 1</span>Definitions</div>
+      <dl class="definitions">
+        <dt>"CardONE System"</dt>
+        <dd>Means CabConnect's proprietary software platform, including all web-based portals, APIs, databases, card issuance infrastructure, transaction processing services, and related documentation made available to Licensee under this Agreement, as updated or modified by CabConnect from time to time.</dd>
+
+        <dt>"Authorized Users"</dt>
+        <dd>Means Licensee's employees, contractors, and call takers who are authorized by Licensee to access and use the CardONE System on behalf of Licensee in accordance with this Agreement.</dd>
+
+        <dt>"Riders"</dt>
+        <dd>Means the individual paratransit program beneficiaries enrolled by Licensee in its ride credit program who receive and use Cards issued through the CardONE System.</dd>
+
+        <dt>"Transaction"</dt>
+        <dd>Means each discrete debit card authorization, redemption, or fund transfer event processed through the CardONE System on behalf of a Rider, including but not limited to ride credits, adjustments, and refunds.</dd>
+
+        <dt>"Card"</dt>
+        <dd>Means each physical or virtual prepaid/debit card produced and managed by CabConnect through the CardONE System for distribution to Riders as part of Licensee's paratransit ride credit program.</dd>
+
+        <dt>"Admin Portal"</dt>
+        <dd>Means the web-based administrative interface within the CardONE System accessible to Authorized Users for managing Rider accounts, loading ride credits, processing Transactions, generating reports, and ordering Cards.</dd>
+
+        <dt>"Online Intake Portal"</dt>
+        <dd>Means the optional web-based interface within the CardONE System through which Riders may submit enrollment or sign-up information directly to Licensee's program.</dd>
+
+        <dt>"Rider Sign-In Portal"</dt>
+        <dd>Means the optional web-based interface within the CardONE System through which Riders may authenticate, view their ride history, check balances, and request trip bookings.</dd>
+
+        <dt>"Rider Data"</dt>
+        <dd>Means all personally identifiable information and paratransit program data pertaining to Riders that is collected, submitted, or generated through Licensee's use of the CardONE System.</dd>
+      </dl>
+    </div>
+
+    <!-- SECTION 2: LICENSE GRANT -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 2</span>License Grant</div>
+      <p><strong>2.1 Limited License.</strong> Subject to the terms and conditions of this Agreement and timely payment of all applicable fees, CabConnect hereby grants to Licensee a limited, non-exclusive, non-transferable, non-sublicensable license during the Term to access and use the CardONE System solely for the purpose of administering Licensee's internal paratransit ride credit program for Riders within Licensee's jurisdiction (the <strong>"Permitted Purpose"</strong>).</p>
+      <p><strong>2.2 Restrictions.</strong> Licensee shall not, and shall ensure that its Authorized Users do not: (a) sublicense, sell, resell, transfer, assign, or otherwise make the CardONE System available to any third party; (b) copy, modify, translate, adapt, or create derivative works based upon the CardONE System; (c) reverse engineer, disassemble, decompile, or otherwise attempt to derive the source code or underlying algorithms of the CardONE System; (d) use the CardONE System for any purpose other than the Permitted Purpose; (e) remove or alter any proprietary notices, labels, or marks on the CardONE System; or (f) use the CardONE System in violation of any applicable law or regulation.</p>
+      <p><strong>2.3 Authorized Users.</strong> Licensee is responsible for all activity occurring under its Authorized User accounts. Licensee shall promptly notify CabConnect of any unauthorized access or use of the CardONE System.</p>
+    </div>
+
+    <!-- SECTION 3: SERVICES & DELIVERABLES -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 3</span>Services &amp; Deliverables</div>
+      <p><strong>3.1 Core Services.</strong> Subject to this Agreement and payment of fees, CabConnect shall provide Licensee with the following services:</p>
+      <div class="subsection">
+        <div class="subsection-title">(a) CardONE Platform Access</div>
+        <p>Access to the Admin Portal for Authorized Users to manage Rider accounts, load and monitor ride credits, process Transactions, generate usage reports, and coordinate Card fulfillment.</p>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">(b) Card Production &amp; Fulfillment</div>
+        <p>Production and fulfillment of physical Cards upon Licensee's request, subject to a minimum order quantity of <span class="highlight">500 Cards per order</span>. Cards will be produced and shipped to Licensee's designated address within a mutually agreed lead time, generally ten (10) to fifteen (15) business days from order confirmation.</p>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">(c) Transaction Processing</div>
+        <p>Real-time processing of Transactions initiated by Riders using issued Cards, including authorization, settlement, and balance management within the CardONE System.</p>
+      </div>
+      <p><strong>3.2 Optional Add-On Services.</strong> Upon written request and payment of applicable additional fees, CabConnect will enable the following optional modules:</p>
+      <div class="subsection">
+        <div class="subsection-title">(a) Online Intake / Sign-Up Portal</div>
+        <p>A branded web portal through which prospective Riders may submit enrollment applications to Licensee's paratransit program electronically.</p>
+      </div>
+      <div class="subsection">
+        <div class="subsection-title">(b) Rider Sign-In Portal</div>
+        <p>A secure, authenticated portal through which enrolled Riders may view their Card balance, Transaction history, and request trip bookings.</p>
+      </div>
+      <p><strong>3.3 Support.</strong> CabConnect will provide Licensee with reasonable technical support via email and telephone during CabConnect's standard business hours (Monday–Friday, 9:00 AM–5:00 PM Pacific Time), excluding federal and California state holidays.</p>
+    </div>
+
+    <!-- SECTION 4: FEES & PAYMENT -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 4</span>Fees &amp; Payment</div>
+      <p><strong>4.1 Fee Schedule.</strong> Licensee shall pay CabConnect the following fees:</p>
+
+      <table class="fee-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base Monthly Fee</td>
+            <td>Core platform access, Admin Portal, support</td>
+            <td>$100.00 / month</td>
+          </tr>
+          <tr>
+            <td>Transaction Fee</td>
+            <td>Per Transaction processed through the CardONE System</td>
+            <td>$0.35 / Transaction</td>
+          </tr>
+          <tr>
+            <td>Card Production</td>
+            <td>Physical Card production &amp; fulfillment (500-card minimum per order)</td>
+            <td>$1.25 / Card</td>
+          </tr>
+          <tr>
+            <td>Online Intake Portal <em>(Optional)</em></td>
+            <td>Monthly fee for Rider enrollment portal add-on</td>
+            <td>$25.00 / month</td>
+          </tr>
+          <tr>
+            <td>Rider Sign-In Portal <em>(Optional)</em></td>
+            <td>Monthly fee for Rider self-service portal add-on</td>
+            <td>$25.00 / month</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>4.2 Invoicing.</strong> CabConnect shall issue monthly invoices to Licensee summarizing all fees accrued in the prior calendar month, including the base monthly fee, Transaction fees, and any add-on module fees. Card production orders will be invoiced upon order fulfillment. All invoices are due and payable within <span class="highlight">thirty (30) days</span> of the invoice date (<strong>"Net 30"</strong>).</p>
+      <p><strong>4.3 Late Payment.</strong> Any amounts not paid by the due date shall accrue interest at the rate of <span class="highlight">1.5% per month</span> (or the maximum rate permitted by applicable law, whichever is less) on the outstanding overdue balance, calculated from the due date until the date of actual payment.</p>
+      <p><strong>4.4 Taxes.</strong> All fees are exclusive of applicable taxes. Licensee is responsible for all sales, use, excise, or similar taxes, if any, imposed on the services provided under this Agreement, other than taxes on CabConnect's net income.</p>
+      <p><strong>4.5 Fee Adjustments.</strong> CabConnect may adjust its fee schedule upon at least sixty (60) days prior written notice to Licensee. Fee increases shall not take effect until the start of the next renewal term.</p>
+    </div>
+
+    <!-- SECTION 5: TERM & TERMINATION -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 5</span>Term &amp; Termination</div>
+      <p><strong>5.1 Initial Term.</strong> This Agreement shall commence on the Effective Date and continue for an initial period of <span class="highlight">twelve (12) months</span> (the <strong>"Initial Term"</strong>), unless earlier terminated in accordance with this Agreement.</p>
+      <p><strong>5.2 Renewal.</strong> Upon expiration of the Initial Term, this Agreement shall automatically renew for successive one (1) year periods (each a <strong>"Renewal Term,"</strong> and together with the Initial Term, the <strong>"Term"</strong>), unless either Party provides the other with written notice of its intent not to renew at least <span class="highlight">thirty (30) days</span> prior to the end of the then-current Term.</p>
+      <p><strong>5.3 Termination for Cause.</strong> Either Party may terminate this Agreement upon written notice to the other Party if the other Party materially breaches this Agreement and fails to cure such breach within <span class="highlight">thirty (30) days</span> after receiving written notice describing the breach in reasonable detail.</p>
+      <p><strong>5.4 Suspension for Non-Payment.</strong> CabConnect may suspend Licensee's access to the CardONE System if any undisputed invoice remains unpaid for more than <span class="highlight">fifteen (15) days</span> after the due date, provided that CabConnect has given Licensee written notice of the delinquency and its intent to suspend at least fifteen (15) days prior to the suspension. Suspension does not relieve Licensee of its payment obligations.</p>
+      <p><strong>5.5 Effect of Termination.</strong> Upon expiration or termination of this Agreement: (a) all licenses granted hereunder shall immediately terminate; (b) each Party shall promptly return or destroy the other Party's Confidential Information; (c) Licensee shall cease all use of the CardONE System; and (d) all outstanding undisputed fees shall become immediately due and payable. CabConnect shall provide Licensee with a reasonable transition period of up to thirty (30) days to export Rider Data. Sections 1, 6, 7, 8, 9, and 10 shall survive termination or expiration of this Agreement.</p>
+    </div>
+
+    <!-- SECTION 6: INTELLECTUAL PROPERTY -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 6</span>Intellectual Property</div>
+      <p><strong>6.1 CabConnect Ownership.</strong> The CardONE System, including all software, technology, interfaces, processes, and documentation, is and shall remain the sole and exclusive property of CabConnect, Inc. This Agreement conveys no ownership interest, title, or rights in or to the CardONE System except for the limited license expressly granted in Section 2. All rights not expressly granted are reserved to CabConnect.</p>
+      <p><strong>6.2 No Implied License.</strong> Nothing in this Agreement shall be construed to grant Licensee any license or right by implication, estoppel, or otherwise with respect to any intellectual property owned or controlled by CabConnect, except as explicitly set forth herein.</p>
+      <p><strong>6.3 Rider Data Ownership.</strong> Licensee retains all right, title, and interest in and to Rider Data. Licensee grants CabConnect a limited, non-exclusive license to access, process, and use Rider Data solely to the extent necessary to provide the services under this Agreement. CabConnect shall not use Rider Data for any other purpose.</p>
+      <p><strong>6.4 Feedback.</strong> If Licensee provides CabConnect with any suggestions, ideas, or feedback regarding the CardONE System (<strong>"Feedback"</strong>), Licensee hereby grants CabConnect a royalty-free, perpetual, irrevocable license to use, incorporate, and commercialize such Feedback without restriction or obligation to Licensee.</p>
+    </div>
+
+    <!-- SECTION 7: DATA & PRIVACY -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 7</span>Data &amp; Privacy</div>
+      <p><strong>7.1 Data Processing.</strong> CabConnect processes Rider Data solely for the purpose of providing the CardONE System and related services to Licensee as described in this Agreement. CabConnect shall not sell, share, or disclose Rider Data to any third party except (a) to subprocessors engaged to support the delivery of services, who are bound by confidentiality obligations no less protective than those in this Agreement, or (b) as required by applicable law.</p>
+      <p><strong>7.2 Compliance with Privacy Laws.</strong> Both Parties agree to comply with all applicable federal, state, and local privacy and data protection laws in connection with their respective obligations under this Agreement, including but not limited to the California Consumer Privacy Act (CCPA) as amended, and any applicable regulations promulgated thereunder.</p>
+      <p><strong>7.3 Data Security.</strong> CabConnect shall implement and maintain commercially reasonable administrative, physical, and technical safeguards to protect Rider Data against unauthorized access, use, disclosure, alteration, or destruction. Such measures shall include, at a minimum, industry-standard encryption in transit and at rest, role-based access controls, and regular security assessments. CabConnect shall notify Licensee without undue delay (and in any event within seventy-two (72) hours) upon discovery of a confirmed security breach involving Rider Data.</p>
+      <p><strong>7.4 Data Retention &amp; Deletion.</strong> Upon termination or expiration of this Agreement, CabConnect shall, at Licensee's request, return or securely delete Rider Data within sixty (60) days, except to the extent retention is required by applicable law.</p>
+    </div>
+
+    <!-- SECTION 8: REPRESENTATIONS & WARRANTIES -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 8</span>Representations &amp; Warranties</div>
+      <p><strong>8.1 CabConnect Warranties.</strong> CabConnect represents and warrants that: (a) it has the full right and authority to enter into this Agreement and grant the licenses herein; (b) the CardONE System will perform materially in accordance with CabConnect's then-current documentation and service descriptions; and (c) CabConnect will provide the services in a professional and workmanlike manner consistent with industry standards.</p>
+      <p><strong>8.2 Uptime SLA.</strong> CabConnect shall use commercially reasonable efforts to maintain <span class="highlight">99% uptime</span> for the CardONE System, measured on a monthly basis, excluding scheduled maintenance windows (of which CabConnect shall provide at least 48 hours advance notice) and downtime due to factors outside CabConnect's reasonable control (including, without limitation, internet outages, third-party service failures, and force majeure events).</p>
+      <p><strong>8.3 Licensee Warranties.</strong> Licensee represents and warrants that: (a) it has full legal authority to enter into this Agreement; (b) this Agreement has been duly authorized by all necessary governmental action; (c) Licensee's performance under this Agreement will comply with all applicable laws and regulations; and (d) Licensee will use the CardONE System solely for the Permitted Purpose.</p>
+      <p><strong>8.4 Disclaimer.</strong> EXCEPT AS EXPRESSLY SET FORTH IN THIS SECTION 8, THE CARDONE SYSTEM AND ALL SERVICES ARE PROVIDED "AS IS" AND CABCONNECT DISCLAIMS ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+    </div>
+
+    <!-- SECTION 9: LIMITATION OF LIABILITY -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 9</span>Limitation of Liability</div>
+      <p><strong>9.1 Cap on Liability.</strong> CABCONNECT'S TOTAL CUMULATIVE LIABILITY TO LICENSEE ARISING OUT OF OR RELATED TO THIS AGREEMENT, WHETHER IN CONTRACT, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY, OR OTHERWISE, SHALL NOT EXCEED AN AMOUNT EQUAL TO <span class="highlight">THREE (3) MONTHS</span> OF FEES ACTUALLY PAID BY LICENSEE TO CABCONNECT IN THE THREE (3) MONTHS IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM.</p>
+      <p><strong>9.2 Exclusion of Consequential Damages.</strong> IN NO EVENT SHALL EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, PUNITIVE, OR EXEMPLARY DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, LOSS OF REVENUE, LOSS OF DATA, LOSS OF GOODWILL, OR COST OF SUBSTITUTE SERVICES, EVEN IF SUCH PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+      <p><strong>9.3 Exceptions.</strong> The limitations in Sections 9.1 and 9.2 shall not apply to: (a) either Party's indemnification obligations; (b) damages arising from a Party's gross negligence or willful misconduct; or (c) a Party's breach of its confidentiality obligations.</p>
+    </div>
+
+    <!-- SECTION 10: GOVERNING LAW -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 10</span>Governing Law &amp; Dispute Resolution</div>
+      <p><strong>10.1 Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the laws of the <span class="highlight">State of California</span>, without giving effect to any choice of law or conflict of law rules.</p>
+      <p><strong>10.2 Dispute Resolution.</strong> The Parties shall attempt in good faith to resolve any dispute arising under this Agreement through informal negotiation for a period of thirty (30) days following written notice of the dispute. If the dispute is not resolved within such period, either Party may pursue available legal remedies. Each Party irrevocably submits to the exclusive jurisdiction of the state and federal courts located in San Diego County, California for resolution of any such dispute.</p>
+    </div>
+
+    <!-- SECTION 11: GENERAL PROVISIONS -->
+    <div class="section">
+      <div class="section-title"><span class="section-number">§ 11</span>General Provisions</div>
+      <p><strong>11.1 Entire Agreement.</strong> This Agreement constitutes the entire agreement between the Parties with respect to its subject matter and supersedes all prior and contemporaneous agreements, proposals, representations, negotiations, and understandings, whether written or oral, relating thereto.</p>
+      <p><strong>11.2 Amendments.</strong> This Agreement may not be amended or modified except by a written instrument duly executed by authorized representatives of both Parties.</p>
+      <p><strong>11.3 Waiver.</strong> No failure or delay by either Party in exercising any right, power, or remedy under this Agreement shall operate as a waiver thereof. No single or partial exercise of any right shall preclude any other or further exercise thereof.</p>
+      <p><strong>11.4 Severability.</strong> If any provision of this Agreement is found to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect, and the invalid provision shall be modified to the minimum extent necessary to make it enforceable.</p>
+      <p><strong>11.5 Assignment.</strong> Licensee may not assign or transfer this Agreement or any rights or obligations hereunder without the prior written consent of CabConnect. CabConnect may assign this Agreement in connection with a merger, acquisition, or sale of all or substantially all of its assets upon notice to Licensee. Any purported assignment in violation of this section shall be null and void.</p>
+      <p><strong>11.6 Notices.</strong> All notices under this Agreement shall be in writing and delivered by (a) certified mail, return receipt requested, (b) overnight courier, or (c) email with read receipt to the addresses set forth in the signature block, or such other address as a Party may designate in writing.</p>
+      <p><strong>11.7 Force Majeure.</strong> Neither Party shall be liable for any delay or failure to perform its obligations (other than payment obligations) due to causes beyond its reasonable control, including acts of God, natural disasters, pandemic, war, terrorism, labor disputes, or government actions.</p>
+      <p><strong>11.8 Independent Contractors.</strong> The Parties are independent contractors. Nothing in this Agreement shall be construed to create a partnership, joint venture, agency, employment, or fiduciary relationship between the Parties.</p>
+      <p><strong>11.9 Counterparts.</strong> This Agreement may be executed in counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures shall be deemed valid and binding.</p>
+    </div>
+
+    <!-- SIGNATURE BLOCK -->
+    <div class="signature-section">
+      <div class="sig-title">IN WITNESS WHEREOF, the Parties have executed this CardONE Service Agreement as of the Effective Date first written above.</div>
+      <div class="sig-grid">
+
+        <!-- CabConnect -->
+        <div class="sig-block">
+          <div class="party-label">Licensor — CabConnect, Inc.</div>
+          <div class="sig-field">
+            <label>Signature</label>
+            <div class="sig-line">&nbsp;</div>
+          </div>
+          <div class="sig-field">
+            <label>Printed Name</label>
+            <div class="sig-line prefilled">Isabelo "Izzy" Aala</div>
+          </div>
+          <div class="sig-field">
+            <label>Title</label>
+            <div class="sig-line prefilled">Chief Executive Officer</div>
+          </div>
+          <div class="sig-field">
+            <label>Date</label>
+            <div class="sig-line">&nbsp;</div>
+          </div>
+          <div class="sig-field">
+            <label>Email</label>
+            <div class="sig-line prefilled">iaala@cabconnect.com</div>
+          </div>
+        </div>
+
+        <!-- Licensee -->
+        <div class="sig-block">
+          <div class="party-label">Licensee — <span class="ph">[MUNICIPALITY/ORGANIZATION NAME]</span></div>
+          <div class="sig-field">
+            <label>Signature</label>
+            <div class="sig-line">&nbsp;</div>
+          </div>
+          <div class="sig-field">
+            <label>Printed Name</label>
+            <div class="sig-line"><span class="ph">[CONTACT NAME]</span></div>
+          </div>
+          <div class="sig-field">
+            <label>Title</label>
+            <div class="sig-line"><span class="ph">[TITLE]</span></div>
+          </div>
+          <div class="sig-field">
+            <label>Date</label>
+            <div class="sig-line">&nbsp;</div>
+          </div>
+          <div class="sig-field">
+            <label>Email</label>
+            <div class="sig-line">&nbsp;</div>
+          </div>
+        </div>
+
+      </div><!-- /sig-grid -->
+    </div><!-- /signature-section -->
+
+  </div><!-- /doc-body -->
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <span>CardONE Service Agreement v1.0 &mdash; Confidential &amp; Proprietary</span>
+    <span>&copy; 2026 CabConnect, Inc. All rights reserved.</span>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+</body>
+</html>

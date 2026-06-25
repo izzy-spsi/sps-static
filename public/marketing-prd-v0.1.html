@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Marketing Portal — PRD v0.1 | Domo Cafe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0C0C0C;
+    --surface: #111111;
+    --surface2: #1A1A18;
+    --surface3: #222220;
+    --text: #F0EDE8;
+    --muted: #A0A098;
+    --accent: #C9A052;
+    --accent-hover: #e8c07a;
+    --border: rgba(240,237,232,0.08);
+    --border-accent: rgba(201,160,82,0.3);
+    --tbd: #C96A1A;
+    --tbd-bg: rgba(201,106,26,0.12);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #F8F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE8;
+    --surface3: #E8E4DC;
+    --text: #1A1A18;
+    --muted: #6A6A62;
+    --accent: #A07832;
+    --accent-hover: #C9A052;
+    --border: rgba(26,26,24,0.1);
+    --border-accent: rgba(160,120,50,0.3);
+    --tbd: #B85A10;
+    --tbd-bg: rgba(185,90,16,0.1);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  h1,h2,h3,h4,h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; line-height: 1.25; }
+
+  /* HEADER */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .version-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    background: var(--border-accent);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .header-controls { display: flex; align-items: center; gap: 10px; }
+  .ctrl-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .ctrl-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-accent); }
+  .ctrl-btn.edit-active { background: var(--border-accent); color: var(--accent); border-color: var(--border-accent); }
+  .theme-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { background: var(--surface3); border-color: var(--border-accent); }
+
+  /* LAYOUT */
+  .layout { display: flex; padding-top: 60px; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    top: 60px; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 0;
+    z-index: 50;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 0 20px 10px;
+  }
+  .toc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .toc-link:hover { color: var(--text); background: var(--surface2); }
+  .toc-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--tbd-bg); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar-w); flex: 1; max-width: 900px; padding: 48px 60px 120px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 64px; scroll-margin-top: 80px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--border-accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .section-title { font-size: 22px; color: var(--text); }
+
+  .subsection { margin-bottom: 32px; }
+  .subsection-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .info-box.accent { border-color: var(--border-accent); background: rgba(201,160,82,0.05); }
+  .info-box.warning { border-color: rgba(201,106,26,0.3); background: var(--tbd-bg); }
+
+  .tbd {
+    color: var(--tbd);
+    background: var(--tbd-bg);
+    border: 1px solid rgba(201,106,26,0.25);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .table-wrap { overflow-x: auto; margin-bottom: 16px; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .pill-green { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+  .pill-yellow { background: rgba(201,160,82,0.12); color: var(--accent); border: 1px solid var(--border-accent); }
+  .pill-red { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+  .pill-blue { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
+  .pill-orange { background: var(--tbd-bg); color: var(--tbd); border: 1px solid rgba(201,106,26,0.25); }
+  .pill-purple { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+  .pill-pink { background: rgba(244,114,182,0.12); color: #f472b6; border: 1px solid rgba(244,114,182,0.2); }
+
+  .workflow { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 16px; }
+  .workflow-step { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .workflow-node {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .workflow-node.highlight { background: var(--border-accent); color: var(--accent); border-color: var(--border-accent); }
+  .workflow-arrow { padding: 0 6px; color: var(--muted); font-size: 14px; }
+
+  .phase-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .phase-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .phase-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); }
+  .phase-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; flex: 1; }
+  .phase-body { padding: 16px 20px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-lbl { font-size: 12px; color: var(--muted); }
+
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* CHANNEL CARD */
+  .channel-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .channel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .channel-icon { font-size: 20px; }
+  .channel-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; }
+  .channel-tag { margin-left: auto; }
+
+  /* BRAND CARD */
+  .brand-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .brand-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .brand-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; }
+  .brand-tone { font-size: 12px; color: var(--muted); margin-left: auto; font-style: italic; }
+
+  /* CALENDAR MOCK */
+  .calendar-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .cal-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex: 1;
+    min-width: 120px;
+    font-size: 12px;
+  }
+  .cal-date { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 10px; margin-bottom: 3px; }
+
+  [contenteditable="true"] {
+    outline: 2px dashed var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+    min-width: 40px;
+    min-height: 1em;
+    display: inline-block;
+    cursor: text;
+    transition: outline 0.2s;
+  }
+  [contenteditable="true"]:focus { outline-color: var(--accent-hover); background: rgba(201,160,82,0.05); }
+
+  .edit-mode-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
+    padding: 10px 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-mode-bar.visible { display: flex; }
+  .edit-bar-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-bar-btn.save { background: var(--accent); color: #0C0C0C; }
+  .edit-bar-btn.save:hover { background: var(--accent-hover); }
+  .edit-bar-btn.restore { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .edit-bar-btn.restore:hover { color: var(--text); }
+  .edit-bar-btn.exit { background: transparent; color: var(--muted); border: none; }
+
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 300;
+    background: var(--surface2);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transform: translateX(120%);
+    transition: transform 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show { transform: translateX(0); }
+
+  .footer {
+    position: fixed;
+    bottom: 0; right: 0;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media print {
+    .header, .sidebar, .footer, .edit-mode-bar, .toast { display: none !important; }
+    .main { margin-left: 0; padding: 20px; max-width: 100%; }
+    body { background: white; color: black; }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 32px 24px 80px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  .intro-hero {
+    background: linear-gradient(135deg, rgba(201,160,82,0.08), rgba(201,106,26,0.05));
+    border: 1px solid var(--border-accent);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+  }
+  .intro-hero h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .intro-hero .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .meta-item span { color: var(--text); }
+
+  .kpi-tag {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 2px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .feature-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .feature-icon { font-size: 18px; margin-bottom: 8px; }
+  .feature-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">
+    📣 Marketing Portal — PRD
+    <span class="version-badge">v0.1</span>
+  </div>
+  <div class="header-controls">
+    <button class="ctrl-btn" onclick="window.print()">🖨️ Print / PDF</button>
+    <button class="ctrl-btn" id="editToggleBtn" onclick="toggleEditMode()">✏️ Edit</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle light/dark">🌙</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-label">Contents</div>
+  <a class="toc-link" href="#overview"><span class="toc-num">01</span>Overview</a>
+  <a class="toc-link" href="#brand"><span class="toc-num">02</span>Brand Management</a>
+  <a class="toc-link" href="#campaigns"><span class="toc-num">03</span>Content & Campaigns</a>
+  <a class="toc-link" href="#channels"><span class="toc-num">04</span>Channels</a>
+  <a class="toc-link" href="#portal-features"><span class="toc-num">05</span>Portal Features</a>
+  <a class="toc-link" href="#integrations"><span class="toc-num">06</span>Integrations</a>
+  <a class="toc-link" href="#roles"><span class="toc-num">07</span>Roles & Permissions</a>
+  <a class="toc-link" href="#workflows"><span class="toc-num">08</span>Workflows</a>
+  <a class="toc-link" href="#ventures"><span class="toc-num">09</span>Ventures in Scope</a>
+  <a class="toc-link" href="#mvp"><span class="toc-num">10</span>MVP Scope</a>
+  <a class="toc-link" href="#roadmap"><span class="toc-num">11</span>Roadmap</a>
+  <a class="toc-link" href="#open-questions"><span class="toc-num">12</span>Open Questions</a>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+<main class="main">
+
+  <!-- HERO -->
+  <div class="intro-hero">
+    <h1>Marketing Portal</h1>
+    <p class="subtitle">Product Requirements Document — Unified Marketing Management System</p>
+    <div class="meta-row">
+      <div class="meta-item">📅 Date: <span class="editable">June 2026</span></div>
+      <div class="meta-item">👤 Owner: <span class="editable">Izzy Aala</span></div>
+      <div class="meta-item">🏢 Lead Venture: <span>Domo Cafe</span></div>
+      <div class="meta-item">📋 Status: <span class="pill pill-yellow">Draft</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Vision</div>
+      <div class="info-box accent">
+        <p class="editable">Build a unified marketing operations portal that gives Domo Cafe (and the broader venture portfolio) a single command center to create, schedule, publish, and analyze all marketing activity — from social posts to grand opening campaigns — powered by Jarvis AI assistance and integrated with every customer touchpoint.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Problem Statement</div>
+      <p>Across Domo Cafe and the venture portfolio, marketing is fragmented:</p>
+      <ul>
+        <li>Campaigns are managed across Google Docs, group chats, and individual social apps</li>
+        <li>No single content calendar exists — drops are ad-hoc or missed</li>
+        <li>Brand assets are scattered — no enforced guidelines, off-brand content ships</li>
+        <li>Analytics are siloed: IG, TikTok, email, and in-store data never meet</li>
+        <li>The influencer pipeline has no tracking — deliverables fall through the cracks</li>
+        <li>Campaign ROI is impossible to measure without a unified view</li>
+        <li>Jarvis AI capabilities are underused for copy, captions, and strategy</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Scope</div>
+      <div class="grid-2">
+        <div class="info-box">
+          <div class="card-title">✅ In Scope</div>
+          <ul style="margin-top:8px">
+            <li>Campaign lifecycle management</li>
+            <li>Content calendar and scheduling</li>
+            <li>Brand asset library</li>
+            <li>Multi-channel publishing</li>
+            <li>Analytics dashboard</li>
+            <li>Influencer tracking</li>
+            <li>Budget management per campaign</li>
+            <li>AI copy assistant (Jarvis)</li>
+            <li>Loyalty/Chomps tie-in</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="card-title">❌ Out of Scope (v0.1)</div>
+          <ul style="margin-top:8px">
+            <li>Full CRM / customer data platform</li>
+            <li>Paid ad management (Meta Ads, Google Ads)</li>
+            <li>PR wire distribution</li>
+            <li>Video editing / production tools</li>
+            <li>E-commerce cart / checkout</li>
+            <li>Real-time foot traffic data</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Key Success Metrics</div>
+      <div class="grid-4">
+        <div class="stat-box">
+          <span class="stat-val">30+</span>
+          <span class="stat-lbl">Days of content scheduled at all times</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val tbd">[ TBD ]</span>
+          <span class="stat-lbl">Follower growth target (90 days post-open)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val tbd">[ TBD ]</span>
+          <span class="stat-lbl">Email list size at grand opening</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">100%</span>
+          <span class="stat-lbl">Campaigns tracked with budget + KPIs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: BRAND MANAGEMENT -->
+  <section class="section" id="brand">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Brand Management</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Brand Profiles per Venture</div>
+
+      <div class="brand-card">
+        <div class="brand-header">
+          <div class="brand-dot" style="background:#FF6B6B"></div>
+          <div class="brand-name">Domo Cafe</div>
+          <div class="brand-tone">Fun • Kawaii • Immersive</div>
+          <span class="pill pill-green">Primary</span>
+        </div>
+        <div class="grid-2">
+          <div>
+            <strong style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Colors</strong>
+            <p style="font-size:13px;margin-top:4px">Brown <code>#8B4513</code> · Red <code>#CC2222</code> · White BG<br/>NHK brand guidelines apply to all licensed content</p>
+          </div>
+          <div>
+            <strong style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em">Voice</strong>
+            <p style="font-size:13px;margin-top:4px">Playful, welcoming, Japanese-pop culture influenced. Domo-kun moments, kawaii aesthetics, boba culture. Energetic for social, warm for email.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-header">
+          <div class="brand-dot" style="background:#3B82F6"></div>
+          <div class="brand-name">Flywheel Technologies</div>
+          <div class="brand-tone">Professional • Reliable • Operator-First</div>
+          <span class="pill pill-blue">In Scope</span>
+        </div>
+        <div>
+          <p style="font-size:13px">Professional mobility platform voice. Trust-first, efficiency-forward. Content for drivers, dispatchers, fleet operators. No fluff.</p>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-header">
+          <div class="brand-dot" style="background:#A78BFA"></div>
+          <div class="brand-name">Super Power Studios (SPS)</div>
+          <div class="brand-tone">Bold • Aspirational • Builder-Energy</div>
+          <span class="pill pill-purple">In Scope</span>
+        </div>
+        <div>
+          <p style="font-size:13px">Venture studio energy — big ideas, strong opinions, compelling narratives. Audience: founders, creators, operators, builders.</p>
+        </div>
+      </div>
+
+      <div class="brand-card">
+        <div class="brand-header">
+          <div class="brand-dot" style="background:#34D399"></div>
+          <div class="brand-name">Blue Highway</div>
+          <div class="brand-tone">Visionary • Sustainable • Future-Forward</div>
+          <span class="pill pill-orange">[ TBD ]</span>
+        </div>
+        <div>
+          <p style="font-size:13px">Clean technology meets infrastructure. EV/hydrofoil transport narrative. Tone: forward-thinking, environmental, premium. <span class="tbd">[ TBD: confirm scope with Izzy ]</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Asset Library</div>
+      <div class="card">
+        <ul>
+          <li>Logos (full, stacked, icon-only) per venture + usage guidelines</li>
+          <li>Color palettes + hex codes + dark/light variants</li>
+          <li>Font assets + licensing info</li>
+          <li>Photography library (cafe interior, product, event, team)</li>
+          <li>Brand guidelines document (PDF) per venture</li>
+          <li>Tagging system: <code>venture</code> · <code>asset_type</code> · <code>channel</code> · <code>approved</code></li>
+          <li>NHK-approved artwork separate library with license tracking</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Brand Enforcement</div>
+      <div class="info-box warning">
+        <ul>
+          <li>Content flagged off-brand (wrong colors, fonts, or unapproved Domo-kun usage) triggers review workflow</li>
+          <li>All NHK IP usage requires approval before publish — linked to merch portal approval flow</li>
+          <li>Brand guidelines enforcer: <span class="tbd">[ TBD: AI-based or manual checklist ]</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: CAMPAIGNS -->
+  <section class="section" id="campaigns">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Content &amp; Campaigns</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Campaign Types</div>
+      <div class="grid-3">
+        <div class="info-box">
+          <div class="card-title">🎉 Grand Opening</div>
+          <p style="font-size:13px;margin-top:4px">June 13, 2026 — flagship campaign. Full channel activation.</p>
+        </div>
+        <div class="info-box">
+          <div class="card-title">🍂 Seasonal</div>
+          <p style="font-size:13px;margin-top:4px">Holiday, seasonal drops, limited-time menu items.</p>
+        </div>
+        <div class="info-box">
+          <div class="card-title">🚀 Product Launch</div>
+          <p style="font-size:13px;margin-top:4px">New menu, merch drop, app feature, pin series.</p>
+        </div>
+        <div class="info-box">
+          <div class="card-title">📅 Event</div>
+          <p style="font-size:13px;margin-top:4px">Soft opening, pop-ups, brand activations.</p>
+        </div>
+        <div class="info-box">
+          <div class="card-title">🤝 Partnership</div>
+          <p style="font-size:13px;margin-top:4px">NHK partner network, brand collabs, co-marketing.</p>
+        </div>
+        <div class="info-box">
+          <div class="card-title">💛 Loyalty</div>
+          <p style="font-size:13px;margin-top:4px">Chomps program, milestone rewards, re-engagement.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Campaign Brief Template</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Field</th><th>Description</th><th>Required?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Campaign Name</strong></td><td>Unique identifier</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Goal</strong></td><td>Awareness / Engagement / Conversion / Retention</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Target Audience</strong></td><td>Persona, age range, geography</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Key Message</strong></td><td>Single core message / CTA</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Channels</strong></td><td>IG, TikTok, Email, SMS, Events, PR…</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Budget</strong></td><td>Total spend allocation + breakdown</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Timeline</strong></td><td>Start date, go-live date, end date</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>KPIs</strong></td><td>Reach, engagement rate, signups, revenue uplift…</td><td><span class="pill pill-red">Yes</span></td></tr>
+            <tr><td><strong>Assets Needed</strong></td><td>Photo, reel, email, SMS copy, press release</td><td><span class="pill pill-yellow">Rec</span></td></tr>
+            <tr><td><strong>Influencer Partners</strong></td><td>Names, handles, deliverables</td><td><span class="pill pill-green">Opt</span></td></tr>
+            <tr><td><strong>Notes</strong></td><td>NHK restrictions, event logistics, etc.</td><td><span class="pill pill-green">Opt</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Content Formats</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">📸 Photo Post</div>
+          <ul><li>Static IG / FB posts</li><li>Product photography</li><li>Staff / culture shots</li><li>Event recap</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">🎬 Reel / TikTok</div>
+          <ul><li>Short-form video (15-60s)</li><li>Behind the scenes</li><li>Menu reveals</li><li>Domo-kun character moments</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">📖 Story</div>
+          <ul><li>24h ephemeral content</li><li>Polls, questions, countdowns</li><li>Flash promos</li><li>Real-time event coverage</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">📧 Email Blast</div>
+          <ul><li>Newsletter (Postgres + Resend)</li><li>Launch announcements</li><li>Chomps updates</li><li>Monthly roundup</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">📱 SMS</div>
+          <ul><li>Loyalty triggers</li><li>Flash deals</li><li>Event reminders</li><li>Chomps milestones</li></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">📰 Press Release</div>
+          <ul><li>Grand opening</li><li>NHK partnership</li><li>Awards / milestones</li><li>New location opens</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Content Calendar — Key Dates</div>
+      <div class="calendar-row">
+        <div class="cal-item">
+          <div class="cal-date">CONFIRMED</div>
+          <strong>June 13, 2026</strong><br/>Grand Opening
+        </div>
+        <div class="cal-item">
+          <div class="cal-date tbd">TBD</div>
+          <strong>Soft Opening</strong><br/>Friends + family preview
+        </div>
+        <div class="cal-item">
+          <div class="cal-date tbd">TBD</div>
+          <strong>Press Preview</strong><br/>Media + influencer day
+        </div>
+        <div class="cal-item">
+          <div class="cal-date tbd">TBD</div>
+          <strong>Pin Series Drop #1</strong><br/>Physical + digital twin
+        </div>
+      </div>
+      <div class="info-box warning">
+        <p>Full 30/60/90-day content calendar to be built in portal once soft opening date is confirmed. <span class="tbd">[ TBD: soft opening date ]</span></p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Approval Workflow</div>
+      <div class="workflow">
+        <div class="workflow-step">
+          <div class="workflow-node highlight">DRAFT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">REVIEW</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">APPROVED</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">SCHEDULED</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">PUBLISHED</div>
+        </div>
+      </div>
+      <ul>
+        <li>Any NHK IP content routes through brand compliance check before Review</li>
+        <li>Reviewer: GM or Marketing Manager</li>
+        <li>Jarvis can auto-draft captions and flag potential brand issues</li>
+        <li>Rejected content returns to Draft with reviewer comments</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 4: CHANNELS -->
+  <section class="section" id="channels">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Channels</h2>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">📸</div>
+        <div class="channel-name">Instagram</div>
+        <div class="channel-tag"><span class="pill pill-red">Primary</span></div>
+      </div>
+      <p style="font-size:13px">Visual-first platform. Core channel for Domo Cafe. Posts, Reels, Stories, Highlights. Target: kawaii community, food culture, local SD audience.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Followers: [ TBD ]</span>
+        <span class="kpi-tag">Posting: Daily</span>
+        <span class="kpi-tag">Priority: #1</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">🎵</div>
+        <div class="channel-name">TikTok</div>
+        <div class="channel-tag"><span class="pill pill-red">Primary</span></div>
+      </div>
+      <p style="font-size:13px">Short-form video, viral potential. Domo Cafe's character moments, menu reveals, behind-the-scenes. Essential for Gen Z and food content discovery.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Followers: [ TBD ]</span>
+        <span class="kpi-tag">Posting: 3-5x/week</span>
+        <span class="kpi-tag">Priority: #1</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">👥</div>
+        <div class="channel-name">Facebook</div>
+        <div class="channel-tag"><span class="pill pill-blue">Secondary</span></div>
+      </div>
+      <p style="font-size:13px">Events, local community, paid ads. FB Events for grand opening and future activations. Older demographic, families, local residents.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Posting: 2-3x/week</span>
+        <span class="kpi-tag">Priority: #2</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">📧</div>
+        <div class="channel-name">Email (Newsletter)</div>
+        <div class="channel-tag"><span class="pill pill-yellow">Build</span></div>
+      </div>
+      <p style="font-size:13px">Build own email infrastructure using <strong>Postgres + Resend</strong> (as per Domo app PRD note). No Mailchimp dependency. Direct relationship with customers.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Frequency: Monthly + event-driven</span>
+        <span class="kpi-tag">Stack: Postgres + Resend</span>
+        <span class="kpi-tag">List Target: [ TBD ]</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">📱</div>
+        <div class="channel-name">SMS</div>
+        <div class="channel-tag"><span class="pill pill-purple">Loyalty</span></div>
+      </div>
+      <p style="font-size:13px">For Chomps loyalty program members. High-intent audience. Flash deals, milestone notifications, event reminders. Opt-in only.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Frequency: 2-4x/month max</span>
+        <span class="kpi-tag">Provider: [ TBD ]</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">🎤</div>
+        <div class="channel-name">Events</div>
+        <div class="channel-tag"><span class="pill pill-green">IRL</span></div>
+      </div>
+      <p style="font-size:13px">Grand Opening June 13, 2026. Soft opening TBD. Pop-ups, seasonal activations. Events are content generators — document everything for social.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">Grand Opening: June 13, 2026</span>
+        <span class="kpi-tag">Soft Opening: [ TBD ]</span>
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon">🌟</div>
+        <div class="channel-name">Influencer / PR</div>
+        <div class="channel-tag"><span class="pill pill-pink">Planned</span></div>
+      </div>
+      <p style="font-size:13px">NHK partner network, San Diego food bloggers, kawaii/anime community creators. Press for grand opening. Long-term: national food media.</p>
+      <div style="margin-top:10px">
+        <span class="kpi-tag">SD Food Bloggers: [ TBD ]</span>
+        <span class="kpi-tag">NHK Partners: Russell Binder</span>
+        <span class="kpi-tag">PR Firm: [ TBD ]</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: PORTAL FEATURES -->
+  <section class="section" id="portal-features">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Portal Features</h2>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Campaign Manager</div>
+        <div class="feature-desc">Create, track, and close campaigns with brief, timeline, budget, and KPIs. Status: Draft / Active / Paused / Completed.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Content Calendar</div>
+        <div class="feature-desc">Drag-drop scheduling across all channels. 30/60/90-day views. Color-coded by venture and content type.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🗂️</div>
+        <div class="feature-title">Asset Library</div>
+        <div class="feature-desc">Upload, tag, and search brand assets. Venture-separated. NHK-approved art in locked library with license metadata.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">✍️</div>
+        <div class="feature-title">Post Composer</div>
+        <div class="feature-desc">Multi-channel publish from one interface. Character counters, hashtag suggestions, media upload. Schedule or publish now.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Analytics Dashboard</div>
+        <div class="feature-desc">Reach, engagement, conversions, foot traffic correlation. Per-campaign and per-channel views. Export to PDF.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤳</div>
+        <div class="feature-title">Influencer Tracker</div>
+        <div class="feature-desc">Contact directory, campaign assignments, deliverable tracking, payment status, performance data per creator.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Budget Tracker</div>
+        <div class="feature-desc">Per-campaign spend vs. budget. Actuals vs. planned. Alert when budget threshold exceeded.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">AI Copy Assistant (Jarvis)</div>
+        <div class="feature-desc">Draft captions, email copy, press releases, SMS messages. Tone-aware per venture. Editable before publish.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💛</div>
+        <div class="feature-title">Loyalty / Chomps Tie-In</div>
+        <div class="feature-desc">Campaign triggers based on Chomps loyalty activity. Target by tier, visit count, spend, or inactivity.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">✅</div>
+        <div class="feature-title">Approval Workflow</div>
+        <div class="feature-desc">Draft → Review → Approved → Scheduled → Published. Brand compliance check for NHK content. Comment threads per asset.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: INTEGRATIONS -->
+  <section class="section" id="integrations">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Integrations</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>System</th><th>Type</th><th>Purpose</th><th>Priority</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Meta Business Suite</strong></td>
+            <td>API</td>
+            <td>Schedule + publish IG / FB posts; pull analytics</td>
+            <td><span class="pill pill-red">P1</span></td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>TikTok Creator API</strong></td>
+            <td>API</td>
+            <td>Schedule posts, pull engagement data</td>
+            <td><span class="pill pill-red">P1</span></td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Resend + Postgres</strong></td>
+            <td>Internal</td>
+            <td>Email newsletter infrastructure (own stack)</td>
+            <td><span class="pill pill-red">P1</span></td>
+            <td><span class="pill pill-blue">Build</span></td>
+          </tr>
+          <tr>
+            <td><strong>Google Analytics</strong></td>
+            <td>API</td>
+            <td>Website traffic, conversion tracking</td>
+            <td><span class="pill pill-yellow">P2</span></td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Toast POS</strong></td>
+            <td>API</td>
+            <td>Sales data for foot traffic correlation with campaigns</td>
+            <td><span class="pill pill-yellow">P2</span></td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Canva API</strong></td>
+            <td>API</td>
+            <td>Direct design creation linked to campaigns; brand-kit templates</td>
+            <td><span class="pill pill-yellow">P2</span></td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>SMS Provider</strong></td>
+            <td>API</td>
+            <td>Loyalty SMS sends for Chomps program</td>
+            <td><span class="pill pill-yellow">P2</span></td>
+            <td><span class="tbd">[ TBD: provider ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Jarvis AI (Internal)</strong></td>
+            <td>Internal</td>
+            <td>Copy assistant, campaign analysis, brand compliance flagging</td>
+            <td><span class="pill pill-red">P1</span></td>
+            <td><span class="pill pill-blue">Build</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 7: ROLES -->
+  <section class="section" id="roles">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Roles &amp; Permissions</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Campaigns</th><th>Calendar</th><th>Assets</th><th>Publish</th><th>Analytics</th><th>Budget</th><th>Influencer</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-red">GM</span></td>
+            <td>Full</td>
+            <td>Full</td>
+            <td>Full</td>
+            <td>Approve + publish</td>
+            <td>Full</td>
+            <td>Full</td>
+            <td>Full</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-purple">Mktg Manager</span></td>
+            <td>Create + edit</td>
+            <td>Full</td>
+            <td>Upload + tag</td>
+            <td>Approve + publish</td>
+            <td>Full</td>
+            <td>View + edit</td>
+            <td>Full</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">Content Creator</span></td>
+            <td>View + brief</td>
+            <td>Add drafts</td>
+            <td>Upload</td>
+            <td>Submit for approval</td>
+            <td>Own content only</td>
+            <td>No access</td>
+            <td>View own</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-yellow">Jarvis (AI)</span></td>
+            <td>Read + draft</td>
+            <td>Read + suggest</td>
+            <td>Read + tag</td>
+            <td>Submit drafts (not live)</td>
+            <td>Generate reports</td>
+            <td>Read only</td>
+            <td>Track + alert</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 8: WORKFLOWS -->
+  <section class="section" id="workflows">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">Workflows</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Campaign Creation Workflow</div>
+      <div class="workflow">
+        <div class="workflow-step">
+          <div class="workflow-node highlight">CREATE BRIEF</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">ASSIGN CONTENT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">DRAFT CONTENT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">REVIEW</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">SCHEDULE</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">PUBLISH</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">ANALYZE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Grand Opening Workflow (June 13, 2026)</div>
+      <div class="info-box accent">
+        <div class="card-title" style="margin-bottom:12px">🎉 Pre-Launch → Opening Day → Follow-Up</div>
+        <div class="grid-2">
+          <div>
+            <strong style="font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted);text-transform:uppercase">Pre-Launch (T-30 days)</strong>
+            <ul style="margin-top:8px;font-size:13px">
+              <li>Teaser content series (countdown)</li>
+              <li>Influencer seeding (kawaii community)</li>
+              <li>Email + SMS list building</li>
+              <li>Press preview invitations</li>
+              <li>NHK-approved content ready</li>
+            </ul>
+          </div>
+          <div>
+            <strong style="font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--muted);text-transform:uppercase">Opening Week</strong>
+            <ul style="margin-top:8px;font-size:13px">
+              <li>Real-time social coverage</li>
+              <li>Influencer live coverage (stories/reels)</li>
+              <li>Email blast to full list</li>
+              <li>Press release distribution</li>
+              <li>Chomps program launch announcement</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Influencer Workflow</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Action</th><th>Owner</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Identify</td><td>Research + vet creators (SD food, kawaii, anime community)</td><td>Mktg Manager</td></tr>
+            <tr><td>Outreach</td><td>Send brief + gifting / fee offer</td><td>Mktg Manager</td></tr>
+            <tr><td>Brief</td><td>Deliverables, timeline, brand guidelines, NHK restrictions</td><td>Mktg Manager</td></tr>
+            <tr><td>Content Review</td><td>Approve influencer drafts before posting</td><td>GM / Jarvis</td></tr>
+            <tr><td>Publish</td><td>Influencer goes live — track in portal</td><td>System</td></tr>
+            <tr><td>Report</td><td>Log reach, engagement, conversions attributable</td><td>Jarvis</td></tr>
+            <tr><td>Payment</td><td>Process per agreement (gifting, flat fee, affiliate)</td><td>GM</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9: VENTURES -->
+  <section class="section" id="ventures">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Ventures in Scope</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Venture</th><th>Priority</th><th>Primary Channels</th><th>Phase 1?</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Domo Cafe</strong></td>
+            <td><span class="pill pill-red">Primary</span></td>
+            <td>IG, TikTok, Email, Events, Influencer</td>
+            <td><span class="pill pill-green">✅ Yes</span></td>
+            <td>Grand Opening June 13. Full channel activation.</td>
+          </tr>
+          <tr>
+            <td><strong>Flywheel Technologies</strong></td>
+            <td><span class="pill pill-blue">Secondary</span></td>
+            <td>LinkedIn, Email, Trade Events</td>
+            <td><span class="tbd">[ TBD ]</span></td>
+            <td>B2B focus. Different voice and channel mix.</td>
+          </tr>
+          <tr>
+            <td><strong>Super Power Studios</strong></td>
+            <td><span class="pill pill-blue">Secondary</span></td>
+            <td>IG, LinkedIn, Podcast, Email</td>
+            <td><span class="tbd">[ TBD ]</span></td>
+            <td>Thought leadership, venture studio positioning.</td>
+          </tr>
+          <tr>
+            <td><strong>Blue Highway</strong></td>
+            <td><span class="pill pill-orange">Future</span></td>
+            <td><span class="tbd">[ TBD ]</span></td>
+            <td><span class="pill pill-red">❌ No</span></td>
+            <td>Confirm scope with Izzy. Pre-launch / stealth mode possible.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 10: MVP -->
+  <section class="section" id="mvp">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2 class="section-title">MVP Scope — Phase 1</h2>
+    </div>
+
+    <div class="info-box accent">
+      <p><strong>Phase 1 goal:</strong> Ship a working marketing ops hub before Grand Opening (June 13, 2026). Focus: Domo Cafe only. Get content calendar live, scheduling working, and analytics tracking from day one.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Must-Have (Phase 1)</div>
+      <div class="card">
+        <ul>
+          <li>✅ Campaign manager (create, track, close)</li>
+          <li>✅ Content calendar (30/60/90 day views)</li>
+          <li>✅ Asset library (upload, tag, search)</li>
+          <li>✅ Basic analytics (manual input initially, then API)</li>
+          <li>✅ Post scheduling (IG + TikTok via Meta + TikTok API)</li>
+          <li>✅ Role-based access (GM, Mktg Manager, Content Creator)</li>
+          <li>✅ Approval workflow (Draft → Approved → Published)</li>
+          <li>✅ Jarvis AI copy drafts (captions, email subject lines)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Explicitly Deferred</div>
+      <div class="card">
+        <ul>
+          <li>❌ Email infrastructure (Postgres + Resend) — Phase 2</li>
+          <li>❌ SMS / Chomps tie-in — Phase 2</li>
+          <li>❌ Canva API integration — Phase 2</li>
+          <li>❌ Influencer payment processing — Phase 2</li>
+          <li>❌ Flywheel / SPS venture modules — Phase 2+</li>
+          <li>❌ Foot traffic correlation with Toast — Phase 3</li>
+          <li>❌ Paid ad management — Out of scope</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="meta-row">
+        <div class="meta-item">🗓 Target Launch: <span class="tbd editable">[ TBD: before June 13 ]</span></div>
+        <div class="meta-item">👥 Team: <span class="tbd editable">[ TBD ]</span></div>
+        <div class="meta-item">💰 Budget: <span class="tbd editable">[ TBD ]</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 11: ROADMAP -->
+  <section class="section" id="roadmap">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2 class="section-title">Roadmap</h2>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 1</span>
+        <span class="phase-title">Domo Cafe Launch Hub</span>
+        <span class="pill pill-yellow">MVP</span>
+        <span class="tbd">[ TBD: before June 13 ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Campaign manager</li>
+          <li>Content calendar (30/60/90 day)</li>
+          <li>Asset library</li>
+          <li>Post scheduling (IG + TikTok)</li>
+          <li>Approval workflow</li>
+          <li>Basic analytics</li>
+          <li>Jarvis AI copy assistant</li>
+          <li>Role-based access</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 2</span>
+        <span class="phase-title">Full Channel Integration</span>
+        <span class="pill pill-blue">Planned</span>
+        <span class="tbd">[ TBD: Q3 2026 ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Email infrastructure (Postgres + Resend)</li>
+          <li>SMS channel (Chomps tie-in)</li>
+          <li>Canva API integration</li>
+          <li>Influencer CRM with payment tracking</li>
+          <li>Facebook organic + Events management</li>
+          <li>Google Analytics integration</li>
+          <li>Toast POS sales correlation</li>
+          <li>Flywheel + SPS venture modules</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 3</span>
+        <span class="phase-title">Intelligence + Growth</span>
+        <span class="pill pill-green">Future</span>
+        <span class="tbd">[ TBD: Q4 2026+ ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>AI-powered campaign strategy recommendations</li>
+          <li>Predictive content performance scoring</li>
+          <li>Real-time foot traffic correlation with campaigns</li>
+          <li>Automated A/B testing for captions and creative</li>
+          <li>Cross-venture campaign coordination</li>
+          <li>Press release auto-distribution</li>
+          <li>Full ROI attribution model</li>
+          <li>Blue Highway venture module</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 12: OPEN QUESTIONS -->
+  <section class="section" id="open-questions">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2 class="section-title">Open Questions</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Question</th><th>Owner</th><th>Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Q1</code></td>
+            <td>Phase 1 build timeline — must ship before June 13 Grand Opening?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q2</code></td>
+            <td>Soft opening date — needed to finalize content calendar pre-launch sequence</td>
+            <td class="editable">Izzy / GM</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q3</code></td>
+            <td>Social accounts — are IG/TikTok/FB accounts already created? Handles confirmed?</td>
+            <td class="editable">GM</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q4</code></td>
+            <td>Influencer budget — what is the total influencer/PR budget for Grand Opening?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q5</code></td>
+            <td>Marketing Manager hire — is there a dedicated person, or is Jarvis handling ops?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q6</code></td>
+            <td>SMS provider — which platform for Chomps SMS? (Twilio, Postscript, etc.)</td>
+            <td class="editable">Izzy / Eng</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q7</code></td>
+            <td>Blue Highway scope — include in portal v0.1 brief or hold for later?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q8</code></td>
+            <td>Brand guidelines enforcer — AI-based auto-flag, or manual review checklist?</td>
+            <td class="editable">Izzy / Mktg</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q9</code></td>
+            <td>Content Creator hiring — in-house, agency, or freelance network?</td>
+            <td class="editable">Izzy / GM</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q10</code></td>
+            <td>Follower / email list targets — what are the 30/60/90 day growth goals?</td>
+            <td class="editable">Izzy / Mktg</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q11</code></td>
+            <td>PR firm — will we hire a PR firm for Grand Opening media coverage?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-green">LOW</span></td>
+          </tr>
+          <tr>
+            <td><code>Q12</code></td>
+            <td>Canva integration — is the team currently using Canva? API access available?</td>
+            <td class="editable">Mktg</td>
+            <td><span class="pill pill-green">LOW</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- EDIT MODE BAR -->
+<div class="edit-mode-bar" id="editBar">
+  ✏️ Edit Mode Active
+  <button class="edit-bar-btn save" onclick="saveEdits()">💾 Save</button>
+  <button class="edit-bar-btn restore" onclick="restoreEdits()">↩️ Restore</button>
+  <button class="edit-bar-btn exit" onclick="exitEditMode()">✕ Exit</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER / SPS MARK -->
+<div class="footer">⚙ SPS</div>
+
+<script>
+// ─── THEME ───────────────────────────────────────────
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('marketing-prd-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('marketing-prd-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+  }
+})();
+
+// ─── TOC ACTIVE ──────────────────────────────────────
+const sections = document.querySelectorAll('.section');
+const tocLinks = document.querySelectorAll('.toc-link');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ─── EDIT AUTH ───────────────────────────────────────
+const _EDIT_HASH = '08d2ccb2e858548c639f7fa890c5ccbf5d62be0be17183d8aabe5b406d288d42';
+async function _hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function requireEditAuth(onSuccess) {
+  if (sessionStorage.getItem('deck-edit-auth') === '1') { onSuccess(); return; }
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  ov.innerHTML = `<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;">
+    <div style="font-size:32px;margin-bottom:16px;">🔒</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:6px;">Edit Access Required</div>
+    <div style="font-size:12px;color:#A0A098;margin-bottom:24px;">Contact Jarvis to receive the edit password.</div>
+    <input id="_editPwInput" type="password" placeholder="Enter password" style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F0EDE8;font-size:14px;outline:none;font-family:monospace;margin-bottom:10px;" />
+    <div id="_editPwErr" style="color:#ef4444;font-size:12px;min-height:16px;margin-bottom:10px;"></div>
+    <button id="_editPwBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Unlock</button>
+    <button id="_editPwCancel" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#A0A098;font-size:13px;cursor:pointer;">Cancel</button>
+  </div>`;
+  document.body.appendChild(ov);
+  const inp = document.getElementById('_editPwInput');
+  inp.focus();
+  const attempt = async () => {
+    const hash = await _hashStr(inp.value);
+    if (hash === _EDIT_HASH) { sessionStorage.setItem('deck-edit-auth','1'); ov.remove(); onSuccess(); }
+    else { document.getElementById('_editPwErr').textContent='Incorrect password. Contact Jarvis.'; inp.value=''; inp.focus(); }
+  };
+  document.getElementById('_editPwBtn').onclick = attempt;
+  document.getElementById('_editPwCancel').onclick = () => ov.remove();
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') attempt(); });
+}
+
+// ─── EDIT MODE ───────────────────────────────────────
+let editMode = false;
+const LS_KEY = 'marketing-prd-edits';
+
+function toggleEditMode() {
+  if (!editMode) {
+    requireEditAuth(() => enterEditMode());
+  } else {
+    exitEditMode();
+  }
+}
+
+function enterEditMode() {
+  editMode = true;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+  });
+  document.getElementById('editBar').classList.add('visible');
+  document.getElementById('editToggleBtn').classList.add('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Editing';
+  showToast('✅ Edit mode unlocked');
+}
+
+function exitEditMode() {
+  editMode = false;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.removeAttribute('contenteditable');
+  });
+  document.getElementById('editBar').classList.remove('visible');
+  document.getElementById('editToggleBtn').classList.remove('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Edit';
+  showToast('Edit mode closed');
+}
+
+function saveEdits() {
+  const data = {};
+  document.querySelectorAll('.editable').forEach((el, i) => {
+    data[i] = el.innerHTML;
+  });
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  showToast('💾 Changes saved');
+}
+
+function restoreEdits() {
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+}
+
+// Load saved edits
+(function() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      document.querySelectorAll('.editable').forEach((el, i) => {
+        if (data[i] !== undefined) el.innerHTML = data[i];
+      });
+    } catch(e) {}
+  }
+})();
+
+// ─── TOAST ───────────────────────────────────────────
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe Website PRD v2.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--brown:#8B4513;--red:#CC2222;--cream:#FBF7F2;--txt:#1C1208;--muted:#7A6652;--bdr:rgba(139,69,19,.12)}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--txt);line-height:1.7}
+header{background:var(--brown);padding:24px 48px;display:flex;align-items:center;gap:24px}
+header h1{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff}
+header .badge{background:var(--red);color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 12px;border-radius:20px}
+.container{max-width:860px;margin:0 auto;padding:40px 32px 80px}
+h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--brown);margin:32px 0 12px;border-bottom:2px solid var(--brown);padding-bottom:8px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--brown);margin:28px 0 10px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--txt);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+p{margin-bottom:12px;font-size:14px}
+ul{margin:8px 0 16px 20px}
+li{font-size:14px;margin-bottom:4px;line-height:1.6}
+strong{font-weight:700;color:var(--txt)}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(139,69,19,.08);padding:2px 6px;border-radius:4px}
+pre{background:#1C1208;border-radius:10px;padding:20px;margin:16px 0;overflow-x:auto}
+pre code{background:none;color:#e8e4de;font-size:12px;padding:0}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{background:var(--brown);color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;padding:10px 14px;text-align:left}
+td{padding:9px 14px;border-bottom:1px solid var(--bdr)}
+tr:nth-child(even) td{background:rgba(139,69,19,.04)}
+.footer{text-align:center;padding:20px;background:var(--brown);color:rgba(255,255,255,.4);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Domo Cafe — Website PRD</h1>
+  </div>
+  <div class="badge">v2.2</div>
+</header>
+<div class="container">
+<h1>Domokuncafe.com — Website PRD v2.2</h1>
+<p><strong>Updated:</strong> May 24, 2026</p>
+<p><strong>Domain:</strong> domokuncafe.com</p>
+<p><strong>Grand Opening:</strong> June 13, 2026 at 10:00 AM</p>
+
+<p>---</p>
+
+<h2>What Changed in v2.2</h2>
+<ul>
+<li>Added Admin Login (hidden, `/admin` route)</li>
+<li>Added Staff Portal — full learning, certification, survey, and performance system</li>
+<li>Added Manager view within Staff Portal</li>
+</ul>
+
+<h2>What Changed in v2.1</h2>
+<ul>
+<li>Grand Opening date updated: <strong>June 13, 2026 at 10:00 AM</strong></li>
+<li>Removed progressive phase reveal strategy and CMS phase toggle control</li>
+<li>Simplified to <strong>two states only</strong>: Pre-Opening single page → Grand Opening full site</li>
+<li><strong>Interior photos EMBARGOED</strong> until Grand Opening — media gets the first reveal</li>
+<li>Soft Opening still happens but NO website change — single page stays up</li>
+<li>No manual phase trigger — flip to full site is a direct publish on June 13</li>
+</ul>
+
+<p>---</p>
+
+<h2>The Strategy</h2>
+
+<p><strong>Before June 13:</strong> Single-page teaser. Exterior only. Build the list.</p>
+
+<p><strong>June 13, 10:00 AM:</strong> Full 11-page site goes live. Interior revealed for the first time — online and in-person simultaneously.</p>
+
+<p>The media gets to break the inside story. The website reinforces it. No leaks.</p>
+
+<p>---</p>
+
+<h2>Pre-Opening Page — Single Page (Live Until June 13)</h2>
+
+<p><strong>Single page. No navigation. No interior content. Ever.</strong></p>
+
+<h3>Structure</h3>
+<pre><code>
+[LOGO]
+[Headline] — "Something is coming to Buena Park."
+[Subheadline] — "Domo Cafe opens June 13, 2026 at 10 AM."
+[Countdown Timer] — Days / Hours / Minutes / Seconds → June 13, 10:00 AM
+[Exterior photo or mural image — full width]
+[Teaser line art strip — Domo illustrations]
+[Email capture] — "Be the first inside. Join the list."
+[Address] — 8340 La Palma Ave, Buena Park, CA
+[Social icons]
+</code></pre>
+
+<h3>Content Rules — PRE-OPENING</h3>
+
+<ul>
+<li>✅ <strong>Show:</strong></li>
+<li>Domo Cafe logo</li>
+<li>Outdoor signage photo</li>
+<li>Exterior mural</li>
+<li>The big Domo chef hat and face (exterior)</li>
+<li>Domo line art / illustrated assets visible from outside</li>
+<li>Cafe address</li>
+<li>Countdown to June 13, 10:00 AM</li>
+<li>"Something delicious is coming" teaser copy</li>
+<li>Email signup ("Be the first to know")</li>
+<li>Social links (Instagram, TikTok)</li>
+</ul>
+
+<ul>
+<li>❌ <strong>Do NOT show — ever before June 13:</strong></li>
+<li>Interior photos (MEDIA EMBARGO — let them break it)</li>
+<li>Chef Domo character interior</li>
+<li>Menu items or pricing</li>
+<li>Merchandise</li>
+<li>Events detail</li>
+<li>Careers</li>
+<li>Any operational details</li>
+</ul>
+
+<h3>Soft Opening</h3>
+<ul>
+<li>Soft Opening happens as planned</li>
+<li><strong>Website does NOT change during soft opening</strong></li>
+<li>Single page stays up — no phase toggle, no new content</li>
+<li>Website transition happens only on Grand Opening day</li>
+</ul>
+
+<p>---</p>
+
+<h2>Grand Opening — June 13, 2026 at 10:00 AM</h2>
+
+<p>Full 11-page site goes live. Interior revealed online for the first time.</p>
+
+<h3>Pages (all go live simultaneously on June 13)</h3>
+
+<p>1. <strong>Home</strong> — hero (full interior), wait time widget, about preview, menu preview, events, merch, social grid, newsletter</p>
+<p>2. <strong>Visit Us</strong> — map embed, hours, parking, wait time, mini FAQ</p>
+<p>3. <strong>Menu Experience</strong> — images only, no prices, 4 categories</p>
+<p>4. <strong>Events</strong> — CMS-driven event cards</p>
+<p>5. <strong>Merchandise</strong> — in-store items + "coming soon" teaser cards</p>
+<p>6. <strong>Careers</strong> — open roles + application form → jobs@domokuncafe.com</p>
+<p>7. <strong>About / Our Story</strong> — brand narrative + build-out timeline</p>
+<p>8. <strong>Gallery</strong> — photo grid, #DomoCafe</p>
+<p>9. <strong>FAQ</strong> — accordion, 7 pre-loaded Q&As</p>
+<p>10. <strong>Contact</strong> — form → info@domokuncafe.com</p>
+<p>11. <strong>Newsletter</strong> — dedicated email capture page</p>
+
+<h3>CMS-Editable by Non-Technical Staff (June 13 onward)</h3>
+<ul>
+<li>Wait time + status badge + timestamp</li>
+<li>Events (add/edit/delete)</li>
+<li>Menu highlights</li>
+<li>Merchandise items</li>
+<li>Job listings</li>
+<li>FAQ items</li>
+<li>Homepage content blocks</li>
+</ul>
+
+<p>---</p>
+
+<h2>Assets Needed for Pre-Opening Build</h2>
+
+<table>
+<tr><th>Asset</th><th>Status</th><th>Source</th></tr>
+<tr><th>Domo Cafe logo (transparent)</th><th>✅ Ready</th><th>`/workspace/storage/domo-cafe-logo-transparent.png`</th></tr>
+<tr><th>Exterior sign photo</th><th>✅ Ready</th><th>`/workspace/storage/domo-entrance.jpg`</th></tr>
+<tr><th>Mural photo</th><th>🔍 Needed</th><th>Shoot or pull from Drive</th></tr>
+<tr><th>Chef hat / face exterior photo</th><th>🔍 Needed</th><th>Shoot or pull from Drive</th></tr>
+<tr><th>Domo line art illustrations</th><th>🔍 Needed</th><th>Pull from Drive or NHK assets</th></tr>
+<tr><th>Grand Opening date/time</th><th>✅ Confirmed</th><th>June 13, 2026 at 10:00 AM</th></tr>
+<tr><th>Interior photos</th><th>⛔ HOLD</th><th>Media embargo — release only on June 13</th></tr>
+</table>
+
+<p>---</p>
+
+<h2>Tech Stack</h2>
+
+<table>
+<tr><th>Layer</th><th>Recommendation</th><th>Why</th></tr>
+<tr><th>**Platform**</th><th>Framer</th><th>Visual, fast, mobile-first</th></tr>
+<tr><th>**CMS**</th><th>Framer CMS</th><th>Content editable by staff</th></tr>
+<tr><th>**Email capture**</th><th>Mailchimp or Klaviyo</th><th>List building pre-launch</th></tr>
+<tr><th>**Countdown**</th><th>Framer component or custom JS</th><th>Hardcoded to June 13, 10:00 AM</th></tr>
+<tr><th>**Hosting**</th><th>Framer (custom domain)</th><th>domokuncafe.com → Framer</th></tr>
+</table>
+
+<p>---</p>
+
+<h2>Pre-Opening Launch Checklist</h2>
+
+<ul>
+<li>[ ] Source mural + chef hat exterior photos</li>
+<li>[ ] Build single-page teaser in Framer</li>
+<li>[ ] Connect email capture to Mailchimp/Klaviyo</li>
+<li>[ ] Point domokuncafe.com DNS to Framer</li>
+<li>[ ] Set countdown to June 13, 2026 10:00 AM PT</li>
+<li>[ ] Test on mobile</li>
+<li>[ ] Soft publish for inner circle review</li>
+<li>[ ] Go live</li>
+</ul>
+
+<h2>Grand Opening Checklist (June 13)</h2>
+
+<ul>
+<li>[ ] All 11 pages built and staged</li>
+<li>[ ] Interior photos loaded (day-of or night before)</li>
+<li>[ ] CMS content populated (menu, events, FAQ, etc.)</li>
+<li>[ ] Wait time widget live</li>
+<li>[ ] Email list import from pre-opening capture</li>
+<li>[ ] Flip live at 10:00 AM</li>
+</ul>
+
+<p>---</p>
+
+<h2>Success Metrics</h2>
+
+<table>
+<tr><th>Metric</th><th>Goal</th></tr>
+<tr><th>Email signups before opening</th><th>500+</th></tr>
+<tr><th>Social follows (Instagram, TikTok)</th><th>200+</th></tr>
+<tr><th>Site visits before opening</th><th>1,000+</th></tr>
+</table>
+
+<p>---</p>
+
+<p>---</p>
+
+<h2>Admin Login</h2>
+
+<h3>Location</h3>
+<ul>
+<li>Route: `/admin` — not linked anywhere on the public site</li>
+<li>Users access it by typing the URL directly</li>
+<li>No breadcrumb, no footer link, no sitemap entry</li>
+<li>Recommendation: consider a non-obvious slug like `/dc-admin` or `/manage` for light obscurity, but `/admin` is fine to start</li>
+</ul>
+
+<h3>Features</h3>
+<ul>
+<li>Email + password login</li>
+<li>Session-based auth (JWT or cookie)</li>
+<li>Dashboard: site content management (wait time, events, menu, CMS toggles)</li>
+<li>Staff management (view all staff, roles, certifications)</li>
+<li>Survey management (create, enable, disable surveys)</li>
+<li>Activity log (who did what, when)</li>
+</ul>
+
+<h3>Access</h3>
+<ul>
+<li>Admin only — not shared with staff</li>
+<li>Multi-admin supported (Izzy + store managers with admin role)</li>
+</ul>
+
+<p>---</p>
+
+<h2>Staff Portal</h2>
+
+<h3>Location</h3>
+<ul>
+<li>Route: `/team` or `/staff` — also not publicly linked</li>
+<li>Separate login from Admin</li>
+<li>Staff bookmark or QR code posted in back-of-house</li>
+</ul>
+
+<h3>User Types</h3>
+<table>
+<tr><th>Role</th><th>Access</th></tr>
+<tr><th>**Staff**</th><th>Own dashboard, learning, quizzes, surveys, certifications</th></tr>
+<tr><th>**Manager**</th><th>All of the above + full team view, manage certifications, toggle surveys</th></tr>
+</table>
+
+<p>---</p>
+
+<h3>Staff Dashboard (Individual View)</h3>
+
+<p><strong>Welcome screen shows:</strong></p>
+<ul>
+<li>Name + role (e.g., "Welcome back, Hailey — Front of House")</li>
+<li>Overall readiness score (composite of knowledge + service)</li>
+<li>Certifications earned (badge display)</li>
+<li>Active tasks / incomplete items</li>
+<li>Recent activity</li>
+</ul>
+
+<p><strong>Navigation tabs:</strong></p>
+<table>
+<tr><th>Tab</th><th>Contents</th></tr>
+<tr><th>🏠 Home</th><th>Dashboard, readiness score, quick actions</th></tr>
+<tr><th>📚 Learn</th><th>Menu modules, operating procedures, training materials</th></tr>
+<tr><th>🎯 Quizzes</th><th>Knowledge quizzes — must pass to advance</th></tr>
+<tr><th>✅ Certifications</th><th>Roles earned, roles in progress, what's needed to unlock next</th></tr>
+<tr><th>📝 My Growth</th><th>Surveys, self-assessments (manager-toggled), reflection prompts</th></tr>
+</table>
+
+<p>---</p>
+
+<h3>Certification System</h3>
+
+<p><strong>Two tracks required for each role:</strong></p>
+
+<p>1. <strong>Knowledge Track</strong> — digital</p>
+<p>   - Complete learning module for the role</p>
+<p>   - Pass quiz (score threshold, e.g., 80%+)</p>
+<p>   - Unlimited retakes, but tracked</p>
+<p>   - Auto-marks Knowledge Certified when passed</p>
+
+<p>2. <strong>Service Track</strong> — manager-observed</p>
+<p>   - Manager observes staff performing the role in real life</p>
+<p>   - Manager marks Service Certified from their manager dashboard</p>
+<p>   - Cannot self-certify</p>
+
+<p><strong>Role examples:</strong></p>
+<ul>
+<li>Barista</li>
+<li>Front of House</li>
+<li>Food Prep</li>
+<li>Cashier</li>
+<li>Opening Shift</li>
+<li>Closing Shift</li>
+<li>Trainer (senior tier)</li>
+</ul>
+
+<p><strong>Certification badge states:</strong></p>
+<ul>
+<li>🔒 Not started</li>
+<li>📖 Learning in progress</li>
+<li>✅ Knowledge certified</li>
+<li>🌟 Fully certified (knowledge + service)</li>
+</ul>
+
+<p>---</p>
+
+<h3>Learning Modules</h3>
+
+<p>Each module contains:</p>
+<ul>
+<li>Reading material (menu items, descriptions, allergens, prep notes)</li>
+<li>Operating procedures (open/close checklists, service standards, hospitality rules)</li>
+<li>Images / visual guides</li>
+<li>End-of-module quiz</li>
+</ul>
+
+<p>Modules are role-gated — staff only see modules relevant to their assigned roles.</p>
+
+<p>---</p>
+
+<h3>Quiz System</h3>
+
+<ul>
+<li>Multiple choice + true/false</li>
+<li>Pass threshold: 80%+</li>
+<li>Retakes allowed — each attempt is logged</li>
+<li>Manager can see attempt history</li>
+<li>Passing auto-triggers Knowledge Certified status for that module</li>
+</ul>
+
+<p>---</p>
+
+<h3>Surveys & Self-Assessments</h3>
+
+<ul>
+<li>Manager creates and enables surveys from Admin dashboard</li>
+<li>Staff see active surveys under "My Growth" tab</li>
+<li>Survey types:</li>
+</ul>
+<p>  - Open-ended reflection ("What went well this week?")</p>
+<p>  - Rating scales (1–5)</p>
+<p>  - Self-assessment rubrics ("Rate yourself on: Hospitality, Speed, Accuracy, Teamwork")</p>
+<ul>
+<li>Responses visible to managers only</li>
+<li>Staff can see their own history</li>
+</ul>
+
+<p>---</p>
+
+<h3>Manager View</h3>
+
+<p><strong>Team Overview:</strong></p>
+<ul>
+<li>Full staff list with readiness scores</li>
+<li>Filter by role, certification status, quiz progress</li>
+<li>Click any staff member → see their full profile</li>
+</ul>
+
+<p><strong>Actions managers can take:</strong></p>
+<ul>
+<li>Mark Service Certified for a staff member</li>
+<li>Enable / disable surveys</li>
+<li>Create quiz or survey assignments</li>
+<li>Add roles to a staff member</li>
+<li>View quiz attempt history</li>
+<li>Add notes to a staff profile</li>
+</ul>
+
+<p><strong>Manager Dashboard widgets:</strong></p>
+<ul>
+<li>Team readiness %</li>
+<li>Certifications this week</li>
+<li>Pending service observations</li>
+<li>Overdue incomplete items</li>
+</ul>
+
+<p>---</p>
+
+<h3>Tech Stack (Staff Portal)</h3>
+
+<table>
+<tr><th>Layer</th><th>Recommendation</th></tr>
+<tr><th>Frontend</th><th>Same stack as main site (Next.js or plain HTML/JS)</th></tr>
+<tr><th>Auth</th><th>Simple JWT — email + password, role-based</th></tr>
+<tr><th>Database</th><th>PostgreSQL (same DB as ops system)</th></tr>
+<tr><th>Backend</th><th>Node.js / Express API</th></tr>
+<tr><th>Storage</th><th>JSON or DB for quiz content, survey responses</th></tr>
+</table>
+
+<p>---</p>
+
+<p>*PRD v2.2 | Domo Cafe | domokuncafe.com | Updated May 24, 2026*</p>
+
+</div>
+<div class="footer">Domo Cafe · domokuncafe.com · PRD v2.2 · Confidential</div>
+</body>
+</html>

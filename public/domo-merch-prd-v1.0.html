@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Merchandise Portal PRD v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;
+  --tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);
+  --bg:var(--dark);--text:var(--warm);--sub:var(--muted);
+}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+
+/* MAIN */
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+
+/* HEADER */
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.badge-date{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:560px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:32px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.mode-toggle:hover{color:var(--text)}
+
+/* SECTIONS */
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+
+/* CALLOUT */
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout p{font-size:13.5px;margin:0;color:var(--sub)}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+body.light .card{background:#fff}
+.card-icon{font-size:22px;margin-bottom:10px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-body{font-size:12.5px;color:var(--sub);line-height:1.6}
+
+/* PHASE PILLS */
+.phase{display:inline-flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.p0{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.p1{background:rgba(139,69,19,0.15);color:var(--tan)}
+.p2{background:rgba(212,165,116,0.12);color:var(--muted)}
+
+/* WORKFLOW */
+.workflow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:20px 0}
+.wf-step{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:6px 12px;color:var(--text)}
+body.light .wf-step{background:#fff}
+.wf-arrow{color:var(--muted);font-size:14px}
+.wf-step.nhk{border-color:var(--red);color:var(--red)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--sub);line-height:1.5}
+tr:last-child td{border-bottom:none}
+
+/* ROLE CARDS */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.role-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px}
+body.light .role-card{background:#fff}
+.role-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.role-perms{font-size:12px;color:var(--sub);line-height:1.6}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px;text-align:center}
+body.light .kpi{background:#fff}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--red);margin-bottom:4px}
+.kpi-label{font-size:11px;color:var(--sub)}
+
+/* ROYALTY TABLE */
+.royalty-row{display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:0;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin:16px 0}
+.royalty-cell{padding:12px 16px;font-size:13px;border-right:1px solid var(--border)}
+.royalty-cell:last-child{border-right:none}
+.royalty-cell.header{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);background:rgba(139,69,19,0.06)}
+.royalty-cell.rate{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--red)}
+</style>
+</head>
+<body>
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☾ DARK':'☀ LIGHT'">☀ LIGHT</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">Merch Portal · PRD v1.0</div>
+  </div>
+  <span class="nav-section">Overview</span>
+  <a class="nav-item" href="#s1">01 · Executive Summary</a>
+  <a class="nav-item" href="#s2">02 · Problem Statement</a>
+  <a class="nav-item" href="#s3">03 · Goals & Metrics</a>
+  <a class="nav-item" href="#s4">04 · User Roles</a>
+  <span class="nav-section">Features</span>
+  <a class="nav-item" href="#s5">05 · Catalog System</a>
+  <a class="nav-item" href="#s6">06 · Design & Approval</a>
+  <a class="nav-item" href="#s7">07 · Vendor Management</a>
+  <a class="nav-item" href="#s8">08 · Inventory</a>
+  <a class="nav-item" href="#s9">09 · Sales & Royalties</a>
+  <a class="nav-item" href="#s10">10 · Pin Series</a>
+  <span class="nav-section">Technical</span>
+  <a class="nav-item" href="#s11">11 · Architecture</a>
+  <a class="nav-item" href="#s12">12 · Integrations</a>
+  <a class="nav-item" href="#s13">13 · Phases</a>
+  <a class="nav-item" href="#s14">14 · Open Questions</a>
+  <a class="nav-item" href="#s15">15 · Appendix</a>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v1.0</span>
+      <span class="badge-date">June 2026 · GFC BP LLC</span>
+    </div>
+    <div class="doc-title">Merchandise<br><span>Portal</span></div>
+    <div class="doc-sub">Product Requirements Document for the Domo Cafe Merchandise Management Portal — covering House Merch and NHK-Licensed Domo-kun merchandise end to end.</div>
+  </div>
+
+  <!-- 01 -->
+  <section class="section" id="s1">
+    <div class="section-num">01</div>
+    <div class="section-label">Executive Summary</div>
+    <div class="section-title">What We're Building</div>
+    <p>The Domo Cafe Merchandise Portal is a centralized operations platform for managing the full lifecycle of Domo Cafe merchandise — from initial design brief through NHK approval, vendor production, inventory receipt, and royalty reporting.</p>
+    <p>We operate two distinct merchandise tracks: <strong>House Merch</strong> (GFC BP LLC-branded items requiring no character licensing) and <strong>Licensed Merch</strong> (items featuring the Domo-kun character, requiring written NHK approval via Striker Entertainment before any production begins).</p>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Compliance</div>
+      <p>Any merchandise featuring the Domo-kun character must receive written approval from Striker Entertainment before going to production. Unauthorized production constitutes a breach of the NHK Merchandising License Agreement (executed May 19, 2026) and may result in license termination.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🏷️</div><div class="card-title">House Merch</div><div class="card-body">GFC BP LLC branded. Cups, totes, tees, aprons, hats, stickers. No NHK approval needed. Faster to market.</div></div>
+      <div class="card"><div class="card-icon">⭐</div><div class="card-title">Licensed Merch</div><div class="card-body">Domo-kun character items. Pins, plushies, collectibles, character mugs. Full NHK approval workflow required.</div></div>
+      <div class="card"><div class="card-icon">📌</div><div class="card-title">Pin Series</div><div class="card-body">Domo Cafe Crew — monthly limited edition pins. Domo in cafe roles. Physical pin = digital collectible twin.</div></div>
+    </div>
+    <p><strong>Success in 12 months:</strong> Zero unauthorized NHK submissions reach production. 100% royalty reporting accuracy. Less than 14-day vendor-to-shelf lead time for reorders. Full sell-through visibility per SKU.</p>
+  </section>
+
+  <!-- 02 -->
+  <section class="section" id="s2">
+    <div class="section-num">02</div>
+    <div class="section-label">Problem Statement</div>
+    <div class="section-title">Where We Are Today</div>
+    <p>Currently, Domo Cafe's merchandise operations are entirely manual and ad hoc. There is no central system tracking designs in progress, NHK approval status, vendor relationships, purchase orders, or inventory levels.</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">No Approval Tracking</div><div class="card-body">Designs submitted to Striker Entertainment via email with no status visibility. Risk of production beginning before written approval is received.</div></div>
+      <div class="card"><div class="card-title">No Inventory Visibility</div><div class="card-body">No system to track what's in stockroom vs. display floor vs. sold. Reorders happen reactively when items run out.</div></div>
+      <div class="card"><div class="card-title">No Royalty Tracking</div><div class="card-body">NHK requires quarterly royalty reports. With no sales-by-SKU tracking, calculating 8% DTC and 13% wholesale royalties manually is error-prone.</div></div>
+      <div class="card"><div class="card-title">Vendor Fragmentation</div><div class="card-body">Multiple vendors, no central directory. Lead times, MOQs, and pricing scattered across emails. No PO trail.</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ Compliance Risk</div>
+      <p>The NHK Merchandising License Agreement requires all Domo-kun merchandise to be approved in writing before production. Without a tracking system, there is a real risk that unapproved items enter production — a potential breach that could jeopardize the license and the 25-mile exclusivity radius for Buena Park.</p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="section" id="s3">
+    <div class="section-num">03</div>
+    <div class="section-label">Goals & Metrics</div>
+    <div class="section-title">What Success Looks Like</div>
+    <h4>P0 — Must Have at Launch</h4>
+    <p><span class="phase p0">P0</span> Merchandise catalog with SKU management (House + Licensed)<br>
+    <span class="phase p0">P0</span> Design upload and NHK approval workflow with status tracking<br>
+    <span class="phase p0">P0</span> Vendor directory with contact and lead time info<br>
+    <span class="phase p0">P0</span> Clear House vs. Licensed track separation — no mixing</p>
+    <h4>P1 — Ship Within 60 Days</h4>
+    <p><span class="phase p1">P1</span> Inventory management — receive against PO, stock levels, low-stock alerts<br>
+    <span class="phase p1">P1</span> PO generation and vendor communication workflow<br>
+    <span class="phase p1">P1</span> Royalty calculation and quarterly report generation<br>
+    <span class="phase p1">P1</span> Pin series management with drop calendar</p>
+    <h4>P2 — Phase 3</h4>
+    <p><span class="phase p2">P2</span> Toast POS integration for automatic sales data pull<br>
+    <span class="phase p2">P2</span> Domo app loyalty integration (digital collectible mint on pin drop)<br>
+    <span class="phase p2">P2</span> Vendor portal access<br>
+    <span class="phase p2">P2</span> Analytics and sell-through reporting</p>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val">&lt;7d</div><div class="kpi-label">Striker Approval Turnaround Target</div></div>
+      <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-label">NHK Royalty Report Accuracy</div></div>
+      <div class="kpi"><div class="kpi-val">&lt;14d</div><div class="kpi-label">Reorder Lead Time (Vendor to Shelf)</div></div>
+      <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">Unauthorized Items to Production</div></div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="section" id="s4">
+    <div class="section-num">04</div>
+    <div class="section-label">User Roles</div>
+    <div class="section-title">Who Uses the Portal</div>
+    <div class="role-grid">
+      <div class="role-card"><div class="role-name">👑 Brand Operator (Izzy)</div><div class="role-perms">Full access. Final approval on all designs, vendor POs, and financials. Can override any workflow stage. Views royalty reports.</div></div>
+      <div class="role-card"><div class="role-name">🎨 Brand Manager</div><div class="role-perms">Submit designs, manage catalog, track production orders, update inventory. Cannot approve NHK submissions — operator only.</div></div>
+      <div class="role-card"><div class="role-name">📋 Licensing Coordinator</div><div class="role-perms">Manages NHK/Striker submission packages. Tracks approval status. Routes revision requests. Maintains compliance log.</div></div>
+      <div class="role-card"><div class="role-name">🏭 Vendor (External)</div><div class="role-perms">Receives production briefs and RFQs. Submits quotes and production milestones. View-only on approved designs.</div></div>
+      <div class="role-card"><div class="role-name">👕 Staff</div><div class="role-perms">View available staff merch (uniforms, pins earned by role). Request items. View their pin progression status.</div></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="section" id="s5">
+    <div class="section-num">05</div>
+    <div class="section-label">Catalog System</div>
+    <div class="section-title">Product SKU Management</div>
+    <p>Every merchandise item lives in the catalog as a SKU with a clear House or Licensed designation. Licensed SKUs are locked from production until NHK approval is recorded.</p>
+    <table>
+      <tr><th>Field</th><th>House Merch</th><th>Licensed Merch</th></tr>
+      <tr><td>SKU prefix</td><td>DC-HM-XXXX</td><td>DC-LM-XXXX</td></tr>
+      <tr><td>NHK approval required</td><td>No</td><td>Yes — blocks production</td></tr>
+      <tr><td>Royalty tracking</td><td>No</td><td>Yes (8% DTC / 13% WS)</td></tr>
+      <tr><td>Striker submission</td><td>No</td><td>Required before PO</td></tr>
+      <tr><td>Example items</td><td>Tote, tee, apron, mug, sticker</td><td>Pin, plushie, character mug, collectible</td></tr>
+    </table>
+    <h4>Product Types</h4>
+    <div class="grid-3">
+      <div class="card"><div class="card-title">👕 Apparel</div><div class="card-body">Tees, hoodies, aprons, hats. Size variants (XS–3XL). Staff vs. retail distinction.</div></div>
+      <div class="card"><div class="card-title">☕ Drinkware</div><div class="card-body">Ceramic mugs, tumblers, cups. Volume variants. Character vs. brand versions.</div></div>
+      <div class="card"><div class="card-title">👜 Accessories</div><div class="card-body">Tote bags, lanyards, keychains, patches.</div></div>
+      <div class="card"><div class="card-title">📌 Pins / Collectibles</div><div class="card-body">Monthly Domo Cafe Crew pin series. Limited quantity. Physical + digital twin.</div></div>
+      <div class="card"><div class="card-title">📦 Packaging</div><div class="card-body">Custom coffee sleeves, bags, boxes. Brand-printed.</div></div>
+      <div class="card"><div class="card-title">🧸 Plushies</div><div class="card-body">Licensed only. NHK approval required. High-value collectible tier.</div></div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="section" id="s6">
+    <div class="section-num">06</div>
+    <div class="section-label">Design & Approval Workflow</div>
+    <div class="section-title">From Brief to Production</div>
+    <h4>House Merch Workflow</h4>
+    <div class="workflow">
+      <div class="wf-step">Design Brief</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Design Upload</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Internal Review</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Approved</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Production Brief</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Vendor Quote</div><div class="wf-arrow">→</div>
+      <div class="wf-step">PO</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Production</div><div class="wf-arrow">→</div>
+      <div class="wf-step">QC</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Inventory Receive</div>
+    </div>
+    <h4>Licensed Merch Workflow (NHK Approval Gate)</h4>
+    <div class="workflow">
+      <div class="wf-step">Design Brief</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Design Upload</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Internal Review</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">Submit to Striker</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">NHK Review</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">Approved ✓</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Production Brief</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Vendor Quote</div><div class="wf-arrow">→</div>
+      <div class="wf-step">PO</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Production</div><div class="wf-arrow">→</div>
+      <div class="wf-step">QC</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Inventory Receive</div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Gate</div>
+      <p>Red steps above require NHK approval. The system must hard-block any PO generation on a Licensed SKU until approval status = "Approved — Written Confirmation Received." Approval target SLA: 7 business days from Striker submission.</p>
+    </div>
+    <table>
+      <tr><th>Status</th><th>Who Can Set</th><th>Next Action</th></tr>
+      <tr><td>Draft</td><td>Brand Manager</td><td>Submit for internal review</td></tr>
+      <tr><td>Internal Review</td><td>Brand Operator</td><td>Approve internally or request revision</td></tr>
+      <tr><td>Submitted to Striker</td><td>Licensing Coordinator</td><td>Await NHK response</td></tr>
+      <tr><td>NHK Revision Requested</td><td>Licensing Coordinator</td><td>Revise design, resubmit</td></tr>
+      <tr><td>NHK Approved</td><td>Licensing Coordinator</td><td>Unlock production workflow</td></tr>
+      <tr><td>In Production</td><td>Brand Manager</td><td>Track milestones</td></tr>
+      <tr><td>QC Hold</td><td>Brand Manager</td><td>Resolve before inventory receive</td></tr>
+      <tr><td>In Inventory</td><td>System (auto)</td><td>Available for sale</td></tr>
+    </table>
+  </section>
+
+  <!-- 07 -->
+  <section class="section" id="s7">
+    <div class="section-num">07</div>
+    <div class="section-label">Vendor Management</div>
+    <div class="section-title">Supplier Directory & PO Workflow</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📋 Vendor Directory</div><div class="card-body">Name, contact, categories, MOQ, standard lead time, accepted file formats, payment terms, rating (1–5).</div></div>
+      <div class="card"><div class="card-title">📩 RFQ Workflow</div><div class="card-body">Send production brief to one or multiple vendors. Vendors submit quote + lead time. Operator selects and converts to PO.</div></div>
+      <div class="card"><div class="card-title">📄 PO Generation</div><div class="card-body">System generates PO from approved design + accepted quote. Includes SKU, quantity, price, delivery date, and NHK approval reference (if licensed).</div></div>
+      <div class="card"><div class="card-title">📦 Production Milestones</div><div class="card-body">Sample approval, bulk production start, production complete, shipped, delivered. Vendor updates milestones; operator receives alerts on delays.</div></div>
+    </div>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+      <tr><td>Vendor Name</td><td>Text</td><td>Company name</td></tr>
+      <tr><td>Primary Contact</td><td>Name + Email + Phone</td><td></td></tr>
+      <tr><td>Categories</td><td>Multi-select</td><td>Apparel, Drinkware, Pins, Plush, etc.</td></tr>
+      <tr><td>MOQ</td><td>Number</td><td>Minimum order quantity</td></tr>
+      <tr><td>Standard Lead Time</td><td>Number (days)</td><td>From PO to delivery</td></tr>
+      <tr><td>Sample Lead Time</td><td>Number (days)</td><td></td></tr>
+      <tr><td>Rating</td><td>1–5 stars</td><td>Internal only</td></tr>
+      <tr><td>Active POs</td><td>Count</td><td>Linked from PO table</td></tr>
+    </table>
+  </section>
+
+  <!-- 08 -->
+  <section class="section" id="s8">
+    <div class="section-num">08</div>
+    <div class="section-label">Inventory Management</div>
+    <div class="section-title">Stock, Locations & Alerts</div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">📥</div><div class="card-title">Receive Against PO</div><div class="card-body">Scan or manually confirm items received. Match to open PO. Flag discrepancies.</div></div>
+      <div class="card"><div class="card-icon">📊</div><div class="card-title">Stock Levels</div><div class="card-body">Units by SKU and variant. Reorder point trigger. Historical movement chart.</div></div>
+      <div class="card"><div class="card-icon">📍</div><div class="card-title">Location Tracking</div><div class="card-body">Stockroom / Display Floor / Online. Transfer between locations. Prevents phantom stock.</div></div>
+      <div class="card"><div class="card-icon">🔔</div><div class="card-title">Low-Stock Alerts</div><div class="card-body">Set reorder threshold per SKU. Email alert when stock hits threshold. Auto-suggest reorder quantity.</div></div>
+      <div class="card"><div class="card-icon">🔍</div><div class="card-title">Shrinkage Logging</div><div class="card-body">Log damaged, stolen, or missing items by SKU. Reason codes. Monthly shrinkage report.</div></div>
+      <div class="card"><div class="card-icon">📦</div><div class="card-title">Pin Edition Tracking</div><div class="card-body">Limited edition pins tracked separately — quantity produced, quantity sold, quantity remaining per drop.</div></div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section class="section" id="s9">
+    <div class="section-num">09</div>
+    <div class="section-label">Sales & Royalty Tracking</div>
+    <div class="section-title">Revenue, COGS & NHK Reporting</div>
+    <p>Royalty calculation is a contractual requirement under the NHK Merchandising License Agreement. The system must track sales by SKU and automatically compute royalties owed on Licensed items.</p>
+    <div class="royalty-row">
+      <div class="royalty-cell header">Channel</div><div class="royalty-cell header">Rate</div><div class="royalty-cell header">Basis</div><div class="royalty-cell header">Notes</div>
+    </div>
+    <div class="royalty-row">
+      <div class="royalty-cell">Direct-to-Consumer (in-store, online)</div><div class="royalty-cell rate">8%</div><div class="royalty-cell">Net sales</div><div class="royalty-cell">Primary channel — in-cafe and domokuncafe.com</div>
+    </div>
+    <div class="royalty-row">
+      <div class="royalty-cell">Wholesale</div><div class="royalty-cell rate">13%</div><div class="royalty-cell">Net sales</div><div class="royalty-cell">If merch is sold wholesale to third parties</div>
+    </div>
+    <div class="royalty-row">
+      <div class="royalty-cell">Marketing commitment</div><div class="royalty-cell rate">2%</div><div class="royalty-cell">Net wholesale price</div><div class="royalty-cell">Applied to wholesale promotional materials</div>
+    </div>
+    <div class="callout brown">
+      <div class="callout-label">Minimum Guarantee</div>
+      <p>The NHK MLA carries a $35,000 minimum guarantee for the 12-month term. $10,000 advance was paid at signing. Remaining $25,000 is recoupable against earned royalties. Breakeven on MG = $1,167,000 in DTC F&B sales at 3%, or $437,500 in merch DTC sales at 8%. The portal must surface MG recoupment progress in the royalty dashboard.</p>
+    </div>
+    <h4>Quarterly Royalty Report</h4>
+    <p>System generates a quarterly report showing: sales by SKU, channel breakdown, gross royalty owed, MG credit applied, net royalty due. Exportable as PDF for submission to NHK/Striker.</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="section" id="s10">
+    <div class="section-num">10</div>
+    <div class="section-label">Pin Series</div>
+    <div class="section-title">Domo Cafe Crew — Monthly Drops</div>
+    <p>The Domo Cafe Crew pin series is one of the highest-value merchandise programs — combining physical collectibles with digital loyalty integration. Each pin features Domo-kun in a cafe staff role.</p>
+    <div class="grid-3">
+      <div class="card"><div class="card-title">🍽️ Server</div><div class="card-body">Month 1 drop</div></div>
+      <div class="card"><div class="card-title">☕ Barista</div><div class="card-body">Month 2 drop</div></div>
+      <div class="card"><div class="card-title">🏃 Runner</div><div class="card-body">Month 3 drop</div></div>
+      <div class="card"><div class="card-title">🧹 Busser</div><div class="card-body">Month 4 drop</div></div>
+      <div class="card"><div class="card-title">🍳 Line Cook</div><div class="card-body">Month 5 drop</div></div>
+      <div class="card"><div class="card-title">👨‍🍳 Head Chef</div><div class="card-body">Month 7 drop — rare</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Approval Required Per Design</div>
+      <p>Each pin design must be individually submitted to Striker Entertainment and receive written NHK approval before production. Approval must be logged in the portal against the specific SKU. No exceptions.</p>
+    </div>
+    <h4>Physical ↔ Digital Twin</h4>
+    <p>Each physical pin sold triggers a digital collectible mint in the Domo Loyalty App. The portal manages the pairing: when a pin SKU is marked "sold," it fires an API call to the loyalty system to mint the corresponding digital collectible for that customer's account.</p>
+    <h4>Staff Pin Progression</h4>
+    <p>Staff members earn the corresponding pin when they are certified in that role. The portal tracks which roles each staff member has unlocked and their remaining progression. This is separate from the retail pin drop — staff copies are non-sale items tracked as staff benefits.</p>
+  </section>
+
+  <!-- 11 -->
+  <section class="section" id="s11">
+    <div class="section-num">11</div>
+    <div class="section-label">Technical Architecture</div>
+    <div class="section-title">How It's Built</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Frontend</div><div class="card-body">Next.js 14 + TypeScript. React Server Components for data-heavy views. Tailwind CSS. Hosted on Railway.</div></div>
+      <div class="card"><div class="card-title">Database</div><div class="card-body">PostgreSQL on Railway. Prisma ORM. Separate tables for SKUs, designs, approvals, POs, inventory, royalties.</div></div>
+      <div class="card"><div class="card-title">Auth</div><div class="card-body">Clerk or NextAuth. Role-based: Operator, Brand Manager, Licensing Coordinator, Vendor, Staff.</div></div>
+      <div class="card"><div class="card-title">File Storage</div><div class="card-body">Cloudflare R2 or AWS S3. Design files, mockups, NHK submission packages, PO PDFs.</div></div>
+      <div class="card"><div class="card-title">Email</div><div class="card-body">Resend API. Approval notifications to Striker, PO emails to vendors, low-stock alerts, royalty report delivery.</div></div>
+      <div class="card"><div class="card-title">Jarvis API</div><div class="card-body">GET /api/jarvis/status + full CRUD. Auth: x-api-key header = JARVIS_API_KEY env var. Required on all builds.</div></div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="section" id="s12">
+    <div class="section-num">12</div>
+    <div class="section-label">Integrations</div>
+    <div class="section-title">Connected Systems</div>
+    <table>
+      <tr><th>System</th><th>Integration Type</th><th>Purpose</th><th>Phase</th></tr>
+      <tr><td>Toast POS</td><td>API pull</td><td>Pull merch sales data for royalty calculation</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>Striker Entertainment</td><td>Email (structured)</td><td>NHK approval submission packages</td><td><span class="phase p0">P0</span></td></tr>
+      <tr><td>Domo Loyalty App</td><td>API call</td><td>Trigger digital collectible mint on pin sale</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>Notion</td><td>API sync</td><td>Sync product catalog to Notion DB</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>Resend</td><td>Email API</td><td>All notification emails</td><td><span class="phase p0">P0</span></td></tr>
+    </table>
+  </section>
+
+  <!-- 13 -->
+  <section class="section" id="s13">
+    <div class="section-num">13</div>
+    <div class="section-label">Phases & Timeline</div>
+    <div class="section-title">Build Roadmap</div>
+    <div class="card" style="margin-bottom:14px"><div class="card-title"><span class="phase p0">Phase 1 · MVP · 2 Weeks</span></div><div class="card-body">Merchandise catalog (House + Licensed SKUs) · Design upload workflow · NHK approval status tracking · Vendor directory · House and Licensed track separation · Resend email notifications to Striker</div></div>
+    <div class="card" style="margin-bottom:14px"><div class="card-title"><span class="phase p1">Phase 2 · 4 Weeks</span></div><div class="card-body">Inventory management (receive against PO, stock levels, location tracking, low-stock alerts) · PO generation from approved designs · Royalty calculation dashboard · Quarterly royalty report export · Pin drop calendar and edition tracking</div></div>
+    <div class="card"><div class="card-title"><span class="phase p2">Phase 3 · 8 Weeks</span></div><div class="card-body">Toast POS integration for automatic sales data · Digital collectible mint via loyalty app API · Vendor portal login · Analytics dashboard (sell-through, royalty trends, MG progress) · Staff pin progression tracking</div></div>
+  </section>
+
+  <!-- 14 -->
+  <section class="section" id="s14">
+    <div class="section-num">14</div>
+    <div class="section-label">Open Questions</div>
+    <div class="section-title">Decisions Needed</div>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Options</th><th>Owner</th></tr>
+      <tr><td>1</td><td>Vendor portal access model</td><td>Separate login vs. email-based quote submission</td><td>Izzy</td></tr>
+      <tr><td>2</td><td>NHK digital submission</td><td>Email-only vs. portal integration with Striker</td><td>Russell Binder</td></tr>
+      <tr><td>3</td><td>Toast API availability</td><td>Confirm Toast supports merch sales data pull via API</td><td>Domo Cafe ops</td></tr>
+      <tr><td>4</td><td>Pin tracking scope</td><td>Physical only vs. physical + digital collectible pairing at launch</td><td>Izzy</td></tr>
+      <tr><td>5</td><td>Subscription box merch</td><td>Does Domo Sub Box use same SKUs or separate catalog?</td><td>Izzy</td></tr>
+    </table>
+  </section>
+
+  <!-- 15 -->
+  <section class="section" id="s15">
+    <div class="section-num">15</div>
+    <div class="section-label">Appendix</div>
+    <div class="section-title">Reference Material</div>
+    <h4>NHK Royalty Rate Table</h4>
+    <table>
+      <tr><th>Category</th><th>Rate</th><th>Basis</th></tr>
+      <tr><td>F&B Sales</td><td>3%</td><td>Net sales</td></tr>
+      <tr><td>Direct-to-Consumer Merch</td><td>8%</td><td>Net sales</td></tr>
+      <tr><td>Wholesale Merch</td><td>13%</td><td>Net sales</td></tr>
+      <tr><td>Marketing commitment</td><td>2%</td><td>Net wholesale price</td></tr>
+    </table>
+    <h4>Striker Entertainment Submission Checklist</h4>
+    <div class="callout brown">
+      <div class="callout-label">Required for Every Licensed Submission</div>
+      <p>☐ Final artwork file (AI, EPS, or high-res PNG) · ☐ Mockup on product (front + back) · ☐ Color breakdown (Pantone or CMYK) · ☐ Item description (product type, material, size) · ☐ Intended sales channel (DTC / wholesale) · ☐ Planned production quantity · ☐ Target production start date · ☐ Vendor name and location · ☐ Retail price · ☐ Wholesale price (if applicable)</p>
+    </div>
+    <h4>SKU Naming Convention</h4>
+    <p><code style="font-family:monospace;background:var(--surface);padding:2px 6px;border-radius:3px">DC-[HM|LM]-[TYPE]-[SEQ]</code> — Example: <code style="font-family:monospace;background:var(--surface);padding:2px 6px;border-radius:3px">DC-LM-PIN-001</code> = Licensed Merch, Pin, Sequence 001 (Barista pin, Month 1)</p>
+    <h4>Contacts</h4>
+    <table>
+      <tr><th>Role</th><th>Name</th><th>Email</th></tr>
+      <tr><td>Brand Operator</td><td>Izzy Aala (GFC BP LLC)</td><td>izzy@domokuncafe.com</td></tr>
+      <tr><td>Licensing Agent (USA)</td><td>Russell Binder, Striker Entertainment</td><td>Russell@strikerent.com</td></tr>
+      <tr><td>NHK Licensing</td><td>Shiraya Tanaka, NHK Enterprises</td><td>tanaka-shi@nhk-ep.co.jp</td></tr>
+    </table>
+  </section>
+</main>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      navItems.forEach(n=>n.classList.remove('active'));
+      const a = document.querySelector('.nav-item[href="#'+e.target.id+'"]');
+      if(a) a.classList.add('active');
+    }
+  });
+},{threshold:0.2});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

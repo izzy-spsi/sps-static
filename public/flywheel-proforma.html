@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flywheel Pro Forma Simulator v3.2</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:   #070C19; --surf: #0E1728; --surf2:#151F38;
+      --bdr:  rgba(255,255,255,.07);
+      --acc:  #00C2E0; --purp:#9B7FFF; --amb:#F9A825;
+      --grn:  #10B981; --red: #EF4444; --pink:#F472B6;
+      --coral:#FF7B54;
+      --txt:  #EEE9E2; --mut: #8897B4;
+      --font: 'Space Grotesk',sans-serif;
+      --body: 'DM Sans',sans-serif;
+      --mono: 'JetBrains Mono',monospace;
+    }
+    html,body { height:100%; overflow:hidden; }
+    body { background:var(--bg); color:var(--txt); font-family:var(--body); display:flex; flex-direction:column; }
+
+    /* GATE */
+    #gate { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; }
+    .gate-box { text-align:center; max-width:290px; width:100%; padding:0 16px; }
+    .gate-logo { font-family:var(--font); font-size:26px; font-weight:700; color:var(--acc); margin-bottom:6px; }
+    .gate-sub  { font-size:12px; color:var(--mut); margin-bottom:28px; }
+    .gate-inp  { width:100%; padding:11px 14px; background:var(--surf); border:1px solid var(--bdr); border-radius:8px; color:var(--txt); font-size:15px; text-align:center; letter-spacing:4px; outline:none; margin-bottom:12px; transition:border-color .2s; }
+    .gate-inp:focus { border-color:var(--acc); }
+    .gate-inp.shake { border-color:var(--red); animation:shake .3s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .gate-btn { width:100%; padding:11px; background:var(--acc); border:none; border-radius:8px; color:#000; font-family:var(--font); font-weight:700; font-size:14px; cursor:pointer; transition:opacity .2s; }
+    .gate-btn:hover { opacity:.85; }
+
+    /* APP */
+    #app { display:none; flex-direction:column; height:100vh; }
+    header { display:flex; align-items:center; justify-content:space-between; padding:10px 22px; border-bottom:1px solid var(--bdr); background:var(--surf); flex-shrink:0; height:52px; }
+    .hd-l { display:flex; align-items:center; gap:10px; }
+    .logo { font-family:var(--font); font-size:17px; font-weight:700; color:var(--acc); }
+    .ver  { font-family:var(--mono); font-size:10px; color:var(--mut); background:var(--surf2); padding:2px 8px; border-radius:4px; }
+    .conf { font-family:var(--mono); font-size:10px; color:var(--mut); opacity:.4; }
+    .scs  { display:flex; gap:3px; background:var(--bg); padding:4px; border-radius:8px; }
+    .sc   { padding:5px 14px; border:none; border-radius:5px; font-family:var(--font); font-size:12px; font-weight:600; cursor:pointer; background:transparent; color:var(--mut); transition:all .2s; }
+    .sc.on { background:var(--acc); color:#000; }
+
+    .layout { display:flex; flex:1; overflow:hidden; min-height:0; }
+
+    /* INPUT PANEL */
+    .inp { width:360px; flex-shrink:0; background:var(--surf); border-right:1px solid var(--bdr); overflow-y:auto; padding:12px; }
+    .inp::-webkit-scrollbar { width:3px; }
+    .inp::-webkit-scrollbar-thumb { background:var(--surf2); border-radius:2px; }
+
+    .sec { margin-bottom:10px; }
+    .shdr { display:flex; align-items:center; justify-content:space-between; padding:7px 11px; background:var(--surf2); border-radius:7px 7px 0 0; cursor:pointer; user-select:none; }
+    .shdr.cl { border-radius:7px; }
+    .stit { font-family:var(--font); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--mut); }
+    .stit.fc-color { color:var(--coral); }
+    .chev { font-size:11px; color:var(--mut); transition:transform .2s; }
+    .chev.op { transform:rotate(180deg); }
+    .sbdy { background:var(--bg); border:1px solid var(--bdr); border-top:none; border-radius:0 0 7px 7px; padding:10px; }
+
+    /* tier badges */
+    .tb { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; }
+    .tb-h  { background:rgba(0,194,224,.15); color:var(--acc); }
+    .tb-m  { background:rgba(155,127,255,.15); color:var(--purp); }
+    .tb-l  { background:rgba(249,168,37,.15); color:var(--amb); }
+    .tb-d  { background:rgba(16,185,129,.15); color:var(--grn); }
+    .tb-fc { background:rgba(255,123,84,.15); color:var(--coral); }
+
+    /* fleet table */
+    .ft { width:100%; border-collapse:collapse; }
+    .ft th { font-family:var(--mono); font-size:9px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; padding:3px 5px; text-align:right; }
+    .ft th:first-child { text-align:left; }
+    .ft td { padding:3px 3px; vertical-align:middle; }
+
+    input[type="number"] { background:var(--surf); border:1px solid var(--bdr); border-radius:5px; color:var(--txt); font-family:var(--mono); font-size:12px; padding:4px 7px; width:70px; text-align:right; outline:none; transition:border-color .2s; }
+    input[type="number"]:focus { border-color:var(--acc); }
+    input[type="number"].sm { width:54px; }
+    .suf { font-family:var(--mono); font-size:11px; color:var(--mut); margin-left:2px; }
+
+    /* sliders */
+    .sl-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+    .sl-lbl { font-size:12px; color:var(--mut); min-width:120px; }
+    input[type="range"] { flex:1; -webkit-appearance:none; height:3px; background:var(--surf2); border-radius:2px; outline:none; cursor:pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--acc); cursor:pointer; }
+    input[type="range"].fc-slider::-webkit-slider-thumb { background:var(--coral); }
+    .sl-val { font-family:var(--mono); font-size:12px; color:var(--acc); min-width:36px; text-align:right; }
+    .sl-val.fc-val { color:var(--coral); }
+
+    /* channel table */
+    .ct { width:100%; border-collapse:collapse; margin-bottom:8px; }
+    .ct th { font-family:var(--mono); font-size:9px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; padding:3px 3px; text-align:right; }
+    .ct th:first-child { text-align:left; }
+    .ct td { padding:3px 3px; }
+    .ch-nm { font-size:11px; white-space:nowrap; }
+    .lk { font-family:var(--mono); font-size:11px; color:var(--mut); text-align:right; display:block; }
+    .lk.fc-rate { color:var(--coral); }
+
+    .atk { height:3px; background:var(--surf2); border-radius:2px; margin-top:4px; overflow:hidden; }
+    .afl { height:100%; border-radius:2px; transition:width .3s,background .3s; }
+    .att { font-family:var(--mono); font-size:11px; text-align:right; margin-top:5px; }
+    .ok { color:var(--grn); } .warn { color:var(--amb); } .over { color:var(--red); }
+
+    /* fare sliders */
+    .fare-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .fare-ch  { font-size:12px; color:var(--txt); min-width:140px; flex-shrink:0; }
+    .fare-ch small { font-size:10px; color:var(--mut); display:block; margin-top:1px; }
+    .fare-val { font-family:var(--mono); font-size:14px; font-weight:600; color:var(--acc); min-width:38px; text-align:right; }
+
+    /* FC info box */
+    .fc-info { background:rgba(255,123,84,.07); border:1px solid rgba(255,123,84,.2); border-radius:6px; padding:8px 10px; margin-bottom:10px; }
+    .fc-info-row { display:flex; justify-content:space-between; margin-bottom:3px; }
+    .fc-info-lbl { font-size:11px; color:var(--mut); }
+    .fc-info-val { font-family:var(--mono); font-size:11px; color:var(--coral); }
+
+    /* input rows */
+    .ir { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; }
+    .ir label { font-size:12px; color:var(--mut); flex:1; }
+    .ig { font-family:var(--mono); font-size:9px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; margin:7px 0 5px; }
+
+    /* RPV card */
+    .rpv { margin-top:10px; background:var(--surf2); border-radius:6px; padding:8px 10px; }
+    .rpv-t { font-family:var(--mono); font-size:10px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .rpv-r { display:flex; justify-content:space-between; margin-bottom:3px; }
+    .rpv-l { font-size:11px; color:var(--mut); }
+    .rpv-v { font-family:var(--mono); font-size:11px; color:var(--txt); }
+    .rpv-v.fc { color:var(--coral); }
+
+    /* OUTPUT */
+    .out  { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+    .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:12px 18px; flex-shrink:0; }
+    .kpi  { background:var(--surf); border:1px solid var(--bdr); border-radius:9px; padding:12px 14px; }
+    .kl   { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.6px; color:var(--mut); margin-bottom:5px; }
+    .kv   { font-family:var(--font); font-size:22px; font-weight:700; line-height:1; }
+    .ks   { font-size:11px; color:var(--mut); margin-top:3px; }
+    .pos  { color:var(--grn); } .neg { color:var(--red); } .neu { color:var(--acc); }
+
+    .charts { flex:1; display:flex; flex-direction:column; padding:0 18px 14px; gap:10px; min-height:0; overflow:hidden; }
+    .cc  { background:var(--surf); border:1px solid var(--bdr); border-radius:9px; padding:12px 14px; display:flex; flex-direction:column; min-height:0; }
+    .cct { font-family:var(--font); font-size:11px; font-weight:600; color:var(--mut); text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px; flex-shrink:0; }
+    .cw  { position:relative; flex:1; min-height:0; }
+    .cw canvas { position:absolute; inset:0; }
+    .cr  { display:flex; gap:10px; flex:1; min-height:0; }
+    .cr .cc { flex:1; }
+  </style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">⚡ Flywheel</div>
+    <div class="gate-sub">Pro Forma Simulator — Confidential</div>
+    <input type="password" id="gateInput" class="gate-inp" placeholder="Password" autofocus>
+    <button class="gate-btn" onclick="checkPw()">Access Model</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="hd-l">
+      <span class="logo">⚡ Flywheel</span>
+      <span class="ver">Pro Forma v3.2</span>
+      <span class="conf">CONFIDENTIAL</span>
+    </div>
+    <div class="scs">
+      <button class="sc on" onclick="loadSc('conservative',this)">Conservative</button>
+      <button class="sc"    onclick="loadSc('base',this)">Base</button>
+      <button class="sc"    onclick="loadSc('aggressive',this)">Aggressive</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="inp">
+
+      <!-- FLEET -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('fleet')"><span class="stit">Fleet &amp; Growth</span><span class="chev op" id="fleet-chev">▾</span></div>
+        <div class="sbdy" id="fleet-body">
+          <table class="ft">
+            <thead><tr><th>Tier</th><th>Start</th><th>Mo. Growth</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tb tb-h">Heavy</span></td><td><input type="number" id="heavy_s" value="50"   oninput="rc()"></td><td><input type="number" id="heavy_g" value="3"  step=".5" oninput="rc()"><span class="suf">%</span></td></tr>
+              <tr><td><span class="tb tb-m">Medium</span></td><td><input type="number" id="med_s"   value="200"  oninput="rc()"></td><td><input type="number" id="med_g"   value="5"  step=".5" oninput="rc()"><span class="suf">%</span></td></tr>
+              <tr><td><span class="tb tb-l">Light</span></td><td><input type="number" id="light_s"  value="500"  oninput="rc()"></td><td><input type="number" id="light_g"  value="10" step=".5" oninput="rc()"><span class="suf">%</span></td></tr>
+              <tr><td><span class="tb tb-d">D2D</span></td><td><input type="number" id="d2d_s"    value="1000" oninput="rc()"></td><td><input type="number" id="d2d_g"    value="15" step=".5" oninput="rc()"><span class="suf">%</span></td></tr>
+              <tr><td><span class="tb tb-fc">Connect</span></td><td><input type="number" id="fc_s" value="700"  oninput="rc()"></td><td><input type="number" id="fc_g"  value="10" step=".5" oninput="rc()"><span class="suf">%</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:10px;color:var(--mut);margin-top:6px;font-family:var(--mono);">⚡ Connect: Kaptyn LV (700 active). iCabbi 10K target starts Q4 2026.</div>
+        </div>
+      </div>
+
+      <!-- OPERATIONS -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('ops')"><span class="stit">Operations</span><span class="chev op" id="ops-chev">▾</span></div>
+        <div class="sbdy" id="ops-body">
+          <div class="sl-row"><span class="sl-lbl">Shift Hours</span><input type="range" id="shift_hrs" min="6" max="16" value="10" step="1" oninput="slv('shift_hrs','sv-sh','h');rc()"><span class="sl-val" id="sv-sh">10h</span></div>
+          <div class="sl-row"><span class="sl-lbl">Shifts / Day</span><input type="range" id="shifts_day" min="1" max="2" value="1" step=".5" oninput="slv('shifts_day','sv-sd','x');rc()"><span class="sl-val" id="sv-sd">1.0</span></div>
+          <div class="sl-row"><span class="sl-lbl">Days / Month</span><input type="range" id="days_mo" min="20" max="31" value="26" step="1" oninput="slv('days_mo','sv-dm','d');rc()"><span class="sl-val" id="sv-dm">26d</span></div>
+        </div>
+      </div>
+
+      <!-- FARES -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('fares')"><span class="stit">Average Fares by Channel</span><span class="chev op" id="fares-chev">▾</span></div>
+        <div class="sbdy" id="fares-body">
+          <div class="fare-row">
+            <div class="fare-ch">Street Hail<small>Cash &amp; CC</small></div>
+            <input type="range" id="fare_sh" min="8" max="60" value="22" step="1" oninput="fv('fare_sh','fv-sh');rc()">
+            <span class="fare-val" id="fv-sh">$22</span>
+          </div>
+          <div class="fare-row">
+            <div class="fare-ch">Paratransit<small>Dispatch / Gov't</small></div>
+            <input type="range" id="fare_pt" min="10" max="80" value="25" step="1" oninput="fv('fare_pt','fv-pt');rc()">
+            <span class="fare-val" id="fv-pt">$25</span>
+          </div>
+          <div class="fare-row">
+            <div class="fare-ch">Uber 3P<small>Total rider payment</small></div>
+            <input type="range" id="fare_uber" min="8" max="50" value="17" step="1" oninput="fv('fare_uber','fv-uber');rc()">
+            <span class="fare-val" id="fv-uber">$17</span>
+          </div>
+          <div class="fare-row">
+            <div class="fare-ch">eHail (1P)<small>Flywheel app</small></div>
+            <input type="range" id="fare_ehail" min="8" max="50" value="19" step="1" oninput="fv('fare_ehail','fv-ehail');rc()">
+            <span class="fare-val" id="fv-ehail">$19</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANNEL MIX (Heavy/Medium/Light/D2D) -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('ch')"><span class="stit">Channel Mix — Standard Tiers</span><span class="chev op" id="ch-chev">▾</span></div>
+        <div class="sbdy" id="ch-body">
+          <table class="ct">
+            <thead><tr><th>Channel</th><th>Trips/hr</th><th>FW Rate</th><th>Alloc %</th></tr></thead>
+            <tbody>
+              <tr><td class="ch-nm">Street Hail Cash</td><td><span class="lk">1.0</span></td><td><span class="lk">0%</span></td><td><input type="number" id="a_cash" value="20" min="0" max="100" class="sm" oninput="updA('std');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Street Hail CC</td><td><span class="lk">1.0</span></td><td><span class="lk">3.5%</span></td><td><input type="number" id="a_cc"   value="20" min="0" max="100" class="sm" oninput="updA('std');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Paratransit</td><td><span class="lk">0.5</span></td><td><span class="lk">10%</span></td><td><input type="number" id="a_pt"   value="15" min="0" max="100" class="sm" oninput="updA('std');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Uber 3P</td><td><span class="lk">2.0</span></td><td><span class="lk">2.5%</span></td><td><input type="number" id="a_uber" value="35" min="0" max="100" class="sm" oninput="updA('std');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">eHail (1P)</td><td><span class="lk">0.5</span></td><td><span class="lk">17%+$1.50</span></td><td><input type="number" id="a_ehail" value="10" min="0" max="100" class="sm" oninput="updA('std');rc()"><span class="suf">%</span></td></tr>
+            </tbody>
+          </table>
+          <div class="atk"><div class="afl" id="afl-std"></div></div>
+          <div class="att ok" id="att-std">Total: 100% ✓</div>
+          <div class="rpv">
+            <div class="rpv-t">Est. Rev / Driver / Month</div>
+            <div class="rpv-r"><span class="rpv-l">Heavy</span><span class="rpv-v" id="rpv-h">—</span></div>
+            <div class="rpv-r"><span class="rpv-l">Medium</span><span class="rpv-v" id="rpv-m">—</span></div>
+            <div class="rpv-r"><span class="rpv-l">Light</span><span class="rpv-v" id="rpv-l">—</span></div>
+            <div class="rpv-r"><span class="rpv-l">D2D</span><span class="rpv-v" id="rpv-d">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLYWHEEL CONNECT SETTINGS -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('fc')"><span class="stit fc-color">⚡ Flywheel Connect Settings</span><span class="chev op" id="fc-chev">▾</span></div>
+        <div class="sbdy" id="fc-body">
+
+          <div class="fc-info">
+            <div class="fc-info-row"><span class="fc-info-lbl">Hardware</span><span class="fc-info-val">None</span></div>
+            <div class="fc-info-row"><span class="fc-info-lbl">Software</span><span class="fc-info-val">None</span></div>
+            <div class="fc-info-row"><span class="fc-info-lbl">Subscription</span><span class="fc-info-val">$0</span></div>
+            <div class="fc-info-row"><span class="fc-info-lbl">Street Hail Rev</span><span class="fc-info-val">$0 (no FW rev)</span></div>
+            <div class="fc-info-row"><span class="fc-info-lbl">Current Partner</span><span class="fc-info-val">Kaptyn · Las Vegas · 4 fleets</span></div>
+          </div>
+
+          <div class="sl-row">
+            <span class="sl-lbl" style="color:var(--coral);">Negotiated Fee/Trip</span>
+            <input type="range" id="fc_fee" min="0.05" max="1.00" value="0.30" step="0.05" class="fc-slider" oninput="fv2('fc_fee','fv-fc-fee','$');rc()">
+            <span class="sl-val fc-val" id="fv-fc-fee">$0.30</span>
+          </div>
+          <div style="font-size:10px;color:var(--mut);margin:-4px 0 10px;font-family:var(--mono);">Fleet charges $1/trip. Kaptyn: Fleet 70¢, FW 30¢.</div>
+
+          <div class="ig" style="color:var(--coral);">FC Channel Mix (Uber-primary)</div>
+          <table class="ct">
+            <thead><tr><th>Channel</th><th>Trips/hr</th><th>FW Rate</th><th>Alloc %</th></tr></thead>
+            <tbody>
+              <tr><td class="ch-nm">Street Hail Cash</td><td><span class="lk">1.0</span></td><td><span class="lk fc-rate">$0</span></td><td><input type="number" id="fc_a_cash" value="10" min="0" max="100" class="sm" oninput="updA('fc');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Street Hail CC</td><td><span class="lk">1.0</span></td><td><span class="lk fc-rate">$0</span></td><td><input type="number" id="fc_a_cc"   value="10" min="0" max="100" class="sm" oninput="updA('fc');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Paratransit</td><td><span class="lk">0.5</span></td><td><span class="lk">10%</span></td><td><input type="number" id="fc_a_pt"   value="25" min="0" max="100" class="sm" oninput="updA('fc');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">Uber 3P</td><td><span class="lk">2.0</span></td><td><span class="lk">2.5%+fee</span></td><td><input type="number" id="fc_a_uber" value="45" min="0" max="100" class="sm" oninput="updA('fc');rc()"><span class="suf">%</span></td></tr>
+              <tr><td class="ch-nm">eHail (1P)</td><td><span class="lk">0.5</span></td><td><span class="lk">17%+$1.50</span></td><td><input type="number" id="fc_a_ehail" value="10" min="0" max="100" class="sm" oninput="updA('fc');rc()"><span class="suf">%</span></td></tr>
+            </tbody>
+          </table>
+          <div class="atk"><div class="afl" id="afl-fc"></div></div>
+          <div class="att ok" id="att-fc">Total: 100% ✓</div>
+
+          <div class="rpv" style="border:1px solid rgba(255,123,84,.2);">
+            <div class="rpv-t" style="color:var(--coral);">Connect Rev / Driver / Month</div>
+            <div class="rpv-r"><span class="rpv-l">FC (current deal)</span><span class="rpv-v fc" id="rpv-fc">—</span></div>
+            <div class="rpv-r"><span class="rpv-l">vs D2D</span><span class="rpv-v" id="rpv-vs">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIPTIONS -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('subs')"><span class="stit">Monthly Subscriptions</span><span class="chev op" id="subs-chev">▾</span></div>
+        <div class="sbdy" id="subs-body">
+          <div class="ir"><label>Heavy Asset / mo</label><input type="number" id="sub_h" value="400" oninput="rc()"></div>
+          <div class="ir"><label>Medium Asset / mo</label><input type="number" id="sub_m" value="200" oninput="rc()"></div>
+          <div class="ir"><label>Light Asset / mo</label><input type="number" id="sub_l" value="100" oninput="rc()"></div>
+          <div class="ir"><label>D2D (app only) / mo</label><input type="number" id="sub_d" value="50" oninput="rc()"></div>
+          <div class="ir"><label style="color:var(--coral);">Connect / mo</label><input type="number" id="sub_fc" value="0" oninput="rc()"><span class="suf" style="color:var(--coral);">no sw</span></div>
+        </div>
+      </div>
+
+      <!-- COSTS -->
+      <div class="sec">
+        <div class="shdr" onclick="tog('costs')"><span class="stit">Cost Assumptions</span><span class="chev op" id="costs-chev">▾</span></div>
+        <div class="sbdy" id="costs-body">
+          <div class="ig">Onboarding / Vehicle</div>
+          <div class="ir"><label>Heavy</label><input type="number" id="ob_h" value="500" oninput="rc()"></div>
+          <div class="ir"><label>Medium</label><input type="number" id="ob_m" value="300" oninput="rc()"></div>
+          <div class="ir"><label>Light</label><input type="number" id="ob_l" value="150" oninput="rc()"></div>
+          <div class="ir"><label>D2D</label><input type="number" id="ob_d" value="25"  oninput="rc()"></div>
+          <div class="ir"><label style="color:var(--coral);">Connect</label><input type="number" id="ob_fc" value="0" oninput="rc()"><span class="suf" style="color:var(--coral);">API only</span></div>
+          <div class="ig">COGS / Vehicle / Month</div>
+          <div class="ir"><label>Heavy</label><input type="number" id="cg_h" value="30" oninput="rc()"></div>
+          <div class="ir"><label>Medium</label><input type="number" id="cg_m" value="20" oninput="rc()"></div>
+          <div class="ir"><label>Light</label><input type="number" id="cg_l" value="10" oninput="rc()"></div>
+          <div class="ir"><label>D2D</label><input type="number" id="cg_d" value="5"  oninput="rc()"></div>
+          <div class="ir"><label style="color:var(--coral);">Connect</label><input type="number" id="cg_fc" value="2" oninput="rc()"></div>
+          <div class="ig">Overhead</div>
+          <div class="ir"><label>Base Monthly ($K)</label><input type="number" id="oh_base" value="250" oninput="rc()"></div>
+          <div class="ir"><label>Growth (% per 6 mo)</label><input type="number" id="oh_grow" value="10" oninput="rc()"></div>
+        </div>
+      </div>
+
+    </div><!-- /inp -->
+
+    <!-- OUTPUT -->
+    <div class="out">
+      <div class="kpis">
+        <div class="kpi"><div class="kl">Fleet (Month 36)</div><div class="kv neu" id="k-fleet">—</div><div class="ks">total vehicles</div></div>
+        <div class="kpi"><div class="kl">MRR (Month 36)</div><div class="kv neu" id="k-mrr">—</div><div class="ks">monthly net revenue</div></div>
+        <div class="kpi"><div class="kl">Break-even Month</div><div class="kv" id="k-be">—</div><div class="ks">EBITDA turns positive</div></div>
+        <div class="kpi"><div class="kl">36-Mo Cumul. EBITDA</div><div class="kv" id="k-cumul">—</div><div class="ks">total P&amp;L</div></div>
+      </div>
+      <div class="charts">
+        <div class="cc" style="flex:2;">
+          <div class="cct">Monthly Revenue vs EBITDA — 36 Months</div>
+          <div class="cw"><canvas id="mainC"></canvas></div>
+        </div>
+        <div class="cr">
+          <div class="cc"><div class="cct">Fleet Growth by Tier</div><div class="cw"><canvas id="fleetC"></canvas></div></div>
+          <div class="cc"><div class="cct">Revenue Mix — Month 36</div><div class="cw"><canvas id="chC"></canvas></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────────────────
+const TRIPS_HR  = { cash:1.0, cc:1.0, pt:0.5, uber:2.0, ehail:0.5 };
+const FW_RATE   = { cash:0, cc:0.035, pt:0.10, uber:0.025, ehail:0.17 };
+const EHAIL_PAX = 1.50;
+const TIERS     = ['h','m','l','d','fc'];
+// FC: cash+CC = $0 (no FW rev on street hail), uses own allocs + negotiated fee on uber
+const TIER_CH   = {
+  h:  ['cash','cc','pt','uber','ehail'],
+  m:  ['cash','cc','pt','uber','ehail'],
+  l:  ['cc','pt','uber','ehail'],
+  d:  ['uber','cc'],
+  fc: ['cash','cc','pt','uber','ehail']
+};
+const TIER_LABELS = { h:'Heavy', m:'Medium', l:'Light', d:'D2D', fc:'Connect' };
+
+// ── PASSWORD ─────────────────────────────────────────────────────────
+document.getElementById('gateInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPw(); });
+function checkPw() {
+  const el = document.getElementById('gateInput');
+  if (el.value==='flywheel2026') {
+    document.getElementById('gate').style.display='none';
+    const app=document.getElementById('app'); app.style.display='flex';
+    rc();
+  } else {
+    el.value=''; el.classList.add('shake'); el.placeholder='Incorrect — try again';
+    setTimeout(()=>{ el.classList.remove('shake'); el.placeholder='Password'; }, 900);
+  }
+}
+
+// ── SECTION TOGGLE ────────────────────────────────────────────────────
+function tog(id) {
+  const b=document.getElementById(id+'-body'), c=document.getElementById(id+'-chev'), h=b.previousElementSibling;
+  const open=b.style.display!=='none';
+  b.style.display=open?'none':'block'; c.classList.toggle('op',!open); h.classList.toggle('cl',open);
+}
+
+// ── SLIDER DISPLAY ────────────────────────────────────────────────────
+function slv(id,vid,mode) {
+  const v=parseFloat(document.getElementById(id).value), el=document.getElementById(vid);
+  if(mode==='h') el.textContent=v+'h';
+  else if(mode==='d') el.textContent=v+'d';
+  else el.textContent=v.toFixed(1);
+}
+function fv(id,vid)  { document.getElementById(vid).textContent='$'+inp(id); }
+function fv2(id,vid,pfx) { document.getElementById(vid).textContent=pfx+parseFloat(document.getElementById(id).value).toFixed(2); }
+
+// ── ALLOC BARS ────────────────────────────────────────────────────────
+function updA(mode) {
+  const prefix = mode==='fc' ? 'fc_a_' : 'a_';
+  const fillId = mode==='fc' ? 'afl-fc' : 'afl-std';
+  const lblId  = mode==='fc' ? 'att-fc' : 'att-std';
+  const total  = ['cash','cc','pt','uber','ehail'].reduce((s,c)=>s+(parseFloat(document.getElementById(prefix+c).value)||0),0);
+  const fl=document.getElementById(fillId), lb=document.getElementById(lblId);
+  fl.style.width=Math.min(total,100)+'%';
+  if(total<=100){ fl.style.background='var(--grn)'; lb.className='att ok';   lb.textContent='Total: '+total+'% ✓'; }
+  else          { fl.style.background='var(--red)'; lb.className='att over'; lb.textContent='Total: '+total+'% ⚠ over 100%'; }
+}
+
+// ── SCENARIOS ─────────────────────────────────────────────────────────
+const SC = {
+  conservative: { heavy_s:50,  med_s:200, light_s:500,  d2d_s:1000, fc_s:700,  heavy_g:3, med_g:5,  light_g:10, d2d_g:15, fc_g:10 },
+  base:         { heavy_s:50,  med_s:200, light_s:500,  d2d_s:1000, fc_s:700,  heavy_g:5, med_g:8,  light_g:15, d2d_g:20, fc_g:18 },
+  aggressive:   { heavy_s:100, med_s:400, light_s:1000, d2d_s:2000, fc_s:700,  heavy_g:8, med_g:12, light_g:25, d2d_g:35, fc_g:28 }
+};
+function loadSc(name,btn) {
+  Object.entries(SC[name]).forEach(([k,v])=>{ const el=document.getElementById(k); if(el) el.value=v; });
+  document.querySelectorAll('.sc').forEach(b=>b.classList.remove('on')); btn.classList.add('on');
+  rc();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function inp(id) { return parseFloat(document.getElementById(id).value)||0; }
+function fmtK(n) { const a=Math.abs(n),s=n<0?'-':''; if(a>=1e6) return s+(a/1e6).toFixed(1)+'M'; if(a>=1e3) return s+(a/1e3).toFixed(0)+'K'; return s+a.toFixed(0); }
+function fmtN(n) { return Math.round(n).toLocaleString(); }
+function getFares() { const sh=inp('fare_sh'); return { cash:sh, cc:sh, pt:inp('fare_pt'), uber:inp('fare_uber'), ehail:inp('fare_ehail') }; }
+
+// ── REV PER DRIVER ────────────────────────────────────────────────────
+function calcRPV(tier, shHrs, shDay, daysMo, fares, stdAllocs, fcAllocs, subs, fcFee) {
+  const isFC   = tier==='fc';
+  const allocs = isFC ? fcAllocs : stdAllocs;
+  let rev      = subs[tier]; // $0 for FC
+
+  for (const ch of TIER_CH[tier]) {
+    const hrs   = shHrs * shDay * (allocs[ch]/100);
+    const trips = hrs * TRIPS_HR[ch] * daysMo;
+    let   rpt   = 0;
+
+    if (isFC) {
+      // FC: no rev on street hail; standard rates on pt/ehail; uber gets 2.5% + negotiated fee
+      if      (ch==='cash' || ch==='cc') rpt = 0;
+      else if (ch==='pt')                rpt = fares.pt  * FW_RATE.pt;
+      else if (ch==='uber')              rpt = fares.uber * FW_RATE.uber + fcFee;
+      else if (ch==='ehail')             rpt = fares.ehail * FW_RATE.ehail + EHAIL_PAX;
+    } else {
+      if      (ch==='cash')  rpt = 0;
+      else if (ch==='cc')    rpt = fares.cc   * FW_RATE.cc;
+      else if (ch==='pt')    rpt = fares.pt   * FW_RATE.pt;
+      else if (ch==='uber')  rpt = fares.uber  * FW_RATE.uber;
+      else if (ch==='ehail') rpt = fares.ehail * FW_RATE.ehail + EHAIL_PAX;
+    }
+    rev += trips * rpt;
+  }
+  return rev;
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────
+let cMain, cFleet, cCh;
+const CD = {
+  plugins: {
+    legend: { labels:{ color:'#8897B4',font:{family:'JetBrains Mono',size:10},boxWidth:10,padding:8 } },
+    tooltip: { backgroundColor:'#151F38',borderColor:'rgba(255,255,255,.07)',borderWidth:1,titleColor:'#EEE9E2',bodyColor:'#8897B4' }
+  }
+};
+
+function updMain(labels,rev,ebitda) {
+  const bc=ebitda.map(v=>v>=0?'rgba(16,185,129,.65)':'rgba(239,68,68,.65)');
+  const bb=ebitda.map(v=>v>=0?'#10B981':'#EF4444');
+  const ds=[
+    { type:'line',label:'Revenue',data:rev.map(v=>v/1000),borderColor:'#00C2E0',backgroundColor:'rgba(0,194,224,.08)',fill:true,borderWidth:2,pointRadius:0,tension:.4,order:1 },
+    { type:'bar', label:'EBITDA', data:ebitda.map(v=>v/1000),backgroundColor:bc,borderColor:bb,borderWidth:1,order:2 }
+  ];
+  if(cMain){ cMain.data.labels=labels; cMain.data.datasets=ds; cMain.update(); return; }
+  cMain=new Chart(document.getElementById('mainC').getContext('2d'),{
+    type:'bar',data:{labels,datasets:ds},
+    options:{ ...CD,responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      scales:{
+        x:{ ticks:{color:'#8897B4',font:{size:10,family:'JetBrains Mono'},maxTicksLimit:12},grid:{color:'rgba(255,255,255,.04)'} },
+        y:{ ticks:{color:'#8897B4',font:{size:10,family:'JetBrains Mono'},callback:v=>'$'+fmtK(v*1000)},grid:{color:'rgba(255,255,255,.04)'} }
+      },
+      plugins:{ ...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:c=>' '+c.dataset.label+': $'+fmtK(c.raw*1000)}} }
+    }
+  });
+}
+
+function updFleet(labels,bt) {
+  const ds=[
+    { label:'Heavy',   data:bt.h,  borderColor:'#00C2E0',backgroundColor:'rgba(0,194,224,.12)',  fill:true,borderWidth:2,pointRadius:0,tension:.4 },
+    { label:'Medium',  data:bt.m,  borderColor:'#9B7FFF',backgroundColor:'rgba(155,127,255,.12)',fill:true,borderWidth:2,pointRadius:0,tension:.4 },
+    { label:'Light',   data:bt.l,  borderColor:'#F9A825',backgroundColor:'rgba(249,168,37,.12)', fill:true,borderWidth:2,pointRadius:0,tension:.4 },
+    { label:'D2D',     data:bt.d,  borderColor:'#10B981',backgroundColor:'rgba(16,185,129,.12)', fill:true,borderWidth:2,pointRadius:0,tension:.4 },
+    { label:'Connect', data:bt.fc, borderColor:'#FF7B54',backgroundColor:'rgba(255,123,84,.12)', fill:true,borderWidth:2,pointRadius:0,tension:.4 }
+  ];
+  if(cFleet){ cFleet.data.labels=labels; cFleet.data.datasets=ds; cFleet.update(); return; }
+  cFleet=new Chart(document.getElementById('fleetC').getContext('2d'),{
+    type:'line',data:{labels,datasets:ds},
+    options:{ ...CD,responsive:true,maintainAspectRatio:false,
+      scales:{
+        x:{ ticks:{color:'#8897B4',font:{size:9},maxTicksLimit:8},grid:{color:'rgba(255,255,255,.04)'} },
+        y:{ ticks:{color:'#8897B4',font:{size:9},callback:v=>fmtK(v)},grid:{color:'rgba(255,255,255,.04)'} }
+      },
+      plugins:{ ...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:c=>' '+c.dataset.label+': '+fmtN(c.raw)}} }
+    }
+  });
+}
+
+function updCh(chRev,subRev) {
+  const labels=['Subscription','Street Hail CC','Paratransit','Uber 3P','eHail','FC Fee'];
+  const vals=[subRev,chRev.cc,chRev.pt,chRev.uber,chRev.ehail,chRev.fcfee].map(v=>Math.max(0,v));
+  const colors=['#00C2E0','#9B7FFF','#F9A825','#10B981','#F472B6','#FF7B54'];
+  const data={ labels,datasets:[{ data:vals,backgroundColor:colors.map(c=>c+'CC'),borderColor:colors,borderWidth:1.5 }] };
+  if(cCh){ cCh.data=data; cCh.update(); return; }
+  cCh=new Chart(document.getElementById('chC').getContext('2d'),{
+    type:'doughnut',data,
+    options:{ ...CD,responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{ ...CD.plugins,
+        legend:{position:'right',labels:{color:'#8897B4',font:{family:'JetBrains Mono',size:10},boxWidth:10,padding:6}},
+        tooltip:{...CD.plugins.tooltip,callbacks:{label:c=>' '+c.label+': $'+fmtK(c.raw)+'/mo'}}
+      }
+    }
+  });
+}
+
+// ── MAIN CALC ─────────────────────────────────────────────────────────
+function rc() {
+  const MONTHS = 36;
+  const shHrs  = inp('shift_hrs'), shDay=inp('shifts_day'), daysMo=inp('days_mo');
+  const fares  = getFares();
+  const fcFee  = parseFloat(document.getElementById('fc_fee').value)||0.30;
+
+  const stdAllocs = { cash:inp('a_cash'),   cc:inp('a_cc'),    pt:inp('a_pt'),    uber:inp('a_uber'),    ehail:inp('a_ehail') };
+  const fcAllocs  = { cash:inp('fc_a_cash'),cc:inp('fc_a_cc'), pt:inp('fc_a_pt'), uber:inp('fc_a_uber'), ehail:inp('fc_a_ehail') };
+
+  const subs   = { h:inp('sub_h'), m:inp('sub_m'), l:inp('sub_l'), d:inp('sub_d'), fc:inp('sub_fc') };
+  const starts = { h:inp('heavy_s'), m:inp('med_s'), l:inp('light_s'), d:inp('d2d_s'), fc:inp('fc_s') };
+  const growths= { h:inp('heavy_g')/100, m:inp('med_g')/100, l:inp('light_g')/100, d:inp('d2d_g')/100, fc:inp('fc_g')/100 };
+  const ob     = { h:inp('ob_h'), m:inp('ob_m'), l:inp('ob_l'), d:inp('ob_d'), fc:inp('ob_fc') };
+  const cg     = { h:inp('cg_h'), m:inp('cg_m'), l:inp('cg_l'), d:inp('cg_d'), fc:inp('cg_fc') };
+  const ohBase = inp('oh_base')*1000, ohGrow=inp('oh_grow')/100;
+
+  // RPV per tier
+  const rpv={};
+  TIERS.forEach(t=>{ rpv[t]=calcRPV(t,shHrs,shDay,daysMo,fares,stdAllocs,fcAllocs,subs,fcFee); });
+
+  // Update RPV cards
+  ['h','m','l','d'].forEach(t=>{ document.getElementById('rpv-'+t).textContent='$'+fmtK(rpv[t])+'/mo'; });
+  document.getElementById('rpv-fc').textContent = '$'+fmtK(rpv.fc)+'/mo';
+  const dRPV=rpv.d||1;
+  const diff=((rpv.fc-dRPV)/dRPV*100).toFixed(0);
+  document.getElementById('rpv-vs').textContent = (rpv.fc>=dRPV?'+':'')+diff+'% vs D2D';
+  document.getElementById('rpv-vs').style.color = rpv.fc>=dRPV?'var(--grn)':'var(--red)';
+
+  const labels=[], revArr=[], ebitdaArr=[];
+  const bt={ h:[], m:[], l:[], d:[], fc:[] };
+  let prevFleet={ ...starts };
+  let chRevM36={ cc:0, pt:0, uber:0, ehail:0, fcfee:0 }, subRevM36=0;
+
+  for(let mo=0; mo<MONTHS; mo++){
+    labels.push('Mo '+(mo+1));
+    const fl={};
+    TIERS.forEach(t=>{ fl[t]=starts[t]*Math.pow(1+growths[t],mo); });
+
+    let totalRev=0;
+    TIERS.forEach(t=>{ totalRev+=fl[t]*rpv[t]; bt[t].push(Math.round(fl[t])); });
+
+    let costs=0;
+    TIERS.forEach(t=>{ costs+=Math.max(0,fl[t]-prevFleet[t])*ob[t]+fl[t]*cg[t]; });
+    costs+=ohBase*Math.pow(1+ohGrow,Math.floor(mo/6));
+
+    revArr.push(totalRev); ebitdaArr.push(totalRev-costs); prevFleet={...fl};
+
+    if(mo===MONTHS-1){
+      TIERS.forEach(t=>{
+        subRevM36+=fl[t]*subs[t];
+        const allocs=t==='fc'?fcAllocs:stdAllocs;
+        for(const ch of TIER_CH[t]){
+          const hrs=shHrs*shDay*(allocs[ch]/100);
+          const trips=hrs*TRIPS_HR[ch]*daysMo;
+          if(t==='fc'){
+            if(ch==='uber'){
+              chRevM36.uber  += fl[t]*trips*(fares.uber*FW_RATE.uber);
+              chRevM36.fcfee += fl[t]*trips*fcFee;
+            } else if(ch==='pt')    chRevM36.pt    += fl[t]*trips*(fares.pt*FW_RATE.pt);
+            else if(ch==='ehail')   chRevM36.ehail += fl[t]*trips*(fares.ehail*FW_RATE.ehail+EHAIL_PAX);
+          } else {
+            if(ch==='cc')           chRevM36.cc    += fl[t]*trips*(fares.cc*FW_RATE.cc);
+            else if(ch==='pt')      chRevM36.pt    += fl[t]*trips*(fares.pt*FW_RATE.pt);
+            else if(ch==='uber')    chRevM36.uber  += fl[t]*trips*(fares.uber*FW_RATE.uber);
+            else if(ch==='ehail')   chRevM36.ehail += fl[t]*trips*(fares.ehail*FW_RATE.ehail+EHAIL_PAX);
+          }
+        }
+      });
+    }
+  }
+
+  const totalFleet=TIERS.reduce((s,t)=>s+bt[t][MONTHS-1],0);
+  const cumul=ebitdaArr.reduce((s,v)=>s+v,0);
+  let be=null; for(let i=0;i<MONTHS;i++){ if(ebitdaArr[i]>=0){be=i+1;break;} }
+
+  document.getElementById('k-fleet').textContent='$'==='' ? fmtN(totalFleet) : fmtN(totalFleet);
+  document.getElementById('k-fleet').textContent=fmtN(totalFleet);
+  document.getElementById('k-mrr').textContent='$'+fmtK(revArr[MONTHS-1]);
+  const bel=document.getElementById('k-be');
+  if(be){bel.textContent='Mo '+be;bel.className='kv pos';}else{bel.textContent='>36mo';bel.className='kv neg';}
+  const cel=document.getElementById('k-cumul');
+  cel.textContent=(cumul>=0?'+':'')+('$'+fmtK(cumul));
+  cel.className='kv '+(cumul>=0?'pos':'neg');
+
+  updMain(labels,revArr,ebitdaArr);
+  updFleet(labels,bt);
+  updCh(chRevM36,subRevM36);
+  updA('std'); updA('fc');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Pro Forma Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brown: #8B4513;
+    --brown-light: #A0522D;
+    --red: #CC2222;
+    --bg: #F7F5F2;
+    --card: #FFFFFF;
+    --border: #E8E4DE;
+    --text: #1A1410;
+    --muted: #7A6F65;
+    --success: #16A34A;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --info: #2563EB;
+    --tbd: #9CA3AF;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH GATE */
+  #auth-gate {
+    position: fixed; inset: 0; background: var(--brown);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .auth-box {
+    background: white; border-radius: 16px; padding: 48px 40px; width: 360px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .auth-logo { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--brown); margin-bottom: 4px; }
+  .auth-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+  .auth-box input {
+    width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px;
+    font-size: 15px; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 12px;
+  }
+  .auth-box input:focus { border-color: var(--brown); }
+  .auth-btn {
+    width: 100%; padding: 12px; background: var(--brown); color: white; border: none;
+    border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .auth-btn:hover { background: var(--brown-light); }
+  .auth-error { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
+
+  /* APP */
+  #app { display: none; }
+
+  /* HEADER */
+  .header {
+    background: var(--brown); color: white; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between; height: 60px;
+    position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; }
+  .header-badge {
+    background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .header-right { display: flex; align-items: center; gap: 16px; font-size: 13px; opacity: 0.85; }
+  .header-right span { cursor: pointer; }
+  .header-right span:hover { opacity: 1; text-decoration: underline; }
+
+  /* MAIN LAYOUT */
+  .main { display: grid; grid-template-columns: 320px 1fr; gap: 0; min-height: calc(100vh - 60px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: white; border-right: 1px solid var(--border); padding: 24px;
+    overflow-y: auto; position: sticky; top: 60px; height: calc(100vh - 60px);
+  }
+  .sidebar-title { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+
+  .input-group { margin-bottom: 20px; }
+  .input-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .input-label span { font-family: 'JetBrains Mono', monospace; color: var(--brown); font-weight: 600; }
+  .slider {
+    width: 100%; height: 4px; border-radius: 2px; background: var(--border);
+    outline: none; -webkit-appearance: none; cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--brown); cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .mini-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .mini-input-wrap { }
+  .mini-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+  .mini-input {
+    width: 100%; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px;
+    font-size: 13px; font-family: 'JetBrains Mono', monospace; outline: none; color: var(--text);
+  }
+  .mini-input:focus { border-color: var(--brown); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* CONTENT */
+  .content { padding: 24px; overflow-y: auto; }
+
+  /* KPI ROW */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .kpi-card {
+    background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px;
+    border-top: 3px solid var(--brown);
+  }
+  .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+  .kpi-value { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--text); }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .kpi-card.red { border-top-color: var(--red); }
+  .kpi-card.green { border-top-color: var(--success); }
+  .kpi-card.blue { border-top-color: var(--info); }
+
+  /* SCENARIO CARDS */
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .badge {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 20px; background: var(--bg); color: var(--muted);
+  }
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .scenario-card {
+    background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .scenario-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .scenario-card.active { border-color: var(--brown); box-shadow: 0 4px 20px rgba(139,69,19,0.15); }
+  .scenario-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .scenario-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; }
+  .scenario-occ { font-size: 12px; color: var(--muted); }
+  .scenario-occ strong { color: var(--brown); }
+  .scenario-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .scenario-row:last-child { border-bottom: none; }
+  .scenario-row-label { font-size: 13px; color: var(--muted); }
+  .scenario-row-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: var(--text); }
+  .scenario-row-val.green { color: var(--success); }
+  .scenario-row-val.red { color: var(--danger); }
+  .scenario-row-val.warn { color: var(--warning); }
+  .scenario-big { margin-bottom: 14px; }
+  .scenario-revenue { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--text); }
+  .scenario-covers { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* P&L TABLE */
+  .pl-wrap { background: white; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+  .pl-header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .pl-header-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; }
+  .pl-scenario-tabs { display: flex; gap: 4px; }
+  .pl-tab {
+    padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border); color: var(--muted); background: white;
+  }
+  .pl-tab.active { background: var(--brown); color: white; border-color: var(--brown); }
+  table { width: 100%; border-collapse: collapse; }
+  .pl-table th {
+    text-align: left; padding: 10px 24px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--muted); background: var(--bg);
+  }
+  .pl-table th:not(:first-child) { text-align: right; }
+  .pl-table td { padding: 10px 24px; font-size: 13px; border-top: 1px solid var(--border); }
+  .pl-table td:not(:first-child) { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .pl-table tr.section-row td { background: var(--bg); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 8px 24px; }
+  .pl-table tr.total-row td { font-weight: 700; background: #FDF8F5; border-top: 2px solid var(--border); }
+  .pl-table tr.ebitda-row td { font-weight: 700; background: var(--brown); color: white; font-size: 14px; }
+  .pl-table tr.ebitda-row td:not(:first-child) { font-family: 'JetBrains Mono', monospace; }
+  .pl-table tr:hover:not(.section-row):not(.ebitda-row) td { background: #FAF7F4; }
+  .tbd-tag { font-size: 10px; color: var(--tbd); font-family: 'JetBrains Mono', monospace; }
+  .indent { padding-left: 36px !important; }
+  .pos { color: var(--success); }
+  .neg { color: var(--danger); }
+
+  /* MARGIN CALC */
+  .margin-calc { background: white; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+  .margin-calc-header { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+  .margin-calc-body { padding: 24px; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .calc-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 16px; color: var(--brown); }
+  .calc-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .calc-row label { font-size: 12px; color: var(--muted); width: 120px; flex-shrink: 0; }
+  .calc-input {
+    flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: 'JetBrains Mono', monospace; outline: none;
+  }
+  .calc-input:focus { border-color: var(--brown); }
+  .calc-result { background: var(--bg); border-radius: 10px; padding: 16px; margin-top: 8px; }
+  .calc-result-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; }
+  .calc-result-row .label { color: var(--muted); }
+  .calc-result-row .val { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .calc-result-row.highlight .val { color: var(--brown); font-size: 16px; }
+  .nhk-toggle { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .nhk-btn {
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+    border: 1.5px solid var(--border); color: var(--muted); background: white;
+  }
+  .nhk-btn.active { background: var(--brown); color: white; border-color: var(--brown); }
+  .channel-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center; padding: 20px; font-size: 12px; color: var(--muted);
+    border-top: 1px solid var(--border); background: white; margin-top: 8px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .main { grid-template-columns: 280px 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .calc-grid { grid-template-columns: 1fr; }
+  }
+  /* ── NAV TABS ── */
+  .app-nav { display:flex; gap:0; background:var(--brown); border-bottom:3px solid #6B3410; padding:0 24px; }
+  .app-nav-tab { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,.6); padding:10px 20px; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-3px; transition:color .2s,border-color .2s; letter-spacing:.03em; }
+  .app-nav-tab:hover { color:rgba(255,255,255,.9); }
+  .app-nav-tab.active { color:#fff; border-bottom-color:#F5C97A; }
+
+  /* ── MENU PAGE ── */
+  .menu-page { padding:24px; display:none; }
+  .menu-page.active { display:block; }
+  .menu-section { background:#fff; border:1px solid var(--border); border-radius:10px; margin-bottom:20px; overflow:hidden; }
+  .menu-section-hdr { background:var(--bg); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+  .menu-section-title { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--brown); text-transform:uppercase; letter-spacing:.06em; }
+  .menu-section-avg { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); }
+  .menu-tbl { width:100%; border-collapse:collapse; }
+  .menu-tbl th { padding:9px 16px; font-size:11px; font-family:'Space Grotesk',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); background:var(--bg); border-bottom:1px solid var(--border); text-align:left; }
+  .menu-tbl th:not(:first-child) { text-align:right; }
+  .menu-tbl td { padding:9px 16px; font-size:13px; border-bottom:1px solid var(--border); }
+  .menu-tbl td:not(:first-child) { text-align:right; font-family:'JetBrains Mono',monospace; font-size:12px; }
+  .menu-tbl tr:last-child td { border-bottom:none; }
+  .menu-tbl tr:hover td { background:#FAF7F4; }
+  .menu-input { width:72px; text-align:right; border:1px solid var(--border); border-radius:5px; padding:4px 6px; font-family:'JetBrains Mono',monospace; font-size:12px; background:#fff; }
+  .menu-input:focus { outline:none; border-color:var(--brown); }
+  .gm-high { color:#1a7a1a; font-weight:700; }
+  .gm-mid  { color:#2a7a2a; font-weight:600; }
+  .gm-low  { color:#cc7a00; font-weight:600; }
+  .gm-warn { color:#cc2222; font-weight:600; }
+  .star    { color:#C9952A; }
+  .menu-tbl tr.subtotal-row td { background:#FDF8F5; font-weight:700; font-size:12px; border-top:2px solid var(--border); }
+  .sync-bar { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .sync-bar-text { font-size:13px; color:var(--text); }
+  .sync-bar-text strong { font-family:'Space Grotesk',sans-serif; }
+  .sync-btn { background:var(--brown); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; cursor:pointer; letter-spacing:.04em; }
+  .sync-btn:hover { opacity:.88; }
+  .sync-status { font-size:11px; color:#1a7a1a; font-family:'JetBrains Mono',monospace; opacity:0; transition:opacity .5s; }
+  .sync-status.show { opacity:1; }
+  .free-tag { color:var(--muted); font-size:11px; }
+  .tbd-tag  { color:#cc7a00; font-size:11px; font-style:italic; }
+
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <div class="auth-logo">🍡 Domo Cafe</div>
+    <div class="auth-sub">Pro Forma Portal — Confidential</div>
+    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAuth()" />
+    <button class="auth-btn" onclick="checkAuth()">Access Portal</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">🍡 Domo Cafe</div>
+      <div class="header-badge">Pro Forma Portal <span style="font-size:10px;opacity:0.6;font-family:monospace;margin-left:6px">v1.3.0</span></div>
+    </div>
+    <div class="header-right">
+      <span>GFC BP LLC</span>
+      <span>·</span>
+      <span>Buena Park, CA</span>
+      <span>·</span>
+      <span onclick="logout()">Logout</span>
+    </div>
+  </div>
+
+
+  <!-- NAV TABS -->
+  <div class="app-nav">
+    <div class="app-nav-tab active" id="tab-proforma" onclick="switchTab('proforma')">📊 Pro Forma</div>
+    <div class="app-nav-tab" id="tab-menu" onclick="switchTab('menu')">🍽 Menu</div>
+  </div>
+
+  <div id="page-proforma" class="proforma-page">
+  <div class="main">
+
+    <!-- SIDEBAR: CONFIGURATOR -->
+    <div class="sidebar">
+      <div class="sidebar-title">Revenue Configurator</div>
+
+      <!-- Occupancy -->
+      <div class="input-group">
+        <div class="input-label">Occupancy Rate <span id="occ-val">65%</span></div>
+        <input type="range" class="slider" min="10" max="100" value="65" id="occ-slider" oninput="updateAll()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Attach Rates</div>
+
+      <div class="input-group">
+        <div class="input-label">Drinks <span id="drinks-attach-val">90%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="90" id="drinks-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Entrées <span id="entree-attach-val">50%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="50" id="entree-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Desserts <span id="dessert-attach-val">68%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="68" id="dessert-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Merchandise <span id="merch-attach-val">75%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="75" id="merch-attach" oninput="updateAll()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Price Points</div>
+
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Drinks avg</div>
+          <input class="mini-input" type="number" id="drinks-price" value="7.28" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Entrées avg</div>
+          <input class="mini-input" type="number" id="entree-price" value="15.75" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Desserts avg</div>
+          <input class="mini-input" type="number" id="dessert-price" value="11" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Merch blended</div>
+          <input class="mini-input" type="number" id="merch-price" value="16.50" oninput="updateAll()">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Merch Mix</div>
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Small $9 (%)</div>
+          <input class="mini-input" type="number" id="merch-small-pct" value="50" oninput="updateMerchBlend()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Med $20 (%)</div>
+          <input class="mini-input" type="number" id="merch-med-pct" value="30" oninput="updateMerchBlend()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Large $31 (%)</div>
+          <input class="mini-input" type="number" id="merch-lg-pct" value="20" oninput="updateMerchBlend()">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Fixed Costs (Monthly)</div>
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Rent</div>
+          <input class="mini-input" type="number" id="cost-rent" value="10250" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Electricity</div>
+          <input class="mini-input" type="number" id="cost-electric" value="700" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Toast POS</div>
+          <input class="mini-input" type="number" id="cost-pos" value="300" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">EDCO</div>
+          <input class="mini-input" type="number" id="cost-edco" value="510" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Marketing</div>
+          <input class="mini-input" type="number" id="cost-marketing" value="1890" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Insurance</div>
+          <input class="mini-input" type="number" id="cost-insurance" value="0" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Packaging</div>
+          <input class="mini-input" type="number" id="cost-packaging" value="1000" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Accounting</div>
+          <input class="mini-input" type="number" id="cost-accounting" value="0" oninput="updateAll()">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+      <!-- KPI ROW -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Annual Revenue</div>
+          <div class="kpi-value" id="kpi-revenue">—</div>
+          <div class="kpi-sub" id="kpi-covers">— covers/year</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">EBITDA</div>
+          <div class="kpi-value" id="kpi-ebitda">—</div>
+          <div class="kpi-sub" id="kpi-ebitda-pct">— margin</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Labor %</div>
+          <div class="kpi-value" id="kpi-labor-pct">—</div>
+          <div class="kpi-sub">Target: &lt;30%</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Revenue / Cover</div>
+          <div class="kpi-value" id="kpi-per-cover">—</div>
+          <div class="kpi-sub">F&amp;B + Merch blended</div>
+        </div>
+      </div>
+
+      <!-- SCENARIO CARDS -->
+      <div class="section-title">
+        Scenario Projections
+        <span class="badge">Live — adjust sliders to update</span>
+      </div>
+      <div class="scenario-grid">
+        <div class="scenario-card" id="card-conservative">
+          <div class="scenario-header">
+            <div class="scenario-name">Conservative</div>
+            <div class="scenario-occ">Occ: <strong>50%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-con-rev">—</div>
+            <div class="scenario-covers" id="s-con-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-con-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-con-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-con-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-con-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-con-labor">—</span></div>
+        </div>
+        <div class="scenario-card active" id="card-base">
+          <div class="scenario-header">
+            <div class="scenario-name">Base ⭐</div>
+            <div class="scenario-occ">Occ: <strong>65%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-base-rev">—</div>
+            <div class="scenario-covers" id="s-base-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-base-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-base-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-base-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-base-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-base-labor">—</span></div>
+        </div>
+        <div class="scenario-card" id="card-optimistic">
+          <div class="scenario-header">
+            <div class="scenario-name">Optimistic</div>
+            <div class="scenario-occ">Occ: <strong>80%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-opt-rev">—</div>
+            <div class="scenario-covers" id="s-opt-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-opt-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-opt-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-opt-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-opt-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-opt-labor">—</span></div>
+        </div>
+      </div>
+
+      <!-- P&L TABLE -->
+      <div class="pl-wrap">
+        <div class="pl-header">
+          <div class="pl-header-title">Projected P&amp;L — Annual</div>
+          <div class="pl-scenario-tabs">
+            <button class="pl-tab" onclick="setPLTab('conservative')">Conservative</button>
+            <button class="pl-tab active" onclick="setPLTab('base')">Base</button>
+            <button class="pl-tab" onclick="setPLTab('optimistic')">Optimistic</button>
+          </div>
+        </div>
+        <table class="pl-table">
+          <thead>
+            <tr>
+              <th style="width:50%">Line Item</th>
+              <th>Amount</th>
+              <th>% of Revenue</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="pl-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- MENU MIX -->
+      <div class="margin-calc" style="margin-bottom:24px">
+        <div class="margin-calc-header">
+          <div class="section-title" style="margin-bottom:0">Menu Mix &amp; Item Economics <span class="badge">Grand Opening</span></div>
+        </div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table" style="font-size:12px">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th style="text-align:right">Price</th>
+                <th style="text-align:right">Food Cost</th>
+                <th style="text-align:right">Cost %</th>
+                <th style="text-align:right">Margin $</th>
+                <th style="text-align:right">Margin %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-row"><td colspan="6">Signature Plates</td></tr>
+              <tr><td>Domo Moco</td><td>$15.00</td><td>$3.47</td><td>23.1%</td><td>$11.53</td><td style="color:#2a7a2a;font-weight:700">76.9%</td></tr>
+              <tr><td>Golden Katsu Curry</td><td>$16.00</td><td>$3.64</td><td>22.8%</td><td>$12.36</td><td style="color:#2a7a2a;font-weight:700">77.3%</td></tr>
+              <tr><td>Creamy Mushroom Pasta</td><td>$16.00</td><td>$1.70</td><td>10.6%</td><td>$14.30</td><td style="color:#1a6a1a;font-weight:700">89.4% ★</td></tr>
+              <tr class="section-row"><td colspan="6">Handhelds</td></tr>
+              <tr><td>Domo Boss Burger</td><td>$17.00</td><td>$4.49</td><td>26.4%</td><td>$12.51</td><td style="color:#2a7a2a;font-weight:700">73.6%</td></tr>
+              <tr><td>Kimchi Katsu Sandwich</td><td>$17.00</td><td>$4.41</td><td>25.9%</td><td>$12.59</td><td style="color:#2a7a2a;font-weight:700">74.1%</td></tr>
+              <tr><td>Domo's Street Dog</td><td>$17.00</td><td>$5.06</td><td>29.8%</td><td>$11.94</td><td style="color:#2a7a2a;font-weight:700">70.2%</td></tr>
+              <tr class="section-row"><td colspan="6">Kids</td></tr>
+              <tr><td>Korean Fried Chicken</td><td>$15.00</td><td>$3.34</td><td>22.3%</td><td>$11.66</td><td style="color:#2a7a2a;font-weight:700">77.7%</td></tr>
+              <tr><td>Domo's Lunch Box</td><td>$13.00</td><td>$4.08</td><td>31.4%</td><td>$8.92</td><td style="color:#cc7a00;font-weight:700">68.6%</td></tr>
+              <tr class="section-row"><td colspan="6">Drinks (avg)</td></tr>
+              <tr><td>Blended Drinks Avg</td><td>$7.28</td><td>$1.09</td><td>~15%</td><td>$6.19</td><td style="color:#2a7a2a;font-weight:700">~85%</td></tr>
+              <tr class="total-row">
+                <td><strong>Blended Entrée Avg</strong></td>
+                <td><strong>$15.75</strong></td>
+                <td><strong>$3.77</strong></td>
+                <td><strong>24.0%</strong></td>
+                <td><strong>$11.98</strong></td>
+                <td style="color:#1a6a1a;font-weight:700"><strong>76.0%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:12px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)">
+            ★ Best margin item &nbsp;&middot;&nbsp; Food costs from June 2026 grand opening menu spreadsheet &nbsp;&middot;&nbsp; NHK royalty not included in item margins above
+          </div>
+        </div>
+      </div>
+
+      <!-- MARGIN CALCULATOR -->
+      <div class="margin-calc">
+        <div class="margin-calc-header">
+          <div class="section-title" style="margin-bottom:0">Margin Calculator <span class="badge">Bidirectional</span></div>
+        </div>
+        <div class="margin-calc-body">
+          <div class="calc-grid">
+
+            <!-- MODE A: Price → Margin -->
+            <div>
+              <div class="calc-section-title">Mode A — Price → Margin</div>
+              <div style="margin-bottom:10px">
+                <div class="mini-label" style="margin-bottom:6px">Merch Type</div>
+                <div class="nhk-toggle">
+                  <button class="nhk-btn active" onclick="setNHK('a','licensed')">Licensed (Auth)</button>
+                  <button class="nhk-btn" onclick="setNHK('a','house-dtc')">House DTC</button>
+                  <button class="nhk-btn" onclick="setNHK('a','house-whl')">House Wholesale</button>
+                  <button class="nhk-btn" onclick="setNHK('a','no-ip')">No IP</button>
+                </div>
+              </div>
+              <div class="calc-row">
+                <label>Cost ($)</label>
+                <input class="calc-input" type="number" id="a-cost" value="7.50" step="0.01" oninput="calcA()">
+              </div>
+              <div class="calc-row">
+                <label>Sell Price ($)</label>
+                <input class="calc-input" type="number" id="a-price" value="15.00" step="0.01" oninput="calcA()">
+              </div>
+              <div class="calc-result" id="a-result">
+                <div class="calc-result-row"><span class="label">Gross Profit</span><span class="val" id="a-gp">—</span></div>
+                <div class="calc-result-row"><span class="label">GM% (before royalty)</span><span class="val" id="a-gm">—</span></div>
+                <div class="calc-result-row"><span class="label">NHK Royalty</span><span class="val" id="a-royalty">—</span></div>
+                <div class="calc-result-row highlight"><span class="label">True GM% (after royalty)</span><span class="val" id="a-true-gm">—</span></div>
+              </div>
+            </div>
+
+            <!-- MODE B: Target → Price -->
+            <div>
+              <div class="calc-section-title">Mode B — Target GM → Price</div>
+              <div style="margin-bottom:10px">
+                <div class="mini-label" style="margin-bottom:6px">Merch Type</div>
+                <div class="nhk-toggle">
+                  <button class="nhk-btn active" onclick="setNHK('b','licensed')">Licensed (Auth)</button>
+                  <button class="nhk-btn" onclick="setNHK('b','house-dtc')">House DTC</button>
+                  <button class="nhk-btn" onclick="setNHK('b','house-whl')">House Wholesale</button>
+                  <button class="nhk-btn" onclick="setNHK('b','no-ip')">No IP</button>
+                </div>
+              </div>
+              <div class="calc-row">
+                <label>Cost ($)</label>
+                <input class="calc-input" type="number" id="b-cost" value="7.50" step="0.01" oninput="calcB()">
+              </div>
+              <div class="calc-row">
+                <label>Target GM (%)</label>
+                <input class="calc-input" type="number" id="b-target" value="40" step="1" oninput="calcB()">
+              </div>
+              <div class="calc-result">
+                <div class="calc-result-row"><span class="label">Required Sell Price</span><span class="val" id="b-price">—</span></div>
+                <div class="calc-result-row"><span class="label">Gross Profit</span><span class="val" id="b-gp">—</span></div>
+                <div class="calc-result-row"><span class="label">NHK Royalty</span><span class="val" id="b-royalty">—</span></div>
+                <div class="calc-result-row highlight"><span class="label">True GM% (after royalty)</span><span class="val" id="b-true-gm">—</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        GFC BP LLC — Domo Cafe · Confidential Pro Forma · Buena Park, CA · v1.3.0
+        <br>Built by Jarvis / Super Power Studios · <span id="last-updated"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MENU TAB ── -->
+  <div id="page-menu" class="menu-page">
+    <div style="max-width:960px;margin:0 auto">
+
+      <!-- header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--brown)">🍽 Menu Economics</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Edit prices &amp; food costs — changes auto-sync to Pro Forma sliders</div>
+        </div>
+        <div id="sync-status" class="sync-status">✅ Synced to Pro Forma</div>
+      </div>
+
+      <!-- SIGNATURE PLATES -->
+      <div class="margin-calc" style="margin-bottom:20px">
+        <div class="margin-calc-header"><div class="section-title" style="margin-bottom:0">Signature Plates</div></div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table menu-tbl" style="font-size:12px">
+            <thead><tr>
+              <th>Item</th>
+              <th style="text-align:right">Price ($)</th>
+              <th style="text-align:right">Food Cost ($)</th>
+              <th style="text-align:right">Cost %</th>
+              <th style="text-align:right">Margin $</th>
+              <th style="text-align:right">Margin %</th>
+            </tr></thead>
+            <tbody id="tbody-plates">
+              <tr data-cat="plates">
+                <td>Domo Moco</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="15.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="3.47" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="plates">
+                <td>Golden Katsu Curry</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="16.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="3.64" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="plates">
+                <td>Creamy Mushroom Pasta <span style="color:#1a7a1a;font-size:10px">★ Best Margin</span></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="16.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="1.70" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr class="subtotal-row">
+                <td>Section Avg</td>
+                <td style="text-align:right" class="sub-price">—</td>
+                <td style="text-align:right" class="sub-cost">—</td>
+                <td style="text-align:right" class="sub-cpct">—</td>
+                <td style="text-align:right" class="sub-mgnd">—</td>
+                <td style="text-align:right" class="sub-mgnpct">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HANDHELDS -->
+      <div class="margin-calc" style="margin-bottom:20px">
+        <div class="margin-calc-header"><div class="section-title" style="margin-bottom:0">Handhelds</div></div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table menu-tbl" style="font-size:12px">
+            <thead><tr>
+              <th>Item</th>
+              <th style="text-align:right">Price ($)</th>
+              <th style="text-align:right">Food Cost ($)</th>
+              <th style="text-align:right">Cost %</th>
+              <th style="text-align:right">Margin $</th>
+              <th style="text-align:right">Margin %</th>
+            </tr></thead>
+            <tbody id="tbody-handhelds">
+              <tr data-cat="handhelds">
+                <td>Domo Boss Burger</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="17.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="4.49" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="handhelds">
+                <td>Kimchi Katsu Sandwich</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="17.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="4.41" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="handhelds">
+                <td>Domo's Street Dog</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="17.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="5.06" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr class="subtotal-row">
+                <td>Section Avg</td>
+                <td style="text-align:right" class="sub-price">—</td>
+                <td style="text-align:right" class="sub-cost">—</td>
+                <td style="text-align:right" class="sub-cpct">—</td>
+                <td style="text-align:right" class="sub-mgnd">—</td>
+                <td style="text-align:right" class="sub-mgnpct">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- KIDS -->
+      <div class="margin-calc" style="margin-bottom:20px">
+        <div class="margin-calc-header"><div class="section-title" style="margin-bottom:0">Kids Menu</div></div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table menu-tbl" style="font-size:12px">
+            <thead><tr>
+              <th>Item</th>
+              <th style="text-align:right">Price ($)</th>
+              <th style="text-align:right">Food Cost ($)</th>
+              <th style="text-align:right">Cost %</th>
+              <th style="text-align:right">Margin $</th>
+              <th style="text-align:right">Margin %</th>
+            </tr></thead>
+            <tbody id="tbody-kids">
+              <tr data-cat="kids">
+                <td>Korean Fried Chicken</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="15.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="3.34" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="kids">
+                <td>Domo's Lunch Box</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="13.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="4.08" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr class="subtotal-row">
+                <td>Section Avg</td>
+                <td style="text-align:right" class="sub-price">—</td>
+                <td style="text-align:right" class="sub-cost">—</td>
+                <td style="text-align:right" class="sub-cpct">—</td>
+                <td style="text-align:right" class="sub-mgnd">—</td>
+                <td style="text-align:right" class="sub-mgnpct">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DRINKS -->
+      <div class="margin-calc" style="margin-bottom:20px">
+        <div class="margin-calc-header"><div class="section-title" style="margin-bottom:0">Drinks</div></div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table menu-tbl" style="font-size:12px">
+            <thead><tr>
+              <th>Item</th>
+              <th style="text-align:right">Price ($)</th>
+              <th style="text-align:right">Cost ($)</th>
+              <th style="text-align:right">Cost %</th>
+              <th style="text-align:right">Margin $</th>
+              <th style="text-align:right">Margin %</th>
+            </tr></thead>
+            <tbody id="tbody-drinks">
+              <tr data-cat="drinks">
+                <td>Domo Signature Lemonade</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="7.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="0.95" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="drinks">
+                <td>Matcha Latte</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="7.50" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="1.10" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="drinks">
+                <td>Boba / Specialty Drink</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="7.50" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="1.20" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr class="subtotal-row">
+                <td>Section Avg</td>
+                <td style="text-align:right" class="sub-price">—</td>
+                <td style="text-align:right" class="sub-cost">—</td>
+                <td style="text-align:right" class="sub-cpct">—</td>
+                <td style="text-align:right" class="sub-mgnd">—</td>
+                <td style="text-align:right" class="sub-mgnpct">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SWEETS / DESSERTS -->
+      <div class="margin-calc" style="margin-bottom:20px">
+        <div class="margin-calc-header"><div class="section-title" style="margin-bottom:0">Desserts &amp; Sweets</div></div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table menu-tbl" style="font-size:12px">
+            <thead><tr>
+              <th>Item</th>
+              <th style="text-align:right">Price ($)</th>
+              <th style="text-align:right">Cost ($)</th>
+              <th style="text-align:right">Cost %</th>
+              <th style="text-align:right">Margin $</th>
+              <th style="text-align:right">Margin %</th>
+            </tr></thead>
+            <tbody id="tbody-sweets">
+              <tr data-cat="sweets">
+                <td>Domo Parfait</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="11.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="2.20" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="sweets">
+                <td>Mochi Ice Cream</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="9.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="2.50" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr data-cat="sweets">
+                <td>Domo Waffle Toast</td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="12.00" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right"><input class="menu-input" type="number" value="2.80" step="0.01" oninput="recalcRow(this)"></td>
+                <td style="text-align:right" class="cost-pct">—</td>
+                <td style="text-align:right" class="margin-d">—</td>
+                <td style="text-align:right" class="margin-pct">—</td>
+              </tr>
+              <tr class="subtotal-row">
+                <td>Section Avg</td>
+                <td style="text-align:right" class="sub-price">—</td>
+                <td style="text-align:right" class="sub-cost">—</td>
+                <td style="text-align:right" class="sub-cpct">—</td>
+                <td style="text-align:right" class="sub-mgnd">—</td>
+                <td style="text-align:right" class="sub-mgnpct">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- FOOTER NOTE -->
+      <div style="font-size:11px;color:var(--muted);padding:12px 0 24px;border-top:1px solid var(--border);margin-top:4px">
+        ★ Best margin item &nbsp;·&nbsp; Food costs from June 2026 grand opening menu &nbsp;·&nbsp; NHK royalty not included in item margins &nbsp;·&nbsp; Changes auto-sync to Pro Forma price inputs
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// AUTH
+// ============================================================
+const PASSWORD = 'izzy@2026';
+const SSO_TOKEN = 'JARVIS_SSO_2026';
+function unlockApp() {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  updateAll();
+  calcA(); calcB();
+  document.getElementById('last-updated').textContent = 'Last updated: June 1, 2026';
+}
+function checkSSOOnLoad() {
+  const params = new URLSearchParams(window.location.search);
+  if (localStorage.getItem('j_sso') === SSO_TOKEN || params.get('sso') === SSO_TOKEN) {
+    if (params.get('sso') === SSO_TOKEN) localStorage.setItem('j_sso', SSO_TOKEN);
+    unlockApp();
+  }
+}
+function checkAuth() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) { unlockApp(); }
+  else { document.getElementById('auth-error').style.display = 'block'; }
+}
+function logout() {
+  document.getElementById('auth-gate').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+const TOTAL_SEATS = 54;
+const TURN_TIME = 1.15; // hours
+const WD_WINDOW = 9;    // M-F seating window
+const WE_WINDOW = 10;   // Sat-Sun seating window
+const WEEKS_PER_YEAR = 52;
+const WD_PER_WEEK = 5;
+const WE_PER_WEEK = 2;
+
+// Max covers per day
+const WD_MAX_PER_DAY = TOTAL_SEATS * (WD_WINDOW / TURN_TIME);
+const WE_MAX_PER_DAY = TOTAL_SEATS * (WE_WINDOW / TURN_TIME);
+const ANNUAL_MAX = (WD_MAX_PER_DAY * WD_PER_WEEK + WE_MAX_PER_DAY * WE_PER_WEEK) * WEEKS_PER_YEAR;
+
+// Fixed annual labor
+const LABOR_ANNUAL = 936935;
+const WORKERS_COMP_ANNUAL = 44500;
+
+// NHK
+const NHK_MG = 35000;
+const NHK_FB_RATE = 0.03;
+const NHK_HOUSE_DTC = 0.08;
+const NHK_HOUSE_WHL = 0.13;
+
+// CC processing
+const CC_RATE = 0.0275;
+
+// COGS rates
+const FB_COGS_RATE = 0.24; // actual blended food cost from menu spreadsheet
+const MERCH_COGS_RATE = 0.50; // 50% GM baseline
+
+// ============================================================
+// SCENARIOS
+// ============================================================
+const SCENARIOS = [
+  { key: 'conservative', label: 'Conservative', occ: 0.50 },
+  { key: 'base',         label: 'Base',         occ: 0.65 },
+  { key: 'optimistic',   label: 'Optimistic',   occ: 0.80 },
+];
+
+let currentPLTab = 'base';
+
+function getInputs() {
+  return {
+    occ:      parseFloat(document.getElementById('occ-slider').value) / 100,
+    drinksA:  parseFloat(document.getElementById('drinks-attach').value) / 100,
+    entreeA:  parseFloat(document.getElementById('entree-attach').value) / 100,
+    dessertA: parseFloat(document.getElementById('dessert-attach').value) / 100,
+    merchA:   parseFloat(document.getElementById('merch-attach').value) / 100,
+    drinksP:  parseFloat(document.getElementById('drinks-price').value),
+    entreeP:  parseFloat(document.getElementById('entree-price').value),
+    dessertP: parseFloat(document.getElementById('dessert-price').value),
+    merchP:   parseFloat(document.getElementById('merch-price').value),
+    rent:     parseFloat(document.getElementById('cost-rent').value) * 12,
+    electric: parseFloat(document.getElementById('cost-electric').value) * 12,
+    pos:      parseFloat(document.getElementById('cost-pos').value) * 12,
+    edco:     parseFloat(document.getElementById('cost-edco').value) * 12,
+    marketing:parseFloat(document.getElementById('cost-marketing').value) * 12,
+    insurance:parseFloat(document.getElementById('cost-insurance').value) * 12,
+    packaging:parseFloat(document.getElementById('cost-packaging').value) * 12,
+    accounting:parseFloat(document.getElementById('cost-accounting').value) * 12,
+  };
+}
+
+function calcScenario(occ, inp) {
+  const covers = ANNUAL_MAX * occ;
+  const fbPerCover = inp.drinksA * inp.drinksP + inp.entreeA * inp.entreeP + inp.dessertA * inp.dessertP;
+  const merchPerCover = inp.merchA * inp.merchP;
+  const perCover = fbPerCover + merchPerCover;
+
+  const fbRev = covers * fbPerCover;
+  const merchRev = covers * merchPerCover;
+  const totalRev = fbRev + merchRev;
+
+  const fbCOGS = fbRev * FB_COGS_RATE;
+  const merchCOGS = merchRev * MERCH_COGS_RATE;
+  const totalCOGS = fbCOGS + merchCOGS;
+  const grossProfit = totalRev - totalCOGS;
+
+  const nhkFB = Math.max(fbRev * NHK_FB_RATE, NHK_MG);
+  const ccFees = totalRev * CC_RATE;
+
+  const totalOpEx =
+    inp.rent + inp.electric + inp.pos + inp.edco +
+    inp.marketing + inp.insurance + inp.packaging + inp.accounting +
+    LABOR_ANNUAL + WORKERS_COMP_ANNUAL + nhkFB + ccFees;
+
+  const ebitda = grossProfit - totalOpEx;
+  const laborPct = (LABOR_ANNUAL + WORKERS_COMP_ANNUAL) / totalRev * 100;
+  const ebitdaPct = ebitda / totalRev * 100;
+
+  return { covers, fbRev, merchRev, totalRev, fbCOGS, merchCOGS, totalCOGS, grossProfit,
+           nhkFB, ccFees, totalOpEx, ebitda, laborPct, ebitdaPct, perCover,
+           rent: inp.rent, electric: inp.electric, pos: inp.pos, edco: inp.edco,
+           marketing: inp.marketing, insurance: inp.insurance, packaging: inp.packaging,
+           accounting: inp.accounting };
+}
+
+// ============================================================
+// FORMAT HELPERS
+// ============================================================
+function fmt(n) {
+  if (isNaN(n)) return '—';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtPct(n) {
+  if (isNaN(n)) return '—';
+  return n.toFixed(1) + '%';
+}
+function colorPct(pct, target, invert) {
+  if (invert) return pct > target ? 'red' : 'green';
+  return pct >= target ? 'green' : (pct >= target * 0.8 ? 'warn' : 'red');
+}
+
+// ============================================================
+// UPDATE ALL
+// ============================================================
+function updateAll() {
+  const inp = getInputs();
+
+  // Update slider labels
+  document.getElementById('occ-val').textContent = Math.round(inp.occ * 100) + '%';
+  document.getElementById('drinks-attach-val').textContent = Math.round(inp.drinksA * 100) + '%';
+  document.getElementById('entree-attach-val').textContent = Math.round(inp.entreeA * 100) + '%';
+  document.getElementById('dessert-attach-val').textContent = Math.round(inp.dessertA * 100) + '%';
+  document.getElementById('merch-attach-val').textContent = Math.round(inp.merchA * 100) + '%';
+
+  // Calc base scenario for KPIs
+  const base = calcScenario(0.65, inp);
+  const activeOcc = inp.occ;
+  const active = calcScenario(activeOcc, inp);
+
+  // KPIs (based on current slider occ)
+  document.getElementById('kpi-revenue').textContent = fmt(active.totalRev);
+  document.getElementById('kpi-covers').textContent = Math.round(active.covers).toLocaleString() + ' covers/yr';
+  document.getElementById('kpi-ebitda').textContent = fmt(active.ebitda);
+  document.getElementById('kpi-ebitda-pct').textContent = fmtPct(active.ebitdaPct) + ' margin';
+  const laborEl = document.getElementById('kpi-labor-pct');
+  laborEl.textContent = fmtPct(active.laborPct);
+  laborEl.style.color = active.laborPct > 30 ? 'var(--danger)' : 'var(--success)';
+  document.getElementById('kpi-per-cover').textContent = '$' + active.perCover.toFixed(2);
+
+  // Scenario cards
+  const cons = calcScenario(0.50, inp);
+  const opt  = calcScenario(0.80, inp);
+
+  function fillCard(prefix, s) {
+    document.getElementById(`s-${prefix}-rev`).textContent = fmt(s.totalRev);
+    document.getElementById(`s-${prefix}-covers`).textContent = Math.round(s.covers).toLocaleString() + ' covers/yr';
+    document.getElementById(`s-${prefix}-fb`).textContent = fmt(s.fbRev);
+    document.getElementById(`s-${prefix}-merch`).textContent = fmt(s.merchRev);
+    document.getElementById(`s-${prefix}-gp`).textContent = fmt(s.grossProfit);
+    const ebitdaEl = document.getElementById(`s-${prefix}-ebitda`);
+    ebitdaEl.textContent = fmt(s.ebitda);
+    ebitdaEl.className = 'scenario-row-val ' + (s.ebitda >= 0 ? 'green' : 'red');
+    const laborEl2 = document.getElementById(`s-${prefix}-labor`);
+    laborEl2.textContent = fmtPct(s.laborPct);
+    laborEl2.className = 'scenario-row-val ' + (s.laborPct <= 30 ? 'green' : (s.laborPct <= 35 ? 'warn' : 'red'));
+  }
+  fillCard('con', cons);
+  fillCard('base', base);
+  fillCard('opt', opt);
+
+  // P&L table
+  renderPL(inp);
+}
+
+// ============================================================
+// P&L TABLE
+// ============================================================
+function setPLTab(tab) {
+  currentPLTab = tab;
+  document.querySelectorAll('.pl-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderPL(getInputs());
+}
+
+function renderPL(inp) {
+  const occMap = { conservative: 0.50, base: 0.65, optimistic: 0.80 };
+  const s = calcScenario(occMap[currentPLTab], inp);
+  const R = s.totalRev;
+
+  function pct(n) { return R > 0 ? fmtPct(n / R * 100) : '—'; }
+  function tbd(label) { return `<span class="tbd-tag">[TBD — ${label}]</span>`; }
+
+  const rows = [
+    { section: 'REVENUE' },
+    { label: 'Food & Beverage Sales', val: s.fbRev, note: 'Attach rates × prices × covers' },
+    { label: 'Merchandise Sales', val: s.merchRev, note: '75% attach × $13 blended' },
+    { total: 'TOTAL REVENUE', val: s.totalRev },
+    { section: 'COST OF GOODS SOLD' },
+    { label: 'F&B COGS (24%)', val: -s.fbCOGS, note: 'Food & bev cost — blended from actual menu', indent: true },
+    { label: 'Merch COGS (50%)', val: -s.merchCOGS, note: 'Product cost baseline', indent: true },
+    { total: 'GROSS PROFIT', val: s.grossProfit },
+    { section: 'OPERATING EXPENSES — LABOR' },
+    { label: 'Hourly Staff (BOH + FOH)', val: -(LABOR_ANNUAL - 191900), note: 'Base wages only (tips excl.)', indent: true },
+    { label: 'Salaried (Chef + GM)', val: -191900, note: 'Gross incl. employer taxes', indent: true },
+    { label: 'Workers Compensation', val: -WORKERS_COMP_ANNUAL, note: '~$4.75 per $100 payroll CA', indent: true },
+    { total: 'TOTAL LABOR', val: -(LABOR_ANNUAL + WORKERS_COMP_ANNUAL) },
+    { section: 'OPERATING EXPENSES — OCCUPANCY' },
+    { label: 'Rent (Unit R + Storage)', val: -s.rent, note: 'TLA — Newkoa LLC', indent: true },
+    { label: 'Electricity', val: -s.electric, note: 'Estimate', indent: true },
+    { label: 'EDCO (trash/recycle/organics)', val: -s.edco, note: '3 bins, 1x/wk', indent: true },
+    { section: 'OPERATING EXPENSES — OTHER' },
+    { label: 'NHK Royalties (F&B 3%)', val: -s.nhkFB, note: 'Min. guarantee $35K', indent: true },
+    { label: 'CC Processing (2.75%)', val: -s.ccFees, note: 'Toast estimate', indent: true },
+    { label: 'Toast POS', val: -s.pos, note: '$300/mo', indent: true },
+    { label: 'Marketing', val: s.marketing > 0 ? -s.marketing : null, tbdLabel: s.marketing > 0 ? null : 'Striker $1,890/mo or self-managed', note: '', indent: true },
+    { label: 'Insurance (GL + Property)', val: null, tbdLabel: 'Uploading contract', note: '', indent: true },
+    { label: 'Packaging & Supplies', val: -s.packaging, note: 'Placeholder', indent: true },
+    { label: 'Accounting / Bookkeeping', val: s.accounting > 0 ? -s.accounting : null, tbdLabel: s.accounting > 0 ? null : 'TBD', note: '', indent: true },
+    { ebitda: 'EBITDA', val: s.ebitda },
+  ];
+
+  let html = '';
+  rows.forEach(r => {
+    if (r.section) {
+      html += `<tr class="section-row"><td colspan="4">${r.section}</td></tr>`;
+    } else if (r.total) {
+      const v = r.val;
+      html += `<tr class="total-row">
+        <td>${r.total}</td>
+        <td class="${v >= 0 ? 'pos' : 'neg'}">${fmt(v)}</td>
+        <td>${pct(v)}</td>
+        <td></td>
+      </tr>`;
+    } else if (r.ebitda) {
+      const v = r.val;
+      html += `<tr class="ebitda-row">
+        <td>${r.ebitda}</td>
+        <td>${fmt(v)}</td>
+        <td>${pct(v)}</td>
+        <td style="font-size:12px;opacity:0.8">${v >= 0 ? '✅ Profitable' : '⚠️ Needs optimization'}</td>
+      </tr>`;
+    } else {
+      const v = r.val;
+      const displayVal = v !== null ? `<span class="${v >= 0 ? 'pos' : ''}">${fmt(v)}</span>` : tbd(r.tbdLabel);
+      const displayPct = v !== null ? pct(v) : '—';
+      html += `<tr>
+        <td class="${r.indent ? 'indent' : ''}">${r.label}</td>
+        <td>${displayVal}</td>
+        <td>${displayPct}</td>
+        <td style="font-size:11px;color:var(--muted)">${r.note || ''}</td>
+      </tr>`;
+    }
+  });
+
+  document.getElementById('pl-tbody').innerHTML = html;
+}
+
+// ============================================================
+// MERCH BLEND
+// ============================================================
+function updateMerchBlend() {
+  const s = parseFloat(document.getElementById('merch-small-pct').value) || 0;
+  const m = parseFloat(document.getElementById('merch-med-pct').value) || 0;
+  const l = parseFloat(document.getElementById('merch-lg-pct').value) || 0;
+  const blend = (s / 100 * 9) + (m / 100 * 20) + (l / 100 * 31);
+  document.getElementById('merch-price').value = blend.toFixed(2);
+  updateAll();
+}
+
+// ============================================================
+// MARGIN CALCULATOR
+// ============================================================
+const nhkState = { a: 'licensed', b: 'licensed' };
+function getNHKRate(type) {
+  if (type === 'licensed') return 0;
+  if (type === 'house-dtc') return NHK_HOUSE_DTC;
+  if (type === 'house-whl') return NHK_HOUSE_WHL;
+  return 0;
+}
+function setNHK(mode, type) {
+  nhkState[mode] = type;
+  document.querySelectorAll(`.nhk-toggle`).forEach((tog, i) => {
+    if ((mode === 'a' && i === 0) || (mode === 'b' && i === 1)) {
+      tog.querySelectorAll('.nhk-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim().toLowerCase().includes(type.replace('-',' ').replace('house','house').split('-')[0]));
+      });
+    }
+  });
+  // simpler: just re-render buttons
+  const maps = { licensed: 0, 'house-dtc': 1, 'house-whl': 2, 'no-ip': 3 };
+  document.querySelectorAll('.nhk-toggle').forEach((tog, gi) => {
+    if ((mode === 'a' && gi === 0) || (mode === 'b' && gi === 1)) {
+      tog.querySelectorAll('.nhk-btn').forEach((b, bi) => {
+        b.classList.toggle('active', bi === maps[type]);
+      });
+    }
+  });
+  if (mode === 'a') calcA(); else calcB();
+}
+function calcA() {
+  const cost = parseFloat(document.getElementById('a-cost').value) || 0;
+  const price = parseFloat(document.getElementById('a-price').value) || 0;
+  const rate = getNHKRate(nhkState.a);
+  const gp = price - cost;
+  const gm = price > 0 ? gp / price * 100 : 0;
+  const royalty = price * rate;
+  const trueGP = gp - royalty;
+  const trueGM = price > 0 ? trueGP / price * 100 : 0;
+  document.getElementById('a-gp').textContent = '$' + gp.toFixed(2);
+  document.getElementById('a-gm').textContent = gm.toFixed(1) + '%';
+  document.getElementById('a-royalty').textContent = rate === 0 ? '$0.00 (none)' : '$' + royalty.toFixed(2) + ` (${(rate*100)}%)`;
+  document.getElementById('a-true-gm').textContent = trueGM.toFixed(1) + '%';
+}
+function calcB() {
+  const cost = parseFloat(document.getElementById('b-cost').value) || 0;
+  const targetGM = parseFloat(document.getElementById('b-target').value) / 100 || 0;
+  const rate = getNHKRate(nhkState.b);
+  // True GM: (price - cost - price*rate) / price = targetGM
+  // price*(1 - targetGM - rate) = cost
+  // price = cost / (1 - targetGM - rate)
+  const denom = 1 - targetGM - rate;
+  const price = denom > 0 ? cost / denom : 0;
+  const gp = price - cost;
+  const royalty = price * rate;
+  const trueGP = gp - royalty;
+  const trueGM = price > 0 ? trueGP / price * 100 : 0;
+  document.getElementById('b-price').textContent = '$' + price.toFixed(2);
+  document.getElementById('b-gp').textContent = '$' + gp.toFixed(2);
+  document.getElementById('b-royalty').textContent = rate === 0 ? '$0.00 (none)' : '$' + royalty.toFixed(2) + ` (${(rate*100)}%)`;
+  document.getElementById('b-true-gm').textContent = trueGM.toFixed(1) + '%';
+}
+
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.getElementById('page-proforma').style.display = tab === 'proforma' ? '' : 'none';
+  document.getElementById('page-menu').style.display = tab === 'menu' ? 'block' : 'none';
+  document.getElementById('tab-proforma').classList.toggle('active', tab === 'proforma');
+  document.getElementById('tab-menu').classList.toggle('active', tab === 'menu');
+  if (tab === 'menu') initMenuPage();
+}
+
+// ── MARGIN COLOR ──
+function gmClass(pct) {
+  if (pct >= 80) return 'gm-high';
+  if (pct >= 70) return 'gm-mid';
+  if (pct >= 60) return 'gm-low';
+  return 'gm-warn';
+}
+
+// ── RECALC A SINGLE ROW ──
+function recalcRow(input) {
+  const tr = input.closest('tr');
+  const inputs = tr.querySelectorAll('.menu-input');
+  const price = parseFloat(inputs[0]?.value) || 0;
+  const cost  = parseFloat(inputs[1]?.value) || 0;
+  const costPct = price > 0 ? (cost / price * 100) : 0;
+  const mgn = price - cost;
+  const mgnPct = price > 0 ? (mgn / price * 100) : 0;
+  tr.querySelector('.cost-pct').textContent = costPct.toFixed(1) + '%';
+  tr.querySelector('.margin-d').textContent = '$' + mgn.toFixed(2);
+  const mEl = tr.querySelector('.margin-pct');
+  mEl.textContent = mgnPct.toFixed(1) + '%';
+  mEl.className = 'margin-pct ' + gmClass(mgnPct);
+  recalcSection(tr.closest('tbody'));
+  autoSync();
+}
+
+// ── RECALC SECTION SUBTOTAL ──
+function recalcSection(tbody) {
+  const rows = tbody.querySelectorAll('tr[data-cat]');
+  let sumP = 0, sumC = 0, n = 0;
+  rows.forEach(r => {
+    const inputs = r.querySelectorAll('.menu-input');
+    const p = parseFloat(inputs[0]?.value) || 0;
+    const c = parseFloat(inputs[1]?.value) || 0;
+    if (p > 0) { sumP += p; sumC += c; n++; }
+  });
+  const sub = tbody.querySelector('.subtotal-row');
+  if (!sub || n === 0) return;
+  const avgP = sumP / n, avgC = sumC / n;
+  const avgCpct = avgP > 0 ? avgC / avgP * 100 : 0;
+  const avgMgn = avgP - avgC;
+  const avgMgnPct = avgP > 0 ? avgMgn / avgP * 100 : 0;
+  sub.querySelector('.sub-price').textContent = '$' + avgP.toFixed(2);
+  sub.querySelector('.sub-cost').textContent = '$' + avgC.toFixed(2);
+  sub.querySelector('.sub-cpct').textContent = avgCpct.toFixed(1) + '%';
+  sub.querySelector('.sub-mgnd').textContent = '$' + avgMgn.toFixed(2);
+  const mEl = sub.querySelector('.sub-mgnpct');
+  mEl.textContent = avgMgnPct.toFixed(1) + '%';
+  mEl.className = 'sub-mgnpct ' + gmClass(avgMgnPct);
+}
+
+// ── INIT MENU PAGE (first open) ──
+function initMenuPage() {
+  document.querySelectorAll('#page-menu tr[data-cat]').forEach(tr => {
+    const inputs = tr.querySelectorAll('.menu-input');
+    if (inputs.length >= 2) recalcRow(inputs[0]);
+  });
+}
+
+// ── GET CATEGORY AVG ──
+function getCatAvg(tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return 0;
+  const rows = tbody.querySelectorAll('tr[data-cat]');
+  let sum = 0, n = 0;
+  rows.forEach(r => {
+    const p = parseFloat(r.querySelectorAll('.menu-input')[0]?.value) || 0;
+    if (p > 0) { sum += p; n++; }
+  });
+  return n > 0 ? sum / n : 0;
+}
+
+function getBlendedEntreeAvg() {
+  const bodies = ['tbody-plates', 'tbody-handhelds', 'tbody-kids'];
+  let sum = 0, n = 0;
+  bodies.forEach(id => {
+    const tbody = document.getElementById(id);
+    if (!tbody) return;
+    tbody.querySelectorAll('tr[data-cat]').forEach(r => {
+      const p = parseFloat(r.querySelectorAll('.menu-input')[0]?.value) || 0;
+      if (p > 0) { sum += p; n++; }
+    });
+  });
+  return n > 0 ? sum / n : 15.75;
+}
+
+// ── AUTO SYNC ──
+let syncTimer;
+function autoSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncToProforma, 1200);
+}
+
+function syncToProforma() {
+  const entreeAvg = getBlendedEntreeAvg();
+  const drinkAvg  = getCatAvg('tbody-drinks');
+  const dessertAvg = getCatAvg('tbody-sweets');
+  const ep = document.getElementById('entree-price');
+  const dp = document.getElementById('drinks-price');
+  const dsp = document.getElementById('dessert-price');
+  if (ep) ep.value = entreeAvg.toFixed(2);
+  if (dp && drinkAvg > 0) dp.value = drinkAvg.toFixed(2);
+  if (dsp && dessertAvg > 0) dsp.value = dessertAvg.toFixed(2);
+  if (typeof updateAll === 'function') updateAll();
+  const st = document.getElementById('sync-status');
+  if (st) { st.classList.add('show'); setTimeout(() => st.classList.remove('show'), 2000); }
+}
+
+document.addEventListener('DOMContentLoaded', checkSSOOnLoad);
+</script>
+
+</body>
+</html>

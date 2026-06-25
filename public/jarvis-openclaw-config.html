@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jarvis — OpenClaw Configuration Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:    #0C0C0C; --surf: #1C1C1E; --surf2: #2C2C34;
+      --bdr:   rgba(255,255,255,0.07);
+      --acc:   #FF5E1A; --acc2: #FF8C5A;
+      --grn:   #10B981; --blue: #00C2E0; --purp: #9B7FFF; --amber: #F9A825;
+      --txt:   #F0EDE8; --mut:  #A0A098;
+      --font:  'Space Grotesk', sans-serif;
+      --body:  'DM Sans', sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+    }
+    html,body { height:100%; }
+    body { background:var(--bg); color:var(--txt); font-family:var(--body); }
+
+    /* GATE */
+    #gate { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:9999; }
+    .gate-box { text-align:center; max-width:320px; width:100%; padding:0 20px; }
+    .gate-logo { font-family:var(--font); font-size:28px; font-weight:700; color:var(--acc); margin-bottom:6px; }
+    .gate-sub  { font-size:12px; color:var(--mut); margin-bottom:28px; }
+    .gate-inp  { width:100%; padding:12px 16px; background:var(--surf); border:1px solid var(--bdr); border-radius:8px; color:var(--txt); font-size:15px; text-align:center; letter-spacing:4px; outline:none; margin-bottom:14px; transition:border-color .2s; }
+    .gate-inp:focus { border-color:var(--acc); }
+    .gate-inp.shake { border-color:#EF4444; animation:shake .3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+    .gate-btn { width:100%; padding:12px; background:var(--acc); border:none; border-radius:8px; color:#fff; font-family:var(--font); font-weight:700; font-size:14px; cursor:pointer; transition:opacity .2s; }
+    .gate-btn:hover { opacity:.85; }
+
+    /* APP */
+    #app { display:none; min-height:100vh; }
+
+    /* HEADER */
+    header { background:var(--surf); border-bottom:1px solid var(--bdr); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:100; }
+    .hd-l { display:flex; align-items:center; gap:14px; }
+    .hd-logo { font-family:var(--font); font-size:20px; font-weight:700; color:var(--acc); }
+    .hd-badge { font-family:var(--mono); font-size:10px; color:var(--mut); background:var(--surf2); padding:3px 10px; border-radius:4px; }
+    .hd-conf { font-family:var(--mono); font-size:10px; color:var(--mut); opacity:.4; }
+    .hd-r { display:flex; gap:8px; }
+    .btn-sm { padding:6px 14px; border:1px solid var(--bdr); border-radius:6px; background:transparent; color:var(--mut); font-family:var(--font); font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .btn-sm:hover { border-color:var(--acc); color:var(--acc); }
+
+    /* NAV */
+    nav { background:var(--surf); border-bottom:1px solid var(--bdr); padding:0 32px; display:flex; gap:0; overflow-x:auto; }
+    nav::-webkit-scrollbar { display:none; }
+    .nav-tab { padding:12px 18px; font-family:var(--font); font-size:13px; font-weight:500; color:var(--mut); border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap; transition:all .2s; }
+    .nav-tab.on { color:var(--acc); border-bottom-color:var(--acc); }
+    .nav-tab:hover { color:var(--txt); }
+
+    /* CONTENT */
+    .content { max-width:1100px; margin:0 auto; padding:32px; }
+    .page { display:none; }
+    .page.on { display:block; }
+
+    /* SECTION */
+    .sec-title { font-family:var(--font); font-size:22px; font-weight:700; margin-bottom:6px; }
+    .sec-sub   { font-size:14px; color:var(--mut); margin-bottom:28px; }
+    .divider   { height:1px; background:var(--bdr); margin:28px 0; }
+
+    /* CARDS */
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-bottom:28px; }
+    .card { background:var(--surf); border:1px solid var(--bdr); border-radius:10px; padding:18px 20px; }
+    .card-icon { font-size:22px; margin-bottom:10px; }
+    .card-title { font-family:var(--font); font-size:14px; font-weight:600; margin-bottom:4px; }
+    .card-sub { font-size:12px; color:var(--mut); line-height:1.5; }
+    .card-val { font-family:var(--mono); font-size:13px; color:var(--acc); margin-top:8px; }
+    .card.accent { border-color:rgba(255,94,26,.25); background:rgba(255,94,26,.05); }
+
+    /* KPI ROW */
+    .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    .kpi { background:var(--surf); border:1px solid var(--bdr); border-radius:10px; padding:16px 18px; }
+    .kpi-l { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--mut); margin-bottom:6px; }
+    .kpi-v { font-family:var(--font); font-size:26px; font-weight:700; color:var(--acc); }
+    .kpi-s { font-size:11px; color:var(--mut); margin-top:3px; }
+
+    /* TABLE */
+    .tbl-wrap { background:var(--surf); border:1px solid var(--bdr); border-radius:10px; overflow:hidden; margin-bottom:24px; }
+    table { width:100%; border-collapse:collapse; }
+    th { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--mut); padding:10px 16px; text-align:left; background:var(--surf2); border-bottom:1px solid var(--bdr); }
+    td { padding:10px 16px; font-size:13px; border-bottom:1px solid var(--bdr); vertical-align:top; }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:rgba(255,255,255,.02); }
+    .mono { font-family:var(--mono); font-size:11px; }
+    .tag  { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:600; padding:2px 8px; border-radius:4px; }
+    .tag-on  { background:rgba(16,185,129,.15); color:var(--grn); }
+    .tag-off { background:rgba(160,160,152,.1); color:var(--mut); }
+    .tag-acc { background:rgba(255,94,26,.15); color:var(--acc); }
+    .tag-blue{ background:rgba(0,194,224,.15); color:var(--blue); }
+    .tag-purp{ background:rgba(155,127,255,.15); color:var(--purp); }
+
+    /* CODE BLOCK */
+    .code-block { background:var(--surf2); border:1px solid var(--bdr); border-radius:8px; padding:16px; margin-bottom:20px; font-family:var(--mono); font-size:12px; line-height:1.7; color:var(--txt); overflow-x:auto; white-space:pre; }
+    .code-block .key   { color:var(--blue); }
+    .code-block .val   { color:var(--grn); }
+    .code-block .comm  { color:var(--mut); }
+
+    /* RULE CARDS */
+    .rule-list { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+    .rule { background:var(--surf); border:1px solid var(--bdr); border-radius:8px; padding:14px 18px; display:flex; gap:14px; align-items:flex-start; }
+    .rule-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+    .rule-body { flex:1; }
+    .rule-title { font-family:var(--font); font-size:13px; font-weight:600; margin-bottom:3px; }
+    .rule-desc  { font-size:12px; color:var(--mut); line-height:1.5; }
+    .rule.warn { border-color:rgba(249,168,37,.25); }
+    .rule.danger { border-color:rgba(239,68,68,.25); }
+    .rule.info { border-color:rgba(0,194,224,.15); }
+
+    /* COMMAND TABLE */
+    .cmd-grid { display:grid; grid-template-columns:160px 1fr; gap:0; background:var(--surf); border:1px solid var(--bdr); border-radius:10px; overflow:hidden; margin-bottom:24px; }
+    .cmd-key { font-family:var(--mono); font-size:12px; font-weight:600; color:var(--acc); padding:10px 16px; border-bottom:1px solid var(--bdr); background:var(--surf2); }
+    .cmd-val { font-size:12px; color:var(--txt); padding:10px 16px; border-bottom:1px solid var(--bdr); }
+    .cmd-key:last-of-type, .cmd-val:last-of-type { border-bottom:none; }
+
+    /* FILE TREE */
+    .file-tree { background:var(--surf2); border-radius:8px; padding:16px 20px; margin-bottom:20px; font-family:var(--mono); font-size:12px; line-height:2; }
+    .ft-dir  { color:var(--blue); }
+    .ft-file { color:var(--txt); }
+    .ft-desc { color:var(--mut); margin-left:8px; }
+    .ft-key  { color:var(--acc); }
+
+    /* HOW-TO STEPS */
+    .steps { counter-reset:step; display:flex; flex-direction:column; gap:14px; margin-bottom:24px; }
+    .step  { background:var(--surf); border:1px solid var(--bdr); border-radius:8px; padding:16px 20px; display:flex; gap:16px; }
+    .step-num { font-family:var(--font); font-size:20px; font-weight:700; color:var(--acc); min-width:32px; }
+    .step-body h4 { font-family:var(--font); font-size:14px; font-weight:600; margin-bottom:4px; }
+    .step-body p  { font-size:12px; color:var(--mut); line-height:1.6; }
+    .step-body .mono { font-family:var(--mono); font-size:11px; color:var(--grn); }
+
+    /* PRINT */
+    @media print {
+      body { background:#fff; color:#000; }
+      #gate { display:none !important; }
+      #app  { display:block !important; }
+      header, nav { position:static; }
+      .page { display:block !important; page-break-before:always; }
+      .page:first-child { page-break-before:avoid; }
+    }
+
+    /* SPS mark */
+    .sps-mark { position:fixed; bottom:16px; right:20px; font-family:var(--font); font-size:11px; color:var(--mut); opacity:.35; }
+  </style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">⚙️ Jarvis</div>
+    <div class="gate-sub">OpenClaw Configuration Portal — Internal Use Only</div>
+    <input type="password" id="gateInput" class="gate-inp" placeholder="Password" autofocus>
+    <button class="gate-btn" onclick="checkPw()">Enter</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="hd-l">
+      <span class="hd-logo">⚙️ Jarvis</span>
+      <span class="hd-badge">OpenClaw Config v1.0</span>
+      <span class="hd-conf">INTERNAL</span>
+    </div>
+    <div class="hd-r">
+      <button class="btn-sm" onclick="window.print()">🖨 Print PDF</button>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--mut);padding:6px 10px;">Last updated: June 9, 2026</span>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-tab on" onclick="showPage('overview',this)">Overview</div>
+    <div class="nav-tab" onclick="showPage('identity',this)">Identity</div>
+    <div class="nav-tab" onclick="showPage('models',this)">Models & LLMs</div>
+    <div class="nav-tab" onclick="showPage('skills',this)">Skills</div>
+    <div class="nav-tab" onclick="showPage('channels',this)">Channels</div>
+    <div class="nav-tab" onclick="showPage('config',this)">Config Files</div>
+    <div class="nav-tab" onclick="showPage('commands',this)">Commands</div>
+    <div class="nav-tab" onclick="showPage('rules',this)">Hard Rules</div>
+    <div class="nav-tab" onclick="showPage('portals',this)">How Portals Work</div>
+    <div class="nav-tab" onclick="showPage('costs',this)">Costs & APIs</div>
+  </nav>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="page on" id="page-overview">
+      <div class="sec-title">OpenClaw Configuration Overview</div>
+      <div class="sec-sub">Everything needed to understand, maintain, and recreate the Jarvis AI setup for Izzy Aala / Super Power Studios.</div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-l">Agent Name</div><div class="kpi-v" style="font-size:20px;">⚙️ Jarvis</div><div class="kpi-s">Main session agent</div></div>
+        <div class="kpi"><div class="kpi-l">Default Model</div><div class="kpi-v" style="font-size:16px;">Sonnet 4.6</div><div class="kpi-s">anthropic/claude-sonnet-4-6</div></div>
+        <div class="kpi"><div class="kpi-l">Active Skills</div><div class="kpi-v">25</div><div class="kpi-s">enabled of 50+ installed</div></div>
+        <div class="kpi"><div class="kpi-l">Channels</div><div class="kpi-v">3</div><div class="kpi-s">Telegram (×3 bots), WhatsApp</div></div>
+      </div>
+
+      <div class="card-grid">
+        <div class="card accent">
+          <div class="card-icon">🖥️</div>
+          <div class="card-title">Host Machine</div>
+          <div class="card-sub">Mac Studio · Darwin 24.3.0 · Apple Silicon (arm64)</div>
+          <div class="card-val">Node v22.22.0 · zsh</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <div class="card-title">Workspace</div>
+          <div class="card-sub">Primary workspace for all AI operations, memory, and project files</div>
+          <div class="card-val">/Users/izzyaala/.openclaw/workspace</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">Heartbeat</div>
+          <div class="card-sub">Periodic check-in using Haiku model (cost-optimized)</div>
+          <div class="card-val">Every 30 minutes · haiku model</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💾</div>
+          <div class="card-title">Context Pruning</div>
+          <div class="card-sub">Cache TTL mode — context refreshes hourly</div>
+          <div class="card-val">mode: cache-ttl · ttl: 1h</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Gateway</div>
+          <div class="card-sub">Local mode, loopback bind, token auth</div>
+          <div class="card-val">Port 18789 · mode: local</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">Web Search</div>
+          <div class="card-sub">Brave search provider, always enabled</div>
+          <div class="card-val">provider: brave</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:16px;font-weight:600;margin-bottom:14px;">What This Portal Covers</div>
+      <div class="card-grid">
+        <div class="card"><div class="card-title">🤖 Identity</div><div class="card-sub">Who Jarvis is, what persona is configured, how the agent introduces itself and behaves.</div></div>
+        <div class="card"><div class="card-title">🧠 Models & LLMs</div><div class="card-sub">Which AI models are connected, aliases, fallbacks, and provider configuration.</div></div>
+        <div class="card"><div class="card-title">🛠 Skills</div><div class="card-sub">All installed skills, which are enabled, what each does, and how to add new ones.</div></div>
+        <div class="card"><div class="card-title">📡 Channels</div><div class="card-sub">Telegram bots, WhatsApp config, DM policies, group policies, and authorized senders.</div></div>
+        <div class="card"><div class="card-title">📂 Config Files</div><div class="card-sub">Every AGENTS.md, SOUL.md, MEMORY.md file — what it does and why it matters.</div></div>
+        <div class="card"><div class="card-title">⚡ Commands</div><div class="card-sub">Slash commands (/draft, /commit, /recall) and one-word commands (Commit, Monitor, Build).</div></div>
+        <div class="card"><div class="card-title">⚠️ Hard Rules</div><div class="card-sub">Non-negotiable behaviors Jarvis must always follow — established after violations.</div></div>
+        <div class="card"><div class="card-title">🏗 How Portals Work</div><div class="card-sub">The standard for building portals — design system, features, deployment process.</div></div>
+        <div class="card"><div class="card-title">💰 Costs & APIs</div><div class="card-sub">API keys in use, estimated costs per model, and optimization strategies.</div></div>
+      </div>
+    </div>
+
+    <!-- IDENTITY -->
+    <div class="page" id="page-identity">
+      <div class="sec-title">Agent Identity</div>
+      <div class="sec-sub">Who Jarvis is, how the agent is configured, and what persona it embodies.</div>
+
+      <div class="card-grid">
+        <div class="card accent">
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">Name: Jarvis</div>
+          <div class="card-sub">AI operator — part strategist, part engineer, part COO. Built to think in systems. Sharp, direct, resourceful. No fluff, no filler.</div>
+          <div class="card-val">identity: IDENTITY.md</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">👤</div>
+          <div class="card-title">Owner: Izzy Aala</div>
+          <div class="card-sub">Isabelo "Izzy" Aala · he/him · PDT (America/Los_Angeles) · Father of three · Multi-venture entrepreneur</div>
+          <div class="card-val">profile: USER.md</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎭</div>
+          <div class="card-title">Persona: SOUL.md</div>
+          <div class="card-sub">Genuinely helpful, not performatively helpful. Has opinions. Resourceful before asking. Earns trust through competence.</div>
+          <div class="card-val">tone: direct · concise · competent</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:16px;font-weight:600;margin-bottom:14px;">Role Definition</div>
+      <div class="rule-list">
+        <div class="rule info"><div class="rule-icon">🎯</div><div class="rule-body"><div class="rule-title">COO + Product Lead + AI Engineer hybrid</div><div class="rule-desc">Operates like a Chief of Staff. Thinks in ecosystems and flywheels. Leads with structure: templates, docs, frameworks. Connects strategy ↔ product ↔ execution.</div></div></div>
+        <div class="rule info"><div class="rule-icon">🏢</div><div class="rule-body"><div class="rule-title">Main Jarvis = Chief of Staff</div><div class="rule-desc">Business bots (JarvisSPS, JarvisDomo, etc.) = operators. Respect the lanes. Main Jarvis does NOT take over tasks that belong to business bots.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💬</div><div class="rule-body"><div class="rule-title">Group Chat Behavior</div><div class="rule-desc">Participate, don't dominate. React like a human. Stay silent when it's just banter. Respond when directly asked or genuinely adding value. Quality over quantity.</div></div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:16px;font-weight:600;margin-bottom:14px;">Ventures Jarvis Supports</div>
+      <div class="card-grid">
+        <div class="card"><div class="card-title">⚡ Flywheel Technologies</div><div class="card-sub">TaxiOS platform · Uber 3P integration · 53 cities · $15M raise at $265M pre-money</div></div>
+        <div class="card"><div class="card-title">🎌 Domo Cafe</div><div class="card-sub">NHK-backed themed cafe · Grand Opening June 13, 2026 · San Diego</div></div>
+        <div class="card"><div class="card-title">🚢 Blue Highway</div><div class="card-sub">Hydrofoil + EV transport · Modular cargo capsules · Patent filed April 2026</div></div>
+        <div class="card"><div class="card-title">⚡ Super Power Studios</div><div class="card-sub">Venture studio · AI platforms · 437 88th St Brooklyn HQ</div></div>
+      </div>
+    </div>
+
+    <!-- MODELS -->
+    <div class="page" id="page-models">
+      <div class="sec-title">Models & LLM Configuration</div>
+      <div class="sec-sub">AI models connected to OpenClaw, their aliases, fallback chains, and use cases.</div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-l">Primary Model</div><div class="kpi-v" style="font-size:16px;">Sonnet</div><div class="kpi-s">claude-sonnet-4-6</div></div>
+        <div class="kpi"><div class="kpi-l">Heartbeat Model</div><div class="kpi-v" style="font-size:16px;">Haiku</div><div class="kpi-s">claude-haiku-4-5</div></div>
+        <div class="kpi"><div class="kpi-l">Fallback #1</div><div class="kpi-v" style="font-size:16px;">Haiku</div><div class="kpi-s">cost-optimized fallback</div></div>
+        <div class="kpi"><div class="kpi-l">Fallback #2</div><div class="kpi-v" style="font-size:16px;">Gemini</div><div class="kpi-s">google/gemini-3.1-pro</div></div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Alias</th><th>Full Model ID</th><th>Provider</th><th>Use Case</th><th>Cache</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-acc">sonnet</span></td><td class="mono">anthropic/claude-sonnet-4-6</td><td>Anthropic</td><td>Default — all main session work, complex reasoning, builds</td><td class="mono">short</td></tr>
+            <tr><td><span class="tag tag-blue">haiku</span></td><td class="mono">anthropic/claude-haiku-4-5</td><td>Anthropic</td><td>Heartbeat checks, cron jobs, cost-sensitive tasks</td><td class="mono">short</td></tr>
+            <tr><td><span class="tag tag-purp">gemini</span></td><td class="mono">google/gemini-3.1-pro-preview</td><td>Google</td><td>Fallback #2, memory search embeddings</td><td class="mono">short</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:16px;font-weight:600;margin-bottom:14px;">Additional AI Providers</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Provider</th><th>Purpose</th><th>API Key Env Var</th></tr></thead>
+          <tbody>
+            <tr><td>Anthropic</td><td>Primary LLM (Sonnet + Haiku)</td><td class="mono">ANTHROPIC_API_KEY</td></tr>
+            <tr><td>Google</td><td>Gemini fallback + memory embeddings</td><td class="mono">GEMINI_API_KEY</td></tr>
+            <tr><td>ElevenLabs</td><td>TTS voice output (sag skill)</td><td class="mono">ELEVENLABS_API_KEY</td></tr>
+            <tr><td>OpenAI</td><td>Image generation (gpt-image)</td><td class="mono">OPENAI_API_KEY</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:16px;font-weight:600;margin-bottom:14px;">Model Selection Strategy</div>
+      <div class="rule-list">
+        <div class="rule info"><div class="rule-icon">💡</div><div class="rule-body"><div class="rule-title">Use Sonnet for everything in main session</div><div class="rule-desc">Complex reasoning, builds, financial models, negotiations, drafts — all Sonnet.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💰</div><div class="rule-body"><div class="rule-title">Use Haiku for heartbeats and cron</div><div class="rule-desc">Periodic checks, monitoring, simple lookups. Dramatically cheaper. Configured as heartbeat model.</div></div></div>
+        <div class="rule info"><div class="rule-icon">🔄</div><div class="rule-body"><div class="rule-title">Gemini as fallback only</div><div class="rule-desc">Kicks in if Anthropic is unavailable. Also used by OpenClaw's memory search embedding layer.</div></div></div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="page" id="page-skills">
+      <div class="sec-title">Installed Skills</div>
+      <div class="sec-sub">OpenClaw skills extend Jarvis's capabilities. Skills are loaded from core install, plugins, and the workspace.</div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-l">Core Skills</div><div class="kpi-v">50+</div><div class="kpi-s">installed via openclaw</div></div>
+        <div class="kpi"><div class="kpi-l">Plugin Skills</div><div class="kpi-v">2</div><div class="kpi-s">acp-router, browser-automation</div></div>
+        <div class="kpi"><div class="kpi-l">Workspace Skills</div><div class="kpi-v">4</div><div class="kpi-s">computer-use, gstack + variants</div></div>
+        <div class="kpi"><div class="kpi-l">Active (enabled)</div><div class="kpi-v">~25</div><div class="kpi-s">rest are disabled</div></div>
+      </div>
+
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">✅ Active Skills</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Location</th><th>What It Does</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-on">acp-router</span></td><td class="mono">plugin</td><td>Routes requests to Claude Code, Codex, Gemini CLI, OpenCode and other ACP harnesses</td></tr>
+            <tr><td><span class="tag tag-on">apple-notes</span></td><td class="mono">core</td><td>Create, view, edit, delete, search Apple Notes via memo CLI</td></tr>
+            <tr><td><span class="tag tag-on">apple-reminders</span></td><td class="mono">core</td><td>Manage Apple Reminders and lists via remindctl</td></tr>
+            <tr><td><span class="tag tag-on">browser-automation</span></td><td class="mono">plugin</td><td>Control web pages with OpenClaw browser tool — multi-step flows, login, tab management</td></tr>
+            <tr><td><span class="tag tag-on">clawhub</span></td><td class="mono">core</td><td>Search, install, update, sync, publish skills from ClawHub registry</td></tr>
+            <tr><td><span class="tag tag-on">computer-use</span></td><td class="mono">workspace</td><td>Full desktop computer use — headless Linux, Xvfb+XFCE, xdotool, VNC</td></tr>
+            <tr><td><span class="tag tag-on">computer-use-macos</span></td><td class="mono">workspace</td><td>macOS computer use — standalone runtime, X11 level automation</td></tr>
+            <tr><td><span class="tag tag-on">gemini</span></td><td class="mono">core</td><td>Gemini CLI for one-shot Q&A, summaries, generation</td></tr>
+            <tr><td><span class="tag tag-on">gh-issues</span></td><td class="mono">core</td><td>Fetch GitHub issues, delegate fixes to subagents, open PRs</td></tr>
+            <tr><td><span class="tag tag-on">github</span></td><td class="mono">core</td><td>gh CLI for GitHub issues, PR status, CI logs, comments, reviews, releases</td></tr>
+            <tr><td><span class="tag tag-on">gog</span></td><td class="mono">core</td><td>Google Workspace CLI — Gmail, Calendar, Drive, Contacts, Sheets, Docs</td></tr>
+            <tr><td><span class="tag tag-on">gstack</span></td><td class="mono">workspace</td><td>World-class thinking frameworks — Google Staff Eng, Paul Graham, Elon Musk, Stripe/Airbnb</td></tr>
+            <tr><td><span class="tag tag-on">healthcheck</span></td><td class="mono">core</td><td>Audit and harden hosts — SSH, firewall, updates, exposure, cron checks</td></tr>
+            <tr><td><span class="tag tag-on">nano-pdf</span></td><td class="mono">core</td><td>Edit PDFs with natural-language instructions via nano-pdf CLI</td></tr>
+            <tr><td><span class="tag tag-on">node-connect</span></td><td class="mono">core</td><td>Diagnose OpenClaw Android/iOS/macOS node pairing and connection failures</td></tr>
+            <tr><td><span class="tag tag-on">notion</span></td><td class="mono">core</td><td>Notion API — create/manage pages, databases, blocks</td></tr>
+            <tr><td><span class="tag tag-on">openai-whisper</span></td><td class="mono">core</td><td>Local speech-to-text with Whisper CLI (no API key)</td></tr>
+            <tr><td><span class="tag tag-on">skill-creator</span></td><td class="mono">core</td><td>Create, edit, improve, audit AgentSkills and SKILL.md files</td></tr>
+            <tr><td><span class="tag tag-on">summarize</span></td><td class="mono">core</td><td>Summarize/transcribe URLs, YouTube, podcasts, articles, PDFs, local files</td></tr>
+            <tr><td><span class="tag tag-on">taskflow</span></td><td class="mono">core</td><td>Coordinate multi-step detached tasks as durable TaskFlow jobs</td></tr>
+            <tr><td><span class="tag tag-on">things-mac</span></td><td class="mono">core</td><td>Add, update, list, search Things 3 todos, projects, areas on macOS</td></tr>
+            <tr><td><span class="tag tag-on">video-frames</span></td><td class="mono">core</td><td>Extract frames or short clips from videos using ffmpeg</td></tr>
+            <tr><td><span class="tag tag-on">weather</span></td><td class="mono">core</td><td>Current weather, rain, temperature, forecasts</td></tr>
+            <tr><td><span class="tag tag-on">xurl</span></td><td class="mono">core</td><td>Authenticated X (Twitter) API — posts, replies, search, DMs, media upload</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin:20px 0 12px;">⛔ Disabled Skills (installed but off)</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Skill</th><th>Reason Disabled</th></tr></thead>
+          <tbody>
+            <tr><td><span class="tag tag-off">1password</span></td><td>Not needed — using other credential management</td></tr>
+            <tr><td><span class="tag tag-off">bear-notes</span></td><td>Using Apple Notes instead</td></tr>
+            <tr><td><span class="tag tag-off">discord</span></td><td>Not active on Discord</td></tr>
+            <tr><td><span class="tag tag-off">model-usage</span></td><td>Disabled — use session_status for usage tracking</td></tr>
+            <tr><td><span class="tag tag-off">obsidian</span></td><td>Using Jarvis Memory Vault directly</td></tr>
+            <tr><td><span class="tag tag-off">voice-call</span></td><td>Plugin disabled — Twilio configured but off</td></tr>
+            <tr><td><span class="tag tag-off">slack</span></td><td>Not in active use</td></tr>
+            <tr><td><span class="tag tag-off">trello</span></td><td>Using Notion instead</td></tr>
+            <tr><td><span class="tag tag-off">spotify-player</span></td><td>Not needed</td></tr>
+            <tr><td><span class="tag tag-off">coding-agent</span></td><td>Using ACP router instead</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">How to Install a New Skill</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Find on ClawHub</h4><p>Ask Jarvis to search ClawHub: "find a skill that does X" — uses the clawhub skill to search the registry at clawhub.ai</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Install via CLI</h4><p class="mono">openclaw skills install &lt;skill-name&gt;</p><p>or ask Jarvis to install it using the clawhub skill</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Enable in config</h4><p>Skills are auto-enabled on install. To disable: add to skills.entries in openclaw.json with enabled: false</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Document it here</h4><p>Update this portal's Skills tab and add any local config notes to TOOLS.md in the workspace</p></div></div>
+      </div>
+    </div>
+
+    <!-- CHANNELS -->
+    <div class="page" id="page-channels">
+      <div class="sec-title">Channels & Integrations</div>
+      <div class="sec-sub">How Jarvis connects to messaging platforms and who is authorized to interact.</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Channel</th><th>Account</th><th>DM Policy</th><th>Group Policy</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Telegram</td>
+              <td class="mono">default</td>
+              <td>pairing</td>
+              <td>allowlist</td>
+              <td><span class="tag tag-on">active</span></td>
+            </tr>
+            <tr>
+              <td>Telegram</td>
+              <td class="mono">sps</td>
+              <td>allowlist (8503290482 only)</td>
+              <td>—</td>
+              <td><span class="tag tag-on">active</span></td>
+            </tr>
+            <tr>
+              <td>Telegram</td>
+              <td class="mono">domo</td>
+              <td>allowlist (8503290482 only)</td>
+              <td>—</td>
+              <td><span class="tag tag-on">active · separate workspace</span></td>
+            </tr>
+            <tr>
+              <td>WhatsApp</td>
+              <td class="mono">default</td>
+              <td>open (rules enforced in HEARTBEAT.md)</td>
+              <td>open (monitor only)</td>
+              <td><span class="tag tag-on">active</span></td>
+            </tr>
+            <tr>
+              <td>Voice Call</td>
+              <td class="mono">twilio</td>
+              <td>—</td>
+              <td>—</td>
+              <td><span class="tag tag-off">disabled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">Telegram Bots</div>
+      <div class="card-grid">
+        <div class="card accent">
+          <div class="card-title">Default Bot</div>
+          <div class="card-sub">Main Jarvis. Used for Izzy's primary direct messages. DM policy: pairing (authorized contacts only).</div>
+          <div class="card-val">account: default</div>
+        </div>
+        <div class="card">
+          <div class="card-title">SPS Bot</div>
+          <div class="card-sub">Super Power Studios workspace. Allowlist: Izzy only (8503290482). Direct access to SPS workspace and projects.</div>
+          <div class="card-val">account: sps</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Domo Bot</div>
+          <div class="card-sub">Domo Cafe dedicated workspace. Separate workspace at workspace-domo. Allowlist: Izzy only.</div>
+          <div class="card-val">account: domo · workspace: workspace-domo</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">WhatsApp Rules (Critical)</div>
+      <div class="rule-list">
+        <div class="rule danger"><div class="rule-icon">🚫</div><div class="rule-body"><div class="rule-title">Unknown DM = COMPLETE SILENCE + alert Izzy</div><div class="rule-desc">Any WhatsApp DM from a number NOT on the approved contacts list → zero response to sender + Telegram alert to Izzy immediately. Never reveal AI identity or protocol to sender.</div></div></div>
+        <div class="rule danger"><div class="rule-icon">🚫</div><div class="rule-body"><div class="rule-title">NEVER respond in any WhatsApp group</div><div class="rule-desc">Even if @mentioned or asked directly. Monitor only. @mentions trigger immediate Telegram alert to Izzy with draft reply for approval.</div></div></div>
+        <div class="rule warn"><div class="rule-icon">⚠️</div><div class="rule-body"><div class="rule-title">Approved contacts list lives in HEARTBEAT.md</div><div class="rule-desc">Only add contacts when Izzy explicitly approves. Current list includes: Amy Aala, Hailey (Domo), Nathan Aala, Estella Pantoja, Carlos Olamendi, Horacio, Jose Vargas, Pablo Sowicz, and others.</div></div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">Authorized Senders</div>
+      <div class="card">
+        <div class="card-title">Owner / Authorized Sender</div>
+        <div class="card-sub">Izzy Aala — Telegram ID 8503290482. Full command access including owner-only commands.</div>
+        <div class="card-val">telegram:8503290482</div>
+      </div>
+    </div>
+
+    <!-- CONFIG FILES -->
+    <div class="page" id="page-config">
+      <div class="sec-title">Configuration Files</div>
+      <div class="sec-sub">Every file that shapes how Jarvis thinks, remembers, and behaves. All live in the workspace.</div>
+
+      <div class="file-tree">
+<span class="ft-dir">/Users/izzyaala/.openclaw/</span>
+├── <span class="ft-file">openclaw.json</span>         <span class="ft-desc">← Master config: models, channels, skills, gateway, env vars</span>
+└── <span class="ft-dir">workspace/</span>
+    ├── <span class="ft-key">AGENTS.md</span>           <span class="ft-desc">← Operating rules, commands, memory protocol (READ BY ALL AGENTS)</span>
+    ├── <span class="ft-key">SOUL.md</span>             <span class="ft-desc">← Personality, tone, core values (who Jarvis is)</span>
+    ├── <span class="ft-key">IDENTITY.md</span>         <span class="ft-desc">← Name, creature type, vibe, emoji</span>
+    ├── <span class="ft-key">USER.md</span>             <span class="ft-desc">← About Izzy — context, ventures, style preferences</span>
+    ├── <span class="ft-key">MEMORY.md</span>           <span class="ft-desc">← Long-term curated memory (MAIN SESSION ONLY)</span>
+    ├── <span class="ft-key">HEARTBEAT.md</span>        <span class="ft-desc">← Heartbeat rules, WhatsApp approved contacts, monitoring tasks</span>
+    ├── <span class="ft-key">TOOLS.md</span>            <span class="ft-desc">← Local tool config: calendar accounts, Google Meet link, device notes</span>
+    ├── <span class="ft-key">PROJECTS.md</span>         <span class="ft-desc">← Registry of all built projects, URLs, repos, deploy status</span>
+    ├── <span class="ft-key">NOTION_MAP.md</span>       <span class="ft-desc">← Routing guide: where to save things in Notion</span>
+    ├── <span class="ft-key">GIT_ROUTINE.md</span>      <span class="ft-desc">← Git workflow: branch → commit → tag → push → deploy → verify</span>
+    └── <span class="ft-dir">memory/</span>
+        └── <span class="ft-file">YYYY-MM-DD.md</span>   <span class="ft-desc">← Daily session logs (aggressive memory mode)</span>
+      </div>
+
+      <div class="divider"></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>File</th><th>Purpose</th><th>Who Reads It</th><th>Update Frequency</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">openclaw.json</td><td>Master config — everything OpenClaw needs to run</td><td>OpenClaw runtime</td><td>When config changes</td></tr>
+            <tr><td class="mono">AGENTS.md</td><td>Operating rules, commands, memory protocol, delegation rules</td><td>ALL agents on startup</td><td>When new rules established</td></tr>
+            <tr><td class="mono">SOUL.md</td><td>Personality and tone — who Jarvis is and how to communicate</td><td>Main session on startup</td><td>Rarely — evolves slowly</td></tr>
+            <tr><td class="mono">IDENTITY.md</td><td>Name, role, persona summary</td><td>Main session on startup</td><td>Rarely</td></tr>
+            <tr><td class="mono">USER.md</td><td>Everything about Izzy — context, ventures, communication style</td><td>Main session on startup</td><td>When Izzy's context changes</td></tr>
+            <tr><td class="mono">MEMORY.md</td><td>Long-term curated memory — distilled wisdom from all sessions</td><td>Main session ONLY</td><td>After every significant event</td></tr>
+            <tr><td class="mono">HEARTBEAT.md</td><td>Heartbeat rules, WhatsApp contacts, monitoring checklist</td><td>Every heartbeat</td><td>When contacts/rules change</td></tr>
+            <tr><td class="mono">TOOLS.md</td><td>Local tool config — calendar IDs, meet links, device names</td><td>When using tools</td><td>When setup changes</td></tr>
+            <tr><td class="mono">NOTION_MAP.md</td><td>Where to save things in Notion — routing decision tree</td><td>Before any Notion save</td><td>When new DB areas added</td></tr>
+            <tr><td class="mono">memory/YYYY-MM-DD.md</td><td>Daily log — every significant event, decision, contact</td><td>Start of session (today + yesterday)</td><td>After EVERY significant exchange</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:12px;">Memory Architecture</div>
+      <div class="card-grid">
+        <div class="card accent">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">Layer 1 — Session Context</div>
+          <div class="card-sub">Active conversation. Pruned after 1 hour TTL. Compaction in safeguard mode.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📝</div>
+          <div class="card-title">Layer 2 — Daily Logs</div>
+          <div class="card-sub">memory/YYYY-MM-DD.md files. Written aggressively after every significant exchange. Raw session logs.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">💾</div>
+          <div class="card-title">Layer 3 — Long-Term Memory</div>
+          <div class="card-sub">MEMORY.md — curated, distilled. Only significant decisions, contacts, patterns. Main session only.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🗄️</div>
+          <div class="card-title">Layer 4 — Obsidian Vault</div>
+          <div class="card-sub">/Users/izzyaala/Documents/Jarvis-Memory-Vault — deep storage, project notes, mistakes log.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMANDS -->
+    <div class="page" id="page-commands">
+      <div class="sec-title">Commands Reference</div>
+      <div class="sec-sub">Slash commands and one-word commands that Izzy uses to direct Jarvis. All agents must know these.</div>
+
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">⚡ Slash Commands</div>
+      <div class="cmd-grid">
+        <div class="cmd-key">/draft</div><div class="cmd-val">Write and show ONLY. Never send. Izzy decides what happens next. Even if the draft looks ready — NEVER send unless explicitly told to.</div>
+        <div class="cmd-key">/send</div><div class="cmd-val">Send immediately, no confirmation needed.</div>
+        <div class="cmd-key">/note</div><div class="cmd-val">Log to memory only, no response shown.</div>
+        <div class="cmd-key">/revise</div><div class="cmd-val">Update the last draft with new direction provided.</div>
+        <div class="cmd-key">/shorter</div><div class="cmd-val">Make the last response or draft shorter.</div>
+        <div class="cmd-key">/longer</div><div class="cmd-val">Make the last response or draft longer.</div>
+        <div class="cmd-key">/formal</div><div class="cmd-val">Adjust tone to formal/professional.</div>
+        <div class="cmd-key">/casual</div><div class="cmd-val">Adjust tone to casual/conversational.</div>
+        <div class="cmd-key">/commit</div><div class="cmd-val">Save session to all places: memory (YYYY-MM-DD.md + MEMORY.md) + Notion + Jarvis HQ Dashboard + git tag.</div>
+        <div class="cmd-key">/recall [topic]</div><div class="cmd-val">Retrieve everything about a topic into context: search MEMORY.md + daily logs + Notion + Google Workspace (Gmail/Drive/Calendar) + Jarvis HQ Dashboard. Compile into a clean context summary.</div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">One-Word Commands</div>
+      <div class="cmd-grid">
+        <div class="cmd-key">Commit / Commit All</div><div class="cmd-val">Same as /commit — save to memory + update Jarvis HQ Dashboard + update Notion + git tag. Confirm when all four done.</div>
+        <div class="cmd-key">Monitor</div><div class="cmd-val">Set up 5-min cron QA loop → auto-fix → auto-stop when clean → alert Izzy. Remove cron automatically when all clear.</div>
+        <div class="cmd-key">Note Mode</div><div class="cmd-val">Silent intake — receive notes only, no building or questions.</div>
+        <div class="cmd-key">Planning Mode</div><div class="cmd-val">Open discussion / Q&A — ask questions, explore ideas, shape direction together.</div>
+        <div class="cmd-key">Compile</div><div class="cmd-val">Synthesize all notes + discussion into a clean spec.</div>
+        <div class="cmd-key">Build</div><div class="cmd-val">Execute using compiled spec.</div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Workflow Flows</div>
+      <div class="card-grid">
+        <div class="card accent"><div class="card-title">Build Flow</div><div class="card-sub">Note Mode → Planning Mode → Compile → Build → Commit</div></div>
+        <div class="card"><div class="card-title">Draft Flow</div><div class="card-sub">/draft → [Izzy reviews] → /revise OR /send</div></div>
+        <div class="card"><div class="card-title">Context Flow</div><div class="card-sub">/recall [topic] → work → /commit</div></div>
+      </div>
+    </div>
+
+    <!-- RULES -->
+    <div class="page" id="page-rules">
+      <div class="sec-title">Hard Rules</div>
+      <div class="sec-sub">Non-negotiable behaviors established after specific incidents. Every agent must follow these without exception.</div>
+
+      <div class="rule-list">
+        <div class="rule danger"><div class="rule-icon">⛔</div><div class="rule-body"><div class="rule-title">Never push to main without explicit approval</div><div class="rule-desc">Accepted triggers: "push to prod", "update production", "merge to main", "go live". Default: push to develop branch only. Flow: develop → staging → main (Izzy approves). Established 2026-05-27 after violation.</div></div></div>
+        <div class="rule danger"><div class="rule-icon">⛔</div><div class="rule-body"><div class="rule-title">Never assume or guess date/time</div><div class="rule-desc">Always run session_status to get exact current date/time when needed. Violated 2026-04-24 — caused real scheduling errors.</div></div></div>
+        <div class="rule danger"><div class="rule-icon">⛔</div><div class="rule-body"><div class="rule-title">WhatsApp DM from unknown number = SILENCE + alert</div><div class="rule-desc">Zero response to sender. Telegram alert to Izzy only. Never reveal protocol, AI identity, or internal reasoning to sender. Violated multiple times — hard line.</div></div></div>
+        <div class="rule danger"><div class="rule-icon">⛔</div><div class="rule-body"><div class="rule-title">Never respond in any WhatsApp group</div><div class="rule-desc">groupPolicy is "open" only for monitoring. Not for responding. @mentions → alert Izzy + draft → wait for approval.</div></div></div>
+        <div class="rule danger"><div class="rule-icon">⛔</div><div class="rule-body"><div class="rule-title">Never run or report health checks proactively</div><div class="rule-desc">Never send "all clear" or "all systems healthy" messages ever. Only alert if something is actually broken. Established 2026-05-12.</div></div></div>
+        <div class="rule warn"><div class="rule-icon">⚠️</div><div class="rule-body"><div class="rule-title">Every PDF must be saved locally AND uploaded to Google Drive</div><div class="rule-desc">Local: /workspace/storage/ | Drive: account matching the project. Always return Drive link after upload. No exceptions. Established 2026-05-28.</div></div></div>
+        <div class="rule warn"><div class="rule-icon">⚠️</div><div class="rule-body"><div class="rule-title">Bot Delegation Rule</div><div class="rule-desc">When a task belongs to a business bot (JarvisSPS, JarvisDomo, etc.) — relay, don't execute. Step in ONLY if the business bot explicitly escalates. Main Jarvis = Chief of Staff. Business bots = operators. Violated 2026-05-10.</div></div></div>
+        <div class="rule warn"><div class="rule-icon">⚠️</div><div class="rule-body"><div class="rule-title">Draft = show only. Never send.</div><div class="rule-desc">The word "draft" alone is never a send instruction. Even if the draft looks ready. Only send when Izzy explicitly says "send", "send it", or /send.</div></div></div>
+        <div class="rule warn"><div class="rule-icon">⚠️</div><div class="rule-body"><div class="rule-title">Versioning: X.Y.Z — Two-place update rule</div><div class="rule-desc">Z = patch (bug fixes, increment forever). Y = minor (confirmed working, reset Z). X = major milestone. Always update BOTH package.json AND hardcoded UI version string. Established 2026-05-14.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💡</div><div class="rule-body"><div class="rule-title">trash > rm</div><div class="rule-desc">Recoverable beats gone forever. Always use trash command instead of rm for file deletions.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💡</div><div class="rule-body"><div class="rule-title">MEMORY.md is main session only</div><div class="rule-desc">Contains personal context. Do NOT load in shared contexts (Discord, group chats, sessions with other people). Security measure.</div></div></div>
+      </div>
+    </div>
+
+    <!-- HOW PORTALS WORK -->
+    <div class="page" id="page-portals">
+      <div class="sec-title">How Portals Are Built</div>
+      <div class="sec-sub">The standard Jarvis portal format — design system, required features, deployment process, and naming conventions.</div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Design System</div>
+      <div class="card-grid">
+        <div class="card accent">
+          <div class="card-title">Color System (Dark Default)</div>
+          <div class="card-sub">Background: #0C0C0C · Surface: #1C1C1E · Surface2: #2C2C34</div>
+          <div class="card-val">Text: #F0EDE8 · Muted: #A0A098</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Accent Colors by Venture</div>
+          <div class="card-sub">SPS: Signal Orange #FF5E1A · Flywheel: Cyan #00C2E0 · Domo: Brown/Red · Blue Highway: Navy · 24HG: Electric Green #00C853</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Typography Stack</div>
+          <div class="card-sub">Headings: Space Grotesk 700 · Body: DM Sans 300/400 · Labels/UI: Outfit 600 · Mono/Code: JetBrains Mono</div>
+          <div class="card-val">All loaded from Google Fonts</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Border Radius & Spacing</div>
+          <div class="card-sub">Cards: 10px · Buttons: 8px · Tags: 4-5px · Generous padding (64px+ on desktop). Space = the design.</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Required Features (every portal)</div>
+      <div class="rule-list">
+        <div class="rule info"><div class="rule-icon">🔐</div><div class="rule-body"><div class="rule-title">Password Gate</div><div class="rule-desc">Always required. Overlay with logo, subtitle "Confidential" or "Internal", password input, Enter key support, shake animation on wrong password. No password stored in plain text — hardcoded in JS.</div></div></div>
+        <div class="rule info"><div class="rule-icon">🌓</div><div class="rule-body"><div class="rule-title">Light / Dark Mode Toggle</div><div class="rule-desc">Top right corner button. Dark: Carbon bg, Warm White text, accent color. Light: Warm White bg, Carbon text. Photo-backed slides always keep white text.</div></div></div>
+        <div class="rule info"><div class="rule-icon">🖨️</div><div class="rule-body"><div class="rule-title">Print to PDF Button</div><div class="rule-desc">Top right, always forces Light Mode for printing. @media print: landscape, no nav, all slides/pages paginated.</div></div></div>
+        <div class="rule info"><div class="rule-icon">📊</div><div class="rule-body"><div class="rule-title">Real-Time Calculations (where applicable)</div><div class="rule-desc">Financial/simulator portals: all inputs trigger instant recalc via oninput events. No "calculate" button needed. Chart.js for charts with maintainAspectRatio:false.</div></div></div>
+        <div class="rule info"><div class="rule-icon">📱</div><div class="rule-body"><div class="rule-title">Self-Contained HTML</div><div class="rule-desc">All assets embedded (fonts via CDN, images as base64 when needed). Single file deployable anywhere. No external dependencies except Google Fonts + Chart.js CDN.</div></div></div>
+        <div class="rule info"><div class="rule-icon">⚙️</div><div class="rule-body"><div class="rule-title">SPS S-mark</div><div class="rule-desc">Bottom right corner on all SPS-branded portals. Omit only when explicitly told to.</div></div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Deployment Process</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Build as self-contained HTML</h4><p>Save to /workspace/storage/[portal-name].html. Test locally via Tailscale or local server first.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Copy to Railway public folder</h4><p class="mono">cp /workspace/storage/[portal].html ~/Documents/geopulse-ai/public/[portal].html</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Git commit and push</h4><p class="mono">cd ~/Documents/geopulse-ai && git add . && git commit -m "feat: [portal] vX.Y" && git push origin main</p><p>Railway auto-deploys on push.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Verify live URL</h4><p class="mono">https://geopulse-ai-production.up.railway.app/[portal-name].html</p><p>Test password gate, all tabs, print to PDF.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Add to Notion + Jarvis HQ Dashboard</h4><p>Add to Notion Presentations page. Update project card in Jarvis HQ Dashboard (GitHub Pages). Log in VERSION_REGISTRY.md.</p></div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Pre-Build Checklist</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Question to Confirm</th></tr></thead>
+          <tbody>
+            <tr><td>Purpose & audience</td><td>HNW, institutional, internal, pitch?</td></tr>
+            <tr><td>Brand guidelines</td><td>Colors, fonts, logo — which venture?</td></tr>
+            <tr><td>Content source</td><td>Existing deck PDF, notes, raw data?</td></tr>
+            <tr><td>Tone</td><td>Conservative/credible, bold/aspirational, technical?</td></tr>
+            <tr><td>TBD fields</td><td>Any missing numbers? Flag in orange [TBD]</td></tr>
+            <tr><td>Password</td><td>Set per project — format: [project]2026</td></tr>
+            <tr><td>Deployment target</td><td>Railway public folder or GitHub Pages?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Active Portals</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Portal</th><th>URL</th><th>Password</th><th>Version</th></tr></thead>
+          <tbody>
+            <tr><td>Flywheel Pro Forma</td><td class="mono">geopulse-ai-production.up.railway.app/flywheel-proforma.html</td><td class="mono">flywheel2026</td><td>v3.2</td></tr>
+            <tr><td>Flywheel Investor Deck</td><td class="mono">geopulse-ai-production.up.railway.app/flywheel-investor-deck-v2.0.html</td><td class="mono">flywheel2026</td><td>v2.0</td></tr>
+            <tr><td>Domo Pro Forma</td><td class="mono">izzy-spsi.github.io/domo-proforma/</td><td class="mono">Domo@2026</td><td>v1.0</td></tr>
+            <tr><td>Domo SIS</td><td class="mono">izzy-spsi.github.io/domo-sis/</td><td class="mono">Domo@2026</td><td>v2.0</td></tr>
+            <tr><td>24HG Pro Forma</td><td class="mono">izzy-spsi.github.io/24hg-proforma/</td><td class="mono">Golf@2026</td><td>v1.0</td></tr>
+            <tr><td>EZLiving Storyboard</td><td class="mono">geopulse-ai-production.up.railway.app/ezliving-storyboard-v0.1.2.html</td><td class="mono">ezliving2026</td><td>v0.1.2</td></tr>
+            <tr><td>OpenClaw Config (this)</td><td class="mono">geopulse-ai-production.up.railway.app/jarvis-openclaw-config.html</td><td class="mono">jarvis2026</td><td>v1.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COSTS -->
+    <div class="page" id="page-costs">
+      <div class="sec-title">Costs & API Configuration</div>
+      <div class="sec-sub">API providers, estimated costs, and optimization strategies.</div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Provider</th><th>Service</th><th>Env Var</th><th>Est. Cost</th><th>Optimization</th></tr></thead>
+          <tbody>
+            <tr><td>Anthropic</td><td>Claude Sonnet 4-6 (primary)</td><td class="mono">ANTHROPIC_API_KEY</td><td>~$3-15 / 1M tokens</td><td>Cache retention: short. Compaction: safeguard.</td></tr>
+            <tr><td>Anthropic</td><td>Claude Haiku 4-5 (heartbeat)</td><td class="mono">ANTHROPIC_API_KEY</td><td>~$0.25 / 1M tokens</td><td>Used for all cron/heartbeat tasks</td></tr>
+            <tr><td>Google</td><td>Gemini 3.1 Pro (fallback + embeddings)</td><td class="mono">GEMINI_API_KEY</td><td>~$1.25 / 1M tokens</td><td>Memory search uses Gemini embeddings</td></tr>
+            <tr><td>ElevenLabs</td><td>TTS / Voice (sag skill)</td><td class="mono">ELEVENLABS_API_KEY</td><td>Pay per character</td><td>Use for voice stories, storytime moments</td></tr>
+            <tr><td>Notion</td><td>API access (notion skill)</td><td class="mono">NOTION_API_KEY</td><td>Free (workspace plan)</td><td>—</td></tr>
+            <tr><td>Canva</td><td>OAuth integration</td><td class="mono">CANVA_CLIENT_ID/SECRET</td><td>Free tier</td><td>—</td></tr>
+            <tr><td>Railway</td><td>Hosting (geopulse-ai)</td><td>—</td><td>~$5-20/mo</td><td>Static files only — minimal compute</td></tr>
+            <tr><td>GitHub Pages</td><td>Hosting (multiple sites)</td><td>—</td><td>Free</td><td>Used for static portals and dashboards</td></tr>
+            <tr><td>Brave</td><td>Web search API</td><td>via openclaw</td><td>Pay per query</td><td>Search only when needed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">Cost Optimization Strategies</div>
+      <div class="rule-list">
+        <div class="rule info"><div class="rule-icon">💰</div><div class="rule-body"><div class="rule-title">Haiku for heartbeats and cron</div><div class="rule-desc">Every 30-min heartbeat uses Haiku (~60x cheaper than Sonnet). All cron jobs default to Haiku unless complex reasoning is required.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💰</div><div class="rule-body"><div class="rule-title">Cache TTL: 1 hour</div><div class="rule-desc">Context is cached and reused within the hour. Reduces redundant token spend on repeated context loading.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💰</div><div class="rule-body"><div class="rule-title">Bootstrap max: 40K chars (80K total)</div><div class="rule-desc">Limits how much context is loaded at session start. Keeps costs manageable for long-running sessions.</div></div></div>
+        <div class="rule info"><div class="rule-icon">💰</div><div class="rule-body"><div class="rule-title">Railway for dynamic, GitHub Pages for static</div><div class="rule-desc">Static portals (no server-side logic) go to GitHub Pages (free). Only Railway for apps that need a server.</div></div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-family:var(--font);font-size:15px;font-weight:600;margin-bottom:14px;">How to Add a New API Key</div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Edit openclaw.json</h4><p class="mono">~/.openclaw/openclaw.json → env section</p><p>Add: "NEW_API_KEY": "your-key-here"</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Restart gateway</h4><p class="mono">openclaw gateway restart</p><p>Or use the gateway tool action "restart" from within Jarvis.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Document it here</h4><p>Add to the costs table above with provider, service, env var name, and estimated cost.</p></div></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <div class="sps-mark">⚡ Super Power Studios</div>
+</div><!-- /app -->
+
+<script>
+// GATE
+document.getElementById('gateInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPw(); });
+function checkPw() {
+  const el = document.getElementById('gateInput');
+  if (el.value === 'jarvis2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  } else {
+    el.value = ''; el.classList.add('shake'); el.placeholder = 'Incorrect — try again';
+    setTimeout(() => { el.classList.remove('shake'); el.placeholder = 'Password'; }, 900);
+  }
+}
+
+// TABS
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+</script>
+</body>
+</html>

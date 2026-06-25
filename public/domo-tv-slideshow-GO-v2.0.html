@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Domo Cafe — TV Slideshow GO v2.0</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --brown: #8B4513;
+  --red: #CC2222;
+  --gold: #C9A052;
+  --orange: #E8650A;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ── SLIDES ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── TOP ORANGE LINE ── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--orange), var(--gold), var(--orange));
+  z-index: 100;
+}
+
+/* ── LOGO TOP LEFT ── */
+.domo-logo {
+  position: fixed;
+  top: 24px;
+  left: 40px;
+  z-index: 100;
+}
+.domo-logo img {
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+}
+
+/* ── CATEGORY PILL TOP RIGHT ── */
+.category-pill {
+  position: fixed;
+  top: 24px;
+  right: 40px;
+  z-index: 100;
+  background: rgba(139,69,19,0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(201,160,82,0.4);
+  border-radius: 40px;
+  padding: 10px 28px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  transition: opacity 0.6s ease;
+}
+
+/* ── SLIDE COUNTER BOTTOM RIGHT ── */
+.slide-counter {
+  position: fixed;
+  bottom: 32px;
+  right: 44px;
+  z-index: 100;
+  font-size: 22px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed;
+  bottom: 0; left: 0;
+  height: 4px;
+  background: var(--gold);
+  z-index: 100;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ── COVER SLIDE ── */
+.cover {
+  width: 100%; height: 100%;
+  background: #1C0A00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.cover-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/domo-food/domo-entrance-door.jpg') center/cover no-repeat;
+  filter: brightness(0.35);
+}
+.cover-content {
+  position: relative;
+  z-index: 2;
+}
+.cover-grand {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.cover-title {
+  font-size: clamp(60px, 9vw, 130px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.cover-divider {
+  width: 80px;
+  height: 3px;
+  background: var(--orange);
+  margin: 0 auto 24px;
+  border-radius: 2px;
+}
+.cover-date {
+  font-size: clamp(18px, 2.2vw, 28px);
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+}
+.cover-menu {
+  font-size: clamp(13px, 1.5vw, 18px);
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── FOOD SLIDES ── */
+.food-slide {
+  width: 100%; height: 100%;
+  position: relative;
+}
+.food-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.food-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(
+    transparent 0%,
+    rgba(0,0,0,0.3) 25%,
+    rgba(0,0,0,0.82) 55%,
+    rgba(0,0,0,0.97) 100%
+  );
+  padding: 60px 72px 72px;
+}
+.food-category {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+}
+.food-accent {
+  width: 48px;
+  height: 3px;
+  background: var(--orange);
+  border-radius: 2px;
+  margin-bottom: 18px;
+}
+.food-name {
+  font-size: clamp(56px, 7vw, 100px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  text-shadow: 0 3px 20px rgba(0,0,0,0.8);
+}
+.food-price {
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 22px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+.food-desc {
+  font-size: clamp(28px, 2.9vw, 56px);
+  color: rgba(255,255,255,0.88);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  max-width: 1600px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.7);
+}
+
+/* ── DRINKS SLIDE ── */
+.drinks-slide {
+  width: 100%; height: 100%;
+  position: relative;
+}
+.drinks-photo {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.45);
+}
+.drinks-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 80px;
+}
+.drinks-title {
+  font-size: clamp(36px, 4vw, 60px);
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.drinks-accent {
+  width: 60px;
+  height: 3px;
+  background: var(--orange);
+  border-radius: 2px;
+  margin-bottom: 40px;
+}
+.drinks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 100px;
+  max-width: 1100px;
+}
+.drink-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  padding-bottom: 14px;
+}
+.drink-name {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 600;
+  color: #fff;
+}
+.drink-price {
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 700;
+  color: var(--gold);
+  white-space: nowrap;
+  margin-left: 16px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar"></div>
+
+<!-- LOGO -->
+<div class="domo-logo">
+  <img src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+</div>
+
+<!-- CATEGORY PILL -->
+<div class="category-pill" id="cat-pill">Grand Opening</div>
+
+<!-- SLIDE COUNTER -->
+<div class="slide-counter" id="counter">01 / 09</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- ═══════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════ -->
+<div class="slide active" data-category="Grand Opening">
+  <div class="cover">
+    <div class="cover-bg"></div>
+    <div class="cover-content">
+      <div class="cover-grand">Grand Opening</div>
+      <div class="cover-title">Domo<br/>Cafe</div>
+      <div class="cover-divider"></div>
+      <div class="cover-date">June 13, 2026 · Buena Park, CA</div>
+      <div class="cover-menu">Signature Plates · Handhelds · Drinks</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 2 — DOMO MOCO
+═══════════════════════════ -->
+<div class="slide" data-category="Signature Plates">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/domo-moco.jpg" alt="Domo Moco"/>
+    <div class="food-overlay">
+      <div class="food-name">Domo Moco</div>
+      <div class="food-price">$19</div>
+      <div class="food-desc">· Juicy beef patty · Steamed rice · Rich house gravy · Sunny-side-up egg</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 3 — GOLDEN KATSU CURRY
+═══════════════════════════ -->
+<div class="slide" data-category="Signature Plates">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/katsu-curry.jpg" alt="Golden Katsu Curry"/>
+    <div class="food-overlay">
+      <div class="food-name">Golden Katsu Curry</div>
+      <div class="food-price">$18</div>
+      <div class="food-desc">· Steamed jasmine rice · Signature Japanese curry · Sliced carrots · Crispy chicken katsu · Domo egg</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 4 — UMAMI CREAM PASTA
+═══════════════════════════ -->
+<div class="slide" data-category="Signature Plates">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/umami-pasta.jpg" alt="Umami Cream Pasta"/>
+    <div class="food-overlay">
+      <div class="food-name">Umami Cream Pasta</div>
+      <div class="food-price">$18.50</div>
+      <div class="food-desc">· Campanelle pasta · Earthy mushrooms · Shallots · Umami cream sauce · Parmesan · Fresh chives</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 5 — CRISPY CHICKEN LOADED FRIES
+═══════════════════════════ -->
+<div class="slide" data-category="Signature Plates">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/crispy-chicken-fries.jpg" alt="Crispy Chicken Loaded Fries"/>
+    <div class="food-overlay">
+      <div class="food-name">Crispy Chicken Loaded Fries</div>
+      <div class="food-price">$17</div>
+      <div class="food-desc">· Crispy chicken chunks · Sweet Korean chili · Furikake waffle fries · Yum-yum sauce · Scallions · Sesame</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 6 — DOMO BOSS BURGER
+═══════════════════════════ -->
+<div class="slide" data-category="Handhelds">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/boss-burger.jpg" alt="Domo Boss Burger"/>
+    <div class="food-overlay">
+      <div class="food-name">Domo Boss Burger</div>
+      <div class="food-price">$17</div>
+      <div class="food-desc">· Toasted brioche bun · Pickled burger sauce · Tomato · Lettuce · Angus beef patty · American cheese · Furikake waffle fries</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 7 — KIMCHI KATSU SANDWICH
+═══════════════════════════ -->
+<div class="slide" data-category="Handhelds">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/kimchi-katsu.jpg" alt="Kimchi Katsu Sandwich"/>
+    <div class="food-overlay">
+      <div class="food-name">Kimchi Katsu Sandwich</div>
+      <div class="food-price">$18.50</div>
+      <div class="food-desc">· Toasted brioche bun · Yum-yum sauce · Crispy chicken katsu · Sweet Korean chili · Yuzu coleslaw · Kimchi · Scallions · Sesame</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 8 — DOMO'S STREET DOG
+═══════════════════════════ -->
+<div class="slide" data-category="Handhelds">
+  <div class="food-slide">
+    <img class="food-photo" src="/domo-food/street-dog.jpg" alt="Domo's Street Dog"/>
+    <div class="food-overlay">
+      <div class="food-name">Domo's Street Dog</div>
+      <div class="food-price">$16.50</div>
+      <div class="food-desc">· Toasted hot dog bun · Beef sausage · Teriyaki sauce · Kewpie mayo · Scallions · Shredded seaweed · Bonito flakes</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SLIDE 9 — DRINKS
+═══════════════════════════ -->
+<div class="slide" data-category="Drinks">
+  <div class="drinks-slide">
+    <img class="drinks-photo" src="/domo-food/drinks.jpg" alt="Drinks"/>
+    <div class="drinks-overlay">
+      <div class="drinks-title">Drinks</div>
+      <div class="drinks-accent"></div>
+      <div class="drinks-grid">
+        <div class="drink-item"><span class="drink-name">Strawberry Lime Refresher</span><span class="drink-price">$8</span></div>
+        <div class="drink-item"><span class="drink-name">Pineapple / Watermelon Refresher</span><span class="drink-price">$8</span></div>
+        <div class="drink-item"><span class="drink-name">Strawberry Matcha</span><span class="drink-price">$8.50</span></div>
+        <div class="drink-item"><span class="drink-name">Cinnamon Roll Matcha</span><span class="drink-price">$8.50</span></div>
+        <div class="drink-item"><span class="drink-name">Mango Lemonade</span><span class="drink-price">$7</span></div>
+        <div class="drink-item"><span class="drink-name">Domo's Iced Cookie Coffee</span><span class="drink-price">$7</span></div>
+        <div class="drink-item"><span class="drink-name">Milo Dinosaur</span><span class="drink-price">$7</span></div>
+        <div class="drink-item"><span class="drink-name">Domo Palmer</span><span class="drink-price">$6.50</span></div>
+        <div class="drink-item"><span class="drink-name">Lemonade</span><span class="drink-price">$6</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DURATION = 6000; // 6 seconds per slide
+const slides = document.querySelectorAll('.slide');
+const pill = document.getElementById('cat-pill');
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+const total = slides.length;
+
+let current = 0;
+let startTime = null;
+let animFrame = null;
+
+function showSlide(idx) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  pill.textContent = slides[idx].dataset.category || '';
+  counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+}
+
+function tick(ts) {
+  if (!startTime) startTime = ts;
+  const elapsed = ts - startTime;
+  const pct = Math.min(elapsed / DURATION * 100, 100);
+  progress.style.width = pct + '%';
+
+  if (elapsed >= DURATION) {
+    current = (current + 1) % total;
+    showSlide(current);
+    startTime = ts;
+  }
+  animFrame = requestAnimationFrame(tick);
+}
+
+// Preload all images
+const imgs = document.querySelectorAll('img');
+let loaded = 0;
+imgs.forEach(img => {
+  if (img.complete) { loaded++; }
+  else { img.addEventListener('load', () => loaded++); }
+});
+
+// Support ?slide=N for preview/screenshot
+const params = new URLSearchParams(window.location.search);
+const startSlide = parseInt(params.get('slide') || '0', 10);
+current = Math.min(startSlide, total - 1);
+showSlide(current);
+animFrame = requestAnimationFrame(tick);
+</script>
+</body>
+</html>

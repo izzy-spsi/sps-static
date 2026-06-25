@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Domo Cafe — Run of Show</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:    #FBF7F2;
+      --surf:  #FFFFFF;
+      --surf2: #F5EDE3;
+      --bdr:   rgba(139,69,19,0.12);
+      --red:   #CC2222;
+      --brown: #8B4513;
+      --amber: #D4882A;
+      --grn:   #2E7D32;
+      --txt:   #2C1810;
+      --mut:   #8B7355;
+      --font:  'Space Grotesk', sans-serif;
+      --body:  'DM Sans', sans-serif;
+      --mono:  'JetBrains Mono', monospace;
+    }
+    html, body { min-height:100%; background:var(--bg); color:var(--txt); font-family:var(--body); }
+
+    /* GATE */
+    #gate { position:fixed; inset:0; background:var(--red); display:flex; align-items:center; justify-content:center; z-index:9999; }
+    .gate-box { text-align:center; max-width:280px; width:100%; padding:0 20px; }
+    .gate-logo { font-size:52px; margin-bottom:8px; }
+    .gate-title { font-family:var(--font); font-size:22px; font-weight:700; color:#fff; margin-bottom:4px; }
+    .gate-sub   { font-size:13px; color:rgba(255,255,255,.7); margin-bottom:28px; }
+    .gate-inp   { width:100%; padding:12px 16px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3); border-radius:10px; color:#fff; font-size:16px; text-align:center; letter-spacing:3px; outline:none; margin-bottom:12px; }
+    .gate-inp::placeholder { color:rgba(255,255,255,.5); letter-spacing:1px; }
+    .gate-inp.shake { animation:shake .3s; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+    .gate-btn { width:100%; padding:12px; background:#fff; border:none; border-radius:10px; color:var(--red); font-family:var(--font); font-weight:700; font-size:15px; cursor:pointer; }
+
+    /* APP */
+    #app { display:none; max-width:640px; margin:0 auto; padding:16px; }
+
+    /* HEADER */
+    .hdr { text-align:center; padding:24px 0 20px; border-bottom:2px solid var(--bdr); margin-bottom:20px; }
+    .hdr-emoji { font-size:40px; }
+    .hdr-title { font-family:var(--font); font-size:24px; font-weight:700; color:var(--red); margin:6px 0 2px; }
+    .hdr-sub   { font-size:13px; color:var(--mut); }
+
+    /* SECTION CARDS */
+    .sec { background:var(--surf); border:1px solid var(--bdr); border-radius:14px; margin-bottom:16px; overflow:hidden; }
+    .sec-hdr { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:var(--surf2); cursor:pointer; user-select:none; }
+    .sec-hdr-l { display:flex; align-items:center; gap:10px; }
+    .sec-icon  { font-size:18px; }
+    .sec-title { font-family:var(--font); font-size:14px; font-weight:700; color:var(--brown); }
+    .sec-chev  { font-size:12px; color:var(--mut); transition:transform .2s; }
+    .sec-chev.open { transform:rotate(180deg); }
+    .sec-body  { padding:16px; display:none; }
+    .sec-body.open { display:block; }
+
+    /* PEOPLE CHIPS */
+    .people-group { margin-bottom:14px; }
+    .people-label { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.7px; color:var(--mut); margin-bottom:8px; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+    .chip { display:flex; align-items:center; gap:6px; background:var(--surf2); border:1px solid var(--bdr); border-radius:20px; padding:6px 12px; font-size:13px; font-weight:500; }
+    .chip.host   { background:rgba(204,34,34,.08); border-color:rgba(204,34,34,.25); color:var(--red); }
+    .chip.mgr    { background:rgba(139,69,19,.08); border-color:rgba(139,69,19,.25); color:var(--brown); }
+    .chip.outside{ background:rgba(46,125,50,.08); border-color:rgba(46,125,50,.25); color:var(--grn); }
+    .chip.staff  { background:var(--surf2); color:var(--txt); }
+    .chip-del { cursor:pointer; color:var(--mut); font-size:14px; line-height:1; }
+    .chip-del:hover { color:var(--red); }
+    .badge-tag { font-size:10px; background:rgba(212,136,42,.2); color:var(--amber); border-radius:4px; padding:1px 5px; font-family:var(--mono); }
+
+    /* ADD INPUT */
+    .add-row { display:flex; gap:8px; margin-top:6px; }
+    .add-inp { flex:1; padding:8px 12px; border:1px solid var(--bdr); border-radius:8px; font-size:13px; background:var(--surf2); color:var(--txt); outline:none; font-family:var(--body); }
+    .add-inp:focus { border-color:var(--red); }
+    .add-btn { padding:8px 14px; background:var(--red); border:none; border-radius:8px; color:#fff; font-family:var(--font); font-weight:600; font-size:13px; cursor:pointer; white-space:nowrap; }
+    .add-btn:hover { opacity:.88; }
+
+    /* CHECKLIST */
+    .check-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--bdr); }
+    .check-item:last-child { border-bottom:none; }
+    .check-box { width:20px; height:20px; border-radius:5px; border:2px solid var(--bdr); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; }
+    .check-box.done { background:var(--grn); border-color:var(--grn); }
+    .check-box.done::after { content:'✓'; color:#fff; font-size:12px; font-weight:700; }
+    .check-text { flex:1; font-size:14px; }
+    .check-text.done { text-decoration:line-through; color:var(--mut); }
+    .check-del { cursor:pointer; color:var(--mut); font-size:16px; }
+    .check-del:hover { color:var(--red); }
+
+    /* TASK NOTE */
+    .task-note { font-size:11px; color:var(--amber); font-family:var(--mono); margin-left:4px; }
+
+    /* RUN OF SHOW */
+    .ros-item { border:1px solid var(--bdr); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+    .ros-hdr  { display:flex; align-items:center; gap:12px; padding:13px 14px; cursor:pointer; background:var(--surf2); user-select:none; }
+    .ros-num  { font-family:var(--font); font-size:16px; font-weight:700; color:var(--red); min-width:28px; }
+    .ros-name { font-family:var(--font); font-size:14px; font-weight:600; flex:1; }
+    .ros-icon { font-size:16px; }
+    .ros-chev { font-size:11px; color:var(--mut); transition:transform .2s; }
+    .ros-chev.open { transform:rotate(180deg); }
+    .ros-body { display:none; padding:14px; }
+    .ros-body.open { display:block; }
+    .ros-body p { font-size:13px; line-height:1.65; color:var(--txt); margin-bottom:10px; }
+    .ros-body p:last-child { margin-bottom:0; }
+    .ros-body ul { padding-left:18px; margin-bottom:10px; }
+    .ros-body li { font-size:13px; line-height:1.7; color:var(--txt); }
+    .ros-body .tip { background:rgba(212,136,42,.1); border-left:3px solid var(--amber); padding:8px 12px; border-radius:0 6px 6px 0; font-size:12px; color:var(--brown); margin:8px 0; }
+    .char-card { background:rgba(139,69,19,.06); border:1px solid rgba(139,69,19,.15); border-radius:8px; padding:12px; margin-bottom:8px; }
+    .char-name { font-family:var(--font); font-size:13px; font-weight:700; color:var(--brown); margin-bottom:6px; }
+    .char-body { font-size:12px; line-height:1.6; color:var(--txt); }
+
+    /* DIVIDER */
+    .divider { height:1px; background:var(--bdr); margin:10px 0; }
+
+    /* FOOTER */
+    .footer { text-align:center; padding:20px 0 32px; font-size:12px; color:var(--mut); }
+  </style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">🎌</div>
+    <div class="gate-title">Domo Cafe</div>
+    <div class="gate-sub">Run of Show — Staff Only</div>
+    <input type="password" id="gateInput" class="gate-inp" placeholder="Enter password" autofocus>
+    <button class="gate-btn" onclick="checkPw()">Enter</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <div class="hdr">
+    <div class="hdr-emoji">🎌</div>
+    <div class="hdr-title">Domo Cafe — Run of Show</div>
+    <div class="hdr-sub">Soft Opening · Before We Open</div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="sec" id="sec-team">
+    <div class="sec-hdr" onclick="togSec('team')">
+      <div class="sec-hdr-l"><span class="sec-icon">👥</span><span class="sec-title">Team</span></div>
+      <span class="sec-chev open" id="chev-team">▾</span>
+    </div>
+    <div class="sec-body open" id="body-team">
+
+      <!-- Hosts -->
+      <div class="people-group">
+        <div class="people-label">Hosts</div>
+        <div class="chips" id="chips-host">
+          <div class="chip host">🎤 Izzy</div>
+          <div class="chip host">🎤 Amy</div>
+        </div>
+      </div>
+
+      <!-- Managers -->
+      <div class="people-group">
+        <div class="people-label">Managers</div>
+        <div class="chips" id="chips-mgr">
+          <div class="chip mgr">⭐ Jerry</div>
+          <div class="chip mgr">⭐ JP</div>
+          <div class="chip mgr">⭐ Nathan</div>
+        </div>
+      </div>
+
+      <!-- Staff FOH -->
+      <div class="people-group">
+        <div class="people-label">Staff — Front of House (FOH)</div>
+        <div class="chips" id="chips-foh">
+          <div class="chip staff" data-name="David Valencia">David Valencia <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+          <div class="chip staff" data-name="Sophia Lomeli">Sophia Lomeli <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+        </div>
+        <div class="add-row">
+          <input type="text" class="add-inp" id="inp-foh" placeholder="Add FOH staff name..." onkeydown="if(event.key==='Enter')addPerson('foh')">
+          <button class="add-btn" onclick="addPerson('foh')">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Staff BOH -->
+      <div class="people-group">
+        <div class="people-label">Staff — Back of House (BOH)</div>
+        <div class="chips" id="chips-boh">
+          <div class="chip staff" data-name="Grace Arias">Grace Arias <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+          <div class="chip staff" data-name="Jessica Gomez">Jessica Gomez <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+          <div class="chip staff" data-name="Josue Irineo">Josue Irineo <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+          <div class="chip staff" data-name="Janet Delgado">Janet Delgado <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+          <div class="chip staff" data-name="Jesus Alarcon Saldana">Jesus Alarcon Saldana <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span></div>
+        </div>
+        <div class="add-row">
+          <input type="text" class="add-inp" id="inp-boh" placeholder="Add BOH staff name..." onkeydown="if(event.key==='Enter')addPerson('boh')">
+          <button class="add-btn" onclick="addPerson('boh')">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Outside Help -->
+      <div class="people-group">
+        <div class="people-label">Outside Help</div>
+        <div class="chips" id="chips-outside">
+          <div class="chip outside">🤝 Boon <span class="badge-tag">shirt</span></div>
+          <div class="chip outside">🤝 Lauren <span class="badge-tag">shirt</span></div>
+          <div class="chip outside">🤝 Ming <span class="badge-tag">shirt</span></div>
+        </div>
+        <div class="add-row">
+          <input type="text" class="add-inp" id="inp-outside" placeholder="Add outside help..." onkeydown="if(event.key==='Enter')addPerson('outside')">
+          <button class="add-btn" onclick="addPerson('outside')">+ Add</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRE-EVENT CHECKLIST -->
+  <div class="sec" id="sec-check">
+    <div class="sec-hdr" onclick="togSec('check')">
+      <div class="sec-hdr-l"><span class="sec-icon">✅</span><span class="sec-title">Pre-Event Checklist</span></div>
+      <span class="sec-chev open" id="chev-check">▾</span>
+    </div>
+    <div class="sec-body open" id="body-check">
+      <div id="checklist">
+        <div class="check-item" id="chk-0">
+          <div class="check-box" onclick="toggleCheck(0)"></div>
+          <span class="check-text">Get staff shirts for outside help (Boon, Lauren, Ming) <span class="task-note">⚠ shirts needed</span></span>
+          <span class="check-del" onclick="delCheck(0)">✕</span>
+        </div>
+        <div class="check-item" id="chk-1">
+          <div class="check-box" onclick="toggleCheck(1)"></div>
+          <span class="check-text">Bring Domo Bags from Hong Kong</span>
+          <span class="check-del" onclick="delCheck(1)">✕</span>
+        </div>
+        <div class="check-item" id="chk-2">
+          <div class="check-box" onclick="toggleCheck(2)"></div>
+          <span class="check-text">Bring fake food items for cafe</span>
+          <span class="check-del" onclick="delCheck(2)">✕</span>
+        </div>
+      </div>
+      <div class="add-row" style="margin-top:12px;">
+        <input type="text" class="add-inp" id="inp-task" placeholder="Add checklist item..." onkeydown="if(event.key==='Enter')addTask()">
+        <button class="add-btn" onclick="addTask()">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUN OF SHOW -->
+  <div class="sec" id="sec-ros">
+    <div class="sec-hdr" onclick="togSec('ros')">
+      <div class="sec-hdr-l"><span class="sec-icon">🗺️</span><span class="sec-title">Run of Show — Tour Route</span></div>
+      <span class="sec-chev open" id="chev-ros">▾</span>
+    </div>
+    <div class="sec-body open" id="body-ros">
+
+      <!-- Stop 1 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(1)">
+          <span class="ros-num">1</span>
+          <span class="ros-icon">🚪</span>
+          <span class="ros-name">Arrival & Welcome — Zone 1</span>
+          <span class="ros-chev open" id="ros-chev-1">▾</span>
+        </div>
+        <div class="ros-body open" id="ros-body-1">
+          <p>Welcome guests at the entrance and begin the tour from <strong>Zone 1</strong>.</p>
+          <ul>
+            <li>Show where the long line will curve around the entrance area.</li>
+            <li>Share the story of when we opened <strong>Gudetama Cafe</strong> here — the energy, the lines, what that moment felt like.</li>
+          </ul>
+          <div class="tip">💡 Set the tone early. This is a moment of excitement — channel the Gudetama opening energy.</div>
+        </div>
+      </div>
+
+      <!-- Stop 2 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(2)">
+          <span class="ros-num">2</span>
+          <span class="ros-icon">🎨</span>
+          <span class="ros-name">Zone 2 — Mural & Surroundings</span>
+          <span class="ros-chev" id="ros-chev-2">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-2">
+          <ul>
+            <li>Point out and showcase <strong>the mural and the sign</strong>.</li>
+            <li>Show guests <strong>Soak City</strong> from this vantage point.</li>
+            <li>Highlight the <strong>free parking</strong> — it's a big deal for families.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Stop 3 — Characters -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(3)">
+          <span class="ros-num">3</span>
+          <span class="ros-icon">🐰</span>
+          <span class="ros-name">Meet the Characters</span>
+          <span class="ros-chev" id="ros-chev-3">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-3">
+          <p>Introduce guests to the world of Domo. Use these character backgrounds to bring the story to life.</p>
+
+          <div class="char-card">
+            <div class="char-name">🐰 Mr. Usaji (the Rabbit)</div>
+            <div class="char-body">
+              Domo's cave companion. A wise old rabbit who has lived in the cave for <em>decades</em>. He loves watching television and drinking astringent green tea. Mr. Usaji is not into "new" materials and does not own a telephone.<br><br>
+              <strong>Fashion:</strong> Focuses on materials over shapes.<br>
+              <strong>Favorite food:</strong> Carrots.<br>
+              <strong>Least favorite food:</strong> "Something that is meaningless."<br><br>
+              <em>His Japanese name "Usajii" is a portmanteau of usagi (rabbit) and jii (grandpa/old man).</em>
+            </div>
+          </div>
+
+          <div class="char-card">
+            <div class="char-name">🦦 Tashanna (the Weasel)</div>
+            <div class="char-body">
+              17 years old. Aspires to be a <strong>fashion stylist or model in Tokyo</strong>. Always using technology — televisions, mobile phones, and cameras.<br><br>
+              <strong>Accent (English):</strong> "Weaselly" — ends sentences with "y"s.<br>
+              <strong>Japanese version:</strong> Ends sentences with "chi".<br>
+              <strong>Fun fact:</strong> Has not had a boyfriend in ten years and is seeking a platonic one. Passionate about auctions (but gives up by the end).<br>
+              <strong>Favorite food:</strong> Apricot and mint tarts.<br>
+              <strong>Least favorite:</strong> Sea urchin.<br><br>
+              <em>Her name originates from the Japanese word for "multichannel" in digital broadcasting.</em>
+            </div>
+          </div>
+
+          <div class="char-card">
+            <div class="char-name">🦇 Maya & Mario (the Bats)</div>
+            <div class="char-body">
+              The two iconic bats of the Domo universe. Share what makes them part of the cave family.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stop 4 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(4)">
+          <span class="ros-num">4</span>
+          <span class="ros-icon">🎢</span>
+          <span class="ros-name">Zone 4 — Knotts View & Development</span>
+          <span class="ros-chev" id="ros-chev-4">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-4">
+          <ul>
+            <li>As you walk to Zone 4, point out the <strong>Knotts Berry Farm</strong> view.</li>
+            <li>Explain the <strong>construction</strong> happening nearby.</li>
+            <li>Highlight the <strong>1,300 new apartments</strong> being built — this means thousands of new neighbors and potential regulars for Domo Cafe.</li>
+          </ul>
+          <div class="tip">💡 Frame the apartment development as a growth opportunity — we're opening at exactly the right moment for this neighborhood.</div>
+        </div>
+      </div>
+
+      <!-- Stop 5 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(5)">
+          <span class="ros-num">5</span>
+          <span class="ros-icon">🚪</span>
+          <span class="ros-name">Zones 5, 6 & 7 — Exit & Future Patio</span>
+          <span class="ros-chev" id="ros-chev-5">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-5">
+          <ul>
+            <li>Walk through <strong>Zones 5, 6, and 7</strong>.</li>
+            <li>Show guests this is the <strong>exit area</strong>.</li>
+            <li>Point out the space designated for a <strong>future patio</strong> — share the vision for outdoor seating and expansion.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Stop 6 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(6)">
+          <span class="ros-num">6</span>
+          <span class="ros-icon">👨‍🍳</span>
+          <span class="ros-name">Back to Entrance — Chef's Hat</span>
+          <span class="ros-chev" id="ros-chev-6">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-6">
+          <p>Walk back to the entrance and point out the <strong>chef's hat</strong> feature. Let guests appreciate the design detail and theming at the front of the cafe.</p>
+        </div>
+      </div>
+
+      <!-- Stop 7 -->
+      <div class="ros-item">
+        <div class="ros-hdr" onclick="togRos(7)">
+          <span class="ros-num">7</span>
+          <span class="ros-icon">☀️</span>
+          <span class="ros-name">Morning Opening Demonstration</span>
+          <span class="ros-chev" id="ros-chev-7">▾</span>
+        </div>
+        <div class="ros-body" id="ros-body-7">
+          <p>Show guests <strong>how we open the cafe each morning</strong>. Walk them through the opening ritual — what the team does, how the space comes to life, and what the first moments of a Domo Cafe day look like.</p>
+          <div class="tip">💡 This is a behind-the-scenes moment — guests love seeing the "backstage" of a cafe they love.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">Domo Cafe · Soft Opening · Before We Open 🎌</div>
+</div>
+
+<script>
+// ── GATE ──
+document.getElementById('gateInput').addEventListener('keydown', e => { if(e.key==='Enter') checkPw(); });
+function checkPw() {
+  const el = document.getElementById('gateInput');
+  if (el.value === 'Domo@2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadState();
+  } else {
+    el.value = ''; el.classList.add('shake'); el.placeholder = 'Incorrect — try again';
+    setTimeout(() => { el.classList.remove('shake'); el.placeholder = 'Enter password'; }, 900);
+  }
+}
+
+// ── SECTION TOGGLE ──
+function togSec(id) {
+  const body = document.getElementById('body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+}
+
+// ── ROS TOGGLE ──
+function togRos(n) {
+  const body = document.getElementById('ros-body-'+n);
+  const chev = document.getElementById('ros-chev-'+n);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+}
+
+// ── STATE ──
+function saveState() {
+  const state = {
+    foh: getChipNames('chips-foh'),
+    boh: getChipNames('chips-boh'),
+    outside: getChipNames('chips-outside-added'),
+    tasks: getTaskState(),
+    checks: getCheckState()
+  };
+  localStorage.setItem('domo-ros-v1', JSON.stringify(state));
+}
+
+function loadState() {
+  const raw = localStorage.getItem('domo-ros-v1');
+  if (!raw) return;
+  try {
+    const s = JSON.parse(raw);
+    (s.foh||[]).forEach(n => addChip('chips-foh', n, 'staff', true));
+    (s.boh||[]).forEach(n => addChip('chips-boh', n, 'staff', true));
+    (s.outside||[]).forEach(n => addOutsideChip(n, true));
+    if (s.tasks) restoreTasks(s.tasks);
+    if (s.checks) restoreChecks(s.checks);
+  } catch(e) {}
+}
+
+// ── PEOPLE ──
+function addPerson(type) {
+  const inp = document.getElementById('inp-'+type);
+  const name = inp.value.trim();
+  if (!name) return;
+  const chipClass = type === 'outside' ? 'outside' : 'staff';
+  const containerId = 'chips-'+type;
+  if (type === 'outside') {
+    addOutsideChip(name, false);
+  } else {
+    addChip(containerId, name, chipClass, false);
+  }
+  inp.value = '';
+  saveState();
+}
+
+function addChip(containerId, name, cls, silent) {
+  const container = document.getElementById(containerId);
+  const chip = document.createElement('div');
+  chip.className = 'chip ' + cls;
+  chip.dataset.name = name;
+  chip.innerHTML = name + ' <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span>';
+  container.appendChild(chip);
+}
+
+function addOutsideChip(name, silent) {
+  const container = document.getElementById('chips-outside');
+  const chip = document.createElement('div');
+  chip.className = 'chip outside';
+  chip.dataset.name = name;
+  chip.innerHTML = '🤝 ' + name + ' <span class="badge-tag">shirt</span> <span class="chip-del" onclick="this.parentElement.remove();saveState()">✕</span>';
+  container.appendChild(chip);
+}
+
+function getChipNames(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return [];
+  return [...container.querySelectorAll('.chip[data-name]')].map(c => c.dataset.name);
+}
+
+// ── CHECKLIST ──
+let checkCount = 3;
+
+function addTask() {
+  const inp = document.getElementById('inp-task');
+  const text = inp.value.trim();
+  if (!text) return;
+  const id = checkCount++;
+  const item = document.createElement('div');
+  item.className = 'check-item';
+  item.id = 'chk-'+id;
+  item.innerHTML = `
+    <div class="check-box" onclick="toggleCheck(${id})"></div>
+    <span class="check-text">${text}</span>
+    <span class="check-del" onclick="delCheck(${id})">✕</span>
+  `;
+  document.getElementById('checklist').appendChild(item);
+  inp.value = '';
+  saveState();
+}
+
+function toggleCheck(id) {
+  const item = document.getElementById('chk-'+id);
+  if (!item) return;
+  const box = item.querySelector('.check-box');
+  const txt = item.querySelector('.check-text');
+  box.classList.toggle('done');
+  txt.classList.toggle('done');
+  saveState();
+}
+
+function delCheck(id) {
+  const item = document.getElementById('chk-'+id);
+  if (item) item.remove();
+  saveState();
+}
+
+function getTaskState() {
+  const items = document.querySelectorAll('.check-item');
+  return [...items].map(item => ({
+    id: item.id,
+    text: item.querySelector('.check-text').textContent,
+    done: item.querySelector('.check-box').classList.contains('done'),
+    note: item.querySelector('.task-note') ? item.querySelector('.task-note').textContent : ''
+  }));
+}
+
+function getCheckState() { return getTaskState(); }
+
+function restoreTasks(tasks) {
+  // Tasks already rendered for defaults — skip re-rendering defaults
+}
+
+function restoreChecks(checks) {
+  checks.forEach(t => {
+    if (parseInt(t.id.replace('chk-','')) >= 3) {
+      const id = checkCount++;
+      const item = document.createElement('div');
+      item.className = 'check-item';
+      item.id = 'chk-'+id;
+      item.innerHTML = `
+        <div class="check-box ${t.done ? 'done' : ''}" onclick="toggleCheck(${id})"></div>
+        <span class="check-text ${t.done ? 'done' : ''}">${t.text}</span>
+        <span class="check-del" onclick="delCheck(${id})">✕</span>
+      `;
+      document.getElementById('checklist').appendChild(item);
+    }
+  });
+}
+</script>
+</body>
+</html>
+<!-- redeploy 20260610T055456Z -->

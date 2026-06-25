@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Domo Cafe — Grand Opening | Buena Park, CA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --dark: #1A0800;
+    --dark2: #2C1A0E;
+    --dark3: #3D2415;
+    --warm-white: #FDF8F4;
+    --cream: #F5EDD8;
+    --tan: #D4A574;
+    --muted: #9E7A60;
+    --border: rgba(212,165,116,0.18);
+    --card: rgba(44,26,14,0.85);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(26,8,0,0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo img {
+    height: 38px;
+    object-fit: contain;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tan);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--warm-white); }
+  .nav-cta {
+    background: var(--red);
+    color: var(--warm-white) !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: #a81c1c !important; }
+  .staging-badge {
+    position: fixed;
+    top: 72px; right: 1rem;
+    z-index: 200;
+    background: #FF5E1A;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(to bottom, rgba(26,8,0,0.55) 0%, rgba(26,8,0,0.75) 60%, var(--dark) 100%),
+      url('https://www.domokuncafe.com/domo-storefront-6.jpg') center/cover no-repeat;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--tan);
+    border: 1px solid var(--tan);
+    border-radius: 2rem;
+    padding: 0.4rem 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--warm-white);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title span { color: var(--red); }
+  .hero-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--tan);
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.02em;
+  }
+  .hero-date {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    background: var(--red);
+    display: inline-block;
+    padding: 0.7rem 2rem;
+    border-radius: 3rem;
+    margin-bottom: 2rem;
+  }
+  .hero-location {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hero-scroll::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--muted), transparent);
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--warm-white);
+    margin-bottom: 1.5rem;
+  }
+  .section-body {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--tan);
+    line-height: 1.75;
+    max-width: 640px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── STORY ── */
+  #story {
+    background: var(--dark2);
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+  .story-img {
+    border-radius: 1rem;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .story-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .story-text p {
+    font-size: 1rem;
+    color: var(--tan);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+  .story-text p strong {
+    color: var(--warm-white);
+    font-weight: 500;
+  }
+  .story-pillars {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .pillar {
+    flex: 1;
+    min-width: 120px;
+    background: rgba(212,165,116,0.08);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .pillar-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  .pillar-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--warm-white);
+    text-transform: uppercase;
+  }
+
+  /* ── GALLERY ── */
+  #gallery { background: var(--dark3); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .gallery-grid .wide { grid-column: span 2; }
+  .gallery-item {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .gallery-item.tall { aspect-ratio: 3/4; }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.04); }
+
+  /* ── MENU ── */
+  #menu { background: var(--dark); }
+  .menu-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+  .menu-tab {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1.25rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .menu-tab.active, .menu-tab:hover {
+    background: var(--red);
+    color: var(--warm-white);
+    border-color: var(--red);
+  }
+  .menu-panel { display: none; }
+  .menu-panel.active { display: block; }
+  .menu-category {
+    margin-bottom: 3rem;
+  }
+  .menu-category-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--tan);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .menu-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+  .menu-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .menu-item:hover { border-color: var(--tan); }
+  .menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .menu-item-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--warm-white);
+  }
+  .menu-item-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--red);
+    white-space: nowrap;
+  }
+  .menu-item-desc {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .sauce-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .sauce-pill {
+    background: rgba(212,165,116,0.1);
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    padding: 0.3rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    color: var(--tan);
+  }
+  .sauce-pill span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-left: 0.3rem;
+  }
+
+  /* ── CHOMPS LOYALTY ── */
+  #chomps {
+    background: var(--dark2);
+    overflow: hidden;
+  }
+  .chomps-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+  .chomps-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .tier {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .tier-icon { font-size: 1.75rem; min-width: 2rem; text-align: center; }
+  .tier-info {}
+  .tier-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--warm-white);
+    letter-spacing: 0.05em;
+  }
+  .tier-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .chomps-currency {
+    background: var(--red);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  .chomps-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--warm-white);
+    margin-bottom: 0.5rem;
+  }
+  .chomps-tagline {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.5rem;
+  }
+  .chomps-desc {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.7;
+  }
+
+  /* ── MERCH ── */
+  #merch { background: var(--dark3); }
+  .merch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-top: 3rem;
+  }
+  .merch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .merch-card:hover { border-color: var(--tan); transform: translateY(-3px); }
+  .merch-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .merch-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--warm-white);
+    margin-bottom: 0.4rem;
+  }
+  .merch-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .merch-coming {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 2rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  /* ── VISIT ── */
+  #visit { background: var(--dark); }
+  .visit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+  }
+  .info-block { margin-bottom: 2.5rem; }
+  .info-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.75rem;
+  }
+  .info-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--warm-white);
+    line-height: 1.6;
+  }
+  .info-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .hours-table { width: 100%; border-collapse: collapse; }
+  .hours-table tr { border-bottom: 1px solid var(--border); }
+  .hours-table td {
+    padding: 0.6rem 0;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--tan);
+  }
+  .hours-table td:last-child {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .map-embed {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    height: 360px;
+  }
+  .map-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    filter: grayscale(20%) contrast(90%);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0F0400;
+    border-top: 1px solid var(--border);
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+  }
+  .footer-logo img {
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+  .footer-tagline {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    list-style: none;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .footer-links a {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--tan); }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(158,122,96,0.5);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .story-grid, .chomps-layout, .visit-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-grid .wide { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Staging Badge -->
+<div class="staging-badge">⚠ Staging Preview</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">
+    <img src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#chomps">Chomps</a></li>
+    <li><a href="#merch">Merch</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ul>
+  <a class="nav-cta" href="#visit">Get Directions →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Grand Opening · Buena Park, CA</div>
+    <h1 class="hero-title">Welcome to<br/><span>Domo</span> Cafe</h1>
+    <p class="hero-sub">Japan's most lovable character now has a home — and a kitchen.</p>
+    <div class="hero-date">🎉 June 13, 2026 · 10:00 AM</div>
+    <p class="hero-location">📍 Buena Park Mall · Buena Park, California</p>
+  </div>
+  <div class="hero-scroll">Scroll<br/></div>
+</section>
+
+<hr class="divider"/>
+
+<!-- STORY -->
+<section id="story">
+  <div class="section-inner">
+    <div class="section-label">Our Story</div>
+    <h2 class="section-title">More Than a Cafe.<br/>An Experience.</h2>
+    <div class="story-grid">
+      <div class="story-img">
+        <img src="https://www.domokuncafe.com/domo-storefront-6.jpg" alt="Domo Cafe Exterior"/>
+      </div>
+      <div class="story-text">
+        <p><strong>Domo Cafe is NHK's beloved character come to life</strong> — a Japanese-inspired cafe where playful design meets bold, craveable food.</p>
+        <p>Every corner is crafted to surprise and delight. From the moment you walk in, you're inside the world of Domo: warm, a little wild, and completely unforgettable.</p>
+        <p>We're obsessed with <strong>hospitality with heart</strong> — the kind that makes you feel seen, welcomed, and hungry to come back.</p>
+        <p>Based in <strong>Buena Park, California</strong>, we're proud to call this community home and even prouder to open our doors here first.</p>
+        <div class="story-pillars">
+          <div class="pillar"><div class="pillar-icon">🍱</div><div class="pillar-name">Bold Food</div></div>
+          <div class="pillar"><div class="pillar-icon">🎌</div><div class="pillar-name">Japanese Soul</div></div>
+          <div class="pillar"><div class="pillar-icon">❤️</div><div class="pillar-name">Heart First</div></div>
+          <div class="pillar"><div class="pillar-icon">🧸</div><div class="pillar-name">Domo World</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="section-label">The Space</div>
+    <h2 class="section-title">Step Inside.</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item wide">
+        <img src="https://www.domokuncafe.com/domo-storefront-6.jpg" alt="Domo Cafe Entrance"/>
+      </div>
+      <div class="gallery-item">
+        <img src="https://www.domokuncafe.com/domo-storefront-1.jpg" alt="Domo Cafe Storefront"/>
+      </div>
+      <div class="gallery-item">
+        <img src="https://www.domokuncafe.com/domo-storefront-2.jpg" alt="Domo Cafe"/>
+      </div>
+      <div class="gallery-item">
+        <img src="https://www.domokuncafe.com/domo-storefront-3.jpg" alt="Domo Cafe"/>
+      </div>
+      <div class="gallery-item wide">
+        <img src="https://www.domokuncafe.com/domo-storefront-4.jpg" alt="Domo Cafe"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="section-inner">
+    <div class="section-label">Grand Opening Menu</div>
+    <h2 class="section-title">Eat. Drink. Repeat.</h2>
+    <p class="section-body" style="margin-bottom:2.5rem;">Japanese-inspired plates, bold handhelds, and drinks that hit different. Every item made with intention.</p>
+
+    <div class="menu-tabs">
+      <button class="menu-tab active" onclick="switchTab('food', this)">⭐ Signature Plates</button>
+      <button class="menu-tab" onclick="switchTab('handhelds', this)">🥪 Handhelds</button>
+      <button class="menu-tab" onclick="switchTab('kids', this)">🧒 Kids</button>
+      <button class="menu-tab" onclick="switchTab('sweets', this)">🍮 Sweets</button>
+      <button class="menu-tab" onclick="switchTab('drinks', this)">🥤 Drinks</button>
+      <button class="menu-tab" onclick="switchTab('sides', this)">🍟 Sides & Sauces</button>
+    </div>
+
+    <!-- FOOD -->
+    <div class="menu-panel active" id="tab-food">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo Moco</div>
+            <div class="menu-item-price">$15</div>
+          </div>
+          <div class="menu-item-desc">A juicy beef patty served over steamed rice, topped with rich house gravy and a sunny-side-up egg.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Golden Katsu Curry</div>
+            <div class="menu-item-price">$16</div>
+          </div>
+          <div class="menu-item-desc">Steamed jasmine rice, signature Japanese curry, sliced carrots, chicken katsu, Domo sticker on the egg.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Creamy Mushroom Pasta</div>
+            <div class="menu-item-price">$16</div>
+          </div>
+          <div class="menu-item-desc">Campanelle pasta with earthy mushrooms, shallots, umami cream sauce, parmesan and fresh chives.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HANDHELDS -->
+    <div class="menu-panel" id="tab-handhelds">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo Boss Burger</div>
+            <div class="menu-item-price">$17</div>
+          </div>
+          <div class="menu-item-desc">Toasted brioche bun, pickled burger sauce, tomato, lettuce, Angus beef patty, American cheese. Furikake waffle fries.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Kimchi Katsu Sandwich</div>
+            <div class="menu-item-price">$17</div>
+          </div>
+          <div class="menu-item-desc">Toasted brioche bun, yum-yum sauce, crispy chicken katsu in sweet Korean chili, yuzu coleslaw, kimchi, scallions, sesame. Furikake waffle fries.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo's Street Dog</div>
+            <div class="menu-item-price">$17</div>
+          </div>
+          <div class="menu-item-desc">Toasted hot dog bun, beef sausage, teriyaki sauce, Kewpie mayo, scallions, shredded seaweed, bonito flakes. Furikake fries.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KIDS -->
+    <div class="menu-panel" id="tab-kids">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Korean Fried Chicken</div>
+            <div class="menu-item-price">$15</div>
+          </div>
+          <div class="menu-item-desc">Waffle fries, yum-yum sauce drizzle, crispy chicken chunks in sweet Korean chili, scallions, sesame seeds.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo's Lunch Box</div>
+            <div class="menu-item-price">$13</div>
+          </div>
+          <div class="menu-item-desc">Golden crispy chicken bites, waffle fries, fresh fruit, and ketchup.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SWEETS -->
+    <div class="menu-panel" id="tab-sweets">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo Dream Cup</div>
+            <div class="menu-item-price"></div>
+          </div>
+          <div class="menu-item-desc">Creamy house-made flan layered with strawberry compote, topped with your choice of cookies & cream, strawberry, or ube whipped cream.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo-Yaki</div>
+            <div class="menu-item-price"></div>
+          </div>
+          <div class="menu-item-desc">Golden Japanese-style pastries with your choice of melted ham & cheese or rich chocolate filling.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="menu-panel" id="tab-drinks">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Strawberry Lime Refresher</div>
+            <div class="menu-item-price">$8</div>
+          </div>
+          <div class="menu-item-desc">Strawberry soda, strawberry syrup, fresh lemon juice, diced strawberries, mint leaves.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Pineapple/Watermelon Refresher</div>
+            <div class="menu-item-price">$8</div>
+          </div>
+          <div class="menu-item-desc">Pineapple soda, watermelon syrup, fresh diced watermelon, lemon juice.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Strawberry Matcha</div>
+            <div class="menu-item-price">$8.50</div>
+          </div>
+          <div class="menu-item-desc">Premium matcha blended with fresh strawberry.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Cinnamon Roll Matcha</div>
+            <div class="menu-item-price">$8.50</div>
+          </div>
+          <div class="menu-item-desc">Warm cinnamon and spice notes layered with premium matcha.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo's House Coffee</div>
+            <div class="menu-item-price">$7</div>
+          </div>
+          <div class="menu-item-desc">Rich iced coffee blended with sweetened condensed milk.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Domo Palmer</div>
+            <div class="menu-item-price">$6.50</div>
+          </div>
+          <div class="menu-item-desc">Tropical passionfruit tea and fresh housemade lemonade.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Mango Lemonade</div>
+            <div class="menu-item-price">$7</div>
+          </div>
+          <div class="menu-item-desc">Sweet mango and freshly squeezed lemonade, served with mango jelly over ice.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Milo Dinosaur</div>
+            <div class="menu-item-price">$6</div>
+          </div>
+          <div class="menu-item-desc">Rich chocolate malt blended with smooth milk, served ice-cold.</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-name">Lemonade</div>
+            <div class="menu-item-price">$6</div>
+          </div>
+          <div class="menu-item-desc">Freshly squeezed lemonade, ice-cold, perfectly sweet and refreshing.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDES & SAUCES -->
+    <div class="menu-panel" id="tab-sides">
+      <div class="menu-category">
+        <div class="menu-category-title">🍟 Sides (Add-ons)</div>
+        <div class="sauce-grid">
+          <div class="sauce-pill">Patty <span>$4.50</span></div>
+          <div class="sauce-pill">Chicken Katsu <span>$4.50</span></div>
+          <div class="sauce-pill">Egg <span>$1.50</span></div>
+          <div class="sauce-pill">Cheese <span>$1.00</span></div>
+          <div class="sauce-pill">Rice <span>$2.50</span></div>
+          <div class="sauce-pill">Seasonal Fruit <span>$4.00</span></div>
+        </div>
+      </div>
+      <div class="menu-category">
+        <div class="menu-category-title">🥡 Sauces</div>
+        <div class="sauce-grid">
+          <div class="sauce-pill">Teriyaki <span>$0.50</span></div>
+          <div class="sauce-pill">Tonkatsu Mayo <span>$0.50</span></div>
+          <div class="sauce-pill">Sweet Spicy Mayo <span>$0.50</span></div>
+          <div class="sauce-pill">Yum-Yum <span>$0.50</span></div>
+          <div class="sauce-pill">Burger Sauce <span>$0.50</span></div>
+          <div class="sauce-pill">Gochujang <span>$0.50</span></div>
+          <div class="sauce-pill">Ranch <span>$0.50</span></div>
+          <div class="sauce-pill">Soy Sauce <span>FREE</span></div>
+          <div class="sauce-pill">Sriracha <span>FREE</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- CHOMPS -->
+<section id="chomps">
+  <div class="section-inner">
+    <div class="section-label">Loyalty Program</div>
+    <h2 class="section-title">Earn Chomps.<br/>Spend Chomps.</h2>
+    <p class="section-body" style="margin-bottom:0">Every visit, every order, every Domo moment earns you Chomps — our loyalty currency. The more you visit, the more you unlock.</p>
+    <div class="chomps-layout">
+      <div class="chomps-tiers">
+        <div class="tier">
+          <div class="tier-icon">🤝</div>
+          <div class="tier-info">
+            <div class="tier-name">Domo Friend</div>
+            <div class="tier-desc">Just getting started. Every Chomp counts.</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-icon">⭐</div>
+          <div class="tier-info">
+            <div class="tier-name">Domo Fan</div>
+            <div class="tier-desc">You're becoming a regular. Perks incoming.</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-icon">🔥</div>
+          <div class="tier-info">
+            <div class="tier-name">Domo Obsessed</div>
+            <div class="tier-desc">Priority access, early drops, and surprise rewards.</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-icon">👑</div>
+          <div class="tier-info">
+            <div class="tier-name">Domo Legend</div>
+            <div class="tier-desc">Invite only. The inner circle of Domo.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chomps-currency">
+        <div class="chomps-logo">😋</div>
+        <div class="chomps-logo" style="font-size:2.5rem;margin-top:-1rem;">Chomps</div>
+        <div class="chomps-tagline">Domo's Loyalty Currency</div>
+        <div class="chomps-desc">Earn Chomps with every order. Redeem for free food, exclusive merch, and limited-edition drops. Download the Domo Cafe app at launch to start earning.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- MERCH -->
+<section id="merch">
+  <div class="section-inner">
+    <div class="section-label">Merchandise</div>
+    <h2 class="section-title">Take Domo Home.</h2>
+    <p class="section-body" style="margin-bottom:0">Exclusive Domo Cafe merch — only available in-store and online. Limited quantities. Don't sleep on it.</p>
+    <div class="merch-grid">
+      <div class="merch-card">
+        <div class="merch-icon">👕</div>
+        <div class="merch-name">Domo Cafe Tee</div>
+        <div class="merch-desc">Classic crew, exclusive Grand Opening colorway</div>
+        <div class="merch-coming">Available In-Store</div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-icon">📌</div>
+        <div class="merch-name">Domo Cafe Crew Pin</div>
+        <div class="merch-desc">Monthly limited edition — Domo in cafe roles</div>
+        <div class="merch-coming">Grand Opening Drop</div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-icon">🧢</div>
+        <div class="merch-name">Domo Cap</div>
+        <div class="merch-desc">Structured cap, embroidered Domo logo</div>
+        <div class="merch-coming">Available In-Store</div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-icon">🛍️</div>
+        <div class="merch-name">Domo Tote</div>
+        <div class="merch-desc">Heavy-duty canvas, signature brown & red</div>
+        <div class="merch-coming">Available In-Store</div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-icon">☕</div>
+        <div class="merch-name">Domo Mug</div>
+        <div class="merch-desc">Ceramic, Domo Cafe Grand Opening edition</div>
+        <div class="merch-coming">Available In-Store</div>
+      </div>
+      <div class="merch-card">
+        <div class="merch-icon">📦</div>
+        <div class="merch-name">Domo Subscription Box</div>
+        <div class="merch-desc">Monthly merch drop delivered to your door</div>
+        <div class="merch-coming">Coming Soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- VISIT -->
+<section id="visit">
+  <div class="section-inner">
+    <div class="section-label">Find Us</div>
+    <h2 class="section-title">We're in Buena Park.</h2>
+    <div class="visit-grid">
+      <div>
+        <div class="info-block">
+          <div class="info-label">Address</div>
+          <div class="info-value">Buena Park Mall<br/>8308 On The Mall<br/>Buena Park, CA 90620</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Hours</div>
+          <table class="hours-table">
+            <tr><td>Monday – Thursday</td><td>11:00 AM – 9:00 PM</td></tr>
+            <tr><td>Friday</td><td>11:00 AM – 10:00 PM</td></tr>
+            <tr><td>Saturday</td><td>10:00 AM – 10:00 PM</td></tr>
+            <tr><td>Sunday</td><td>10:00 AM – 8:00 PM</td></tr>
+          </table>
+          <div class="info-sub" style="margin-top:0.75rem;">Grand Opening hours may vary · June 13, 2026</div>
+        </div>
+        <div class="info-block">
+          <div class="info-label">Contact</div>
+          <div class="info-value" style="font-size:0.95rem;">hello@domokuncafe.com</div>
+          <div class="info-sub">domokuncafe.com</div>
+        </div>
+      </div>
+      <div>
+        <div class="map-embed">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3316.5!2d-117.9986!3d33.8658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dd2a0b5a5b5a5b%3A0x0!2sBuena+Park+Mall%2C+Buena+Park%2C+CA!5e0!3m2!1sen!2sus!4v1"
+            allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+        <div style="margin-top:1.25rem; display:flex; gap:0.75rem;">
+          <a href="https://maps.google.com/?q=Buena+Park+Mall+CA" target="_blank" style="flex:1; background:var(--red); color:var(--warm-white); text-align:center; padding:0.9rem; border-radius:0.75rem; font-family:'Outfit',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.05em; text-decoration:none;">Get Directions →</a>
+          <a href="tel:" style="flex:1; background:var(--card); color:var(--tan); text-align:center; padding:0.9rem; border-radius:0.75rem; font-family:'Outfit',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.05em; text-decoration:none; border:1px solid var(--border);">Call Us 📞</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <img src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+  </div>
+  <div class="footer-tagline">Buena Park, California · Grand Opening June 13, 2026</div>
+  <ul class="footer-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#chomps">Chomps Loyalty</a></li>
+    <li><a href="#merch">Merch</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Domo Cafe · Buena Park, CA · NHK Licensed Character · domokuncafe.com</div>
+</footer>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

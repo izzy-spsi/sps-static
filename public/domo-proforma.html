@@ -1,0 +1,3104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Pro Forma Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brown: #8B4513; --brown-light: #A0522D; --red: #CC2222;
+    --bg: #F7F5F2; --card: #FFFFFF; --border: #E8E4DE;
+    --text: #1A1410; --muted: #7A6F65;
+    --success: #16A34A; --warning: #D97706; --danger: #DC2626; --info: #2563EB;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* AUTH */
+  #auth-gate { position:fixed; inset:0; background:var(--brown); display:flex; align-items:center; justify-content:center; z-index:1000; }
+  .auth-box { background:white; border-radius:16px; padding:48px 40px; width:360px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .auth-logo { font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:var(--brown); margin-bottom:4px; }
+  .auth-sub { font-size:13px; color:var(--muted); margin-bottom:32px; }
+  .auth-box input { width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:15px; font-family:'DM Sans',sans-serif; outline:none; margin-bottom:12px; }
+  .auth-box input:focus { border-color:var(--brown); }
+  .auth-btn { width:100%; padding:12px; background:var(--brown); color:white; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .auth-btn:hover { background:var(--brown-light); }
+  .auth-error { color:var(--danger); font-size:13px; margin-top:8px; display:none; }
+  #app { display:none; }
+
+  /* HEADER */
+  .header { background:var(--brown); color:white; padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:60px; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.15); }
+  .header-logo { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; }
+  .header-badge { background:rgba(255,255,255,.2); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
+
+  /* NAV */
+  .app-nav { display:flex; gap:0; background:var(--brown); border-bottom:3px solid #6B3410; padding:0 24px; }
+  .app-nav-tab { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:rgba(255,255,255,.6); padding:10px 20px; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-3px; transition:color .2s,border-color .2s; letter-spacing:.03em; }
+  .app-nav-tab:hover { color:rgba(255,255,255,.9); }
+  .app-nav-tab.active { color:#fff; border-bottom-color:#F5C97A; }
+
+  /* LAYOUT */
+  .main { display:grid; grid-template-columns:320px 1fr; gap:0; min-height:calc(100vh - 60px); }
+  .sidebar { background:white; border-right:1px solid var(--border); padding:24px; overflow-y:auto; position:sticky; top:60px; height:calc(100vh - 60px); }
+  .sidebar-title { font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:16px; }
+  .input-group { margin-bottom:20px; }
+  .input-label { font-size:12px; font-weight:500; color:var(--muted); margin-bottom:6px; display:flex; justify-content:space-between; }
+  .input-label span { font-family:'JetBrains Mono',monospace; color:var(--brown); font-weight:600; }
+  .slider { width:100%; height:4px; border-radius:2px; background:var(--border); outline:none; -webkit-appearance:none; cursor:pointer; }
+  .slider::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--brown); cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,.2); }
+  .mini-inputs { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px; }
+  .mini-label { font-size:11px; color:var(--muted); margin-bottom:3px; }
+  .mini-input { width:100%; padding:7px 10px; border:1.5px solid var(--border); border-radius:6px; font-size:13px; font-family:'JetBrains Mono',monospace; outline:none; color:var(--text); }
+  .mini-input:focus { border-color:var(--brown); }
+  .divider { border:none; border-top:1px solid var(--border); margin:20px 0; }
+  .content { padding:24px 32px; overflow-y:auto; }
+  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+  .kpi-card { background:white; border:1px solid var(--border); border-radius:12px; padding:20px; }
+  .kpi-card.green { border-left:4px solid var(--success); }
+  .kpi-card.red { border-left:4px solid var(--danger); }
+  .kpi-card.blue { border-left:4px solid var(--info); }
+  .kpi-label { font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .kpi-value { font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:var(--text); }
+  .kpi-sub { font-size:11px; color:var(--muted); margin-top:4px; }
+  .section-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .badge { background:var(--bg); border:1px solid var(--border); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.3px; }
+  .scenario-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .scenario-card { background:white; border:1.5px solid var(--border); border-radius:12px; padding:20px; }
+  .scenario-card.active { border-color:var(--brown); background:#FDF8F5; }
+  .scenario-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .scenario-name { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
+  .scenario-occ { font-size:12px; color:var(--muted); }
+  .scenario-big { margin-bottom:12px; }
+  .scenario-revenue { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--brown); }
+  .scenario-covers { font-size:11px; color:var(--muted); }
+  .scenario-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; border-top:1px solid var(--border); }
+  .scenario-row-label { color:var(--muted); }
+  .scenario-row-val { font-family:'JetBrains Mono',monospace; font-weight:600; }
+  .scenario-row-val.green { color:var(--success); }
+  .pl-wrap { background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:24px; }
+  .pl-header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .pl-header-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
+  .pl-scenario-tabs { display:flex; gap:4px; }
+  .pl-tab { padding:4px 12px; font-size:12px; font-weight:600; border:1.5px solid var(--border); border-radius:4px; background:white; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .pl-tab.active { background:var(--brown); color:white; border-color:var(--brown); }
+  table { width:100%; border-collapse:collapse; }
+  .pl-table th { background:var(--bg); padding:10px 24px; font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); text-align:left; border-bottom:2px solid var(--border); }
+  .pl-table th:not(:first-child) { text-align:right; }
+  .pl-table td { padding:10px 24px; font-size:13px; border-top:1px solid var(--border); }
+  .pl-table td:not(:first-child) { text-align:right; font-family:'JetBrains Mono',monospace; font-size:12px; }
+  .pl-table tr.section-row td { background:var(--bg); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:8px 24px; }
+  .pl-table tr.total-row td { font-weight:700; background:#FDF8F5; border-top:2px solid var(--border); }
+  .pl-table tr.ebitda-row td { font-weight:700; background:var(--brown); color:white; font-size:14px; }
+  .pl-table tr.ebitda-row td:not(:first-child) { font-family:'JetBrains Mono',monospace; }
+  .pl-table tr:hover:not(.section-row):not(.ebitda-row) td { background:#FAF7F4; }
+  .margin-calc { background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .margin-calc-header { padding:14px 20px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .margin-calc-body { padding:20px; }
+  .nhk-toggle { display:flex; gap:4px; flex-wrap:wrap; }
+  .nhk-btn { padding:4px 10px; font-size:11px; font-weight:600; border:1.5px solid var(--border); border-radius:4px; background:white; cursor:pointer; font-family:'DM Sans',sans-serif; color:var(--muted); }
+  .nhk-btn.active { background:var(--brown); color:white; border-color:var(--brown); }
+  .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .calc-section-title { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; margin-bottom:12px; color:var(--brown); }
+  .calc-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .calc-row label { font-size:13px; color:var(--text); }
+  .calc-input { width:100px; padding:7px 10px; border:1.5px solid var(--border); border-radius:6px; font-size:13px; font-family:'JetBrains Mono',monospace; outline:none; text-align:right; }
+  .calc-input:focus { border-color:var(--brown); }
+  .calc-result { background:var(--bg); border-radius:8px; padding:14px; margin-top:8px; }
+  .calc-result-row { display:flex; justify-content:space-between; font-size:12px; padding:3px 0; }
+  .calc-result-row .label { color:var(--muted); }
+  .calc-result-row .val { font-family:'JetBrains Mono',monospace; font-weight:600; }
+  .calc-result-row.highlight { border-top:1px solid var(--border); margin-top:4px; padding-top:6px; }
+  .calc-result-row.highlight .val { color:var(--brown); font-size:13px; }
+  .footer { text-align:center; font-size:11px; color:var(--muted); padding:24px 0 32px; border-top:1px solid var(--border); margin-top:24px; }
+  .gm-high { color:#1a7a1a; font-weight:700; }
+  .gm-mid  { color:#2a7a2a; font-weight:700; }
+  .gm-low  { color:#cc7a00; font-weight:600; }
+  .gm-warn { color:var(--danger); font-weight:600; }
+
+  /* ACTUALS */
+  .act-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .act-title  { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--brown); }
+  .act-sync   { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; }
+  .act-sync-btn { background:var(--brown); color:#fff; border:none; border-radius:6px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .act-sync-btn:hover { background:var(--brown-light); }
+  .act-date-input { border:1.5px solid var(--border); border-radius:6px; padding:6px 10px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; }
+  #act-spinner { display:flex; align-items:center; justify-content:center; min-height:300px; flex-direction:column; gap:12px; }
+  .act-spin { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--brown); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  #act-error { display:none; background:#FEF2F2; color:var(--danger); border:1px solid #FECACA; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:13px; }
+  .act-rev-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .act-rev-table th { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding:8px 16px; text-align:right; border-bottom:2px solid var(--border); }
+  .act-rev-table th:first-child { text-align:left; }
+  .act-rev-table td { padding:12px 16px; font-family:'JetBrains Mono',monospace; font-size:13px; text-align:right; border-top:1px solid var(--border); }
+  .act-rev-table td:first-child { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; text-align:left; }
+  .act-rev-table tr:last-child td { font-weight:700; background:#FDF8F5; font-size:14px; }
+  .act-variance { font-weight:700; padding:2px 8px; border-radius:4px; font-size:12px; }
+  .act-pos { background:#DCFCE7; color:#16A34A; }
+  .act-neg { background:#FEE2E2; color:#DC2626; }
+  .act-neu { background:#F3F4F6; color:#6B7280; }
+  .act-section { background:#fff; border:1px solid var(--border); border-radius:12px; margin-bottom:24px; overflow:hidden; }
+  .act-section-hdr { background:var(--bg); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+  .act-section-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
+  .act-section-body { padding:20px; }
+  .act-dp-tabs { display:flex; gap:4px; }
+  .act-dp-tab { font-size:12px; font-weight:600; padding:4px 12px; border-radius:4px; border:1.5px solid var(--border); background:#fff; cursor:pointer; font-family:'DM Sans',sans-serif; color:var(--muted); }
+  .act-dp-tab.active { background:var(--brown); color:#fff; border-color:var(--brown); }
+  .act-item-table { width:100%; border-collapse:collapse; }
+  .act-item-table th { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding:8px 12px; text-align:right; border-bottom:1px solid var(--border); }
+  .act-item-table th:first-child { text-align:left; }
+  .act-item-table td { padding:8px 12px; border-top:1px solid var(--border); vertical-align:middle; }
+  .act-item-table tr:hover td { background:#FAF7F4; }
+  .act-attach-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .act-attach-card { background:var(--bg); border-radius:8px; padding:12px; text-align:center; }
+  .act-attach-val  { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:var(--brown); }
+  .act-attach-lbl  { font-size:11px; color:var(--muted); margin-top:2px; }
+  .act-chart-wrap { height:180px; display:flex; align-items:flex-end; gap:8px; padding:0 8px; }
+  .act-chart-col  { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .act-chart-bars-wrap { flex:1; width:100%; position:relative; display:flex; flex-direction:column-reverse; }
+  .act-chart-bar-lunch  { background:var(--brown); width:100%; border-radius:3px 3px 0 0; min-height:2px; }
+  .act-chart-bar-dinner { background:#CC2222; width:100%; min-height:2px; }
+  .act-chart-proj-line  { position:absolute; left:0; right:0; border-top:2px dashed #9CA3AF; }
+  .act-chart-label { font-size:10px; color:var(--muted); text-align:center; white-space:nowrap; }
+  .act-chart-val   { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text); }
+  .act-chart-legend { display:flex; gap:16px; font-size:11px; color:var(--muted); margin-top:8px; }
+  .act-chart-legend span { display:flex; align-items:center; gap:5px; }
+  .act-chart-legend .dot { width:10px; height:10px; border-radius:2px; }
+  .act-legend-lunch { background:var(--brown); }
+  .act-legend-dinner { background:#CC2222; }
+  .act-legend-proj { width:16px; height:2px; border-top:2px dashed #9CA3AF; }
+
+  /* MERCH */
+  .merch-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+  .merch-title { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--brown); }
+  .merch-sync-btn { background:var(--brown); color:#fff; border:none; border-radius:6px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .merch-sync-btn:hover { background:var(--brown-light); }
+  .merch-cat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+  .merch-cat-card { background:#fff; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .merch-cat-hdr  { background:var(--brown); color:#fff; padding:12px 16px; }
+  .merch-cat-name { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; }
+  .merch-subcat   { padding:12px 16px; border-bottom:1px solid var(--border); }
+  .merch-subcat:last-child { border-bottom:none; }
+  .merch-subcat-name { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .merch-item-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; font-size:13px; }
+  .merch-item-name { color:var(--text); flex:1; }
+  .merch-item-price { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--brown); }
+  #merch-spinner { display:flex; align-items:center; justify-content:center; min-height:200px; flex-direction:column; gap:12px; }
+
+  /* PROJECTIONS */
+  .proj-layout { display:grid; grid-template-columns:300px 1fr; gap:24px; }
+  .proj-settings { background:#fff; border:1px solid var(--border); border-radius:12px; padding:20px; height:fit-content; position:sticky; top:84px; }
+  .proj-settings-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:var(--brown); margin-bottom:16px; }
+  .proj-field { margin-bottom:14px; }
+  .proj-label { font-size:11px; font-weight:600; letter-spacing:.3px; color:var(--muted); margin-bottom:5px; text-transform:uppercase; }
+  .proj-input { width:100%; padding:7px 10px; border:1.5px solid var(--border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; outline:none; color:var(--text); }
+  .proj-input:focus { border-color:var(--brown); }
+  .proj-dow-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .proj-dow-row { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .proj-dow-label { width:28px; font-weight:600; }
+  .proj-dow-input { flex:1; padding:5px 8px; border:1.5px solid var(--border); border-radius:5px; font-size:12px; font-family:'JetBrains Mono',monospace; outline:none; text-align:right; }
+  .proj-dow-input:focus { border-color:var(--brown); }
+  .proj-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+  .proj-apply-btn { width:100%; padding:10px; background:var(--brown); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:8px; }
+  .proj-apply-btn:hover { background:var(--brown-light); }
+  .proj-cal-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .proj-cal-title { font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; }
+  .proj-cal-btn { background:var(--bg); border:1.5px solid var(--border); border-radius:6px; padding:6px 14px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .proj-cal-btn:hover { background:var(--border); }
+  .proj-cal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .proj-cal-dow { text-align:center; font-size:11px; font-weight:700; letter-spacing:.5px; color:var(--muted); padding:4px 0; text-transform:uppercase; }
+  .proj-day { background:#fff; border:1.5px solid var(--border); border-radius:8px; padding:8px; min-height:80px; cursor:pointer; position:relative; transition:border-color .15s; }
+  .proj-day:hover { border-color:var(--brown); }
+  .proj-day.today { border-color:var(--brown); background:#FDF8F5; }
+  .proj-day.overridden { border-color:#CC2222; }
+  .proj-day.closed { background:#F9FAFB; opacity:.6; }
+  .proj-day.empty { background:transparent; border-color:transparent; cursor:default; }
+  .proj-day.high .proj-day-rev { color:#16A34A; }
+  .proj-day.low  .proj-day-rev { color:#D97706; }
+  .proj-day-num { font-size:11px; font-weight:700; color:var(--muted); margin-bottom:4px; }
+  .proj-day-rev { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--brown); }
+  .proj-day-covers { font-size:10px; color:var(--muted); }
+  .proj-day-label { font-size:9px; font-weight:700; color:#CC2222; text-transform:uppercase; margin-top:2px; }
+  .proj-day-occ { font-size:10px; color:var(--muted); }
+  .proj-summary { background:#fff; border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:20px; }
+  .proj-sum-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .proj-sum-card { text-align:center; }
+  .proj-sum-val { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--brown); }
+  .proj-sum-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
+  .proj-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:500; align-items:center; justify-content:center; }
+  .proj-modal-overlay.open { display:flex; }
+  .proj-modal { background:#fff; border-radius:16px; padding:28px; width:400px; max-width:95vw; box-shadow:0 20px 60px rgba(0,0,0,.3); }
+  .proj-modal-title { font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; margin-bottom:20px; color:var(--brown); }
+  .proj-modal-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .proj-modal-btns { display:flex; gap:8px; margin-top:20px; }
+  .proj-modal-save { flex:1; padding:10px; background:var(--brown); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .proj-modal-cancel { padding:10px 20px; background:var(--bg); border:1.5px solid var(--border); border-radius:8px; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .proj-modal-clear { padding:10px; background:#FEE2E2; color:#DC2626; border:none; border-radius:8px; font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .proj-closed-toggle { display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:12px; }
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="auth-box">
+    <div class="auth-logo">Domo Cafe</div>
+    <div class="auth-sub">Pro Forma Portal</div>
+    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAuth()" />
+    <button class="auth-btn" onclick="checkAuth()">Access Portal</button>
+    <div class="auth-error" id="auth-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="header-logo">Domo Cafe</div>
+      <div class="header-badge">Pro Forma Portal <span style="font-size:10px;opacity:0.6;font-family:monospace;margin-left:6px">v2.0</span></div>
+    </div>
+  </div>
+
+  <div class="app-nav">
+    <div class="app-nav-tab active" id="tab-proforma" onclick="switchTab('proforma')">&#x1F4CA; Pro Forma</div>
+    <div class="app-nav-tab" id="tab-menu" onclick="switchTab('menu')">&#x1F37D; Menu</div>
+    <div class="app-nav-tab" id="tab-actuals" onclick="switchTab('actuals')">&#x1F4C8; Actuals</div>
+    <div class="app-nav-tab" id="tab-merch" onclick="switchTab('merch')">&#x1F6CD; Merchandise</div>
+    <div class="app-nav-tab" id="tab-projections" onclick="switchTab('projections')">&#x1F5D3; Projections</div>
+    <div class="app-nav-tab" id="tab-labor" onclick="switchTab('labor')">&#x1F4BC; Labor</div>
+  </div>
+
+  <!-- PRO FORMA PAGE -->
+<div id="page-proforma" class="proforma-page">
+  <div class="main">
+
+    <!-- SIDEBAR: CONFIGURATOR -->
+    <div class="sidebar">
+      <div class="sidebar-title">Revenue Configurator</div>
+
+      <!-- Occupancy -->
+      <div class="input-group">
+        <div class="input-label">Occupancy Rate <span id="occ-val">65%</span></div>
+        <input type="range" class="slider" min="10" max="100" value="65" id="occ-slider" oninput="updateAll()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Attach Rates</div>
+
+      <div class="input-group">
+        <div class="input-label">Drinks <span id="drinks-attach-val">90%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="90" id="drinks-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Entrées <span id="entree-attach-val">50%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="50" id="entree-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Desserts <span id="dessert-attach-val">68%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="68" id="dessert-attach" oninput="updateAll()">
+      </div>
+      <div class="input-group">
+        <div class="input-label">Merchandise <span id="merch-attach-val">75%</span></div>
+        <input type="range" class="slider" min="0" max="100" value="75" id="merch-attach" oninput="updateAll()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Price Points</div>
+
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Drinks avg</div>
+          <input class="mini-input" type="number" id="drinks-price" value="7.28" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Entrées avg</div>
+          <input class="mini-input" type="number" id="entree-price" value="15.75" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Desserts avg</div>
+          <input class="mini-input" type="number" id="dessert-price" value="11" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Merch blended</div>
+          <input class="mini-input" type="number" id="merch-price" value="16.50" oninput="updateAll()">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Merch Mix</div>
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Small $9 (%)</div>
+          <input class="mini-input" type="number" id="merch-small-pct" value="50" oninput="updateMerchBlend()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Med $20 (%)</div>
+          <input class="mini-input" type="number" id="merch-med-pct" value="30" oninput="updateMerchBlend()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Large $31 (%)</div>
+          <input class="mini-input" type="number" id="merch-lg-pct" value="20" oninput="updateMerchBlend()">
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="sidebar-title">Fixed Costs (Monthly)</div>
+      <div class="mini-inputs">
+        <div class="mini-input-wrap">
+          <div class="mini-label">Rent</div>
+          <input class="mini-input" type="number" id="cost-rent" value="10250" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Electricity</div>
+          <input class="mini-input" type="number" id="cost-electric" value="700" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Toast POS</div>
+          <input class="mini-input" type="number" id="cost-pos" value="300" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">EDCO</div>
+          <input class="mini-input" type="number" id="cost-edco" value="510" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Marketing</div>
+          <input class="mini-input" type="number" id="cost-marketing" value="1890" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Insurance</div>
+          <input class="mini-input" type="number" id="cost-insurance" value="0" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Packaging</div>
+          <input class="mini-input" type="number" id="cost-packaging" value="1000" oninput="updateAll()">
+        </div>
+        <div class="mini-input-wrap">
+          <div class="mini-label">Accounting</div>
+          <input class="mini-input" type="number" id="cost-accounting" value="0" oninput="updateAll()">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+      <!-- KPI ROW -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Annual Revenue</div>
+          <div class="kpi-value" id="kpi-revenue">—</div>
+          <div class="kpi-sub" id="kpi-covers">— covers/year</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">EBITDA</div>
+          <div class="kpi-value" id="kpi-ebitda">—</div>
+          <div class="kpi-sub" id="kpi-ebitda-pct">— margin</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Labor %</div>
+          <div class="kpi-value" id="kpi-labor-pct">—</div>
+          <div class="kpi-sub">Target: &lt;30%</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Revenue / Cover</div>
+          <div class="kpi-value" id="kpi-per-cover">—</div>
+          <div class="kpi-sub">F&amp;B + Merch blended</div>
+        </div>
+      </div>
+
+      <!-- SCENARIO CARDS -->
+      <div class="section-title">
+        Scenario Projections
+        <span class="badge">Live — adjust sliders to update</span>
+      </div>
+      <div class="scenario-grid">
+        <div class="scenario-card" id="card-conservative">
+          <div class="scenario-header">
+            <div class="scenario-name">Conservative</div>
+            <div class="scenario-occ">Occ: <strong>50%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-con-rev">—</div>
+            <div class="scenario-covers" id="s-con-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-con-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-con-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-con-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-con-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-con-labor">—</span></div>
+        </div>
+        <div class="scenario-card active" id="card-base">
+          <div class="scenario-header">
+            <div class="scenario-name">Base ⭐</div>
+            <div class="scenario-occ">Occ: <strong>65%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-base-rev">—</div>
+            <div class="scenario-covers" id="s-base-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-base-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-base-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-base-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-base-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-base-labor">—</span></div>
+        </div>
+        <div class="scenario-card" id="card-optimistic">
+          <div class="scenario-header">
+            <div class="scenario-name">Optimistic</div>
+            <div class="scenario-occ">Occ: <strong>80%</strong></div>
+          </div>
+          <div class="scenario-big">
+            <div class="scenario-revenue" id="s-opt-rev">—</div>
+            <div class="scenario-covers" id="s-opt-covers">— covers/yr</div>
+          </div>
+          <div class="scenario-row"><span class="scenario-row-label">F&amp;B Revenue</span><span class="scenario-row-val" id="s-opt-fb">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Merch Revenue</span><span class="scenario-row-val" id="s-opt-merch">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Gross Profit</span><span class="scenario-row-val green" id="s-opt-gp">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">EBITDA</span><span class="scenario-row-val" id="s-opt-ebitda">—</span></div>
+          <div class="scenario-row"><span class="scenario-row-label">Labor %</span><span class="scenario-row-val" id="s-opt-labor">—</span></div>
+        </div>
+      </div>
+
+      <!-- P&L TABLE -->
+      <div class="pl-wrap">
+        <div class="pl-header">
+          <div class="pl-header-title">Projected P&amp;L — Annual</div>
+          <div class="pl-scenario-tabs">
+            <button class="pl-tab" onclick="setPLTab('conservative')">Conservative</button>
+            <button class="pl-tab active" onclick="setPLTab('base')">Base</button>
+            <button class="pl-tab" onclick="setPLTab('optimistic')">Optimistic</button>
+          </div>
+        </div>
+        <table class="pl-table">
+          <thead>
+            <tr>
+              <th style="width:50%">Line Item</th>
+              <th>Amount</th>
+              <th>% of Revenue</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="pl-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- MENU MIX -->
+      <div class="margin-calc" style="margin-bottom:24px">
+        <div class="margin-calc-header">
+          <div class="section-title" style="margin-bottom:0">Menu Mix &amp; Item Economics <span class="badge">Grand Opening</span></div>
+        </div>
+        <div class="margin-calc-body" style="padding:0">
+          <table class="pl-table" style="font-size:12px">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th style="text-align:right">Price</th>
+                <th style="text-align:right">Food Cost</th>
+                <th style="text-align:right">Cost %</th>
+                <th style="text-align:right">Margin $</th>
+                <th style="text-align:right">Margin %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-row"><td colspan="6">Signature Plates</td></tr>
+              <tr><td>Domo Moco</td><td>$15.00</td><td>$3.47</td><td>23.1%</td><td>$11.53</td><td style="color:#2a7a2a;font-weight:700">76.9%</td></tr>
+              <tr><td>Golden Katsu Curry</td><td>$16.00</td><td>$3.64</td><td>22.8%</td><td>$12.36</td><td style="color:#2a7a2a;font-weight:700">77.3%</td></tr>
+              <tr><td>Creamy Mushroom Pasta</td><td>$16.00</td><td>$1.70</td><td>10.6%</td><td>$14.30</td><td style="color:#1a6a1a;font-weight:700">89.4% ★</td></tr>
+              <tr class="section-row"><td colspan="6">Handhelds</td></tr>
+              <tr><td>Domo Boss Burger</td><td>$17.00</td><td>$4.49</td><td>26.4%</td><td>$12.51</td><td style="color:#2a7a2a;font-weight:700">73.6%</td></tr>
+              <tr><td>Kimchi Katsu Sandwich</td><td>$17.00</td><td>$4.41</td><td>25.9%</td><td>$12.59</td><td style="color:#2a7a2a;font-weight:700">74.1%</td></tr>
+              <tr><td>Domo's Street Dog</td><td>$17.00</td><td>$5.06</td><td>29.8%</td><td>$11.94</td><td style="color:#2a7a2a;font-weight:700">70.2%</td></tr>
+              <tr class="section-row"><td colspan="6">Kids</td></tr>
+              <tr><td>Korean Fried Chicken</td><td>$15.00</td><td>$3.34</td><td>22.3%</td><td>$11.66</td><td style="color:#2a7a2a;font-weight:700">77.7%</td></tr>
+              <tr><td>Domo's Lunch Box</td><td>$13.00</td><td>$4.08</td><td>31.4%</td><td>$8.92</td><td style="color:#cc7a00;font-weight:700">68.6%</td></tr>
+              <tr class="section-row"><td colspan="6">Drinks (avg)</td></tr>
+              <tr><td>Blended Drinks Avg</td><td>$7.28</td><td>$1.09</td><td>~15%</td><td>$6.19</td><td style="color:#2a7a2a;font-weight:700">~85%</td></tr>
+              <tr class="total-row">
+                <td><strong>Blended Entrée Avg</strong></td>
+                <td><strong>$15.75</strong></td>
+                <td><strong>$3.77</strong></td>
+                <td><strong>24.0%</strong></td>
+                <td><strong>$11.98</strong></td>
+                <td style="color:#1a6a1a;font-weight:700"><strong>76.0%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:12px 24px;font-size:11px;color:var(--muted);border-top:1px solid var(--border)">
+            ★ Best margin item &nbsp;&middot;&nbsp; Food costs from June 2026 grand opening menu spreadsheet &nbsp;&middot;&nbsp; NHK royalty not included in item margins above
+          </div>
+        </div>
+      </div>
+
+      <!-- MARGIN CALCULATOR -->
+      <div class="margin-calc">
+        <div class="margin-calc-header">
+          <div class="section-title" style="margin-bottom:0">Margin Calculator <span class="badge">Bidirectional</span></div>
+        </div>
+        <div class="margin-calc-body">
+          <div class="calc-grid">
+
+            <!-- MODE A: Price → Margin -->
+            <div>
+              <div class="calc-section-title">Mode A — Price → Margin</div>
+              <div style="margin-bottom:10px">
+                <div class="mini-label" style="margin-bottom:6px">Merch Type</div>
+                <div class="nhk-toggle">
+                  <button class="nhk-btn active" onclick="setNHK('a','licensed')">Licensed (Auth)</button>
+                  <button class="nhk-btn" onclick="setNHK('a','house-dtc')">House DTC</button>
+                  <button class="nhk-btn" onclick="setNHK('a','house-whl')">House Wholesale</button>
+                  <button class="nhk-btn" onclick="setNHK('a','no-ip')">No IP</button>
+                </div>
+              </div>
+              <div class="calc-row">
+                <label>Cost ($)</label>
+                <input class="calc-input" type="number" id="a-cost" value="7.50" step="0.01" oninput="calcA()">
+              </div>
+              <div class="calc-row">
+                <label>Sell Price ($)</label>
+                <input class="calc-input" type="number" id="a-price" value="15.00" step="0.01" oninput="calcA()">
+              </div>
+              <div class="calc-result" id="a-result">
+                <div class="calc-result-row"><span class="label">Gross Profit</span><span class="val" id="a-gp">—</span></div>
+                <div class="calc-result-row"><span class="label">GM% (before royalty)</span><span class="val" id="a-gm">—</span></div>
+                <div class="calc-result-row"><span class="label">NHK Royalty</span><span class="val" id="a-royalty">—</span></div>
+                <div class="calc-result-row highlight"><span class="label">True GM% (after royalty)</span><span class="val" id="a-true-gm">—</span></div>
+              </div>
+            </div>
+
+            <!-- MODE B: Target → Price -->
+            <div>
+              <div class="calc-section-title">Mode B — Target GM → Price</div>
+              <div style="margin-bottom:10px">
+                <div class="mini-label" style="margin-bottom:6px">Merch Type</div>
+                <div class="nhk-toggle">
+                  <button class="nhk-btn active" onclick="setNHK('b','licensed')">Licensed (Auth)</button>
+                  <button class="nhk-btn" onclick="setNHK('b','house-dtc')">House DTC</button>
+                  <button class="nhk-btn" onclick="setNHK('b','house-whl')">House Wholesale</button>
+                  <button class="nhk-btn" onclick="setNHK('b','no-ip')">No IP</button>
+                </div>
+              </div>
+              <div class="calc-row">
+                <label>Cost ($)</label>
+                <input class="calc-input" type="number" id="b-cost" value="7.50" step="0.01" oninput="calcB()">
+              </div>
+              <div class="calc-row">
+                <label>Target GM (%)</label>
+                <input class="calc-input" type="number" id="b-target" value="40" step="1" oninput="calcB()">
+              </div>
+              <div class="calc-result">
+                <div class="calc-result-row"><span class="label">Required Sell Price</span><span class="val" id="b-price">—</span></div>
+                <div class="calc-result-row"><span class="label">Gross Profit</span><span class="val" id="b-gp">—</span></div>
+                <div class="calc-result-row"><span class="label">NHK Royalty</span><span class="val" id="b-royalty">—</span></div>
+                <div class="calc-result-row highlight"><span class="label">True GM% (after royalty)</span><span class="val" id="b-true-gm">—</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        GFC BP LLC — Domo Cafe · Confidential Pro Forma · Buena Park, CA · v2.0
+        <br>Built by Jarvis / Super Power Studios · <span id="last-updated"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MENU TAB ── -->
+
+  </div>
+
+  <!-- MENU PAGE -->
+  <div id="page-menu" style="display:none;padding:24px 32px;max-width:860px;margin:0 auto">
+    <div style="margin-bottom:24px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--brown)">&#x1F37D; Menu</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Grand Opening &middot; Buena Park, CA &middot; Prices from Toast POS</div>
+    </div>
+    <div class="act-section" style="margin-bottom:16px">
+      <div class="act-section-hdr"><div class="act-section-title">Signature Plates</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Domo Moco <span style="font-size:10px;color:var(--warning)">⚠️ Toast ringing $18.50 — printed menu $19</span></td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$19.00</td></tr>
+        <tr><td>Golden Katsu Curry</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$18.00</td></tr>
+        <tr><td>Umami Cream Pasta</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$18.50</td></tr>
+        <tr><td>Crispy Chicken Loaded Fries</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$17.00</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="act-section" style="margin-bottom:16px">
+      <div class="act-section-hdr"><div class="act-section-title">Handhelds</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Domo Boss Burger</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$17.00</td></tr>
+        <tr><td>Kimchi Katsu Sandwich</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$18.50</td></tr>
+        <tr><td>Domo's Street Dog</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$16.50</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="act-section" style="margin-bottom:16px">
+      <div class="act-section-hdr"><div class="act-section-title">Domo Jr (Kids)</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Chicken Nuggets</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$9.00</td></tr>
+        <tr><td>Junior Cheeseburger</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$9.00</td></tr>
+        <tr><td>Domo's Hot Dog</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$9.00</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="act-section" style="margin-bottom:16px">
+      <div class="act-section-hdr"><div class="act-section-title">Drinks</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Strawberry Matcha</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$8.50</td></tr>
+        <tr><td>Cinnamon Roll Matcha</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$8.50</td></tr>
+        <tr><td>Strawberry Lime Refresher</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$8.00</td></tr>
+        <tr><td>Pineapple Watermelon Refresher</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$8.00</td></tr>
+        <tr><td>Mango Lemonade</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$7.00</td></tr>
+        <tr><td>Domo's Iced Cookie Coffee</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$7.00</td></tr>
+        <tr><td>Milo Dinosaur</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$7.00</td></tr>
+        <tr><td>Domo Palmer</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.50</td></tr>
+        <tr><td>Lemonade</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.00</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="act-section" style="margin-bottom:32px">
+      <div class="act-section-hdr"><div class="act-section-title">Desserts</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Domo Dream Cup</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$8.00</td></tr>
+        <tr><td>Chocolate Domo-Yaki</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.00</td></tr>
+        <tr><td>Ham &amp; Cheese Domo-Yaki</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.00</td></tr>
+        <tr><td>Domo's Lava Bites</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.00</td></tr>
+      </tbody></table></div>
+    </div>
+    <div class="act-section" style="margin-bottom:16px">
+      <div class="act-section-hdr"><div class="act-section-title">Sides</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Item</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Patty</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$4.50</td></tr>
+        <tr><td>Chicken Katsu</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$6.00</td></tr>
+        <tr><td>Egg</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$2.00</td></tr>
+        <tr><td>Cheese</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$1.50</td></tr>
+        <tr><td>Rice</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$4.00</td></tr>
+        <tr><td>Mac Salad</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$4.00</td></tr>
+        <tr><td>Waffle Fries</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$4.00</td></tr>
+        <tr><td>Seasonal Fruit</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$5.00</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <div class="act-section" style="margin-bottom:32px">
+      <div class="act-section-hdr"><div class="act-section-title">Sauces</div></div>
+      <div style="padding:0"><table class="pl-table"><thead><tr><th>Sauce</th><th style="text-align:right">Price</th></tr></thead><tbody>
+        <tr><td>Teriyaki</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Yum-Yum</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Tonkatsu Mayo</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Burger Sauce</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Sweet Spicy Mayo</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Gochujang</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Ranch</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--brown)">$0.50</td></tr>
+        <tr><td>Soy Sauce</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--muted)">FREE</td></tr>
+        <tr><td>Sriracha</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--muted)">FREE</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);padding-bottom:32px">v2.0 Grand Opening Menu &middot; June 13, 2026 &middot; Sourced from printed menu</div>
+  </div>
+
+  <!-- ACTUALS PAGE -->
+  <div id="page-actuals" style="display:none;padding:24px 32px;max-width:1200px;margin:0 auto">
+    <style>/* act styles already in head */</style>
+    <div class="act-header">
+      <div class="act-title">&#x1F4C8; Actuals vs Projections</div>
+      <div class="act-sync">
+        <input type="date" id="act-date-picker" class="act-date-input" onchange="loadActuals(this.value)">
+        <span id="act-sync-time">&#x2014;</span>
+        <button class="act-sync-btn" onclick="loadActuals()">&#x21BB; Sync Now</button>
+      </div>
+    </div>
+    <div id="act-error"></div>
+    <div id="act-spinner"><div class="act-spin"></div><div style="font-size:13px;color:var(--muted)">Loading Toast data&#x2026;</div></div>
+    <div id="act-content" style="display:none">
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F4B0; Revenue vs Projected</div><div style="font-size:11px;color:var(--muted)">Base scenario @ 65% occupancy</div></div>
+        <div style="padding:0"><table class="act-rev-table"><thead><tr><th>Daypart</th><th>Actual</th><th>Projected</th><th>Variance</th><th>Orders</th><th>Avg Check</th></tr></thead><tbody>
+          <tr><td>&#x1F324; Lunch (10a&#x2013;4p)</td><td id="act-rev-lunch">&#x2014;</td><td id="act-proj-lunch" style="color:var(--muted)">&#x2014;</td><td><span id="act-var-lunch" class="act-variance">&#x2014;</span></td><td id="act-orders-lunch">&#x2014;</td><td id="act-avg-lunch">&#x2014;</td></tr>
+          <tr><td>&#x1F319; Dinner (4p&#x2013;9p)</td><td id="act-rev-dinner">&#x2014;</td><td id="act-proj-dinner" style="color:var(--muted)">&#x2014;</td><td><span id="act-var-dinner" class="act-variance">&#x2014;</span></td><td id="act-orders-dinner">&#x2014;</td><td id="act-avg-dinner">&#x2014;</td></tr>
+          <tr><td>&#x1F4CA; Full Day</td><td id="act-rev-total">&#x2014;</td><td id="act-proj-total" style="color:var(--muted)">&#x2014;</td><td><span id="act-var-total" class="act-variance">&#x2014;</span></td><td id="act-orders-total">&#x2014;</td><td id="act-avg-total">&#x2014;</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F4C5; 7-Day Revenue</div>
+          <div class="act-chart-legend"><span><div class="dot act-legend-lunch"></div>Lunch</span><span><div class="dot act-legend-dinner"></div>Dinner</span><span><div class="act-legend-proj"></div>Projected</span></div>
+        </div>
+        <div class="act-section-body"><div class="act-chart-wrap" id="act-chart-bars"></div></div>
+      </div>
+
+      <!-- JOURNAL -->
+      <div class="act-section" id="act-journal-section">
+        <div class="act-section-hdr">
+          <div class="act-section-title">&#x1F4D3; Operations Journal</div>
+          <button onclick="openJournalModal()" style="background:var(--brown);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">+ Add Entry</button>
+        </div>
+        <div class="act-section-body" style="padding:0">
+          <div id="journal-list" style="min-height:60px"></div>
+        </div>
+      </div>
+
+      <!-- Journal Modal -->
+      <div id="journal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;align-items:center;justify-content:center">
+        <div style="background:#fff;border-radius:16px;padding:28px;width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--brown);margin-bottom:20px">Add Journal Entry</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Date</div>
+              <input type="date" id="jnl-date" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Time</div>
+              <input type="time" id="jnl-time" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Type</div>
+            <select id="jnl-type" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+              <option value="operational">&#x2699;&#xFE0F; Operational Change</option>
+              <option value="staffing">&#x1F465; Staffing</option>
+              <option value="menu">&#x1F37D; Menu</option>
+              <option value="emergency">&#x1F6A8; Emergency</option>
+              <option value="event">&#x1F3C6; Event</option>
+            </select>
+          </div>
+          <div style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Title</div>
+            <input type="text" id="jnl-title" placeholder="Brief description..." style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+          </div>
+          <div style="margin-bottom:20px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Notes</div>
+            <textarea id="jnl-notes" rows="3" placeholder="Details, reason, expected impact..." style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical"></textarea>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="closeJournalModal()" style="padding:10px 20px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif">Cancel</button>
+            <button onclick="saveJournalEntry()" style="flex:1;padding:10px;background:var(--brown);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Save Entry</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F517; Ticket Attach Rates</div>
+          <div class="act-dp-tabs">
+            <button class="act-dp-tab active" data-dp="total" onclick="setAttachView('total')">All Day</button>
+            <button class="act-dp-tab" data-dp="lunch" onclick="setAttachView('lunch')">Lunch</button>
+            <button class="act-dp-tab" data-dp="dinner" onclick="setAttachView('dinner')">Dinner</button>
+          </div>
+        </div>
+        <div class="act-section-body">
+          <div id="attach-view-total"><div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-total">&#x2014;</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-total">&#x2014;</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-total">&#x2014;</div><div class="act-attach-lbl">Kids w/ Entr&#xe9;e</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-total">&#x2014;</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div></div>
+          <div id="attach-view-lunch" style="display:none"><div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-lunch">&#x2014;</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-lunch">&#x2014;</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-lunch">&#x2014;</div><div class="act-attach-lbl">Kids w/ Entr&#xe9;e</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-lunch">&#x2014;</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div></div>
+          <div id="attach-view-dinner" style="display:none"><div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-dinner">&#x2014;</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-dinner">&#x2014;</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-dinner">&#x2014;</div><div class="act-attach-lbl">Kids w/ Entr&#xe9;e</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-dinner">&#x2014;</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div></div>
+        </div>
+      </div>
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F6CD; Merch Performance</div><div style="font-size:11px;color:var(--muted)">Card-match attach proxy</div></div>
+        <div style="padding:0"><table class="act-rev-table"><thead><tr><th>Daypart</th><th>Revenue</th><th>Transactions</th><th>Avg Transaction</th><th>Est. Attach %</th></tr></thead><tbody>
+          <tr><td>&#x1F324; Lunch</td><td id="act-merch-rev-lunch">&#x2014;</td><td id="act-merch-ord-lunch">&#x2014;</td><td id="act-merch-avg-lunch">&#x2014;</td><td id="act-att-merch-lunch">&#x2014;</td></tr>
+          <tr><td>&#x1F319; Dinner</td><td id="act-merch-rev-dinner">&#x2014;</td><td id="act-merch-ord-dinner">&#x2014;</td><td id="act-merch-avg-dinner">&#x2014;</td><td id="act-att-merch-dinner">&#x2014;</td></tr>
+          <tr><td>&#x1F4CA; Full Day</td><td id="act-merch-rev-total">&#x2014;</td><td id="act-merch-ord-total">&#x2014;</td><td id="act-merch-avg-total">&#x2014;</td><td id="act-att-merch-total">&#x2014;</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F37D; Menu Item Performance</div>
+          <div class="act-dp-tabs">
+            <button class="act-dp-tab active" data-dp="total" onclick="setItemView('food','total')">All Day</button>
+            <button class="act-dp-tab" data-dp="lunch" onclick="setItemView('food','lunch')">Lunch</button>
+            <button class="act-dp-tab" data-dp="dinner" onclick="setItemView('food','dinner')">Dinner</button>
+          </div>
+        </div>
+        <div style="padding:0">
+          <div id="food-view-total"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-total"></tbody></table></div>
+          <div id="food-view-lunch" style="display:none"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-lunch"></tbody></table></div>
+          <div id="food-view-dinner" style="display:none"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-dinner"></tbody></table></div>
+        </div>
+      </div>
+      <div class="act-section">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F4E6; Merch Item Performance</div>
+          <div class="act-dp-tabs">
+            <button class="act-dp-tab active" data-dp="total" onclick="setItemView('merch','total')">All Day</button>
+            <button class="act-dp-tab" data-dp="lunch" onclick="setItemView('merch','lunch')">Lunch</button>
+            <button class="act-dp-tab" data-dp="dinner" onclick="setItemView('merch','dinner')">Dinner</button>
+          </div>
+        </div>
+        <div style="padding:0">
+          <div id="merch-view-total"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-total"></tbody></table></div>
+          <div id="merch-view-lunch" style="display:none"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-lunch"></tbody></table></div>
+          <div id="merch-view-dinner" style="display:none"><table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-dinner"></tbody></table></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);padding:12px 0 32px;text-align:center">Data from Toast POS &middot; Merch attach = card-match estimate (&plusmn;2hr)</div>
+    </div>
+  </div>
+
+  <!-- MERCHANDISE PAGE -->
+  <div id="page-merch" style="display:none;padding:24px 32px;max-width:1100px;margin:0 auto">
+    <div class="merch-hdr">
+      <div class="merch-title">&#x1F6CD; Merchandise Catalog</div>
+      <button class="merch-sync-btn" onclick="merchandiseLoaded=false;initMerch()">&#x21BB; Refresh from Toast</button>
+    </div>
+    <div id="merch-spinner"><div class="act-spin"></div><div style="font-size:13px;color:var(--muted)">Loading merchandise&#x2026;</div></div>
+    <div id="merch-content" style="display:none">
+      <div class="merch-cat-grid" id="merch-cat-grid"></div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;padding:16px 0 32px">Items and categories sourced from Toast POS &middot; Last 14 days of transactions</div>
+    </div>
+  </div>
+
+  <!-- PROJECTIONS PAGE -->
+  <div id="page-projections" style="display:none;padding:24px 32px;max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--brown)">&#x1F5D3; Revenue Projections</div>
+      <div style="font-size:12px;color:var(--muted)">Click any date to override hours or occupancy</div>
+    </div>
+    <div class="proj-layout">
+      <div class="proj-settings">
+        <div class="proj-settings-title">&#x2699; Default Settings</div>
+        <div class="proj-field"><div class="proj-label">Open Time</div><input type="time" id="proj-open" class="proj-input" value="10:00" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Last Seating</div><input type="time" id="proj-lastseating" class="proj-input" value="20:00" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Close Time</div><input type="time" id="proj-close" class="proj-input" value="21:00" oninput="renderCalendar()"></div>
+        <hr class="proj-divider">
+        <div class="proj-settings-title">Occupancy by Day</div>
+        <div class="proj-dow-grid">
+          <div class="proj-dow-row"><span class="proj-dow-label">Mon</span><input class="proj-dow-input" id="occ-1" type="number" min="0" max="100" value="45" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Tue</span><input class="proj-dow-input" id="occ-2" type="number" min="0" max="100" value="45" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Wed</span><input class="proj-dow-input" id="occ-3" type="number" min="0" max="100" value="50" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Thu</span><input class="proj-dow-input" id="occ-4" type="number" min="0" max="100" value="55" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Fri</span><input class="proj-dow-input" id="occ-5" type="number" min="0" max="100" value="70" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Sat</span><input class="proj-dow-input" id="occ-6" type="number" min="0" max="100" value="85" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+          <div class="proj-dow-row"><span class="proj-dow-label">Sun</span><input class="proj-dow-input" id="occ-0" type="number" min="0" max="100" value="80" oninput="renderCalendar()"><span style="font-size:11px">%</span></div>
+        </div>
+        <hr class="proj-divider">
+        <div class="proj-settings-title">Unit Economics</div>
+        <div class="proj-field"><div class="proj-label">Seats</div><input type="number" id="proj-seats" class="proj-input" value="50" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Avg Table Size</div><input type="number" id="proj-table-size" class="proj-input" value="2.78" step="0.01" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Avg Check F&amp;B ($)</div><input type="number" id="proj-avg-fb" class="proj-input" value="17.50" step="0.50" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Merch Attach Rate (%)</div><input type="number" id="proj-merch-attach" class="proj-input" value="15" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Avg Merch Transaction ($)</div><input type="number" id="proj-avg-merch" class="proj-input" value="15.00" step="0.50" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Turn Time Lunch (min)</div><input type="number" id="proj-turn-lunch" class="proj-input" value="45" oninput="renderCalendar()"></div>
+        <div class="proj-field"><div class="proj-label">Turn Time Dinner (min)</div><input type="number" id="proj-turn-dinner" class="proj-input" value="60" oninput="renderCalendar()"></div>
+        <button class="proj-apply-btn" onclick="saveProjectionSettings()">&#x1F4BE; Save Settings</button>
+        <div style="margin-top:8px;text-align:center"><button onclick="clearAllOverrides()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline">Clear all overrides</button></div>
+      </div>
+      <div>
+        <div class="proj-cal-hdr">
+          <div class="proj-cal-title" id="proj-month-title"></div>
+          <div style="display:flex;gap:8px">
+            <button class="proj-cal-btn" onclick="projChangeMonth(-1)">&#x2039; Prev</button>
+            <button class="proj-cal-btn" onclick="projGoToday()">Today</button>
+            <button class="proj-cal-btn" onclick="projChangeMonth(1)">Next &#x203a;</button>
+          </div>
+        </div>
+        <div class="proj-cal" id="proj-calendar"></div>
+        <div class="proj-summary">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;margin-bottom:16px">&#x1F4CA; Monthly Summary</div>
+          <div class="proj-sum-grid">
+            <div class="proj-sum-card"><div class="proj-sum-val" id="proj-sum-rev">&#x2014;</div><div class="proj-sum-lbl">Projected Revenue</div></div>
+            <div class="proj-sum-card"><div class="proj-sum-val" id="proj-sum-covers">&#x2014;</div><div class="proj-sum-lbl">Total Covers</div></div>
+            <div class="proj-sum-card"><div class="proj-sum-val" id="proj-sum-days">&#x2014;</div><div class="proj-sum-lbl">Operating Days</div></div>
+            <div class="proj-sum-card"><div class="proj-sum-val" id="proj-sum-avg-day">&#x2014;</div><div class="proj-sum-lbl">Avg Revenue / Day</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proj-modal-overlay" id="proj-modal">
+      <div class="proj-modal">
+        <div class="proj-modal-title" id="proj-modal-date-title">Override</div>
+        <div class="proj-closed-toggle"><input type="checkbox" id="proj-closed-check" onchange="toggleClosedMode()"><label for="proj-closed-check" style="font-weight:600;cursor:pointer">Closed this day</label></div>
+        <div id="proj-modal-fields">
+          <div class="proj-modal-grid">
+            <div class="proj-field"><div class="proj-label">Open Time</div><input type="time" id="ov-open" class="proj-input" value="10:00"></div>
+            <div class="proj-field"><div class="proj-label">Last Seating</div><input type="time" id="ov-lastseating" class="proj-input" value="20:00"></div>
+            <div class="proj-field"><div class="proj-label">Close Time</div><input type="time" id="ov-close" class="proj-input" value="21:00"></div>
+            <div class="proj-field"><div class="proj-label">Occupancy Override (%)</div><input type="number" id="ov-occ" class="proj-input" min="0" max="100" placeholder="Default"></div>
+          </div>
+          <div class="proj-field" style="margin-top:8px"><div class="proj-label">Event Label</div><input type="text" id="ov-label" class="proj-input" placeholder="e.g. July 4th Holiday"></div>
+        </div>
+        <div class="proj-modal-btns">
+          <button class="proj-modal-cancel" onclick="closeModal()">Cancel</button>
+          <button class="proj-modal-clear" onclick="clearOverride()">&#x2715; Clear</button>
+          <button class="proj-modal-save" onclick="saveOverride()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- LABOR PAGE -->
+  <div id="page-labor" style="display:none;padding:24px 32px;max-width:1200px;margin:0 auto">
+  <style>
+    .labor-hdr { display:flex;align-items:center;justify-content:space-between;margin-bottom:24px; }
+    .labor-title { font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--brown); }
+    .labor-controls { display:flex;gap:10px;align-items:center; }
+    .labor-date { border:1.5px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none; }
+    .labor-date:focus { border-color:var(--brown); }
+    .labor-btn { background:var(--brown);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif; }
+    .labor-btn:hover { background:var(--brown-light); }
+    .labor-presets { display:flex;gap:4px; }
+    .labor-preset { background:var(--bg);border:1.5px solid var(--border);border-radius:5px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--muted); }
+    .labor-preset:hover,.labor-preset.active { background:var(--brown);color:#fff;border-color:var(--brown); }
+    #labor-spinner { display:flex;align-items:center;justify-content:center;min-height:300px;flex-direction:column;gap:12px; }
+    #labor-error { display:none;background:#FEF2F2;color:var(--danger);border:1px solid #FECACA;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px; }
+
+    /* KPI row */
+    .labor-kpi-row { display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px; }
+    .labor-kpi { background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center; }
+    .labor-kpi-val { font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--brown); }
+    .labor-kpi-lbl { font-size:11px;color:var(--muted);margin-top:3px; }
+    .labor-kpi.warn .labor-kpi-val { color:var(--warning); }
+    .labor-kpi.danger .labor-kpi-val { color:var(--danger); }
+    .labor-kpi.good .labor-kpi-val { color:var(--success); }
+
+    /* P&L summary */
+    .labor-pl { background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px; }
+    .labor-pl-hdr { background:var(--bg);padding:14px 20px;border-bottom:1px solid var(--border);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700; }
+    .labor-pl table { width:100%;border-collapse:collapse; }
+    .labor-pl td { padding:10px 20px;font-size:13px;border-top:1px solid var(--border); }
+    .labor-pl td:last-child { text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px; }
+    .labor-pl td:nth-child(3) { text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);width:80px; }
+    .labor-pl tr.section { background:var(--bg); }
+    .labor-pl tr.section td { font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding:8px 20px; }
+    .labor-pl tr.total td { font-weight:700;background:#FDF8F5;border-top:2px solid var(--border); }
+    .labor-pl tr.highlight td { background:var(--brown);color:#fff;font-weight:700; }
+    .labor-pl tr.highlight td:last-child { font-family:'JetBrains Mono',monospace; }
+
+    /* Daily table */
+    .labor-daily table { width:100%;border-collapse:collapse; }
+    .labor-daily th { background:var(--bg);padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);text-align:right;border-bottom:2px solid var(--border); }
+    .labor-daily th:first-child,.labor-daily th:nth-child(2) { text-align:left; }
+    .labor-daily td { padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;border-top:1px solid var(--border); }
+    .labor-daily td:first-child { font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;text-align:left; }
+    .labor-daily td:nth-child(2) { text-align:left;font-family:'DM Sans',sans-serif;color:var(--muted); }
+    .labor-daily tr:hover td { background:#FAF7F4; }
+    .labor-daily tr.total-row td { font-weight:700;background:#FDF8F5;border-top:2px solid var(--border); }
+    .pct-good { color:var(--success);font-weight:700; }
+    .pct-warn { color:var(--warning);font-weight:700; }
+    .pct-bad  { color:var(--danger);font-weight:700; }
+
+    /* Merch cost inputs */
+    .merch-cost-note { font-size:12px;color:var(--muted);background:#FFF8F0;border:1px solid #F5D9B0;border-radius:8px;padding:12px 16px;margin-bottom:24px; }
+  </style>
+
+    <div class="labor-hdr">
+      <div class="labor-title">&#x1F4BC; Labor &amp; Cost of Goods</div>
+      <div class="labor-controls">
+        <div class="labor-presets">
+          <button class="labor-preset" onclick="setLaborPeriod('2026-06-08','2026-06-14')">Wk 6/8</button>
+          <button class="labor-preset" onclick="setLaborPeriod('2026-06-15','2026-06-21')">Wk 6/15</button>
+          <button class="labor-preset active" onclick="setLaborPeriod('2026-06-08','2026-06-21')">Pay Period</button>
+          <button class="labor-preset" onclick="setLaborPeriod('2026-06-13','2026-06-21')">Since Open</button>
+        </div>
+        <input type="date" id="labor-start" class="labor-date" value="2026-06-08">
+        <span style="font-size:12px;color:var(--muted)">to</span>
+        <input type="date" id="labor-end" class="labor-date" value="2026-06-21">
+        <button class="labor-btn" onclick="loadLabor()">&#x21BB; Load</button>
+      </div>
+    </div>
+
+    <div id="labor-error"></div>
+    <div id="labor-spinner"><div class="act-spin"></div><div style="font-size:13px;color:var(--muted)">Loading labor &amp; revenue data&#x2026;</div></div>
+
+    <div id="labor-content" style="display:none">
+
+      <!-- KPIs -->
+      <div class="labor-kpi-row">
+        <div class="labor-kpi"><div class="labor-kpi-val" id="lk-total-rev">&#x2014;</div><div class="labor-kpi-lbl">Total Revenue</div></div>
+        <div class="labor-kpi"><div class="labor-kpi-val" id="lk-fb-cogs">&#x2014;</div><div class="labor-kpi-lbl">Est. F&amp;B COGS</div></div>
+        <div class="labor-kpi"><div class="labor-kpi-val" id="lk-labor-cost">&#x2014;</div><div class="labor-kpi-lbl">Total Labor Cost</div></div>
+        <div class="labor-kpi" id="lk-labor-card"><div class="labor-kpi-val" id="lk-labor-pct">&#x2014;</div><div class="labor-kpi-lbl">Labor % of Revenue</div></div>
+        <div class="labor-kpi"><div class="labor-kpi-val" id="lk-total-hrs">&#x2014;</div><div class="labor-kpi-lbl">Total Hours Worked</div></div>
+      </div>
+
+      <!-- Merch cost note -->
+      <div class="merch-cost-note">
+        &#x26A0;&#xFE0F; <strong>Merch COGS not yet calculated</strong> — enter wholesale cost per item in the
+        <span onclick="switchTab('merch')" style="color:var(--brown);cursor:pointer;text-decoration:underline">Merchandise tab</span>
+        to see full gross margin. F&amp;B COGS uses Pro Forma food cost data.
+      </div>
+
+      <!-- P&L Summary -->
+      <div class="labor-pl" style="margin-bottom:24px">
+        <div class="labor-pl-hdr">&#x1F4CB; Period Summary</div>
+        <table>
+          <tbody id="labor-pl-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Daily Breakdown -->
+      <div class="act-section" style="margin-bottom:24px">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F4C5; Daily Breakdown</div></div>
+        <div style="padding:0">
+          <div class="labor-daily">
+            <table>
+              <thead><tr>
+                <th style="text-align:left">Date</th>
+                <th style="text-align:left">Day</th>
+                <th>F&amp;B Rev</th>
+                <th>Merch Rev</th>
+                <th>Total Rev</th>
+                <th>Est. F&amp;B COGS</th>
+                <th>Labor Hrs</th>
+                <th>Labor Cost</th>
+                <th>Labor %</th>
+                <th>Staff</th>
+              </tr></thead>
+              <tbody id="labor-daily-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- By Role -->
+      <div class="act-section" style="margin-bottom:24px">
+        <div class="act-section-hdr"><div class="act-section-title">&#x1F465; By Role</div></div>
+        <div style="padding:0">
+          <div class="labor-daily">
+            <table>
+              <thead><tr>
+                <th style="text-align:left">Role</th>
+                <th>Hours</th>
+                <th>Labor Cost</th>
+                <th>% of Labor</th>
+                <th>Avg Staff/Day</th>
+              </tr></thead>
+              <tbody id="labor-role-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- OT / DT / BC Section -->
+      <div class="act-section" style="margin-bottom:24px">
+        <div class="act-section-hdr">
+          <div class="act-section-title">&#x26A0;&#xFE0F; Overtime · Double Time · Break Compliance</div>
+          <div style="font-size:11px;color:var(--muted)">CA Labor Law · Source: Toast time entries</div>
+        </div>
+        <div class="act-section-body" style="padding:0">
+
+          <!-- OT / DT / BC KPI row -->
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;border-bottom:1px solid var(--border)">
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">OT Hours</div>
+              <div id="ot-hours" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--warning)">—</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">OT Cost</div>
+              <div id="ot-cost" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--warning)">—</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">DT Hours</div>
+              <div id="dt-hours" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--danger)">—</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">DT Cost</div>
+              <div id="dt-cost" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--danger)">—</div>
+            </div>
+            <div style="padding:16px;text-align:center;border-right:1px solid var(--border)">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">BC Violations</div>
+              <div id="bc-count" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--danger)">—</div>
+            </div>
+            <div style="padding:16px;text-align:center">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">BC Cost</div>
+              <div id="bc-cost" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--danger)">—</div>
+            </div>
+          </div>
+
+          <!-- Definitions -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:0">
+            <div style="padding:16px;border-right:1px solid var(--border)">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--warning);margin-bottom:6px">OT — Overtime (1.5x)</div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Hours 8–12 in a single shift or over 40/week. Cost = OT hours × wage × 0.5 premium.</div>
+              <div id="ot-detail" style="margin-top:10px;font-size:12px"></div>
+            </div>
+            <div style="padding:16px;border-right:1px solid var(--border)">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--danger);margin-bottom:6px">DT — Double Time (2x)</div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">Hours beyond 12 in a single shift or 7th consecutive day. Cost = DT hours × wage × 1.0 premium.</div>
+              <div id="dt-detail" style="margin-top:10px;font-size:12px"></div>
+            </div>
+            <div style="padding:16px">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--danger);margin-bottom:6px">BC — Break Compliance</div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6">CA law: 30-min meal break required for shifts &gt;5h. Each violation = 1 hr premium pay at regular rate.</div>
+              <div id="bc-detail" style="margin-top:10px;font-size:12px"></div>
+            </div>
+          </div>
+
+          <!-- Daily OT/DT/BC table -->
+          <div style="border-top:1px solid var(--border)">
+            <div class="labor-daily">
+              <table>
+                <thead><tr>
+                  <th style="text-align:left">Date</th>
+                  <th style="text-align:left">Day</th>
+                  <th>Reg Hrs</th>
+                  <th>OT Hrs</th>
+                  <th>OT Cost</th>
+                  <th>DT Hrs</th>
+                  <th>DT Cost</th>
+                  <th>BC Violations</th>
+                  <th>BC Cost</th>
+                  <th>Extra Cost</th>
+                </tr></thead>
+                <tbody id="ot-dt-bc-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);padding:8px 0 32px;text-align:center">
+        Labor cost from Toast time entries &nbsp;&middot;&nbsp; F&amp;B COGS estimated from Pro Forma food costs &nbsp;&middot;&nbsp; Salary workers shown separately &nbsp;&middot;&nbsp; Merch COGS requires manual cost entry
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /app -->
+
+
+
+<!-- ═══ ACTUALS PAGE ═══════════════════════════════════════════════════ -->
+<div id="page-actuals" style="display:none;padding:24px 32px;max-width:1200px;margin:0 auto">
+
+  <style>
+    .act-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .act-title  { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; color:var(--brown); }
+    .act-sync   { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; }
+    .act-sync-btn { background:var(--brown); color:#fff; border:none; border-radius:6px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .act-sync-btn:hover { background:var(--brown-light); }
+    .act-date-input { border:1.5px solid var(--border); border-radius:6px; padding:6px 10px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; }
+    .act-date-input:focus { border-color:var(--brown); }
+
+    /* Spinner */
+    #act-spinner { display:flex; align-items:center; justify-content:center; min-height:300px; flex-direction:column; gap:12px; }
+    .act-spin { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--brown); border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Error */
+    #act-error { display:none; background:#FEF2F2; color:var(--danger); border:1px solid #FECACA; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:13px; }
+
+    /* Revenue summary table */
+    .act-rev-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+    .act-rev-table th { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding:8px 16px; text-align:right; border-bottom:2px solid var(--border); }
+    .act-rev-table th:first-child { text-align:left; }
+    .act-rev-table td { padding:12px 16px; font-family:'JetBrains Mono',monospace; font-size:13px; text-align:right; border-top:1px solid var(--border); }
+    .act-rev-table td:first-child { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; text-align:left; color:var(--text); }
+    .act-rev-table tr:last-child td { font-weight:700; background:#FDF8F5; font-size:14px; }
+    .act-variance { font-weight:700; padding:2px 8px; border-radius:4px; font-size:12px; }
+    .act-pos { background:#DCFCE7; color:#16A34A; }
+    .act-neg { background:#FEE2E2; color:#DC2626; }
+    .act-neu { background:#F3F4F6; color:#6B7280; }
+
+    /* Section cards */
+    .act-section { background:#fff; border:1px solid var(--border); border-radius:12px; margin-bottom:24px; overflow:hidden; }
+    .act-section-hdr { background:var(--bg); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+    .act-section-title { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:var(--text); }
+    .act-section-body { padding:20px; }
+
+    /* Daypart tabs */
+    .act-dp-tabs { display:flex; gap:4px; }
+    .act-dp-tab { font-size:12px; font-weight:600; padding:4px 12px; border-radius:4px; border:1.5px solid var(--border); background:#fff; cursor:pointer; font-family:'DM Sans',sans-serif; color:var(--muted); }
+    .act-dp-tab.active { background:var(--brown); color:#fff; border-color:var(--brown); }
+
+    /* Item tables */
+    .act-item-table { width:100%; border-collapse:collapse; }
+    .act-item-table th { font-size:11px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding:8px 12px; text-align:right; border-bottom:1px solid var(--border); }
+    .act-item-table th:first-child { text-align:left; }
+    .act-item-table td { padding:8px 12px; border-top:1px solid var(--border); vertical-align:middle; }
+    .act-item-table tr:hover td { background:#FAF7F4; }
+
+    /* Side-by-side daypart layout */
+    .act-dp-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+    .act-dp-pane { }
+    .act-dp-label { font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--brown); margin-bottom:10px; }
+
+    /* Attach rate grid */
+    .act-attach-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .act-attach-card { background:var(--bg); border-radius:8px; padding:12px; text-align:center; }
+    .act-attach-val  { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:var(--brown); }
+    .act-attach-lbl  { font-size:11px; color:var(--muted); margin-top:2px; }
+
+    /* Chart */
+    .act-chart-wrap { height:180px; display:flex; align-items:flex-end; gap:8px; padding:0 8px; }
+    .act-chart-col  { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .act-chart-bars-wrap { flex:1; width:100%; position:relative; display:flex; flex-direction:column-reverse; }
+    .act-chart-bar-lunch  { background:var(--brown); width:100%; border-radius:3px 3px 0 0; min-height:2px; }
+    .act-chart-bar-dinner { background:#CC2222; width:100%; min-height:2px; }
+    .act-chart-proj-line  { position:absolute; left:0; right:0; border-top:2px dashed #9CA3AF; }
+    .act-chart-label { font-size:10px; color:var(--muted); text-align:center; white-space:nowrap; }
+    .act-chart-val   { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text); }
+    .act-chart-legend { display:flex; gap:16px; font-size:11px; color:var(--muted); margin-top:8px; }
+    .act-chart-legend span { display:flex; align-items:center; gap:5px; }
+    .act-chart-legend .dot  { width:10px; height:10px; border-radius:2px; }
+    .act-legend-lunch  { background:var(--brown); }
+    .act-legend-dinner { background:#CC2222; }
+    .act-legend-proj   { width:16px; height:2px; border-top:2px dashed #9CA3AF; border-radius:0; }
+  </style>
+
+  <!-- Header -->
+  <div class="act-header">
+    <div class="act-title">📈 Actuals vs Projections</div>
+    <div class="act-sync">
+      <input type="date" id="act-date-picker" class="act-date-input"
+        onchange="loadActuals(this.value)">
+      <span id="act-sync-time">—</span>
+      <button class="act-sync-btn" onclick="loadActuals()">↻ Sync Now</button>
+    </div>
+  </div>
+
+  <div id="act-error"></div>
+
+  <!-- Spinner -->
+  <div id="act-spinner">
+    <div class="act-spin"></div>
+    <div style="font-size:13px;color:var(--muted)">Loading Toast data…</div>
+  </div>
+
+  <!-- Content -->
+  <div id="act-content" style="display:none">
+
+
+      <!-- PROJECTED vs ACTUAL TABLE -->
+      <div class="act-section" style="margin-bottom:24px">
+        <div class="act-section-hdr">
+          <div class="act-section-title">&#x1F4CA; Projected vs Actual &#x2014; Since Opening</div>
+          <div style="font-size:11px;color:var(--muted)">Opening June 13, 2026 &nbsp;&middot;&nbsp; 50 seats &nbsp;&middot;&nbsp; 18 tables</div>
+        </div>
+        <div style="padding:0;overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;min-width:820px">
+            <thead>
+              <tr style="background:var(--bg)">
+                <th rowspan="2" style="padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:2px solid var(--border);vertical-align:bottom">Date</th>
+                <th rowspan="2" style="padding:8px 8px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--border);vertical-align:bottom">Day</th>
+                <th colspan="3" style="padding:6px 8px;font-size:10px;font-weight:700;text-transform:uppercase;color:#2563EB;text-align:center;border-bottom:1px solid var(--border);border-left:2px solid #DBEAFE">Covers</th>
+                <th colspan="2" style="padding:6px 8px;font-size:10px;font-weight:700;text-transform:uppercase;color:#7C3AED;text-align:center;border-bottom:1px solid var(--border);border-left:2px solid #EDE9FE">Occ %</th>
+                <th colspan="3" style="padding:6px 8px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--brown);text-align:center;border-bottom:1px solid var(--border);border-left:2px solid #FEF3E2">Revenue</th>
+              </tr>
+              <tr style="background:var(--bg)">
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);border-left:2px solid #DBEAFE;font-weight:600">Proj</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);font-weight:600">Actual</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);font-weight:600">&#x25B3;</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);border-left:2px solid #EDE9FE;font-weight:600">Proj</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);font-weight:600">Actual</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);border-left:2px solid #FEF3E2;font-weight:600">Proj</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);font-weight:600">Actual</th>
+                <th style="padding:6px 8px;font-size:10px;color:var(--muted);text-align:right;border-bottom:2px solid var(--border);font-weight:600">Var</th>
+              </tr>
+            </thead>
+            <tbody id="pva-tbody"></tbody>
+            <tfoot><tr id="pva-tfoot" style="display:none;background:#FDF8F5;font-weight:700">
+              <td colspan="2" style="padding:10px 14px;font-size:13px;font-family:'Space Grotesk',sans-serif">TOTAL</td>
+              <td id="pva-tot-pc" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;border-left:2px solid #DBEAFE"></td>
+              <td id="pva-tot-ac" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px"></td>
+              <td id="pva-tot-dc" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px"></td>
+              <td id="pva-tot-po" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;border-left:2px solid #EDE9FE"></td>
+              <td id="pva-tot-ao" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px"></td>
+              <td id="pva-tot-pr" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;border-left:2px solid #FEF3E2"></td>
+              <td id="pva-tot-ar" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px"></td>
+              <td id="pva-tot-vr" style="padding:10px 8px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px"></td>
+            </tr></tfoot>
+          </table>
+        </div>
+        <div style="padding:10px 20px;font-size:11px;color:var(--muted)">Occ% &gt;100% = faster table turns than model assumed &nbsp;&middot;&nbsp; Max: lunch 400/day &middot; dinner 250/day</div>
+      </div>
+      <!-- Summary cards -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+        <div class="act-section" style="margin-bottom:0"><div class="act-section-body" style="text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">Avg Occ% Since Opening</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--brown)" id="pva-avg-occ">&#x2014;</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Proj: <span id="pva-proj-occ-avg">&#x2014;</span></div>
+        </div></div>
+        <div class="act-section" style="margin-bottom:0"><div class="act-section-body" style="text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">Avg Covers / Day</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--brown)" id="pva-avg-cov">&#x2014;</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Proj: <span id="pva-proj-cov-avg">&#x2014;</span></div>
+        </div></div>
+        <div class="act-section" style="margin-bottom:0"><div class="act-section-body" style="text-align:center">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">Revenue / Cover</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--brown)" id="pva-rev-per-cov">&#x2014;</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Proj: <span id="pva-proj-rpc">&#x2014;</span></div>
+        </div></div>
+      </div>
+
+    <!-- ① Revenue vs Projected -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">💰 Revenue vs Projected</div>
+        <div style="font-size:11px;color:var(--muted)">Base scenario @ 65% occupancy</div>
+      </div>
+      <div class="act-section-body" style="padding:0">
+        <table class="act-rev-table">
+          <thead><tr>
+            <th>Daypart</th>
+            <th>Actual</th>
+            <th>Projected</th>
+            <th>Variance</th>
+            <th>Orders</th>
+            <th>Avg Check</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>🌤 Lunch (10a–4p)</td>
+              <td id="act-rev-lunch">—</td>
+              <td id="act-proj-lunch" style="color:var(--muted)">—</td>
+              <td><span id="act-var-lunch" class="act-variance">—</span></td>
+              <td id="act-orders-lunch">—</td>
+              <td id="act-avg-lunch">—</td>
+            </tr>
+            <tr>
+              <td>🌙 Dinner (4p–9p)</td>
+              <td id="act-rev-dinner">—</td>
+              <td id="act-proj-dinner" style="color:var(--muted)">—</td>
+              <td><span id="act-var-dinner" class="act-variance">—</span></td>
+              <td id="act-orders-dinner">—</td>
+              <td id="act-avg-dinner">—</td>
+            </tr>
+            <tr>
+              <td>📊 Full Day</td>
+              <td id="act-rev-total">—</td>
+              <td id="act-proj-total" style="color:var(--muted)">—</td>
+              <td><span id="act-var-total" class="act-variance">—</span></td>
+              <td id="act-orders-total">—</td>
+              <td id="act-avg-total">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ② 7-Day Revenue Chart -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">📅 7-Day Revenue</div>
+        <div class="act-chart-legend">
+          <span><div class="dot act-legend-lunch"></div> Lunch</span>
+          <span><div class="dot act-legend-dinner"></div> Dinner</span>
+          <span><div class="act-legend-proj"></div> Projected</span>
+        </div>
+      </div>
+      <div class="act-section-body">
+        <div class="act-chart-wrap" id="act-chart-bars"></div>
+      </div>
+    </div>
+
+    <!-- ③ Ticket Attach Rates -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">🔗 Ticket Attach Rates</div>
+        <div class="act-dp-tabs">
+          <button class="act-dp-tab active" data-dp="total"  onclick="setAttachView('total')">All Day</button>
+          <button class="act-dp-tab"        data-dp="lunch"  onclick="setAttachView('lunch')">Lunch</button>
+          <button class="act-dp-tab"        data-dp="dinner" onclick="setAttachView('dinner')">Dinner</button>
+        </div>
+      </div>
+      <div class="act-section-body">
+        <div id="attach-view-total">
+          <div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-total">—</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-total">—</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-total">—</div><div class="act-attach-lbl">Kids w/ Entrée</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-total">—</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div>
+        </div>
+        <div id="attach-view-lunch" style="display:none">
+          <div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-lunch">—</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-lunch">—</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-lunch">—</div><div class="act-attach-lbl">Kids w/ Entrée</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-lunch">—</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div>
+        </div>
+        <div id="attach-view-dinner" style="display:none">
+          <div class="act-attach-grid">
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-drink-dinner">—</div><div class="act-attach-lbl">Drink w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-dessert-dinner">—</div><div class="act-attach-lbl">Dessert w/ Food</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-kids-dinner">—</div><div class="act-attach-lbl">Kids w/ Entrée</div></div>
+            <div class="act-attach-card"><div class="act-attach-val" id="act-att-items-dinner">—</div><div class="act-attach-lbl">Avg Items / Ticket</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ Merch Performance -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">🛍 Merch Performance</div>
+        <div style="font-size:11px;color:var(--muted)">Card-match attach proxy · Chomps will replace with exact data</div>
+      </div>
+      <div class="act-section-body" style="padding:0">
+        <table class="act-rev-table">
+          <thead><tr>
+            <th>Daypart</th>
+            <th>Revenue</th>
+            <th>Transactions</th>
+            <th>Avg Transaction</th>
+            <th>Est. Attach %</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>🌤 Lunch</td>
+              <td id="act-merch-rev-lunch">—</td>
+              <td id="act-merch-ord-lunch">—</td>
+              <td id="act-merch-avg-lunch">—</td>
+              <td id="act-att-merch-lunch">—</td>
+            </tr>
+            <tr>
+              <td>🌙 Dinner</td>
+              <td id="act-merch-rev-dinner">—</td>
+              <td id="act-merch-ord-dinner">—</td>
+              <td id="act-merch-avg-dinner">—</td>
+              <td id="act-att-merch-dinner">—</td>
+            </tr>
+            <tr>
+              <td>📊 Full Day</td>
+              <td id="act-merch-rev-total">—</td>
+              <td id="act-merch-ord-total">—</td>
+              <td id="act-merch-avg-total">—</td>
+              <td id="act-att-merch-total">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ⑤ Menu Item Performance -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">🍽 Menu Item Performance</div>
+        <div class="act-dp-tabs">
+          <button class="act-dp-tab active" data-dp="total"  onclick="setItemView('food','total')">All Day</button>
+          <button class="act-dp-tab"        data-dp="lunch"  onclick="setItemView('food','lunch')">Lunch</button>
+          <button class="act-dp-tab"        data-dp="dinner" onclick="setItemView('food','dinner')">Dinner</button>
+        </div>
+      </div>
+      <div class="act-section-body" style="padding:0">
+        <div id="food-view-total">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-total"></tbody></table>
+        </div>
+        <div id="food-view-lunch" style="display:none">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-lunch"></tbody></table>
+        </div>
+        <div id="food-view-dinner" style="display:none">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-food-dinner"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ Merch Item Performance -->
+    <div class="act-section">
+      <div class="act-section-hdr">
+        <div class="act-section-title">📦 Merch Item Performance</div>
+        <div class="act-dp-tabs">
+          <button class="act-dp-tab active" data-dp="total"  onclick="setItemView('merch','total')">All Day</button>
+          <button class="act-dp-tab"        data-dp="lunch"  onclick="setItemView('merch','lunch')">Lunch</button>
+          <button class="act-dp-tab"        data-dp="dinner" onclick="setItemView('merch','dinner')">Dinner</button>
+        </div>
+      </div>
+      <div class="act-section-body" style="padding:0">
+        <div id="merch-view-total">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-total"></tbody></table>
+        </div>
+        <div id="merch-view-lunch" style="display:none">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-lunch"></tbody></table>
+        </div>
+        <div id="merch-view-dinner" style="display:none">
+          <table class="act-item-table"><thead><tr><th>Item</th><th style="text-align:right">Units</th><th style="text-align:right">Revenue</th></tr></thead><tbody id="act-merch-dinner"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);padding:12px 0 32px;text-align:center">
+      Data pulled from Toast POS · Merch attach is a card-match estimate (±2hr window) · Chomps will replace merch attach with exact guest-level data
+    </div>
+
+  </div><!-- /act-content -->
+</div><!-- /page-actuals -->
+
+
+
+
+<script>
+
+
+// ============================================================
+// AUTH
+// ============================================================
+var PASSWORD = 'izzy@2026';
+var SSO_TOKEN = 'JARVIS_SSO_2026';
+function unlockApp() {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  updateAll();
+  calcA(); calcB();
+  // Pre-load all tab data in background on login
+  setTimeout(preloadAllData, 500);
+  document.getElementById('last-updated').textContent = 'Last updated: June 1, 2026';
+}
+function checkSSOOnLoad() {
+  const params = new URLSearchParams(window.location.search);
+  if (localStorage.getItem('j_sso') === SSO_TOKEN || params.get('sso') === SSO_TOKEN) {
+    if (params.get('sso') === SSO_TOKEN) localStorage.setItem('j_sso', SSO_TOKEN);
+    unlockApp();
+  }
+}
+function checkAuth() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) { unlockApp(); }
+  else { document.getElementById('auth-error').style.display = 'block'; }
+}
+function logout() {
+  document.getElementById('auth-gate').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+}
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+var TOTAL_SEATS = 54;
+var TURN_TIME = 1.15; // hours
+var WD_WINDOW = 9;    // M-F seating window
+var WE_WINDOW = 10;   // Sat-Sun seating window
+var WEEKS_PER_YEAR = 52;
+var WD_PER_WEEK = 5;
+var WE_PER_WEEK = 2;
+
+// Max covers per day
+var WD_MAX_PER_DAY = TOTAL_SEATS * (WD_WINDOW / TURN_TIME);
+var WE_MAX_PER_DAY = TOTAL_SEATS * (WE_WINDOW / TURN_TIME);
+var ANNUAL_MAX = (WD_MAX_PER_DAY * WD_PER_WEEK + WE_MAX_PER_DAY * WE_PER_WEEK) * WEEKS_PER_YEAR;
+
+// Fixed annual labor
+var LABOR_ANNUAL = 936935;
+var WORKERS_COMP_ANNUAL = 44500;
+
+// NHK
+var NHK_MG = 35000;
+var NHK_FB_RATE = 0.03;
+var NHK_HOUSE_DTC = 0.08;
+var NHK_HOUSE_WHL = 0.13;
+
+// CC processing
+var CC_RATE = 0.0275;
+
+// COGS rates
+var FB_COGS_RATE = 0.24; // actual blended food cost from menu spreadsheet
+var MERCH_COGS_RATE = 0.50; // 50% GM baseline
+
+// ============================================================
+// SCENARIOS
+// ============================================================
+var SCENARIOS = [
+  { key: 'conservative', label: 'Conservative', occ: 0.50 },
+  { key: 'base',         label: 'Base',         occ: 0.65 },
+  { key: 'optimistic',   label: 'Optimistic',   occ: 0.80 },
+];
+
+var currentPLTab = 'base';
+
+function getInputs() {
+  return {
+    occ:      parseFloat(document.getElementById('occ-slider').value) / 100,
+    drinksA:  parseFloat(document.getElementById('drinks-attach').value) / 100,
+    entreeA:  parseFloat(document.getElementById('entree-attach').value) / 100,
+    dessertA: parseFloat(document.getElementById('dessert-attach').value) / 100,
+    merchA:   parseFloat(document.getElementById('merch-attach').value) / 100,
+    drinksP:  parseFloat(document.getElementById('drinks-price').value),
+    entreeP:  parseFloat(document.getElementById('entree-price').value),
+    dessertP: parseFloat(document.getElementById('dessert-price').value),
+    merchP:   parseFloat(document.getElementById('merch-price').value),
+    rent:     parseFloat(document.getElementById('cost-rent').value) * 12,
+    electric: parseFloat(document.getElementById('cost-electric').value) * 12,
+    pos:      parseFloat(document.getElementById('cost-pos').value) * 12,
+    edco:     parseFloat(document.getElementById('cost-edco').value) * 12,
+    marketing:parseFloat(document.getElementById('cost-marketing').value) * 12,
+    insurance:parseFloat(document.getElementById('cost-insurance').value) * 12,
+    packaging:parseFloat(document.getElementById('cost-packaging').value) * 12,
+    accounting:parseFloat(document.getElementById('cost-accounting').value) * 12,
+  };
+}
+
+function calcScenario(occ, inp) {
+  const covers = ANNUAL_MAX * occ;
+  const fbPerCover = inp.drinksA * inp.drinksP + inp.entreeA * inp.entreeP + inp.dessertA * inp.dessertP;
+  const merchPerCover = inp.merchA * inp.merchP;
+  const perCover = fbPerCover + merchPerCover;
+
+  const fbRev = covers * fbPerCover;
+  const merchRev = covers * merchPerCover;
+  const totalRev = fbRev + merchRev;
+
+  const fbCOGS = fbRev * FB_COGS_RATE;
+  const merchCOGS = merchRev * MERCH_COGS_RATE;
+  const totalCOGS = fbCOGS + merchCOGS;
+  const grossProfit = totalRev - totalCOGS;
+
+  const nhkFB = Math.max(fbRev * NHK_FB_RATE, NHK_MG);
+  const ccFees = totalRev * CC_RATE;
+
+  const totalOpEx =
+    inp.rent + inp.electric + inp.pos + inp.edco +
+    inp.marketing + inp.insurance + inp.packaging + inp.accounting +
+    LABOR_ANNUAL + WORKERS_COMP_ANNUAL + nhkFB + ccFees;
+
+  const ebitda = grossProfit - totalOpEx;
+  const laborPct = (LABOR_ANNUAL + WORKERS_COMP_ANNUAL) / totalRev * 100;
+  const ebitdaPct = ebitda / totalRev * 100;
+
+  return { covers, fbRev, merchRev, totalRev, fbCOGS, merchCOGS, totalCOGS, grossProfit,
+           nhkFB, ccFees, totalOpEx, ebitda, laborPct, ebitdaPct, perCover,
+           rent: inp.rent, electric: inp.electric, pos: inp.pos, edco: inp.edco,
+           marketing: inp.marketing, insurance: inp.insurance, packaging: inp.packaging,
+           accounting: inp.accounting };
+}
+
+// ============================================================
+// FORMAT HELPERS
+// ============================================================
+function fmt(n) {
+  if (isNaN(n)) return '—';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtPct(n) {
+  if (isNaN(n)) return '—';
+  return n.toFixed(1) + '%';
+}
+function colorPct(pct, target, invert) {
+  if (invert) return pct > target ? 'red' : 'green';
+  return pct >= target ? 'green' : (pct >= target * 0.8 ? 'warn' : 'red');
+}
+
+// ============================================================
+// UPDATE ALL
+// ============================================================
+function updateAll() {
+  const inp = getInputs();
+
+  // Update slider labels
+  document.getElementById('occ-val').textContent = Math.round(inp.occ * 100) + '%';
+  document.getElementById('drinks-attach-val').textContent = Math.round(inp.drinksA * 100) + '%';
+  document.getElementById('entree-attach-val').textContent = Math.round(inp.entreeA * 100) + '%';
+  document.getElementById('dessert-attach-val').textContent = Math.round(inp.dessertA * 100) + '%';
+  document.getElementById('merch-attach-val').textContent = Math.round(inp.merchA * 100) + '%';
+
+  // Calc base scenario for KPIs
+  const base = calcScenario(0.65, inp);
+  const activeOcc = inp.occ;
+  const active = calcScenario(activeOcc, inp);
+
+  // KPIs (based on current slider occ)
+  document.getElementById('kpi-revenue').textContent = fmt(active.totalRev);
+  document.getElementById('kpi-covers').textContent = Math.round(active.covers).toLocaleString() + ' covers/yr';
+  document.getElementById('kpi-ebitda').textContent = fmt(active.ebitda);
+  document.getElementById('kpi-ebitda-pct').textContent = fmtPct(active.ebitdaPct) + ' margin';
+  const laborEl = document.getElementById('kpi-labor-pct');
+  laborEl.textContent = fmtPct(active.laborPct);
+  laborEl.style.color = active.laborPct > 30 ? 'var(--danger)' : 'var(--success)';
+  document.getElementById('kpi-per-cover').textContent = '$' + active.perCover.toFixed(2);
+
+  // Scenario cards
+  const cons = calcScenario(0.50, inp);
+  const opt  = calcScenario(0.80, inp);
+
+  function fillCard(prefix, s) {
+    document.getElementById(`s-${prefix}-rev`).textContent = fmt(s.totalRev);
+    document.getElementById(`s-${prefix}-covers`).textContent = Math.round(s.covers).toLocaleString() + ' covers/yr';
+    document.getElementById(`s-${prefix}-fb`).textContent = fmt(s.fbRev);
+    document.getElementById(`s-${prefix}-merch`).textContent = fmt(s.merchRev);
+    document.getElementById(`s-${prefix}-gp`).textContent = fmt(s.grossProfit);
+    const ebitdaEl = document.getElementById(`s-${prefix}-ebitda`);
+    ebitdaEl.textContent = fmt(s.ebitda);
+    ebitdaEl.className = 'scenario-row-val ' + (s.ebitda >= 0 ? 'green' : 'red');
+    const laborEl2 = document.getElementById(`s-${prefix}-labor`);
+    laborEl2.textContent = fmtPct(s.laborPct);
+    laborEl2.className = 'scenario-row-val ' + (s.laborPct <= 30 ? 'green' : (s.laborPct <= 35 ? 'warn' : 'red'));
+  }
+  fillCard('con', cons);
+  fillCard('base', base);
+  fillCard('opt', opt);
+
+  // P&L table
+  renderPL(inp);
+}
+
+// ============================================================
+// P&L TABLE
+// ============================================================
+function setPLTab(tab) {
+  currentPLTab = tab;
+  document.querySelectorAll('.pl-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderPL(getInputs());
+}
+
+function renderPL(inp) {
+  const occMap = { conservative: 0.50, base: 0.65, optimistic: 0.80 };
+  const s = calcScenario(occMap[currentPLTab], inp);
+  const R = s.totalRev;
+
+  function pct(n) { return R > 0 ? fmtPct(n / R * 100) : '—'; }
+  function tbd(label) { return `<span class="tbd-tag">[TBD — ${label}]</span>`; }
+
+  const rows = [
+    { section: 'REVENUE' },
+    { label: 'Food & Beverage Sales', val: s.fbRev, note: 'Attach rates × prices × covers' },
+    { label: 'Merchandise Sales', val: s.merchRev, note: '75% attach × $13 blended' },
+    { total: 'TOTAL REVENUE', val: s.totalRev },
+    { section: 'COST OF GOODS SOLD' },
+    { label: 'F&B COGS (24%)', val: -s.fbCOGS, note: 'Food & bev cost — blended from actual menu', indent: true },
+    { label: 'Merch COGS (50%)', val: -s.merchCOGS, note: 'Product cost baseline', indent: true },
+    { total: 'GROSS PROFIT', val: s.grossProfit },
+    { section: 'OPERATING EXPENSES — LABOR' },
+    { label: 'Hourly Staff (BOH + FOH)', val: -(LABOR_ANNUAL - 191900), note: 'Base wages only (tips excl.)', indent: true },
+    { label: 'Salaried (Chef + GM)', val: -191900, note: 'Gross incl. employer taxes', indent: true },
+    { label: 'Workers Compensation', val: -WORKERS_COMP_ANNUAL, note: '~$4.75 per $100 payroll CA', indent: true },
+    { total: 'TOTAL LABOR', val: -(LABOR_ANNUAL + WORKERS_COMP_ANNUAL) },
+    { section: 'OPERATING EXPENSES — OCCUPANCY' },
+    { label: 'Rent (Unit R + Storage)', val: -s.rent, note: 'TLA — Newkoa LLC', indent: true },
+    { label: 'Electricity', val: -s.electric, note: 'Estimate', indent: true },
+    { label: 'EDCO (trash/recycle/organics)', val: -s.edco, note: '3 bins, 1x/wk', indent: true },
+    { section: 'OPERATING EXPENSES — OTHER' },
+    { label: 'NHK Royalties (F&B 3%)', val: -s.nhkFB, note: 'Min. guarantee $35K', indent: true },
+    { label: 'CC Processing (2.75%)', val: -s.ccFees, note: 'Toast estimate', indent: true },
+    { label: 'Toast POS', val: -s.pos, note: '$300/mo', indent: true },
+    { label: 'Marketing', val: s.marketing > 0 ? -s.marketing : null, tbdLabel: s.marketing > 0 ? null : 'Striker $1,890/mo or self-managed', note: '', indent: true },
+    { label: 'Insurance (GL + Property)', val: null, tbdLabel: 'Uploading contract', note: '', indent: true },
+    { label: 'Packaging & Supplies', val: -s.packaging, note: 'Placeholder', indent: true },
+    { label: 'Accounting / Bookkeeping', val: s.accounting > 0 ? -s.accounting : null, tbdLabel: s.accounting > 0 ? null : 'TBD', note: '', indent: true },
+    { ebitda: 'EBITDA', val: s.ebitda },
+  ];
+
+  let html = '';
+  rows.forEach(r => {
+    if (r.section) {
+      html += `<tr class="section-row"><td colspan="4">${r.section}</td></tr>`;
+    } else if (r.total) {
+      const v = r.val;
+      html += `<tr class="total-row">
+        <td>${r.total}</td>
+        <td class="${v >= 0 ? 'pos' : 'neg'}">${fmt(v)}</td>
+        <td>${pct(v)}</td>
+        <td></td>
+      </tr>`;
+    } else if (r.ebitda) {
+      const v = r.val;
+      html += `<tr class="ebitda-row">
+        <td>${r.ebitda}</td>
+        <td>${fmt(v)}</td>
+        <td>${pct(v)}</td>
+        <td style="font-size:12px;opacity:0.8">${v >= 0 ? '✅ Profitable' : '⚠️ Needs optimization'}</td>
+      </tr>`;
+    } else {
+      const v = r.val;
+      const displayVal = v !== null ? `<span class="${v >= 0 ? 'pos' : ''}">${fmt(v)}</span>` : tbd(r.tbdLabel);
+      const displayPct = v !== null ? pct(v) : '—';
+      html += `<tr>
+        <td class="${r.indent ? 'indent' : ''}">${r.label}</td>
+        <td>${displayVal}</td>
+        <td>${displayPct}</td>
+        <td style="font-size:11px;color:var(--muted)">${r.note || ''}</td>
+      </tr>`;
+    }
+  });
+
+  document.getElementById('pl-tbody').innerHTML = html;
+}
+
+// ============================================================
+// MERCH BLEND
+// ============================================================
+function updateMerchBlend() {
+  const s = parseFloat(document.getElementById('merch-small-pct').value) || 0;
+  const m = parseFloat(document.getElementById('merch-med-pct').value) || 0;
+  const l = parseFloat(document.getElementById('merch-lg-pct').value) || 0;
+  const blend = (s / 100 * 9) + (m / 100 * 20) + (l / 100 * 31);
+  document.getElementById('merch-price').value = blend.toFixed(2);
+  updateAll();
+}
+
+// ============================================================
+// MARGIN CALCULATOR
+// ============================================================
+var nhkState = { a: 'licensed', b: 'licensed' };
+function getNHKRate(type) {
+  if (type === 'licensed') return 0;
+  if (type === 'house-dtc') return NHK_HOUSE_DTC;
+  if (type === 'house-whl') return NHK_HOUSE_WHL;
+  return 0;
+}
+function setNHK(mode, type) {
+  nhkState[mode] = type;
+  document.querySelectorAll(`.nhk-toggle`).forEach((tog, i) => {
+    if ((mode === 'a' && i === 0) || (mode === 'b' && i === 1)) {
+      tog.querySelectorAll('.nhk-btn').forEach(b => {
+        b.classList.toggle('active', b.textContent.trim().toLowerCase().includes(type.replace('-',' ').replace('house','house').split('-')[0]));
+      });
+    }
+  });
+  // simpler: just re-render buttons
+  const maps = { licensed: 0, 'house-dtc': 1, 'house-whl': 2, 'no-ip': 3 };
+  document.querySelectorAll('.nhk-toggle').forEach((tog, gi) => {
+    if ((mode === 'a' && gi === 0) || (mode === 'b' && gi === 1)) {
+      tog.querySelectorAll('.nhk-btn').forEach((b, bi) => {
+        b.classList.toggle('active', bi === maps[type]);
+      });
+    }
+  });
+  if (mode === 'a') calcA(); else calcB();
+}
+function calcA() {
+  const cost = parseFloat(document.getElementById('a-cost').value) || 0;
+  const price = parseFloat(document.getElementById('a-price').value) || 0;
+  const rate = getNHKRate(nhkState.a);
+  const gp = price - cost;
+  const gm = price > 0 ? gp / price * 100 : 0;
+  const royalty = price * rate;
+  const trueGP = gp - royalty;
+  const trueGM = price > 0 ? trueGP / price * 100 : 0;
+  document.getElementById('a-gp').textContent = '$' + gp.toFixed(2);
+  document.getElementById('a-gm').textContent = gm.toFixed(1) + '%';
+  document.getElementById('a-royalty').textContent = rate === 0 ? '$0.00 (none)' : '$' + royalty.toFixed(2) + ` (${(rate*100)}%)`;
+  document.getElementById('a-true-gm').textContent = trueGM.toFixed(1) + '%';
+}
+function calcB() {
+  const cost = parseFloat(document.getElementById('b-cost').value) || 0;
+  const targetGM = parseFloat(document.getElementById('b-target').value) / 100 || 0;
+  const rate = getNHKRate(nhkState.b);
+  // True GM: (price - cost - price*rate) / price = targetGM
+  // price*(1 - targetGM - rate) = cost
+  // price = cost / (1 - targetGM - rate)
+  const denom = 1 - targetGM - rate;
+  const price = denom > 0 ? cost / denom : 0;
+  const gp = price - cost;
+  const royalty = price * rate;
+  const trueGP = gp - royalty;
+  const trueGM = price > 0 ? trueGP / price * 100 : 0;
+  document.getElementById('b-price').textContent = '$' + price.toFixed(2);
+  document.getElementById('b-gp').textContent = '$' + gp.toFixed(2);
+  document.getElementById('b-royalty').textContent = rate === 0 ? '$0.00 (none)' : '$' + royalty.toFixed(2) + ` (${(rate*100)}%)`;
+  document.getElementById('b-true-gm').textContent = trueGM.toFixed(1) + '%';
+}
+
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.getElementById('page-proforma').style.display = tab === 'proforma' ? '' : 'none';
+  document.getElementById('page-menu').style.display = tab === 'menu' ? 'block' : 'none';
+  document.getElementById('page-actuals').style.display = tab === 'actuals' ? 'block' : 'none';
+  document.getElementById('tab-proforma').classList.toggle('active', tab === 'proforma');
+  document.getElementById('tab-menu').classList.toggle('active', tab === 'menu');
+  document.getElementById('tab-actuals').classList.toggle('active', tab === 'actuals');
+  if (tab === 'menu') initMenuPage();
+  if (tab === 'actuals') initActuals();
+}
+
+// ── MARGIN COLOR ──
+function gmClass(pct) {
+  if (pct >= 80) return 'gm-high';
+  if (pct >= 70) return 'gm-mid';
+  if (pct >= 60) return 'gm-low';
+  return 'gm-warn';
+}
+
+// ── RECALC A SINGLE ROW ──
+function recalcRow(input) {
+  const tr = input.closest('tr');
+  const inputs = tr.querySelectorAll('.menu-input');
+  const price = parseFloat(inputs[0]?.value) || 0;
+  const cost  = parseFloat(inputs[1]?.value) || 0;
+  const costPct = price > 0 ? (cost / price * 100) : 0;
+  const mgn = price - cost;
+  const mgnPct = price > 0 ? (mgn / price * 100) : 0;
+  tr.querySelector('.cost-pct').textContent = costPct.toFixed(1) + '%';
+  tr.querySelector('.margin-d').textContent = '$' + mgn.toFixed(2);
+  const mEl = tr.querySelector('.margin-pct');
+  mEl.textContent = mgnPct.toFixed(1) + '%';
+  mEl.className = 'margin-pct ' + gmClass(mgnPct);
+  recalcSection(tr.closest('tbody'));
+  autoSync();
+}
+
+// ── RECALC SECTION SUBTOTAL ──
+function recalcSection(tbody) {
+  const rows = tbody.querySelectorAll('tr[data-cat]');
+  let sumP = 0, sumC = 0, n = 0;
+  rows.forEach(r => {
+    const inputs = r.querySelectorAll('.menu-input');
+    const p = parseFloat(inputs[0]?.value) || 0;
+    const c = parseFloat(inputs[1]?.value) || 0;
+    if (p > 0) { sumP += p; sumC += c; n++; }
+  });
+  const sub = tbody.querySelector('.subtotal-row');
+  if (!sub || n === 0) return;
+  const avgP = sumP / n, avgC = sumC / n;
+  const avgCpct = avgP > 0 ? avgC / avgP * 100 : 0;
+  const avgMgn = avgP - avgC;
+  const avgMgnPct = avgP > 0 ? avgMgn / avgP * 100 : 0;
+  sub.querySelector('.sub-price').textContent = '$' + avgP.toFixed(2);
+  sub.querySelector('.sub-cost').textContent = '$' + avgC.toFixed(2);
+  sub.querySelector('.sub-cpct').textContent = avgCpct.toFixed(1) + '%';
+  sub.querySelector('.sub-mgnd').textContent = '$' + avgMgn.toFixed(2);
+  const mEl = sub.querySelector('.sub-mgnpct');
+  mEl.textContent = avgMgnPct.toFixed(1) + '%';
+  mEl.className = 'sub-mgnpct ' + gmClass(avgMgnPct);
+}
+
+// ── INIT MENU PAGE (first open) ──
+function initMenuPage() {
+  // Menu is now static — no recalc needed
+}
+
+// ── GET CATEGORY AVG ──
+function getCatAvg(tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return 0;
+  const rows = tbody.querySelectorAll('tr[data-cat]');
+  let sum = 0, n = 0;
+  rows.forEach(r => {
+    const p = parseFloat(r.querySelectorAll('.menu-input')[0]?.value) || 0;
+    if (p > 0) { sum += p; n++; }
+  });
+  return n > 0 ? sum / n : 0;
+}
+
+function getBlendedEntreeAvg() {
+  const bodies = ['tbody-plates', 'tbody-handhelds', 'tbody-kids'];
+  let sum = 0, n = 0;
+  bodies.forEach(id => {
+    const tbody = document.getElementById(id);
+    if (!tbody) return;
+    tbody.querySelectorAll('tr[data-cat]').forEach(r => {
+      const p = parseFloat(r.querySelectorAll('.menu-input')[0]?.value) || 0;
+      if (p > 0) { sum += p; n++; }
+    });
+  });
+  return n > 0 ? sum / n : 15.75;
+}
+
+// ── AUTO SYNC ──
+var syncTimer;
+function autoSync() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncToProforma, 1200);
+}
+
+function syncToProforma() {
+  const entreeAvg = getBlendedEntreeAvg();
+  const drinkAvg  = getCatAvg('tbody-drinks');
+  const dessertAvg = getCatAvg('tbody-sweets');
+  const ep = document.getElementById('entree-price');
+  const dp = document.getElementById('drinks-price');
+  const dsp = document.getElementById('dessert-price');
+  if (ep) ep.value = entreeAvg.toFixed(2);
+  if (dp && drinkAvg > 0) dp.value = drinkAvg.toFixed(2);
+  if (dsp && dessertAvg > 0) dsp.value = dessertAvg.toFixed(2);
+  if (typeof updateAll === 'function') updateAll();
+  const st = document.getElementById('sync-status');
+  if (st) { st.classList.add('show'); setTimeout(() => st.classList.remove('show'), 2000); }
+}
+
+document.addEventListener('DOMContentLoaded', checkSSOOnLoad);
+
+// ═══════════════════════════════════════════════════════════════
+// ACTUALS TAB
+// ═══════════════════════════════════════════════════════════════
+var API_BASE   = (location.hostname === 'localhost' || location.hostname === '100.77.96.68') ? `http://${location.hostname}:3600/api/domo/actuals` : 'https://geopulse-ai-production.up.railway.app/api/domo/actuals';
+var MERCH_API  = (location.hostname === 'localhost' || location.hostname === '100.77.96.68') ? `http://${location.hostname}:3600/api/domo/merch`    : 'https://geopulse-ai-production.up.railway.app/api/domo/merch';
+var LABOR_API   = (location.hostname === 'localhost' || location.hostname === '100.77.96.68') ? `http://${location.hostname}:3600/api/domo/labor`   : 'https://geopulse-ai-production.up.railway.app/api/domo/labor';
+var STATUS_API   = (location.hostname === 'localhost' || location.hostname === '100.77.96.68') ? `http://${location.hostname}:3600/api/domo/status`  : 'https://geopulse-ai-production.up.railway.app/api/domo/status';
+var JOURNAL_API  = (location.hostname === 'localhost' || location.hostname === '100.77.96.68') ? `http://${location.hostname}:3600/api/domo/journal` : 'https://geopulse-ai-production.up.railway.app/api/domo/journal';
+var PROJ_DAILY_LUNCH  = 1550;
+var PROJ_DAILY_DINNER = 2340;
+var PROJ_DAILY_TOTAL  = 3890;
+
+var actualsLoaded = false;
+var actualsData   = null;
+var chartData     = null;
+
+var ACTUALS_CACHE_KEY = 'domo_actuals_cache';
+var ACTUALS_RANGE_KEY = 'domo_actuals_range';
+
+function initActuals() {
+  loadJournal(); // load journal entries
+  // Show cached data immediately — only hit API when user presses Sync Now
+  if (actualsLoaded) return;
+  actualsLoaded = true;
+  try {
+    var cached = localStorage.getItem(ACTUALS_CACHE_KEY);
+    var cachedRange = localStorage.getItem(ACTUALS_RANGE_KEY);
+    if (cached) {
+      actualsData = JSON.parse(cached);
+      chartData   = cachedRange ? JSON.parse(cachedRange) : [];
+      renderActuals(actualsData.date);
+      return;
+    }
+  } catch(e) {}
+  // No cache yet — fetch once
+  loadActuals();
+}
+
+async function loadActuals(forceDate) {
+  var picker = document.getElementById('act-date-picker');
+  var date = forceDate || (picker ? picker.value : null) || new Date().toLocaleDateString('en-CA', {timeZone:'America/Los_Angeles'});
+  document.getElementById('act-spinner').style.display = 'flex';
+  document.getElementById('act-content').style.display = 'none';
+  document.getElementById('act-error').style.display = 'none';
+  try {
+    var res = await Promise.all([
+      fetch(API_BASE + '?date=' + date).then(r => r.json()),
+      fetch(API_BASE + '?range=7').then(r => r.json())
+    ]);
+    actualsData = res[0];
+    chartData   = res[1].range || [];
+    try {
+      localStorage.setItem(ACTUALS_CACHE_KEY, JSON.stringify(actualsData));
+      localStorage.setItem(ACTUALS_RANGE_KEY, JSON.stringify(chartData));
+    } catch(e) {}
+    renderActuals(date);
+  } catch(e) {
+    document.getElementById('act-error').style.display = 'block';
+    document.getElementById('act-error').textContent = 'Could not load actuals: ' + e.message;
+    document.getElementById('act-spinner').style.display = 'none';
+  }
+}
+
+function todayPDT() {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+}
+
+function setActualsLoading(on) {
+  document.getElementById('act-spinner').style.display = on ? 'flex' : 'none';
+  document.getElementById('act-content').style.display = on ? 'none'  : 'block';
+}
+
+function fmt$(n)   { return '$' + (n||0).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+function fmtPct(n) { return ((n||0)*100).toFixed(1) + '%'; }
+function variance(actual, proj) {
+  if (!proj) return { pct: 0, label: '—', cls: '' };
+  const pct = (actual - proj) / proj * 100;
+  const sign = pct >= 0 ? '+' : '';
+  const cls  = pct >= 5 ? 'act-pos' : pct <= -5 ? 'act-neg' : 'act-neu';
+  return { pct, label: sign + pct.toFixed(1) + '%', cls };
+}
+
+function renderActuals(date) {
+  const d = actualsData;
+  if (!d || d.error) {
+    document.getElementById('act-error').style.display = 'block';
+    document.getElementById('act-error').textContent = d?.error || 'No data';
+    return;
+  }
+
+  document.getElementById('act-sync-time').textContent =
+    'Synced ' + new Date(d.syncedAt).toLocaleString('en-US', { timeZone:'America/Los_Angeles', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+
+  // ── Revenue cards ──
+  const rows = [
+    { id: 'lunch',  label: 'Lunch',  data: d.lunch,  proj: PROJ_DAILY_LUNCH  },
+    { id: 'dinner', label: 'Dinner', data: d.dinner, proj: PROJ_DAILY_DINNER },
+    { id: 'total',  label: 'Total',  data: d.total,  proj: PROJ_DAILY_TOTAL  },
+  ];
+
+  rows.forEach(({ id, data, proj }) => {
+    const v = variance(data.revenue, proj);
+    setEl(`act-rev-${id}`,    fmt$(data.revenue));
+    setEl(`act-proj-${id}`,   fmt$(proj));
+    setEl(`act-var-${id}`,    v.label);
+    setEl(`act-orders-${id}`, data.orders);
+    setEl(`act-avg-${id}`,    fmt$(data.avgCheck));
+    const varEl = document.getElementById(`act-var-${id}`);
+    if (varEl) { varEl.className = 'act-variance ' + v.cls; }
+  });
+
+  // ── Attach rates ──
+  ['lunch','dinner','total'].forEach(dp => {
+    const a = d[dp].attach;
+    setEl(`act-att-drink-${dp}`,   fmtPct(a.drink));
+    setEl(`act-att-dessert-${dp}`, fmtPct(a.dessert));
+    setEl(`act-att-kids-${dp}`,    fmtPct(a.kids));
+    setEl(`act-att-items-${dp}`,   (a.avgItems||0).toFixed(1));
+    // merch attach
+    const ma = d[dp].merch.attach;
+    const maEl = document.getElementById(`act-att-merch-${dp}`);
+    if (maEl) maEl.textContent = fmtPct(ma.rate) + ' est.';
+  });
+
+  // ── Merch standalone ──
+  ['lunch','dinner','total'].forEach(dp => {
+    const m = d[dp].merch;
+    setEl(`act-merch-rev-${dp}`,   fmt$(m.revenue));
+    setEl(`act-merch-ord-${dp}`,   m.orders);
+    setEl(`act-merch-avg-${dp}`,   fmt$(m.avgTransaction));
+  });
+
+  // ── Top food items ──
+  renderItemTable('act-food-lunch',  d.lunch.topFood);
+  renderItemTable('act-food-dinner', d.dinner.topFood);
+  renderItemTable('act-food-total',  d.total.topFood);
+
+  // ── Top merch items ──
+  renderItemTable('act-merch-lunch',  d.lunch.topMerch);
+  renderItemTable('act-merch-dinner', d.dinner.topMerch);
+  renderItemTable('act-merch-total',  d.total.topMerch);
+
+  // ── 7-day chart ──
+  renderChart();
+}
+
+function setEl(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function renderItemTable(tbodyId, items) {
+  const el = document.getElementById(tbodyId);
+  if (!el) return;
+  if (!items || items.length === 0) {
+    el.innerHTML = '<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">No data</td></tr>';
+    return;
+  }
+  const maxUnits = items[0].units || 1;
+  el.innerHTML = items.map((item, i) => `
+    <tr>
+      <td style="font-size:12px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-right:6px">#${i+1}</span>
+        ${item.name}
+        <div style="margin-top:4px;height:3px;background:var(--border);border-radius:2px">
+          <div style="width:${(item.units/maxUnits*100).toFixed(0)}%;height:3px;background:var(--brown);border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">${item.units}</td>
+      <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">${fmt$(item.revenue)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderChart() {
+  const el = document.getElementById('act-chart-bars');
+  if (!el || !chartData || !chartData.length) return;
+  const projPerDay = PROJ_DAILY_TOTAL;
+  const maxRev = Math.max(...chartData.map(d => d.revenue), projPerDay, 1);
+
+  el.innerHTML = chartData.map(d => {
+    const lPct  = (d.lunch.revenue  / maxRev * 100).toFixed(1);
+    const dPct  = (d.dinner.revenue / maxRev * 100).toFixed(1);
+    const pPct  = (projPerDay       / maxRev * 100).toFixed(1);
+    const label = new Date(d.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'numeric', day:'numeric' });
+    return `
+      <div class="act-chart-col">
+        <div class="act-chart-bars-wrap">
+          <div class="act-chart-proj-line" style="bottom:${pPct}%" title="Projected: ${fmt$(projPerDay)}"></div>
+          <div class="act-chart-bar-dinner" style="height:${dPct}%" title="Dinner: ${fmt$(d.dinner.revenue)}"></div>
+          <div class="act-chart-bar-lunch"  style="height:${lPct}%" title="Lunch: ${fmt$(d.lunch.revenue)}"></div>
+        </div>
+        <div class="act-chart-label">${label}</div>
+        <div class="act-chart-val">${fmt$(d.revenue)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function setActualsDaypart(dp) {
+  ['lunch','dinner','total'].forEach(d => {
+    document.querySelectorAll(`.act-dp-pane[data-dp="${d}"]`).forEach(el => {
+      el.style.display = dp === 'all' || d === dp ? '' : 'none';
+    });
+  });
+  document.querySelectorAll('.act-dp-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.dp === dp);
+  });
+}
+
+
+
+// ── TABS / MERCH / PROJECTIONS ──
+
+// ── SWITCH TAB ──
+function switchTab(tab) {
+  ['proforma','menu','actuals','merch','projections','labor'].forEach(t => {
+    const pg = document.getElementById('page-' + t);
+    const tb = document.getElementById('tab-' + t);
+    if (pg) pg.style.display = 'none';
+    if (tb) tb.classList.remove('active');
+  });
+  const pg = document.getElementById('page-' + tab);
+  const tb = document.getElementById('tab-' + tab);
+  if (pg) pg.style.display = 'block';
+  if (tb) tb.classList.add('active');
+  if (tab === 'actuals')     { document.getElementById('act-date-picker').value = new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'}); initActuals(); }
+  if (tab === 'merch')       initMerch();
+  if (tab === 'projections') initProjections();
+  if (tab === 'labor')       initLabor();
+}
+
+// ── ACTUALS ──
+// API_BASE, MERCH_API, PROJ_DAILY_* defined in core script above
+actualsLoaded=false, actualsData=null, chartData=null;
+
+function initActuals() { if(actualsLoaded) return; actualsLoaded=true; loadActuals(); }
+
+async function loadActuals(forceDate) {
+  const picker=document.getElementById('act-date-picker');
+  const date=forceDate||(picker?picker.value:null)||new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
+  document.getElementById('act-spinner').style.display='flex';
+  document.getElementById('act-content').style.display='none';
+  document.getElementById('act-error').style.display='none';
+  try {
+    const [dayRes,rangeRes]=await Promise.all([fetch(`${API_BASE}?date=${date}`).then(r=>r.json()),fetch(`${API_BASE}?range=7`).then(r=>r.json())]);
+    actualsData=dayRes; chartData=rangeRes.range||[];
+    renderActuals(date);
+  } catch(e) {
+    document.getElementById('act-error').style.display='block';
+    document.getElementById('act-error').textContent='Could not load actuals: '+e.message;
+    document.getElementById('act-spinner').style.display='none';
+  }
+}
+
+function fmt$(n){'$'+(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+var fmt$f=n=>'$'+(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+var fmtPct=n=>((n||0)*100).toFixed(1)+'%';
+function variance(actual,proj){if(!proj)return{label:'—',cls:''};const pct=(actual-proj)/proj*100;const sign=pct>=0?'+':'';return{label:sign+pct.toFixed(1)+'%',cls:pct>=5?'act-pos':pct<=-5?'act-neg':'act-neu'};}
+function setEl(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+
+function renderActuals(date) {
+  const d=actualsData;
+  document.getElementById('act-spinner').style.display='none';
+  document.getElementById('act-content').style.display='block';
+  if(!d||d.error){document.getElementById('act-error').style.display='block';document.getElementById('act-error').textContent=d?.error||'No data';return;}
+  document.getElementById('act-sync-time').textContent='Synced '+new Date(d.syncedAt).toLocaleString('en-US',{timeZone:'America/Los_Angeles',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  [{id:'lunch',data:d.lunch,proj:PROJ_DAILY_LUNCH},{id:'dinner',data:d.dinner,proj:PROJ_DAILY_DINNER},{id:'total',data:d.total,proj:PROJ_DAILY_TOTAL}].forEach(({id,data,proj})=>{
+    const v=variance(data.revenue,proj);
+    setEl(`act-rev-${id}`,fmt$f(data.revenue));setEl(`act-proj-${id}`,fmt$f(proj));
+    setEl(`act-orders-${id}`,data.orders);setEl(`act-avg-${id}`,fmt$f(data.avgCheck));
+    const ve=document.getElementById(`act-var-${id}`);if(ve){ve.textContent=v.label;ve.className='act-variance '+v.cls;}
+  });
+  ['lunch','dinner','total'].forEach(dp=>{
+    const a=d[dp].attach;
+    setEl(`act-att-drink-${dp}`,fmtPct(a.drink));setEl(`act-att-dessert-${dp}`,fmtPct(a.dessert));
+    setEl(`act-att-kids-${dp}`,fmtPct(a.kids));setEl(`act-att-items-${dp}`,(a.avgItems||0).toFixed(1));
+    const ma=d[dp].merch.attach;
+    setEl(`act-att-merch-${dp}`,fmtPct(ma.rate)+' est.');
+    const m=d[dp].merch;
+    setEl(`act-merch-rev-${dp}`,fmt$f(m.revenue));setEl(`act-merch-ord-${dp}`,m.orders);
+    setEl(`act-merch-avg-${dp}`,fmt$f(m.avgTransaction));
+  });
+  renderItemTable('act-food-total',d.total.topFood);renderItemTable('act-food-lunch',d.lunch.topFood);renderItemTable('act-food-dinner',d.dinner.topFood);
+  renderItemTable('act-merch-total',d.total.topMerch);renderItemTable('act-merch-lunch',d.lunch.topMerch);renderItemTable('act-merch-dinner',d.dinner.topMerch);
+  renderChart();
+}
+
+function renderItemTable(tbodyId,items){
+  const el=document.getElementById(tbodyId);if(!el)return;
+  if(!items||!items.length){el.innerHTML='<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">No data</td></tr>';return;}
+  const mx=items[0].units||1;
+  el.innerHTML=items.map((item,i)=>`<tr><td style="font-size:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-right:6px">#${i+1}</span>${item.name}<div style="margin-top:3px;height:3px;background:var(--border);border-radius:2px"><div style="width:${(item.units/mx*100).toFixed(0)}%;height:3px;background:var(--brown);border-radius:2px"></div></div></td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">${item.units}</td><td style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px">${fmt$f(item.revenue)}</td></tr>`).join('');
+}
+
+function renderChart(){
+  const el=document.getElementById('act-chart-bars');if(!el||!chartData||!chartData.length)return;
+  const maxRev=Math.max(...chartData.map(d=>d.revenue),PROJ_DAILY_TOTAL,1);
+  el.innerHTML=chartData.map(d=>{
+    const lP=(d.lunch.revenue/maxRev*100).toFixed(1),dP=(d.dinner.revenue/maxRev*100).toFixed(1),pP=(PROJ_DAILY_TOTAL/maxRev*100).toFixed(1);
+    const lbl=new Date(d.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'});
+    // Check for journal entries on this date
+    const dayEntries = (journalEntries||[]).filter(e => e.date === d.date);
+    const flagHTML = dayEntries.length
+      ? `<div style="font-size:14px;cursor:pointer;margin-top:2px" title="${dayEntries.map(e=>e.title).join(', ')}">${dayEntries.map(e=>(TYPE_META[e.type]||TYPE_META.operational).icon).join('')}</div>`
+      : '';
+    return`<div class="act-chart-col"><div class="act-chart-bars-wrap"><div class="act-chart-proj-line" style="bottom:${pP}%"></div><div class="act-chart-bar-dinner" style="height:${dP}%"></div><div class="act-chart-bar-lunch" style="height:${lP}%"></div></div><div class="act-chart-label">${lbl}</div><div class="act-chart-val">${fmt$f(d.revenue)}</div>${flagHTML}</div>`;
+  }).join('');
+}
+
+function setAttachView(dp){['total','lunch','dinner'].forEach(d=>{const el=document.getElementById('attach-view-'+d);if(el)el.style.display=d===dp?'':'none';});document.querySelectorAll('.act-dp-tab[data-dp]').forEach(t=>{if(t.closest('#page-actuals .act-section:nth-child(3)'))t.classList.toggle('active',t.dataset.dp===dp);});}
+function setItemView(type,dp){['total','lunch','dinner'].forEach(d=>{const el=document.getElementById(type+'-view-'+d);if(el)el.style.display=d===dp?'':'none';});}
+
+// ── MERCH ──
+var merchandiseLoaded=false;
+var MERCH_CACHE_KEY='domo_merch_cache';
+
+function initMerch(){
+  if(merchandiseLoaded) return;
+  merchandiseLoaded=true;
+  try {
+    var cached=localStorage.getItem(MERCH_CACHE_KEY);
+    if(cached){ renderMerch(JSON.parse(cached)); return; }
+  } catch(e){}
+  loadMerch();
+}
+
+async function loadMerch(){
+  document.getElementById('merch-spinner').style.display='flex';
+  document.getElementById('merch-content').style.display='none';
+  try {
+    const data=await fetch(`${MERCH_API}?days=14`).then(r=>r.json());
+    try { localStorage.setItem(MERCH_CACHE_KEY, JSON.stringify(data)); } catch(e){}
+    renderMerch(data);
+  } catch(e){document.getElementById('merch-spinner').innerHTML=`<div style="color:var(--danger);font-size:13px">Error: ${e.message}</div>`;}
+}
+
+function renderMerch(data){
+  document.getElementById('merch-spinner').style.display='none';
+  document.getElementById('merch-content').style.display='block';
+  const grouped=data.grouped||{};
+  const grid=document.getElementById('merch-cat-grid');
+  grid.innerHTML='';
+  const catOrder=['Apparel','Collectibles','Plush','Accessories','Bags'];
+  const allCats=[...new Set([...catOrder,...Object.keys(grouped)])];
+  for(const cat of allCats){
+    const subs=grouped[cat];if(!subs||!Object.keys(subs).length)continue;
+    const card=document.createElement('div');card.className='merch-cat-card';
+    card.innerHTML=`<div class="merch-cat-hdr"><div class="merch-cat-name">${cat}</div></div>`;
+    for(const[sub,items]of Object.entries(subs)){
+      const subDiv=document.createElement('div');subDiv.className='merch-subcat';
+      subDiv.innerHTML=`<div class="merch-subcat-name">${sub}</div>`;
+      items.forEach(item=>{
+        const row=document.createElement('div');
+        row.innerHTML=`<div class="merch-item-row"><span class="merch-item-name">${item.name}</span><span class="merch-item-price">$${item.price.toFixed(2)}</span></div>`;
+        subDiv.appendChild(row);
+      });
+      card.appendChild(subDiv);
+    }
+    grid.appendChild(card);
+  }
+}
+
+// ── PROJECTIONS ──
+var projYear=new Date().getFullYear(),projMonth=new Date().getMonth(),projModalDate=null;
+var projOverrides=JSON.parse(localStorage.getItem('domo_proj_overrides')||'{}');
+
+function initProjections(){
+  seedSmartProjections();
+  // Reload overrides from localStorage after seeding
+  try { projOverrides = JSON.parse(localStorage.getItem('domo_proj_overrides')||'{}'); } catch(e){}
+  renderCalendar();
+}
+
+function getProjSettings(){return{open:document.getElementById('proj-open')?.value||'10:00',lastseating:document.getElementById('proj-lastseating')?.value||'20:00',seats:+(document.getElementById('proj-seats')?.value||54),tableSize:+(document.getElementById('proj-table-size')?.value||2.2),avgFb:+(document.getElementById('proj-avg-fb')?.value||17.5),avgMerch:+(document.getElementById('proj-avg-merch')?.value||15),merchAttach:+(document.getElementById('proj-merch-attach')?.value||15),turnLunch:+(document.getElementById('proj-turn-lunch')?.value||45),turnDinner:+(document.getElementById('proj-turn-dinner')?.value||60),occ:Object.fromEntries([0,1,2,3,4,5,6].map(d=>[d,+(document.getElementById(`occ-${d}`)?.value||60)]))}}
+
+function timeToHours(t){const[h,m]=t.split(':').map(Number);return h+m/60;}
+
+function projectDay(dateStr,s){
+  // Pre-opening — no projections before June 13
+  if(dateStr < '2026-06-13') return{revenue:0,covers:0,closed:true,label:'Pre-Opening'};
+  const ov=projOverrides[dateStr];
+  if(ov?.closed)return{revenue:0,covers:0,closed:true,label:ov.label||'Closed'};
+  const open=timeToHours(ov?.open||s.open),lastSeating=timeToHours(ov?.lastseating||s.lastseating);
+  const occ=ov?.occ!=null?ov.occ/100:(s.occ[new Date(dateStr+'T12:00:00').getDay()]/100);
+  const tables=Math.floor(s.seats/s.tableSize);
+  const lunchHrs=Math.max(0,Math.min(16,lastSeating)-Math.max(open,10));
+  const dinnerHrs=Math.max(0,lastSeating-Math.max(open,16));
+  const lunchCovers=Math.round(tables*(lunchHrs*60/s.turnLunch)*occ);
+  const dinnerCovers=Math.round(tables*(dinnerHrs*60/s.turnDinner)*occ);
+  const totalCovers=lunchCovers+dinnerCovers;
+  const revenue=totalCovers*s.avgFb+totalCovers*(s.merchAttach/100)*s.avgMerch;
+  return{revenue,covers:totalCovers,occ:Math.round(occ*100),label:ov?.label||'',overridden:!!ov};
+}
+
+function renderCalendar(){
+  const s=getProjSettings();
+  const cal=document.getElementById('proj-calendar');if(!cal)return;
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('proj-month-title').textContent=months[projMonth]+' '+projYear;
+  const firstDay=new Date(projYear,projMonth,1).getDay();
+  const daysInMonth=new Date(projYear,projMonth+1,0).getDate();
+  const todayStr=new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
+  let html=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="proj-cal-dow">${d}</div>`).join('');
+  for(let i=0;i<firstDay;i++)html+='<div class="proj-day empty"></div>';
+  let mRev=0,mCovers=0,opDays=0;
+  const projs=[];
+  for(let d=1;d<=daysInMonth;d++){const ds=`${projYear}-${String(projMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const p=projectDay(ds,s);projs.push(p.revenue);if(!p.closed){mRev+=p.revenue;mCovers+=p.covers;opDays++;}}
+  const maxRev=Math.max(...projs,1),midRev=maxRev*.6;
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${projYear}-${String(projMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const p=projectDay(ds,s);
+    let cls='proj-day';
+    if(ds===todayStr)cls+=' today';
+    if(p.closed)cls+=' closed';
+    else if(p.overridden)cls+=' overridden';
+    else if(p.revenue>=maxRev*.8)cls+=' high';
+    else if(p.revenue<midRev)cls+=' low';
+    html+=`<div class="${cls}" onclick="openOverrideModal('${ds}')"><div class="proj-day-num">${d}</div>${p.closed?'<div style="font-size:10px;color:#DC2626;font-weight:700">CLOSED</div>':`<div class="proj-day-rev">$${p.revenue.toLocaleString('en-US',{maximumFractionDigits:0})}</div><div class="proj-day-covers">${p.covers} covers</div><div class="proj-day-occ">${p.occ}% occ</div>`}${p.label?`<div class="proj-day-label">${p.label}</div>`:''}</div>`;
+  }
+  cal.innerHTML=html;
+  setEl('proj-sum-rev','$'+mRev.toLocaleString('en-US',{maximumFractionDigits:0}));
+  setEl('proj-sum-covers',mCovers.toLocaleString());
+  setEl('proj-sum-days',opDays);
+  setEl('proj-sum-avg-day',opDays>0?'$'+(mRev/opDays).toLocaleString('en-US',{maximumFractionDigits:0}):'—');
+}
+
+function projChangeMonth(d){projMonth+=d;if(projMonth<0){projMonth=11;projYear--;}if(projMonth>11){projMonth=0;projYear++;}renderCalendar();}
+function projGoToday(){const n=new Date();projYear=n.getFullYear();projMonth=n.getMonth();renderCalendar();}
+
+function openOverrideModal(ds){
+  projModalDate=ds;const ov=projOverrides[ds]||{};const s=getProjSettings();
+  const d=new Date(ds+'T12:00:00');
+  document.getElementById('proj-modal-date-title').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('ov-open').value=ov.open||s.open;
+  document.getElementById('ov-lastseating').value=ov.lastseating||s.lastseating;
+  document.getElementById('ov-close').value=ov.close||'21:00';
+  document.getElementById('ov-occ').value=ov.occ!=null?ov.occ:'';
+  document.getElementById('ov-label').value=ov.label||'';
+  document.getElementById('proj-closed-check').checked=!!ov.closed;
+  document.getElementById('proj-modal-fields').style.display=ov.closed?'none':'';
+  document.getElementById('proj-modal').classList.add('open');
+}
+function toggleClosedMode(){document.getElementById('proj-modal-fields').style.display=document.getElementById('proj-closed-check').checked?'none':'';}
+function closeModal(){document.getElementById('proj-modal').classList.remove('open');projModalDate=null;}
+function saveOverride(){
+  if(!projModalDate)return;
+  const closed=document.getElementById('proj-closed-check').checked;
+  const ov={closed};
+  if(!closed){ov.open=document.getElementById('ov-open').value;ov.lastseating=document.getElementById('ov-lastseating').value;ov.close=document.getElementById('ov-close').value;const o=document.getElementById('ov-occ').value;if(o!=='')ov.occ=+o;}
+  const lbl=document.getElementById('ov-label').value.trim();if(lbl)ov.label=lbl;
+  projOverrides[projModalDate]=ov;localStorage.setItem('domo_proj_overrides',JSON.stringify(projOverrides));
+  closeModal();renderCalendar();
+}
+function clearOverride(){if(!projModalDate)return;delete projOverrides[projModalDate];localStorage.setItem('domo_proj_overrides',JSON.stringify(projOverrides));closeModal();renderCalendar();}
+function clearAllOverrides(){if(!confirm('Clear all date overrides?'))return;projOverrides={};localStorage.removeItem('domo_proj_overrides');renderCalendar();}
+function saveProjectionSettings(){localStorage.setItem('domo_proj_settings',JSON.stringify(getProjSettings()));renderCalendar();}
+document.getElementById('proj-modal')?.addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// Init Pro Forma on load
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('act-date-picker').value = new Date().toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});
+});
+
+
+</script>
+<script>
+
+// ═══════════════════════════════════════════════
+// LABOR TAB
+// ═══════════════════════════════════════════════
+var laborLoaded = false;
+var laborData   = null;
+var LABOR_CACHE_KEY = 'domo_labor_cache';
+
+function initLabor() {
+  if (laborLoaded) return;
+  laborLoaded = true;
+  // Try cache first
+  try {
+    var cached = localStorage.getItem(LABOR_CACHE_KEY);
+    if (cached) {
+      laborData = JSON.parse(cached);
+      renderLabor();
+      return;
+    }
+  } catch(e) {}
+  loadLabor();
+}
+
+function setLaborPeriod(start, end) {
+  document.getElementById('labor-start').value = start;
+  document.getElementById('labor-end').value   = end;
+  document.querySelectorAll('.labor-preset').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  loadLabor();
+}
+
+async function loadLabor() {
+  var start = document.getElementById('labor-start').value;
+  var end   = document.getElementById('labor-end').value;
+  if (!start || !end) return;
+  document.getElementById('labor-spinner').style.display = 'flex';
+  document.getElementById('labor-content').style.display = 'none';
+  document.getElementById('labor-error').style.display = 'none';
+  try {
+    laborData = await fetch(LABOR_API + '?startDate=' + start + '&endDate=' + end).then(r => r.json());
+    if (laborData.error) throw new Error(laborData.error);
+    try { localStorage.setItem(LABOR_CACHE_KEY, JSON.stringify(laborData)); } catch(e) {}
+    renderLabor();
+  } catch(e) {
+    document.getElementById('labor-error').style.display = 'block';
+    document.getElementById('labor-error').textContent = 'Could not load labor data: ' + e.message;
+    document.getElementById('labor-spinner').style.display = 'none';
+  }
+}
+
+function pctClass(pct) {
+  if (pct <= 30) return 'pct-good';
+  if (pct <= 40) return 'pct-warn';
+  return 'pct-bad';
+}
+
+function kpiClass(pct) {
+  if (pct <= 30) return 'good';
+  if (pct <= 40) return 'warn';
+  return 'danger';
+}
+
+function renderLabor() {
+  document.getElementById('labor-spinner').style.display = 'none';
+  document.getElementById('labor-content').style.display = 'block';
+  if (!laborData || laborData.error) return;
+
+  var t = laborData.totals;
+  var days = laborData.days;
+
+  // KPIs
+  document.getElementById('lk-total-rev').textContent   = '$' + t.totalRevenue.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('lk-fb-cogs').textContent     = '$' + t.fbCogs.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('lk-labor-cost').textContent  = '$' + t.wageCost.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('lk-labor-pct').textContent   = t.laborPct.toFixed(1) + '%';
+  document.getElementById('lk-total-hrs').textContent   = t.totalHours.toFixed(0) + 'h';
+  var lkCard = document.getElementById('lk-labor-card');
+  lkCard.className = 'labor-kpi ' + kpiClass(t.laborPct);
+
+  // P&L summary
+  var fbGp  = t.fbRevenue - t.fbCogs;
+  var fbGpPct = t.fbRevenue > 0 ? fbGp / t.fbRevenue * 100 : 0;
+  var contribAfterLabor = t.totalRevenue - t.fbCogs - t.wageCost;
+  var contribPct = t.totalRevenue > 0 ? contribAfterLabor / t.totalRevenue * 100 : 0;
+  var plBody = document.getElementById('labor-pl-body');
+  plBody.innerHTML = [
+    ['section', 'Revenue', '', ''],
+    ['row',     'F&amp;B Revenue',    '$'+t.fbRevenue.toLocaleString('en-US',{maximumFractionDigits:0}),    ''],
+    ['row',     'Merch Revenue',  '$'+t.merchRevenue.toLocaleString('en-US',{maximumFractionDigits:0}),  ''],
+    ['total',   'Total Revenue',  '$'+t.totalRevenue.toLocaleString('en-US',{maximumFractionDigits:0}),  '100%'],
+    ['section', 'Cost of Goods', '', ''],
+    ['row',     'F&amp;B COGS (est.)', '($'+t.fbCogs.toLocaleString('en-US',{maximumFractionDigits:0})+')', (t.fbRevenue>0?(t.fbCogs/t.fbRevenue*100).toFixed(1)+'%':'—')],
+    ['row',     'Merch COGS',    '[ Enter costs in Merch tab ]', '—'],
+    ['total',   'Est. Gross Profit (F&amp;B)', '$'+fbGp.toLocaleString('en-US',{maximumFractionDigits:0}), fbGpPct.toFixed(1)+'%'],
+    ['section', 'Labor', '', ''],
+    ['row',     'Regular Wages',  '$'+t.regularHours.toFixed(0)+'h · $'+(t.wageCost*(t.regularHours/Math.max(t.totalHours,1))).toLocaleString('en-US',{maximumFractionDigits:0}), ''],
+    ['row',     'Overtime',      t.overtimeHours.toFixed(1)+'h', ''],
+    ['total',   'Total Labor',   '($'+t.wageCost.toLocaleString('en-US',{maximumFractionDigits:0})+')', t.laborPct.toFixed(1)+'%'],
+    ['highlight','Contribution Margin (after F&amp;B COGS + Labor)', '$'+contribAfterLabor.toLocaleString('en-US',{maximumFractionDigits:0}), contribPct.toFixed(1)+'%'],
+  ].map(([type, label, val, pct]) => {
+    if (type === 'section') return `<tr class="section"><td colspan="3">${label}</td></tr>`;
+    var cls = type === 'total' ? 'total' : type === 'highlight' ? 'highlight' : '';
+    return `<tr class="${cls}"><td>${label}</td><td>${pct}</td><td>${val}</td></tr>`;
+  }).join('');
+
+  // Daily breakdown
+  var dayBody = document.getElementById('labor-daily-body');
+  dayBody.innerHTML = days.map(d => {
+    var pct = d.laborPct;
+    var pcls = pctClass(pct);
+    return `<tr>
+      <td>${d.date}</td>
+      <td>${d.dayOfWeek}</td>
+      <td>$${d.revenue.fbRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+      <td>$${d.revenue.merchRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+      <td>$${d.revenue.totalRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+      <td style="color:var(--muted)">($${d.revenue.fbCogs.toLocaleString('en-US',{maximumFractionDigits:0})})</td>
+      <td>${d.labor.totalHours.toFixed(1)}h</td>
+      <td>$${d.labor.wageCost.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+      <td class="${pcls}">${pct.toFixed(1)}%</td>
+      <td>${d.labor.staffCount}</td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td colspan="2">TOTAL</td>
+    <td>$${t.fbRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+    <td>$${t.merchRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+    <td>$${t.totalRevenue.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+    <td style="color:var(--muted)">($${t.fbCogs.toLocaleString('en-US',{maximumFractionDigits:0})})</td>
+    <td>${t.totalHours.toFixed(1)}h</td>
+    <td>$${t.wageCost.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+    <td class="${pctClass(t.laborPct)}">${t.laborPct.toFixed(1)}%</td>
+    <td>—</td>
+  </tr>`;
+
+  // OT / DT / BC section
+  var otHours = t.overtimeHours || 0;
+  var dtHours = t.doubleOtHours || 0;
+  var bcCount = t.bcViolations  || 0;
+  var bcCostT = t.bcCost        || 0;
+  // OT premium cost = OT hours × avg_wage × 0.5 (premium only, base already counted)
+  var avgWage = t.totalHours > 0 ? t.wageCost / t.totalHours : 17;
+  var otCost  = otHours * avgWage * 0.5;
+  var dtCost  = dtHours * avgWage * 1.0;
+
+  document.getElementById('ot-hours').textContent = otHours.toFixed(1) + 'h';
+  document.getElementById('ot-cost').textContent  = '$' + otCost.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('dt-hours').textContent = dtHours.toFixed(1) + 'h';
+  document.getElementById('dt-cost').textContent  = '$' + dtCost.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('bc-count').textContent = bcCount;
+  document.getElementById('bc-cost').textContent  = '$' + bcCostT.toLocaleString('en-US', {maximumFractionDigits:0});
+
+  // OT/DT/BC detail text
+  document.getElementById('ot-detail').innerHTML = otHours > 0
+    ? '<span style="color:var(--warning);font-weight:600">' + otHours.toFixed(1) + ' OT hours</span> this period · $' + otCost.toLocaleString('en-US',{maximumFractionDigits:0}) + ' premium cost'
+    : '<span style="color:var(--success)">No OT this period ✅</span>';
+  document.getElementById('dt-detail').innerHTML = dtHours > 0
+    ? '<span style="color:var(--danger);font-weight:600">' + dtHours.toFixed(1) + ' DT hours</span> detected · $' + dtCost.toLocaleString('en-US',{maximumFractionDigits:0}) + ' premium · Review scheduling'
+    : '<span style="color:var(--success)">No DT detected ✅</span>';
+  document.getElementById('bc-detail').innerHTML = bcCount > 0
+    ? '<span style="color:var(--danger);font-weight:600">' + bcCount + ' violations</span> · $' + bcCostT.toLocaleString('en-US',{maximumFractionDigits:0}) + ' cost · <span style="color:var(--muted)">Note: Toast break tracking may undercount — see payroll for exact figure</span>'
+    : '<span style="color:var(--success)">No violations recorded in Toast ✅</span><div style="color:var(--muted);font-size:11px;margin-top:4px">Cross-check with payroll for accuracy</div>';
+
+  // Daily OT/DT/BC table
+  var otBody = document.getElementById('ot-dt-bc-body');
+  otBody.innerHTML = days.map(d => {
+    var lab = d.labor;
+    var ot  = lab.overtimeHours || 0;
+    var dt  = lab.doubleOtHours || 0;
+    var bc  = lab.bcViolations  || 0;
+    var bcc = lab.bcCost        || 0;
+    var dAvgW = lab.totalHours > 0 ? lab.wageCost / lab.totalHours : avgWage;
+    var otc = ot * dAvgW * 0.5;
+    var dtc = dt * dAvgW * 1.0;
+    var extra = otc + dtc + bcc;
+    var extraCls = extra > 200 ? 'pct-bad' : extra > 50 ? 'pct-warn' : '';
+    return '<tr>' +
+      '<td>' + d.date + '</td>' +
+      '<td>' + d.dayOfWeek + '</td>' +
+      '<td>' + lab.regularHours.toFixed(1) + 'h</td>' +
+      '<td class="' + (ot > 0 ? 'pct-warn' : '') + '">' + ot.toFixed(1) + 'h</td>' +
+      '<td class="' + (ot > 0 ? 'pct-warn' : '') + '">' + (ot > 0 ? '$' + otc.toLocaleString('en-US',{maximumFractionDigits:0}) : '—') + '</td>' +
+      '<td class="' + (dt > 0 ? 'pct-bad' : '') + '">' + dt.toFixed(1) + 'h</td>' +
+      '<td class="' + (dt > 0 ? 'pct-bad' : '') + '">' + (dt > 0 ? '$' + dtc.toLocaleString('en-US',{maximumFractionDigits:0}) : '—') + '</td>' +
+      '<td class="' + (bc > 0 ? 'pct-bad' : '') + '">' + (bc > 0 ? bc + ' ⚠️' : '—') + '</td>' +
+      '<td class="' + (bc > 0 ? 'pct-bad' : '') + '">' + (bc > 0 ? '$' + bcc.toLocaleString('en-US',{maximumFractionDigits:0}) : '—') + '</td>' +
+      '<td class="' + extraCls + '">' + (extra > 0 ? '$' + extra.toLocaleString('en-US',{maximumFractionDigits:0}) : '—') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  // By role — aggregate across days
+  var roleMap = {};
+  var numDays = days.filter(d => d.labor.totalHours > 0).length || 1;
+  days.forEach(d => {
+    Object.entries(d.labor.byRole || {}).forEach(([role, data]) => {
+      if (!roleMap[role]) roleMap[role] = {hours:0, cost:0, staffDays:0};
+      roleMap[role].hours += data.hours;
+      roleMap[role].cost  += data.cost;
+      roleMap[role].staffDays += data.staffCount;
+    });
+  });
+  var roleBody = document.getElementById('labor-role-body');
+  roleBody.innerHTML = Object.entries(roleMap)
+    .sort((a,b) => b[1].cost - a[1].cost)
+    .map(([role, data]) => {
+      var rolePct = t.wageCost > 0 ? data.cost / t.wageCost * 100 : 0;
+      var avgStaff = (data.staffDays / numDays).toFixed(1);
+      return `<tr>
+        <td>${role}</td>
+        <td>${data.hours.toFixed(1)}h</td>
+        <td>$${data.cost.toLocaleString('en-US',{maximumFractionDigits:0})}</td>
+        <td>${rolePct.toFixed(1)}%</td>
+        <td>${avgStaff}</td>
+      </tr>`;
+    }).join('');
+}
+
+</script>
+
+<script>
+// ═══════════════════════════════════════════════
+// PRE-LOAD ALL DATA ON LOGIN
+// ═══════════════════════════════════════════════
+var PRELOAD_STATUS_KEY = 'domo_preload_status';
+
+async function preloadAllData() {
+  if (typeof fetch === 'undefined') return; // guard for non-browser envs
+  var today = new Date().toLocaleDateString('en-CA', {timeZone:'America/Los_Angeles'});
+  // Calculate current and last pay periods (bi-weekly Mon-Sun)
+  var d = new Date();
+  // Find last Monday
+  var dow = d.getDay(); // 0=Sun
+  var lastMon = new Date(d); lastMon.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+  var lastSun = new Date(lastMon); lastSun.setDate(lastMon.getDate() - 1);
+  var periodStart = new Date(lastSun); periodStart.setDate(lastSun.getDate() - 13);
+  var periodEnd   = lastSun;
+  var ps = periodStart.toLocaleDateString('en-CA');
+  var pe = periodEnd.toLocaleDateString('en-CA');
+
+  var preloads = [
+    // Actuals: today + last 7 days
+    fetch(API_BASE + '?date=' + today).then(r => r.json()).then(d => {
+      try { localStorage.setItem(ACTUALS_CACHE_KEY, JSON.stringify(d)); } catch(e){}
+    }),
+    fetch(API_BASE + '?range=7').then(r => r.json()).then(d => {
+      try { localStorage.setItem(ACTUALS_RANGE_KEY, JSON.stringify(d.range||[])); } catch(e){}
+    }),
+    // Merch catalog
+    fetch(MERCH_API + '?days=14').then(r => r.json()).then(d => {
+      try { localStorage.setItem(MERCH_CACHE_KEY, JSON.stringify(d)); } catch(e){}
+    }),
+    // Labor: current pay period
+    fetch(LABOR_API + '?startDate=' + ps + '&endDate=' + pe).then(r => r.json()).then(d => {
+      try { localStorage.setItem(LABOR_CACHE_KEY, JSON.stringify(d)); } catch(e){}
+    }),
+  ];
+
+  // Fire and forget — don't block UI
+  Promise.allSettled(preloads).then(results => {
+    var ok = results.filter(r => r.status === 'fulfilled').length;
+    var ts = new Date().toISOString();
+    try { localStorage.setItem(PRELOAD_STATUS_KEY, JSON.stringify({ loadedAt: ts, datasets: ok, total: preloads.length })); } catch(e){}
+    console.log('[Domo Portal] Pre-loaded ' + ok + '/' + preloads.length + ' datasets at ' + ts);
+  });
+}
+</script>
+
+
+<script>
+// ═══════════════════════════════════════════════
+// OPERATIONS JOURNAL
+// ═══════════════════════════════════════════════
+var JOURNAL_LS_KEY  = 'domo_journal_entries';
+var journalEntries  = [];
+
+var TYPE_META = {
+  operational: { label:'Operational', icon:'⚙️',  color:'#2563EB' },
+  staffing:    { label:'Staffing',    icon:'👥',  color:'#7C3AED' },
+  menu:        { label:'Menu',        icon:'🍽',  color:'#D97706' },
+  emergency:   { label:'Emergency',  icon:'🚨',  color:'#DC2626' },
+  event:       { label:'Event',      icon:'🏆',  color:'#16A34A' },
+};
+
+function loadJournal() {
+  try {
+    var ls = localStorage.getItem(JOURNAL_LS_KEY);
+    if (ls) journalEntries = JSON.parse(ls);
+  } catch(e) { journalEntries = []; }
+
+  // Seed first entry if empty
+  if (!journalEntries.length) {
+    journalEntries = [{
+      id: '1750723200000',
+      date: '2026-06-23',
+      time: '15:00',
+      type: 'operational',
+      title: 'Table Configuration Change',
+      notes: 'Added 10 two-tops, removed 5 four-tops. New layout: 11 two-tops + 7 four-tops = 18 tables, 50 seats. Previous: mixed config, 54 seats. Reason: majority of guests are parties of 2 — eliminating wasted seats and improving turn efficiency.',
+      createdAt: '2026-06-23T22:00:00.000Z'
+    }];
+    saveJournalLocal();
+    // Also post to server
+    if (typeof fetch !== 'undefined') {
+      fetch(JOURNAL_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(journalEntries[0]) }).catch(()=>{});
+    }
+  }
+  renderJournal();
+  // Refresh chart to show flags
+  if (chartData && chartData.length) renderChart();
+}
+
+function saveJournalLocal() {
+  try { localStorage.setItem(JOURNAL_LS_KEY, JSON.stringify(journalEntries)); } catch(e) {}
+}
+
+function renderJournal() {
+  var el = document.getElementById('journal-list');
+  if (!el) return;
+  if (!journalEntries.length) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">No entries yet. Add one to track operational changes.</div>';
+    return;
+  }
+  var sorted = [...journalEntries].sort((a,b) => (b.date+b.time).localeCompare(a.date+a.time));
+  el.innerHTML = sorted.map(e => {
+    var meta = TYPE_META[e.type] || TYPE_META.operational;
+    var d = new Date(e.date + 'T12:00:00');
+    var dateLabel = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+    return `<div style="display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);align-items:flex-start">
+      <div style="flex-shrink:0;width:44px;height:44px;border-radius:10px;background:${meta.color}15;display:flex;align-items:center;justify-content:center;font-size:20px">${meta.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700">${e.title}</span>
+          <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:${meta.color}15;color:${meta.color}">${meta.label}</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${dateLabel} &middot; ${e.time}</div>
+        ${e.notes ? `<div style="font-size:12px;color:var(--text);line-height:1.5">${e.notes}</div>` : ''}
+      </div>
+      <button onclick="deleteJournalEntry('${e.id}')" style="flex-shrink:0;background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;opacity:.5" title="Delete">&#x2715;</button>
+    </div>`;
+  }).join('') + '<div style="padding:12px 20px;font-size:11px;color:var(--muted)">' + journalEntries.length + ' entries · Synced to server</div>';
+}
+
+function openJournalModal() {
+  var today = new Date().toLocaleDateString('en-CA', {timeZone:'America/Los_Angeles'});
+  var now   = new Date().toLocaleTimeString('en-US', {timeZone:'America/Los_Angeles', hour:'2-digit', minute:'2-digit', hour12:false});
+  document.getElementById('jnl-date').value  = today;
+  document.getElementById('jnl-time').value  = now;
+  document.getElementById('jnl-type').value  = 'operational';
+  document.getElementById('jnl-title').value = '';
+  document.getElementById('jnl-notes').value = '';
+  document.getElementById('journal-modal').style.display = 'flex';
+}
+
+function closeJournalModal() {
+  document.getElementById('journal-modal').style.display = 'none';
+}
+
+async function saveJournalEntry() {
+  var entry = {
+    id:    Date.now().toString(),
+    date:  document.getElementById('jnl-date').value,
+    time:  document.getElementById('jnl-time').value,
+    type:  document.getElementById('jnl-type').value,
+    title: document.getElementById('jnl-title').value.trim(),
+    notes: document.getElementById('jnl-notes').value.trim(),
+    createdAt: new Date().toISOString(),
+  };
+  if (!entry.title) { alert('Please enter a title.'); return; }
+  journalEntries.push(entry);
+  saveJournalLocal();
+  closeJournalModal();
+  renderJournal();
+  if (chartData && chartData.length) renderChart();
+  // Post to server
+  if (typeof fetch !== 'undefined') {
+    fetch(JOURNAL_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(entry) }).catch(()=>{});
+  }
+}
+
+function deleteJournalEntry(id) {
+  if (!confirm('Delete this entry?')) return;
+  journalEntries = journalEntries.filter(e => e.id !== id);
+  saveJournalLocal();
+  renderJournal();
+  if (chartData && chartData.length) renderChart();
+  if (typeof fetch !== 'undefined') {
+    fetch(JOURNAL_API + '?id=' + id, { method:'DELETE' }).catch(()=>{});
+  }
+}
+
+document.getElementById('journal-modal')?.addEventListener('click', function(e) {
+  if (e.target === this) closeJournalModal();
+});
+</script>
+
+</body>
+</html><script>
+// ═══════════════════════════════════════════════════════════
+// PROJECTED vs ACTUAL TABLE
+// ═══════════════════════════════════════════════════════════
+var OPENING_DATE = '2026-06-13';
+var SEATS = 50;
+var LUNCH_MAX_COVERS  = 400; // 50 seats × 6h / 0.75h turn
+var DINNER_MAX_COVERS = 250; // 50 seats × 5h / 1h turn
+var DAY_MAX_COVERS    = LUNCH_MAX_COVERS + DINNER_MAX_COVERS; // 650
+
+function buildDateSince(startDate) {
+  var dates = [], cur = new Date(startDate + 'T12:00:00');
+  var today = new Date();
+  today.setHours(12,0,0,0);
+  while (cur <= today) {
+    dates.push(cur.toLocaleDateString('en-CA'));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return dates;
+}
+
+function renderPVA() {
+  var tbody = document.getElementById('pva-tbody');
+  if (!tbody) return;
+
+  var settings = typeof getProjSettings === 'function' ? getProjSettings() : null;
+  var overrides = typeof projOverrides !== 'undefined' ? projOverrides : {};
+  var actualsCache = {};
+  try {
+    var cached = localStorage.getItem(ACTUALS_CACHE_KEY);
+    if (cached) {
+      var d = JSON.parse(cached);
+      if (d && d.date) actualsCache[d.date] = d;
+    }
+    // Also check range cache
+    var range = localStorage.getItem(ACTUALS_RANGE_KEY);
+    if (range) {
+      JSON.parse(range).forEach(function(r) { actualsCache[r.date] = r; });
+    }
+  } catch(e) {}
+
+  var dates = buildDateSince(OPENING_DATE);
+  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var rows = '';
+  var totProjCov=0, totActCov=0, totProjRev=0, totActRev=0, actDays=0;
+
+  dates.forEach(function(ds) {
+    var d = new Date(ds + 'T12:00:00');
+    var dow = DOW[d.getDay()];
+    var dateLabel = d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+
+    // Projected from Projections engine
+    var proj = settings ? projectDay(ds, settings) : null;
+    var projCov = proj ? proj.covers : 0;
+    var projRev = proj ? proj.revenue : 0;
+    var projOcc = projCov > 0 ? Math.round(projCov / DAY_MAX_COVERS * 100) : (proj ? proj.occ : 0);
+
+    // Actual from cache
+    var act = actualsCache[ds];
+    var actCov  = act && act.total ? (act.total.totalCovers || act.orders || 0) : null;
+    var actRev  = act && act.total ? act.total.revenue : (act && act.revenue ? act.revenue : null);
+    var actOcc  = actCov !== null ? Math.round(actCov / DAY_MAX_COVERS * 100) : null;
+
+    // Accumulate totals
+    totProjCov += projCov; totProjRev += projRev;
+    if (actCov !== null) { totActCov += actCov; totActRev += (actRev||0); actDays++; }
+
+    // Delta calculations
+    var dCov = actCov !== null ? actCov - projCov : null;
+    var dRev = actRev !== null ? actRev - projRev : null;
+    var varPct = (dRev !== null && projRev > 0) ? dRev / projRev * 100 : null;
+
+    var varCls = varPct === null ? '' : varPct > 50 ? 'color:#D97706;font-weight:700' : varPct > 0 ? 'color:var(--success);font-weight:700' : varPct > -10 ? 'color:var(--warning);font-weight:700' : 'color:var(--danger);font-weight:700';
+    var varFlag = varPct === null ? '' : varPct > 50 ? ' &#x1F525;' : varPct > 0 ? ' &#x2705;' : varPct > -10 ? ' &#x26A0;&#xFE0F;' : ' &#x1F534;';
+
+    var na = '<span style="color:var(--muted)">—</span>';
+
+    rows += '<tr style="border-top:1px solid var(--border)">' +
+      '<td style="padding:9px 14px;font-family:\'Space Grotesk\',sans-serif;font-size:12px;font-weight:600">' + dateLabel + '</td>' +
+      '<td style="padding:9px 8px;font-size:12px;color:var(--muted)">' + dow + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--muted);border-left:2px solid #DBEAFE">' + projCov + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600">' + (actCov !== null ? actCov : na) + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;' + (dCov !== null && dCov > 0 ? 'color:var(--success)' : dCov < 0 ? 'color:var(--danger)' : '') + '">' + (dCov !== null ? (dCov > 0 ? '+' : '') + dCov : na) + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--muted);border-left:2px solid #EDE9FE">' + projOcc + '%</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:' + (actOcc !== null && actOcc > 100 ? '700;color:#D97706' : '600') + '">' + (actOcc !== null ? actOcc + '%' : na) + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--muted);border-left:2px solid #FEF3E2">$' + Math.round(projRev).toLocaleString() + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:600">' + (actRev !== null ? '$' + Math.round(actRev).toLocaleString() : na) + '</td>' +
+      '<td style="padding:9px 8px;text-align:right;font-size:12px;' + varCls + '">' + (varPct !== null ? (varPct > 0 ? '+' : '') + varPct.toFixed(0) + '%' + varFlag : na) + '</td>' +
+    '</tr>';
+  });
+
+  tbody.innerHTML = rows;
+
+  // Totals row
+  var tfoot = document.getElementById('pva-tfoot');
+  if (tfoot && actDays > 0) {
+    tfoot.style.display = '';
+    var totVar = totProjRev > 0 ? (totActRev - totProjRev) / totProjRev * 100 : 0;
+    document.getElementById('pva-tot-pc').textContent = totProjCov.toLocaleString();
+    document.getElementById('pva-tot-ac').textContent = totActCov.toLocaleString();
+    document.getElementById('pva-tot-dc').textContent = (totActCov > totProjCov ? '+' : '') + (totActCov - totProjCov).toLocaleString();
+    document.getElementById('pva-tot-po').textContent = Math.round(totProjCov / DAY_MAX_COVERS / dates.length * 100) + '%';
+    document.getElementById('pva-tot-ao').textContent = actDays > 0 ? Math.round(totActCov / DAY_MAX_COVERS / actDays * 100) + '%' : '—';
+    document.getElementById('pva-tot-pr').textContent = '$' + Math.round(totProjRev).toLocaleString();
+    document.getElementById('pva-tot-ar').textContent = '$' + Math.round(totActRev).toLocaleString();
+    document.getElementById('pva-tot-vr').textContent = (totVar > 0 ? '+' : '') + totVar.toFixed(0) + '%';
+
+    // Summary cards
+    var avgActOcc = Math.round(totActCov / DAY_MAX_COVERS / actDays * 100);
+    var avgProjOcc = Math.round(totProjCov / DAY_MAX_COVERS / dates.length * 100);
+    var avgActCov = Math.round(totActCov / actDays);
+    var avgProjCov = Math.round(totProjCov / dates.length);
+    var rpc = totActCov > 0 ? totActRev / totActCov : 0;
+    var projRpc = totProjCov > 0 ? totProjRev / dates.length / (totProjCov / dates.length) : 0;
+
+    document.getElementById('pva-avg-occ').textContent     = avgActOcc + '%';
+    document.getElementById('pva-proj-occ-avg').textContent = avgProjOcc + '%';
+    document.getElementById('pva-avg-cov').textContent     = avgActCov.toLocaleString();
+    document.getElementById('pva-proj-cov-avg').textContent = avgProjCov.toLocaleString();
+    document.getElementById('pva-rev-per-cov').textContent  = '$' + rpc.toFixed(2);
+    document.getElementById('pva-proj-rpc').textContent     = '$' + projRpc.toFixed(2);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SMART PROJECTIONS — seeded based on known factors
+// ═══════════════════════════════════════════════════════════
+function seedSmartProjections() {
+  // Force reseed if version changes
+  if (localStorage.getItem('domo_proj_seeded_v2')) return;
+
+  // Phase model for Domo Cafe based on:
+  // 1. Grand opening hype (June 13 – July 4)
+  // 2. Post-hype normalization (July 5 – Aug 9)
+  // 3. Back-to-school weekday slowdown (Aug 10 – Sep 30)
+  //    - Buena Park Unified / AUHSD return ~Aug 10-12, 2026
+  //    - CSUF / Golden West College ~Aug 25
+  // 4. Fall settled pace (Oct+)
+
+  var overrides = JSON.parse(localStorage.getItem('domo_proj_overrides') || '{}');
+
+  // Day-of-week occupancy settings by phase
+  var PHASES = {
+    // Phase 1: Grand opening hype
+    hype: { 0:90, 1:75, 2:75, 3:78, 4:80, 5:88, 6:92 },
+    // Phase 2: Normalization
+    normal: { 0:75, 1:55, 2:55, 3:58, 4:62, 5:78, 6:82 },
+    // Phase 3: Back to school (weekday drop)
+    bts: { 0:60, 1:38, 2:38, 3:40, 4:42, 5:68, 6:72 },
+    // Phase 4: Fall settled
+    fall: { 0:65, 1:42, 2:42, 3:45, 4:50, 5:72, 6:78 },
+  };
+
+  function getPhase(ds) {
+    if (ds <= '2026-07-04') return 'hype';
+    if (ds <= '2026-08-09') return 'normal';
+    if (ds <= '2026-09-30') return 'bts';
+    return 'fall';
+  }
+
+  // Special dates
+  var specials = {
+    // July 4th — shorter hours, holiday crowd
+    '2026-07-04': { open:'10:00', lastseating:'17:00', close:'18:00', label:'July 4th Holiday', occ:70 },
+    // Labor Day — good family day
+    '2026-09-07': { occ:80, label:'Labor Day' },
+    // Back to school starts ~Aug 10 — flag for awareness
+    '2026-08-10': { label:'Back to School — Buena Park USD', occ:35 },
+    '2026-08-11': { label:'Back to School — AUHSD', occ:32 },
+    '2026-08-25': { label:'College Returns — CSUF/GWC', occ:38 },
+  };
+
+  // Seed overrides for each month going forward
+  var now = new Date();
+  var end = new Date('2026-12-31');
+  var cur = new Date('2026-07-01'); // start seeding from July
+  while (cur <= end) {
+    var ds = cur.toLocaleDateString('en-CA');
+    var phase = getPhase(ds);
+    var dow = cur.getDay();
+    var occ = PHASES[phase][dow];
+
+    // Adjust Friday/Saturday hours for BTS phase — later close to catch after-school crowd
+    var entry = { occ: occ };
+    if (phase === 'bts' || phase === 'fall') {
+      if (dow === 5) { // Friday
+        entry.open = '11:00';
+        entry.lastseating = '21:00';
+        entry.close = '22:00';
+        entry.label = 'Fri — Extended Hours';
+        entry.occ = PHASES[phase][5] + 5; // slight boost for extended hours
+      } else if (dow === 6 || dow === 0) { // Sat/Sun
+        entry.open = '10:00';
+        entry.lastseating = '21:00';
+        entry.close = '22:00';
+      } else if (dow >= 1 && dow <= 4) { // Mon-Thu
+        entry.open = '11:00'; // later open — less morning traffic when school is in
+        entry.lastseating = '20:00';
+        entry.close = '21:00';
+      }
+    }
+
+    overrides[ds] = entry;
+    cur.setDate(cur.getDate() + 1);
+  }
+
+  // Apply special dates (overwrite)
+  Object.entries(specials).forEach(function([ds, s]) {
+    overrides[ds] = Object.assign({}, overrides[ds] || {}, s);
+  });
+
+  localStorage.setItem('domo_proj_overrides', JSON.stringify(overrides));
+  localStorage.removeItem('domo_proj_seeded_v1'); localStorage.setItem('domo_proj_seeded_v2', '1');
+  if (typeof projOverrides !== 'undefined') projOverrides = overrides;
+}
+
+// Hook into initActuals to also render PVA and seed projections
+var _origInitActuals = initActuals;
+initActuals = function() {
+  seedSmartProjections();
+  try { projOverrides = JSON.parse(localStorage.getItem('domo_proj_overrides')||'{}'); } catch(e){}
+  _origInitActuals();
+};
+
+var _origRenderActuals = renderActuals;
+renderActuals = function(date) {
+  _origRenderActuals(date);
+  renderPVA();
+};
+</script>

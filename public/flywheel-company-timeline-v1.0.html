@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel — Company Timeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #080A0D;
+    --surface:   #10141A;
+    --card-bg:   #141820;
+    --card-border: rgba(180,20,30,0.25);
+    --red:       #C8102E;
+    --red-dim:   rgba(200,16,46,0.15);
+    --red-glow:  rgba(200,16,46,0.35);
+    --line:      #C8102E;
+    --text:      #F0EDE8;
+    --muted:     #8A8A94;
+    --label:     #C8102E;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── Slide wrapper ─────────────────────────────────────────── */
+  .slide {
+    width: 1920px; height: 1080px;
+    position: relative;
+    background: var(--bg);
+    /* subtle radial noise */
+    background-image:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(200,16,46,0.04) 0%, transparent 70%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Scale to viewport */
+  .scaler {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .scaler-inner {
+    transform-origin: top left;
+  }
+
+  /* ── Header ────────────────────────────────────────────────── */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 52px 80px 0;
+    flex-shrink: 0;
+  }
+
+  .logo-area {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .logo-mark {
+    width: 44px; height: 44px;
+    background: var(--red);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 22px;
+    color: white; letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .logo-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 20px;
+    color: var(--text); letter-spacing: 0.5px;
+  }
+  .logo-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .title-center {
+    text-align: center;
+    flex: 1;
+    padding: 0 40px;
+  }
+  .title-center h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 34px;
+    letter-spacing: 5px; text-transform: uppercase;
+    color: var(--text);
+  }
+  .title-center p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; color: var(--muted);
+    letter-spacing: 2.5px; text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .era-badge {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .era-badge .est {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+    display: block; margin-bottom: 4px;
+  }
+  .era-badge .years {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 28px;
+    color: var(--red); letter-spacing: -0.5px;
+  }
+
+  /* ── Timeline body ──────────────────────────────────────────── */
+  .timeline-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 80px;
+    padding-bottom: 44px;
+    overflow: hidden;
+  }
+
+  /* Top cards row */
+  .cards-top {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 0;
+  }
+
+  /* Timeline rail */
+  .rail-row {
+    height: 56px;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .rail-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--line) 4%, var(--line) 96%, transparent 100%);
+    top: 50%; transform: translateY(-50%);
+  }
+  .rail-nodes {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+
+  .rail-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+  }
+  .rail-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--red), 0 0 12px var(--red-glow);
+    z-index: 2;
+    position: relative;
+  }
+  .rail-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    position: absolute;
+    white-space: nowrap;
+  }
+  .rail-date.above { bottom: 100%; margin-bottom: 6px; }
+  .rail-date.below { top: 100%; margin-top: 6px; }
+
+  /* Bottom cards row */
+  .cards-bottom {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 0;
+  }
+
+  /* Card columns — 10 equal columns */
+  .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 7px;
+    min-width: 0;
+  }
+  .col-top {
+    justify-content: flex-end;
+  }
+  .col-bottom {
+    justify-content: flex-start;
+  }
+
+  /* Empty col (spacer when no card above/below) */
+  .col-empty { flex: 1; }
+
+  /* ── Card ──────────────────────────────────────────────────── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 14px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(200,16,46,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* top-card connector line (below card) */
+  .col-top .card::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 100px; /* drawn over by rail, just needs to exist */
+    background: linear-gradient(to bottom, rgba(200,16,46,0.3), transparent);
+  }
+
+  .card-phase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 7px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-phase::before {
+    content: '';
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 14px;
+    color: var(--text);
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .card-body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11.5px; font-weight: 300;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── Connector stems ────────────────────────────────────────── */
+  .stem {
+    width: 1px;
+    background: linear-gradient(to bottom, rgba(200,16,46,0.4), rgba(200,16,46,0.1));
+    margin: 0 auto;
+  }
+  .stem-top {
+    height: 18px;
+    background: linear-gradient(to bottom, rgba(200,16,46,0.1), rgba(200,16,46,0.4));
+  }
+  .stem-bottom {
+    height: 18px;
+    background: linear-gradient(to bottom, rgba(200,16,46,0.4), rgba(200,16,46,0.1));
+  }
+
+  /* ── Footer caption ─────────────────────────────────────────── */
+  .caption {
+    position: absolute;
+    bottom: 28px;
+    left: 80px; right: 80px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 300;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.3px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 14px;
+  }
+  .caption span { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="scaler">
+  <div class="scaler-inner" id="scaler">
+    <div class="slide">
+
+      <!-- ── Header ── -->
+      <div class="header">
+        <div class="logo-area">
+          <div class="logo-mark">F</div>
+          <div>
+            <div class="logo-name">Flywheel</div>
+            <div class="logo-sub">Technologies</div>
+          </div>
+        </div>
+        <div class="title-center">
+          <h1>Company Timeline</h1>
+          <p>A Journey of Entrepreneurs &amp; an Evolving Industry</p>
+        </div>
+        <div class="era-badge">
+          <span class="est">Est. — Present</span>
+          <span class="years">2002 — 2026+</span>
+        </div>
+      </div>
+
+      <!-- ── Timeline Body ── -->
+      <div class="timeline-body">
+
+        <!-- TOP CARDS ROW -->
+        <div class="cards-top">
+
+          <!-- Col 1 — TOP CARD -->
+          <div class="col col-top">
+            <div class="card">
+              <div class="card-phase">Foundation</div>
+              <div class="card-title">Setting the Foundation</div>
+              <div class="card-body">Izzy begins as a taxi industry consultant, integrating payments &amp; analytics into professional fleets.</div>
+            </div>
+            <div class="stem stem-bottom"></div>
+          </div>
+
+          <!-- Col 2 — empty top -->
+          <div class="col col-top col-empty"></div>
+
+          <!-- Col 3 — TOP CARD -->
+          <div class="col col-top">
+            <div class="card">
+              <div class="card-phase">Operations</div>
+              <div class="card-title">National Paratransit</div>
+              <div class="card-body">CabConnect paratransit programs expand to Chicago, San Francisco, New York &amp; Washington D.C.</div>
+            </div>
+            <div class="stem stem-bottom"></div>
+          </div>
+
+          <!-- Col 4 — empty top -->
+          <div class="col col-top col-empty"></div>
+
+          <!-- Col 5 — TOP CARD -->
+          <div class="col col-top">
+            <div class="card">
+              <div class="card-phase">Innovation</div>
+              <div class="card-title">Flywheel Technologies</div>
+              <div class="card-body">Google &amp; Amazon approach Flywheel to build their first universal e-commerce platforms.</div>
+            </div>
+            <div class="stem stem-bottom"></div>
+          </div>
+
+          <!-- Col 6 — empty top -->
+          <div class="col col-top col-empty"></div>
+
+          <!-- Col 7 — TOP CARD -->
+          <div class="col col-top">
+            <div class="card">
+              <div class="card-phase">Validation</div>
+              <div class="card-title">Uber Contract Signed</div>
+              <div class="card-body">Successful pilot confirms the model — Flywheel now powers universal 3P dispatch for SF fleets.</div>
+            </div>
+            <div class="stem stem-bottom"></div>
+          </div>
+
+          <!-- Col 8 — empty top -->
+          <div class="col col-top col-empty"></div>
+
+          <!-- Col 9 — TOP CARD -->
+          <div class="col col-top">
+            <div class="card">
+              <div class="card-phase">Expansion</div>
+              <div class="card-title">Domestic Rollout</div>
+              <div class="card-body">Expanded to Reno, Palm Springs, San Diego &amp; Las Vegas. Acquisition pace accelerates.</div>
+            </div>
+            <div class="stem stem-bottom"></div>
+          </div>
+
+          <!-- Col 10 — empty top -->
+          <div class="col col-top col-empty"></div>
+
+        </div><!-- /cards-top -->
+
+        <!-- RAIL ROW -->
+        <div class="rail-row">
+          <div class="rail-line"></div>
+          <div class="rail-nodes">
+
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date above">2002</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date below">2004–11</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date above">2012–15</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date below">2012</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date above">2016–19</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date below">2020</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date above">2020</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date below">2021–22</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date above">2024–25</div>
+            </div>
+            <div class="rail-node">
+              <div class="rail-dot"></div>
+              <div class="rail-date below">2025+</div>
+            </div>
+
+          </div>
+        </div><!-- /rail-row -->
+
+        <!-- BOTTOM CARDS ROW -->
+        <div class="cards-bottom">
+
+          <!-- Col 1 — empty bottom -->
+          <div class="col col-bottom col-empty"></div>
+
+          <!-- Col 2 — BOTTOM CARD -->
+          <div class="col col-bottom">
+            <div class="stem stem-top"></div>
+            <div class="card">
+              <div class="card-phase">Milestone</div>
+              <div class="card-title">Industry Shift</div>
+              <div class="card-body">Regulations push taxi fleets from radio &amp; paper to digital tech. Flywheel leads the transition.</div>
+            </div>
+          </div>
+
+          <!-- Col 3 — empty bottom -->
+          <div class="col col-bottom col-empty"></div>
+
+          <!-- Col 4 — BOTTOM CARD -->
+          <div class="col col-bottom">
+            <div class="stem stem-top"></div>
+            <div class="card">
+              <div class="card-phase">Milestone</div>
+              <div class="card-title">Flywheel Software</div>
+              <div class="card-body">Cabulous acquired. First enterprise fleet dispatch system built for professional taxi operators.</div>
+            </div>
+          </div>
+
+          <!-- Col 5 — empty bottom -->
+          <div class="col col-bottom col-empty"></div>
+
+          <!-- Col 6 — BOTTOM CARD -->
+          <div class="col col-bottom">
+            <div class="stem stem-top"></div>
+            <div class="card">
+              <div class="card-phase">Challenge</div>
+              <div class="card-title">COVID-19 Impact</div>
+              <div class="card-body">Global pandemic forces rapid adaptation. Fleet costs optimized; platform strengthened for recovery.</div>
+            </div>
+          </div>
+
+          <!-- Col 7 — empty bottom -->
+          <div class="col col-bottom col-empty"></div>
+
+          <!-- Col 8 — BOTTOM CARD -->
+          <div class="col col-bottom">
+            <div class="stem stem-top"></div>
+            <div class="card">
+              <div class="card-phase">Pivot</div>
+              <div class="card-title">Uber Live — SF</div>
+              <div class="card-body">First live Uber 3P integration launches in San Francisco. Flywheel Connect model validated.</div>
+            </div>
+          </div>
+
+          <!-- Col 9 — empty bottom -->
+          <div class="col col-bottom col-empty"></div>
+
+          <!-- Col 10 — BOTTOM CARD -->
+          <div class="col col-bottom">
+            <div class="stem stem-top"></div>
+            <div class="card">
+              <div class="card-phase">Global</div>
+              <div class="card-title">Platform Scale</div>
+              <div class="card-body">4,800+ fleet platform. Expansion across Mexico, Miami, Las Vegas &amp; international markets.</div>
+            </div>
+          </div>
+
+        </div><!-- /cards-bottom -->
+
+      </div><!-- /timeline-body -->
+
+      <!-- Caption -->
+      <div class="caption">
+        <span>Flywheel's management team</span> has been immersed in the taxi industry for nearly three decades — navigating every major transition first-hand. Unparalleled niche experience has enabled market anticipation, proactive initiative, and a firm foundation for global scale.
+      </div>
+
+    </div><!-- /slide -->
+  </div><!-- /scaler-inner -->
+</div><!-- /scaler -->
+
+<script>
+  function scaleSlide() {
+    const inner = document.getElementById('scaler');
+    const slide = inner.querySelector('.slide');
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const sw = 1920, sh = 1080;
+    const scale = Math.min(vw / sw, vh / sh);
+    inner.style.transform = `scale(${scale})`;
+    inner.style.width = sw + 'px';
+    inner.style.height = sh + 'px';
+    // Center
+    const x = (vw - sw * scale) / 2;
+    const y = (vh - sh * scale) / 2;
+    inner.style.position = 'fixed';
+    inner.style.top = y + 'px';
+    inner.style.left = x + 'px';
+  }
+  scaleSlide();
+  window.addEventListener('resize', scaleSlide);
+</script>
+
+</body>
+</html>

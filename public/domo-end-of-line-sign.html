@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Domo Cafe — End of Line Sign</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: 8.5in 11in portrait;
+    margin: 0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 8.5in;
+    height: 11in;
+    background: #fff;
+  }
+
+  .page {
+    width: 8.5in;
+    height: 11in;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45in 0.6in 0.45in;
+    background: #fff;
+  }
+
+  /* ── TOP BRAND BAR ── */
+  .top-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #8B4513;
+  }
+  .brand span { color: #CC2222; }
+
+  .rule {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #fff 0%, #8B4513 20%, #CC2222 50%, #8B4513 80%, #fff 100%);
+    border-radius: 2px;
+  }
+
+  /* ── MAIN HEADLINE ── */
+  .headline-wrap {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+  }
+
+  .headline {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1.05;
+    color: #CC2222;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .headline .brown { color: #8B4513; }
+
+  /* ── BODY COPY ── */
+  .body-copy {
+    text-align: center;
+    max-width: 5.8in;
+  }
+
+  .body-copy p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 21px;
+    line-height: 1.55;
+    color: #333;
+    margin-bottom: 12px;
+  }
+
+  .body-copy p:last-child { margin-bottom: 0; }
+
+  .body-copy strong {
+    color: #CC2222;
+    font-weight: 700;
+  }
+
+  /* ── CTA BOX ── */
+  .cta {
+    width: 100%;
+    background: #8B4513;
+    border-radius: 14px;
+    padding: 22px 30px 18px;
+    text-align: center;
+  }
+
+  .cta-head {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    color: #fff;
+    letter-spacing: 0.2px;
+    margin-bottom: 8px;
+  }
+
+  .cta-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #aaa;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  @media print {
+    html, body { width: 8.5in; height: 11in; }
+    .page { page-break-after: always; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Brand -->
+  <div class="top-bar">
+    <div class="brand">Domo<span> Cafe</span></div>
+    <div class="rule"></div>
+  </div>
+
+  <!-- Headline -->
+  <div class="headline-wrap">
+    <div class="headline">
+      We Don't<br>
+      <span class="brown">Want You</span><br>
+      to Wait &amp;<br>
+      Not Get In
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body-copy">
+    <p>
+      We're closing soon and <strong>we can't guarantee</strong><br>
+      everyone in line will make it inside today.
+    </p>
+    <p>
+      We'd rather you come back when we can give you<br>
+      the full Domo experience — no rush, no crowd,<br>
+      just great food and good vibes.
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-head">Come Back Tomorrow — You'll Get Right In!</div>
+    <div class="cta-sub">Open Daily &nbsp;·&nbsp; Full Menu &nbsp;·&nbsp; No Wait &nbsp;·&nbsp; We'll Be Ready For You</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Thank you for celebrating our Grand Opening with us today 🎉 It means the world to us. — The Domo Cafe Team
+  </div>
+
+</div>
+</body>
+</html>

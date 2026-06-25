@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Power Ideas™ — PRD v1.0 | SPS Purity Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#111114;--surface:#18181c;--surface2:#1f1f25;
+  --orange:#FF5E1A;--orange-dim:rgba(255,94,26,0.10);
+  --ink:#FAF9F6;--muted:#888;--line:rgba(250,249,246,0.08);
+  --green:#4ade80;--yellow:#fbbf24;--red:#f87171;
+  --sidebar:260px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);}
+
+/* SIDEBAR */
+#sidebar{position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;background:#0d0d10;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sb-header{padding:28px 24px 20px;border-bottom:1px solid var(--line);}
+.sb-badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.sb-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;line-height:1.3;}
+.sb-version{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;}
+.sb-nav{padding:16px 0;flex:1;}
+.sb-section{padding:6px 24px 4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,94,26,0.5);margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s;}
+.sb-link:hover{color:var(--ink);background:var(--orange-dim);}
+.sb-link.active{color:var(--orange);border-left-color:var(--orange);background:var(--orange-dim);}
+.sb-count{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.sb-footer{padding:16px 24px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+
+/* MAIN */
+#main{margin-left:var(--sidebar);min-height:100vh;}
+.topbar{position:sticky;top:0;background:rgba(17,17,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 48px;display:flex;align-items:center;justify-content:space-between;z-index:90;}
+.tb-left{display:flex;align-items:center;gap:16px;}
+.tb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,94,26,0.3);}
+.tb-tag.draft{color:var(--yellow);background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.3);}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.tb-score{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* SECTIONS */
+.section{padding:72px 64px;border-bottom:1px solid var(--line);}
+.section:last-child{border-bottom:none;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--orange);margin-bottom:14px;}
+.sec-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:36px;letter-spacing:0px;line-height:1.05;margin-bottom:12px;}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.8;max-width:680px;margin-bottom:36px;}
+.rule{width:40px;height:3px;background:var(--orange);border-radius:2px;margin-bottom:32px;}
+
+/* HERO */
+#overview{min-height:60vh;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,#111114 0%,#18100a 100%);}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--orange);text-transform:uppercase;margin-bottom:20px;}
+.hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(32px,4vw,56px);letter-spacing:-0.3px;line-height:1.0;margin-bottom:8px;}
+.hero-subtitle{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;color:var(--muted);margin-bottom:32px;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;}
+.meta-item{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.meta-item span{color:var(--ink);}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;}
+.status-pill.draft{background:rgba(251,191,36,0.1);color:var(--yellow);border:1px solid rgba(251,191,36,0.3);}
+.status-pill.live{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+
+/* REQ CARDS */
+.req-grid{display:flex;flex-direction:column;gap:12px;max-width:860px;}
+.req{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start;transition:border-color .2s;}
+.req:hover{border-color:rgba(255,94,26,0.2);}
+.req-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--orange);min-width:72px;padding-top:2px;}
+.req-body{}
+.req-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;}
+.req-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.req-status{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:4px;white-space:nowrap;}
+.req-status.proposed{background:rgba(251,191,36,0.1);color:var(--yellow);border:1px solid rgba(251,191,36,0.2);}
+.req-status.approved{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.req-status.indev{background:rgba(255,94,26,0.1);color:var(--orange);border:1px solid rgba(255,94,26,0.2);}
+
+/* PHASE CARDS */
+.phase-grid{display:flex;flex-direction:column;gap:20px;max-width:860px;}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.phase-header{padding:20px 28px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;}
+.phase-header:hover{background:var(--surface2);}
+.phase-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:2px;min-width:70px;}
+.phase-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;flex:1;}
+.phase-goal{font-size:12px;color:var(--muted);}
+.phase-chevron{color:var(--muted);font-size:12px;transition:transform .2s;}
+.phase-chevron.open{transform:rotate(180deg);}
+.phase-body{padding:0 28px;max-height:0;overflow:hidden;transition:max-height .3s ease, padding .3s;}
+.phase-body.open{max-height:600px;padding:20px 28px;}
+.phase-qs{display:flex;flex-direction:column;gap:8px;}
+.phase-q{display:flex;gap:12px;font-size:13px;color:var(--muted);line-height:1.6;}
+.phase-q::before{content:"→";color:var(--orange);flex-shrink:0;margin-top:1px;}
+
+/* SCORING */
+.score-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px;}
+.score-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;}
+.score-card.full{grid-column:1/-1;background:linear-gradient(135deg,rgba(255,94,26,0.08),rgba(255,94,26,0.04));border-color:rgba(255,94,26,0.2);}
+.score-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;margin-bottom:6px;}
+.score-range{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--orange);margin-bottom:16px;}
+.score-factors{display:flex;flex-direction:column;gap:6px;}
+.score-factor{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;}
+.score-factor::before{content:"·";color:var(--orange);}
+
+/* DELIVERABLE */
+.brief-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px;}
+.brief-section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 24px;}
+.brief-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:2px;margin-bottom:8px;}
+.brief-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;margin-bottom:6px;}
+.brief-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* PIPELINE */
+.pipeline{display:flex;flex-direction:column;gap:0;max-width:500px;}
+.pipe-item{display:flex;align-items:center;gap:16px;padding:14px 20px;background:var(--surface);border:1px solid var(--line);}
+.pipe-item:first-child{border-radius:10px 10px 0 0;}
+.pipe-item:last-child{border-radius:0 0 10px 10px;}
+.pipe-item.current{background:rgba(255,94,26,0.08);border-color:rgba(255,94,26,0.3);}
+.pipe-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);min-width:24px;}
+.pipe-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;}
+.pipe-name.active{color:var(--orange);}
+.pipe-arrow{margin-left:auto;color:var(--muted);font-size:12px;}
+.pipe-connector{width:2px;height:0;background:var(--line);margin-left:32px;}
+
+/* RECOMMENDATION */
+.reco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;}
+.reco{border-radius:12px;padding:28px;text-align:center;}
+.reco.green{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);}
+.reco.yellow{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);}
+.reco.red{background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);}
+.reco-light{font-size:32px;margin-bottom:12px;}
+.reco-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:8px;}
+.reco.green .reco-label{color:var(--green);}
+.reco.yellow .reco-label{color:var(--yellow);}
+.reco.red .reco-label{color:var(--red);}
+.reco-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* QUOTE BOX */
+.quote-box{border-left:3px solid var(--orange);padding:20px 28px;background:var(--orange-dim);border-radius:0 10px 10px 0;max-width:680px;margin-bottom:40px;}
+.quote-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1.4;margin-bottom:8px;}
+.quote-attr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:2px;}
+
+/* STATS */
+.stats-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:40px;}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 28px;text-align:center;min-width:120px;}
+.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:32px;color:var(--orange);letter-spacing:0px;}
+.stat-lbl{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+
+@media(max-width:768px){
+  #sidebar{display:none;}
+  #main{margin-left:0;}
+  .section{padding:48px 24px;}
+  .score-grid{grid-template-columns:1fr;}
+  .brief-grid{grid-template-columns:1fr;}
+  .reco-grid{grid-template-columns:1fr;}
+  .req{grid-template-columns:auto 1fr;}
+  .req-status{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-header">
+    <div class="sb-badge">Purity Portal</div>
+    <div class="sb-title">Super Power Ideas™</div>
+    <div class="sb-version">PRD v1.0 · June 20, 2026</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <div class="sb-link active" onclick="navTo('overview')">🏠 Overview</div>
+    <div class="sb-link" onclick="navTo('vision')">🎯 Vision</div>
+    <div class="sb-section">Requirements</div>
+    <div class="sb-link" onclick="navTo('inputs')">📥 Agent Inputs <span class="sb-count">REQ-001–005</span></div>
+    <div class="sb-link" onclick="navTo('interview')">🎙 Interview Phases <span class="sb-count">REQ-006–012</span></div>
+    <div class="sb-link" onclick="navTo('adaptive')">⚡ Adaptive Engine <span class="sb-count">REQ-013–016</span></div>
+    <div class="sb-link" onclick="navTo('guardrails')">🛡 Guardrails <span class="sb-count">REQ-017–019</span></div>
+    <div class="sb-link" onclick="navTo('scoring')">📊 Scoring Model <span class="sb-count">REQ-020–023</span></div>
+    <div class="sb-link" onclick="navTo('deliverable')">📄 Deliverable <span class="sb-count">REQ-024–033</span></div>
+    <div class="sb-link" onclick="navTo('recommendation')">🚦 Recommendation <span class="sb-count">REQ-034–036</span></div>
+    <div class="sb-section">Pipeline</div>
+    <div class="sb-link" onclick="navTo('pipeline')">🔗 Agent Pipeline</div>
+  </nav>
+  <div class="sb-footer">SPS · Agent 1 of 9</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <span class="tb-tag">Super Power Studios</span>
+      <span class="tb-tag draft">Draft</span>
+    </div>
+    <div class="tb-right">
+      <span class="tb-score">36 Requirements · 7 Phases</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="section" id="overview">
+    <div class="hero-tag">SPS Purity Portal · Ideation Agent</div>
+    <div class="hero-title">Super Power Ideas™</div>
+    <div class="hero-subtitle">Founder Discovery & Ideation Agent</div>
+    <div class="hero-meta">
+      <div class="meta-item">Version <span>v1.0</span></div>
+      <div class="meta-item">Date <span>June 20, 2026</span></div>
+      <div class="meta-item">Author <span>Izzy Aala</span></div>
+      <div class="meta-item">Agent <span>1 of 9</span></div>
+      <div class="meta-item"><span class="status-pill draft">● Draft</span></div>
+    </div>
+  </section>
+
+  <!-- VISION -->
+  <section class="section" id="vision">
+    <div class="eyebrow">Vision</div>
+    <div class="sec-title">Start with the founder.<br>Not the idea.</div>
+    <div class="rule"></div>
+
+    <div class="quote-box">
+      <div class="quote-text">"That is exactly what I was trying to build,<br>but I couldn't explain it."</div>
+      <div class="quote-attr">— What every founder should say after the session</div>
+    </div>
+
+    <p class="sec-sub">Most incubators start with the idea. SPS starts with the founder. This agent's primary job is not to create ideas — it's to discover who the founder is, what problem they are uniquely qualified to solve, and whether there is genuine founder-market fit.</p>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Interview Phases</div></div>
+      <div class="stat"><div class="stat-num">36</div><div class="stat-lbl">Requirements</div></div>
+      <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Brief Sections</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">Agent Pipeline</div></div>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);line-height:1.8;max-width:680px;">The agent should feel like part Y-Combinator partner, part executive coach, part venture capitalist, part therapist, part co-founder. The output isn't an idea — it's a <strong style="color:var(--ink);">founder-centered venture thesis</strong> that becomes the input to every subsequent SPS agent.</p>
+  </section>
+
+  <!-- INPUTS -->
+  <section class="section" id="inputs">
+    <div class="eyebrow">Requirements · Agent Inputs</div>
+    <div class="sec-title">What the founder provides</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req">
+        <div class="req-id">REQ-001</div>
+        <div class="req-body">
+          <div class="req-title">Required Fields — Identity</div>
+          <div class="req-desc">Agent must collect Name, Email, LinkedIn URL, Current Role, Industry, and Location before beginning the interview.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-002</div>
+        <div class="req-body">
+          <div class="req-title">Optional Uploads — Documents</div>
+          <div class="req-desc">Agent must accept optional uploads: Resume, Website URL, existing Pitch Deck, or Concept Document. These inform the agent's context before the interview begins.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-003</div>
+        <div class="req-body">
+          <div class="req-title">Context Ingestion</div>
+          <div class="req-desc">When optional documents are provided, the agent must read and reference them during the interview — avoiding redundant questions already answered in the materials.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-004</div>
+        <div class="req-body">
+          <div class="req-title">Session Persistence</div>
+          <div class="req-desc">Interview state must be saved continuously. If the founder disconnects, they must be able to resume from the last completed phase without losing prior responses.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-005</div>
+        <div class="req-body">
+          <div class="req-title">Founder Identity Verification</div>
+          <div class="req-desc">Email must be verified before session begins. LinkedIn URL must be valid format. No anonymous sessions allowed.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERVIEW -->
+  <section class="section" id="interview">
+    <div class="eyebrow">Requirements · Interview Structure</div>
+    <div class="sec-title">7 phases. One founder.</div>
+    <div class="rule"></div>
+    <div class="phase-grid">
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-006</div>
+          <div>
+            <div class="phase-title">Phase 1 — Founder Discovery</div>
+            <div class="phase-goal">Goal: Understand who this person is</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">Tell me about yourself.</div>
+            <div class="phase-q">What do you do today?</div>
+            <div class="phase-q">What are you exceptionally good at?</div>
+            <div class="phase-q">What are people constantly asking for your help with?</div>
+            <div class="phase-q">What industries have you worked in?</div>
+            <div class="phase-q">What have you built before?</div>
+            <div class="phase-q">Have you started a company before?</div>
+            <div class="phase-q">What accomplishments are you most proud of?</div>
+            <div class="phase-q">What frustrates you about your current work?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-007</div>
+          <div>
+            <div class="phase-title">Phase 2 — The Personal Story</div>
+            <div class="phase-goal">Goal: Find emotional connection</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">What problem keeps bothering you?</div>
+            <div class="phase-q">When did you first notice it?</div>
+            <div class="phase-q">Why does this matter to you?</div>
+            <div class="phase-q">Have you personally experienced it?</div>
+            <div class="phase-q">Can you tell me a story?</div>
+            <div class="phase-q">Who else experiences this?</div>
+            <div class="phase-q">What would happen if this problem never gets solved?</div>
+            <div class="phase-q">Why are you the person to solve it?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-008</div>
+          <div>
+            <div class="phase-title">Phase 3 — The Problem</div>
+            <div class="phase-goal">Goal: Discover the actual pain</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">Describe the problem in one sentence.</div>
+            <div class="phase-q">Who has this problem?</div>
+            <div class="phase-q">How often does it happen?</div>
+            <div class="phase-q">How painful is it?</div>
+            <div class="phase-q">How much money does it cost?</div>
+            <div class="phase-q">How much time does it waste?</div>
+            <div class="phase-q">How are people solving it today?</div>
+            <div class="phase-q">What frustrates you about current solutions?</div>
+            <div class="phase-q">Why haven't existing solutions solved it?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-009</div>
+          <div>
+            <div class="phase-title">Phase 4 — The Customer</div>
+            <div class="phase-goal">Goal: Identify ICP</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">Who specifically experiences this? (Consumers / Businesses / Government / Non-profits)</div>
+            <div class="phase-q">How old are they? Income level?</div>
+            <div class="phase-q">Industry? Title? Location?</div>
+            <div class="phase-q">What triggers the pain?</div>
+            <div class="phase-q">What are they currently paying to solve it?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-010</div>
+          <div>
+            <div class="phase-title">Phase 5 — The Solution</div>
+            <div class="phase-goal">Goal: Articulate the vision</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">Describe your solution.</div>
+            <div class="phase-q">What does the customer do first?</div>
+            <div class="phase-q">What happens next?</div>
+            <div class="phase-q">What makes this different?</div>
+            <div class="phase-q">Why is this better?</div>
+            <div class="phase-q">How will people discover it?</div>
+            <div class="phase-q">How do you make money?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <div class="phase-num">REQ-011</div>
+          <div>
+            <div class="phase-title">Phase 6 — Founder Commitment</div>
+            <div class="phase-goal">Goal: Determine seriousness</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">How many hours per week can you dedicate?</div>
+            <div class="phase-q">How much money are you willing to invest?</div>
+            <div class="phase-q">Have you quit a job before?</div>
+            <div class="phase-q">Would you work on this for 3 years? 5 years?</div>
+            <div class="phase-q">What happens if this fails?</div>
+            <div class="phase-q">Why won't you quit?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase" style="border-color:rgba(255,94,26,0.3);">
+        <div class="phase-header" onclick="togglePhase(this)" style="background:rgba(255,94,26,0.04);">
+          <div class="phase-num">REQ-012</div>
+          <div>
+            <div class="phase-title">Phase 7 — Founder Superpower Discovery ⭐</div>
+            <div class="phase-goal">Goal: Signature SPS feature — uncover the unfair advantage</div>
+          </div>
+          <div class="phase-chevron">▼</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-qs">
+            <div class="phase-q">What comes naturally to you?</div>
+            <div class="phase-q">What do people consistently compliment you on?</div>
+            <div class="phase-q">When do you feel most energized?</div>
+            <div class="phase-q">What work drains you?</div>
+            <div class="phase-q">What could you talk about for hours?</div>
+            <div class="phase-q">What have you done that others find difficult?</div>
+            <div class="phase-q">What unfair advantage do you have?</div>
+            <div class="phase-q">What is your superpower?</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ADAPTIVE ENGINE -->
+  <section class="section" id="adaptive">
+    <div class="eyebrow">Requirements · Adaptive Engine</div>
+    <div class="sec-title">Never static. Always drilling.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req">
+        <div class="req-id">REQ-013</div>
+        <div class="req-body">
+          <div class="req-title">Dynamic Follow-Up Questions</div>
+          <div class="req-desc">The agent must generate contextual follow-up questions based on each answer. It must never proceed to the next phase while clarity is still missing from the current one.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-014</div>
+        <div class="req-body">
+          <div class="req-title">Assumption Challenging</div>
+          <div class="req-desc">When a founder states an assumption (e.g., "there are no competitors"), the agent must challenge it with evidence-seeking questions before proceeding.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-015</div>
+        <div class="req-body">
+          <div class="req-title">Story & Evidence Seeking</div>
+          <div class="req-desc">For every claim, the agent must seek a concrete story or evidence ("Can you tell me a story about when this happened?"). Abstract answers are not accepted.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-016</div>
+        <div class="req-body">
+          <div class="req-title">Drill-Down Until Clarity</div>
+          <div class="req-desc">The agent must continue probing a topic until a specific, credible, and testable answer emerges. Depth of exploration is more important than speed of completion.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUARDRAILS -->
+  <section class="section" id="guardrails">
+    <div class="eyebrow">Requirements · Guardrails</div>
+    <div class="sec-title">Vague answers are rejected.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req">
+        <div class="req-id">REQ-017</div>
+        <div class="req-body">
+          <div class="req-title">Vague Answer Detection</div>
+          <div class="req-desc">The agent must detect and reject vague responses including: "I want to help people", "Everyone is my customer", "There are no competitors", and similar non-specific answers. It must redirect with specificity prompts.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-018</div>
+        <div class="req-body">
+          <div class="req-title">Specificity Enforcement</div>
+          <div class="req-desc">When a vague answer is detected, the agent must respond with: "Can you be more specific?", "Can you give an example?", "Tell me a story.", "Who exactly?", or "Why exactly?" before moving forward.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+      <div class="req">
+        <div class="req-id">REQ-019</div>
+        <div class="req-body">
+          <div class="req-title">Phase Gate — Minimum Clarity Threshold</div>
+          <div class="req-desc">Each phase has a minimum clarity threshold. The agent must not advance to the next phase until the threshold is met. Thresholds are defined per phase in the scoring model.</div>
+        </div>
+        <div class="req-status proposed">Proposed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORING -->
+  <section class="section" id="scoring">
+    <div class="eyebrow">Requirements · Internal Scoring Model</div>
+    <div class="sec-title">Four scores. One verdict.</div>
+    <div class="rule"></div>
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="req-id" style="margin-bottom:8px;">REQ-020</div>
+        <div class="score-name">Founder-Market Fit Score</div>
+        <div class="score-range">0 – 100</div>
+        <div class="score-factors">
+          <div class="score-factor">Experience in the domain</div>
+          <div class="score-factor">Passion for the problem</div>
+          <div class="score-factor">Credibility with the customer</div>
+          <div class="score-factor">Relevant network</div>
+          <div class="score-factor">Domain expertise</div>
+          <div class="score-factor">Personal connection to pain</div>
+        </div>
+      </div>
+      <div class="score-card">
+        <div class="req-id" style="margin-bottom:8px;">REQ-021</div>
+        <div class="score-name">Problem Strength Score</div>
+        <div class="score-range">0 – 100</div>
+        <div class="score-factors">
+          <div class="score-factor">Frequency of occurrence</div>
+          <div class="score-factor">Urgency to solve</div>
+          <div class="score-factor">Severity of pain</div>
+          <div class="score-factor">Economic cost of problem</div>
+          <div class="score-factor">Dissatisfaction with current solutions</div>
+        </div>
+      </div>
+      <div class="score-card">
+        <div class="req-id" style="margin-bottom:8px;">REQ-022</div>
+        <div class="score-name">Execution Potential Score</div>
+        <div class="score-range">0 – 100</div>
+        <div class="score-factors">
+          <div class="score-factor">Time commitment available</div>
+          <div class="score-factor">Financial resources</div>
+          <div class="score-factor">Relevant skill set</div>
+          <div class="score-factor">Network to leverage</div>
+          <div class="score-factor">Demonstrated determination</div>
+        </div>
+      </div>
+      <div class="score-card full">
+        <div class="req-id" style="margin-bottom:8px;">REQ-023</div>
+        <div class="score-name">Overall SPS Score</div>
+        <div class="score-range">0 – 100 · Composite of REQ-020, 021, 022</div>
+        <div class="score-factors" style="flex-direction:row;flex-wrap:wrap;gap:16px;">
+          <div class="score-factor">Weighted average across all three scores</div>
+          <div class="score-factor">Drives the final Green/Yellow/Red recommendation</div>
+          <div class="score-factor">Visible to founder in their Venture Brief</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DELIVERABLE -->
+  <section class="section" id="deliverable">
+    <div class="eyebrow">Requirements · Final Deliverable</div>
+    <div class="sec-title">The Founder Venture Brief</div>
+    <div class="rule"></div>
+    <p class="sec-sub">A professional, structured document generated at the end of every session. This becomes the input to every downstream SPS agent.</p>
+    <div class="brief-grid">
+      <div class="brief-section"><div class="brief-num">REQ-024 · Section 1</div><div class="brief-title">Executive Summary</div><div class="brief-desc">One-page overview of the founder, problem, and opportunity.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-025 · Section 2</div><div class="brief-title">Founder Profile</div><div class="brief-desc">Background, experience, strengths, and superpowers.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-026 · Section 3</div><div class="brief-title">Founder Story</div><div class="brief-desc">Personal narrative — why this founder, why this problem, why now.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-027 · Section 4</div><div class="brief-title">Problem Statement</div><div class="brief-desc">Detailed articulation of the pain being solved.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-028 · Section 5</div><div class="brief-title">Customer Profile</div><div class="brief-desc">ICP definition, pain points, and jobs to be done.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-029 · Section 6</div><div class="brief-title">Proposed Solution</div><div class="brief-desc">Vision, features, and differentiation.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-030 · Section 7</div><div class="brief-title">Founder-Market Fit Analysis</div><div class="brief-desc">Strengths, weaknesses, risks, and unfair advantages.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-031 · Section 8</div><div class="brief-title">Key Assumptions</div><div class="brief-desc">What must be true for this venture to succeed.</div></div>
+      <div class="brief-section"><div class="brief-num">REQ-032 · Section 9</div><div class="brief-title">Open Questions</div><div class="brief-desc">Unknowns requiring validation before proceeding.</div></div>
+      <div class="brief-section" style="border-color:rgba(255,94,26,0.3);background:rgba(255,94,26,0.04);"><div class="brief-num">REQ-033 · Section 10</div><div class="brief-title">SPS Recommendation</div><div class="brief-desc">Green / Yellow / Red light with rationale and next steps.</div></div>
+    </div>
+  </section>
+
+  <!-- RECOMMENDATION -->
+  <section class="section" id="recommendation">
+    <div class="eyebrow">Requirements · SPS Recommendation</div>
+    <div class="sec-title">One of three outcomes.</div>
+    <div class="rule"></div>
+    <div class="reco-grid">
+      <div class="reco green">
+        <div class="reco-light">🟢</div>
+        <div class="reco-label">REQ-034 · Green Light</div>
+        <div class="reco-desc">Proceed to Market Research Agent. Founder-Market Fit is strong. Problem is real. Commitment is credible.</div>
+      </div>
+      <div class="reco yellow">
+        <div class="reco-light">🟡</div>
+        <div class="reco-label">REQ-035 · Yellow Light</div>
+        <div class="reco-desc">Refine the idea. One or more dimensions need strengthening before moving forward. Agent provides specific guidance.</div>
+      </div>
+      <div class="reco red">
+        <div class="reco-light">🔴</div>
+        <div class="reco-label">REQ-036 · Red Light</div>
+        <div class="reco-desc">Reconsider the opportunity. Fundamental misalignment detected. Agent explains why and suggests alternative paths.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section class="section" id="pipeline">
+    <div class="eyebrow">SPS Agent Pipeline</div>
+    <div class="sec-title">Agent 1 of 9.</div>
+    <div class="rule"></div>
+    <p class="sec-sub">The Founder Venture Brief generated here becomes the input to every downstream agent. Quality here determines quality everywhere.</p>
+    <div class="pipeline">
+      <div class="pipe-item current">
+        <div class="pipe-num">01</div>
+        <div class="pipe-name active">Ideation Agent ← You are here</div>
+      </div>
+      <div class="pipe-item"><div class="pipe-num">02</div><div class="pipe-name">Market Research Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">03</div><div class="pipe-name">TAM/SAM/SOM Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">04</div><div class="pipe-name">Business Model Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">05</div><div class="pipe-name">Cost & Asset Classification Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">06</div><div class="pipe-name">Validation Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">07</div><div class="pipe-name">Investor Readiness Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">08</div><div class="pipe-name">Pitch Deck Agent</div></div>
+      <div class="pipe-item"><div class="pipe-num">09</div><div class="pipe-name">Fundraising Agent</div></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function navTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+
+function togglePhase(header){
+  const body=header.nextElementSibling;
+  const chevron=header.querySelector('.phase-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+
+// Scroll spy
+const secs=['overview','vision','inputs','interview','adaptive','guardrails','scoring','deliverable','recommendation','pipeline'];
+window.addEventListener('scroll',()=>{
+  let cur='overview';
+  secs.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && window.scrollY >= el.offsetTop-120) cur=id;
+  });
+  document.querySelectorAll('.sb-link').forEach(l=>{
+    const target=l.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+    l.classList.toggle('active', target===cur);
+  });
+},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paro Wellness — Brand Guide v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --espresso: #2C2420;
+    --terracotta: #B85C38;
+    --honey: #D4A574;
+    --driftwood: #8A7A6C;
+    --linen: #F7F3EE;
+    --cream: #FBF9F6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--espresso);
+    color: var(--linen);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+  body.light-mode {
+    background: var(--linen);
+    color: var(--espresso);
+  }
+
+  /* PASSWORD GATE */
+  #password-gate {
+    position: fixed; inset: 0;
+    background: var(--espresso);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+    flex-direction: column;
+    gap: 32px;
+  }
+  #password-gate .gate-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 72px;
+    color: var(--linen);
+    letter-spacing: -2px;
+  }
+  #password-gate .gate-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+  }
+  #password-gate .gate-form {
+    display: flex; flex-direction: column; gap: 16px; align-items: center;
+  }
+  #password-gate input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(247,243,238,0.2);
+    color: var(--linen);
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    padding: 14px 24px;
+    border-radius: 8px;
+    width: 280px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  #password-gate input:focus { border-color: var(--terracotta); }
+  #password-gate button {
+    background: var(--terracotta);
+    color: var(--linen);
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 14px 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 280px;
+    transition: opacity 0.2s;
+  }
+  #password-gate button:hover { opacity: 0.88; }
+  #password-gate .gate-error {
+    color: var(--terracotta);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 20px;
+  }
+  #password-gate .gate-terracotta-line {
+    width: 48px; height: 2px;
+    background: var(--terracotta);
+  }
+
+  /* MAIN APP */
+  #app { display: none; }
+
+  /* TOP BAR */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 64px;
+    background: var(--espresso);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  body.light-mode .topbar {
+    background: var(--linen);
+    border-bottom: 1px solid rgba(44,36,32,0.12);
+  }
+  .topbar-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--linen);
+    letter-spacing: -1px;
+  }
+  body.light-mode .topbar-logo { color: var(--espresso); }
+  .topbar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+    margin-left: 16px;
+  }
+  .topbar-left { display: flex; align-items: baseline; gap: 0; }
+  .topbar-actions { display: flex; gap: 12px; align-items: center; }
+  .btn-icon {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--linen);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  body.light-mode .btn-icon { border-color: rgba(44,36,32,0.2); color: var(--espresso); }
+  .btn-icon:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+  /* TAB NAV */
+  .tabnav {
+    position: fixed; top: 64px; left: 0; right: 0;
+    background: var(--espresso);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; gap: 0;
+    padding: 0 40px;
+    z-index: 99;
+    overflow-x: auto;
+    transition: background 0.3s;
+  }
+  body.light-mode .tabnav {
+    background: var(--cream);
+    border-bottom: 1px solid rgba(44,36,32,0.08);
+  }
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 16px 20px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--linen); }
+  body.light-mode .tab-btn:hover { color: var(--espresso); }
+  .tab-btn.active { color: var(--terracotta); border-bottom-color: var(--terracotta); }
+
+  /* CONTENT */
+  .content {
+    margin-top: 128px;
+    padding: 64px 80px;
+    max-width: 1200px;
+  }
+  @media (max-width: 768px) { .content { padding: 40px 24px; } }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    margin-bottom: 64px;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    color: var(--linen);
+    margin-bottom: 16px;
+  }
+  body.light-mode .section-title { color: var(--espresso); }
+  .section-subtitle {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    color: var(--driftwood);
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  /* CARDS */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 24px;
+  }
+  body.light-mode .card {
+    background: var(--cream);
+    border-color: rgba(44,36,32,0.08);
+  }
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 20px;
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ─── SECTION 1: BRAND FOUNDATION ─── */
+  .big-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 120px;
+    color: var(--linen);
+    letter-spacing: -4px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  body.light-mode .big-name { color: var(--espresso); }
+  .big-tagline {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 24px;
+    color: var(--honey);
+    margin-bottom: 48px;
+  }
+
+  .attribute-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  @media (max-width: 900px) { .attribute-grid { grid-template-columns: 1fr 1fr; } }
+  .attribute-pill {
+    background: rgba(184,92,56,0.12);
+    border: 1px solid rgba(184,92,56,0.3);
+    border-radius: 100px;
+    padding: 12px 20px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .archetype-card {
+    background: linear-gradient(135deg, rgba(184,92,56,0.12) 0%, rgba(212,165,116,0.08) 100%);
+    border: 1px solid rgba(184,92,56,0.2);
+    border-radius: 16px;
+    padding: 40px;
+    display: flex; gap: 40px; align-items: flex-start;
+  }
+  .archetype-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--linen);
+    flex-shrink: 0;
+  }
+  .archetype-text h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--linen);
+    margin-bottom: 8px;
+  }
+  body.light-mode .archetype-text h3 { color: var(--espresso); }
+  .archetype-text p { color: var(--driftwood); line-height: 1.7; }
+
+  /* ─── SECTION 2: LOGO ─── */
+  .logo-showcase {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin: 32px 0;
+  }
+  @media (max-width: 900px) { .logo-showcase { grid-template-columns: 1fr; } }
+  .logo-variant {
+    border-radius: 16px;
+    padding: 48px 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .logo-variant.v1 { background: var(--linen); }
+  .logo-variant.v2 { background: var(--espresso); border: 1px solid rgba(255,255,255,0.1); }
+  .logo-variant.v3 { background: var(--linen); }
+  .logo-wordmark {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .logo-wordmark.espresso { color: var(--espresso); }
+  .logo-wordmark.linen { color: var(--linen); }
+  .logo-wordmark.terracotta { color: var(--terracotta); }
+  .logo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .logo-label.dk { color: var(--driftwood); }
+  .logo-label.lt { color: rgba(247,243,238,0.4); }
+
+  .icon-mark-showcase {
+    display: flex; gap: 40px; align-items: center; margin: 32px 0;
+  }
+  .icon-mark {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  /* Botanical SVG icon */
+  .paro-icon-svg {
+    width: 96px; height: 96px;
+  }
+
+  .logo-dont-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px;
+  }
+  @media (max-width: 900px) { .logo-dont-grid { grid-template-columns: 1fr; } }
+  .dont-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  body.light-mode .dont-item {
+    background: var(--cream);
+    border-color: rgba(44,36,32,0.06);
+  }
+  .dont-badge {
+    background: rgba(184,92,56,0.15);
+    color: var(--terracotta);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+  .dont-item p { font-size: 13px; color: var(--driftwood); text-align: center; }
+
+  /* ─── SECTION 3: COLORS ─── */
+  .color-swatches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 900px) { .color-swatches { grid-template-columns: 1fr 1fr; } }
+  .color-swatch {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  body.light-mode .color-swatch { border-color: rgba(44,36,32,0.08); }
+  .swatch-block { height: 120px; }
+  .swatch-info {
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+  }
+  body.light-mode .swatch-info { background: var(--cream); }
+  .swatch-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--linen);
+    margin-bottom: 4px;
+  }
+  body.light-mode .swatch-name { color: var(--espresso); }
+  .swatch-hex {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--terracotta);
+    margin-bottom: 8px;
+  }
+  .swatch-rgb {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--driftwood);
+    margin-bottom: 12px;
+  }
+  .swatch-usage { font-size: 13px; color: var(--driftwood); line-height: 1.5; }
+
+  .color-pairings {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  @media (max-width: 768px) { .color-pairings { grid-template-columns: 1fr; } }
+  .pairing-card {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pairing-demo {
+    padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pairing-meta {
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    display: flex; gap: 8px; align-items: center;
+  }
+  body.light-mode .pairing-meta { background: var(--cream); }
+  .pairing-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .pairing-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--driftwood);
+  }
+
+  /* ─── SECTION 4: TYPOGRAPHY ─── */
+  .type-scale-item {
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  body.light-mode .type-scale-item { border-bottom-color: rgba(44,36,32,0.06); }
+  .type-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+    margin-bottom: 12px;
+  }
+  .type-display {
+    font-family: 'Instrument Serif', serif;
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: var(--linen);
+    line-height: 1;
+  }
+  body.light-mode .type-display { color: var(--espresso); }
+  .type-h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--linen);
+    line-height: 1.1;
+  }
+  body.light-mode .type-h1 { color: var(--espresso); }
+  .type-h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--linen);
+    line-height: 1.2;
+  }
+  body.light-mode .type-h2 { color: var(--espresso); }
+  .type-h3 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--linen);
+  }
+  body.light-mode .type-h3 { color: var(--espresso); }
+  .type-body {
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--linen);
+  }
+  body.light-mode .type-body { color: var(--espresso); }
+  .type-caption {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--driftwood);
+  }
+  .type-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+  }
+
+  .font-showcase {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 24px;
+  }
+  body.light-mode .font-showcase {
+    background: var(--cream);
+    border-color: rgba(44,36,32,0.06);
+  }
+  .font-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 24px;
+  }
+
+  /* ─── SECTION 5: VOICE & TONE ─── */
+  .voice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0;
+  }
+  .voice-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  body.light-mode .voice-table th { border-bottom-color: rgba(44,36,32,0.08); }
+  .voice-table td {
+    padding: 20px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--linen);
+  }
+  body.light-mode .voice-table td { color: var(--espresso); border-bottom-color: rgba(44,36,32,0.04); }
+  .voice-table td:first-child {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    color: var(--terracotta);
+    white-space: nowrap;
+  }
+  .voice-table .good { color: #68A063; }
+  .voice-table .bad { color: rgba(184,92,56,0.6); text-decoration: line-through; }
+
+  .claim-card {
+    background: rgba(184,92,56,0.08);
+    border: 1px solid rgba(184,92,56,0.2);
+    border-radius: 12px;
+    padding: 32px;
+    margin-top: 32px;
+  }
+  .claim-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 20px;
+  }
+  .claim-list { list-style: none; }
+  .claim-list li {
+    font-size: 14px;
+    color: var(--linen);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: flex-start; gap: 12px;
+    line-height: 1.5;
+  }
+  body.light-mode .claim-list li { color: var(--espresso); }
+  .claim-list li:last-child { border-bottom: none; }
+  .claim-list .dot { color: var(--terracotta); font-size: 18px; line-height: 1; }
+
+  /* ─── SECTION 6: PRODUCT PRESENTATION ─── */
+  .photo-do-dont {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0;
+  }
+  @media (max-width: 768px) { .photo-do-dont { grid-template-columns: 1fr; } }
+  .do-card { background: rgba(104,160,99,0.08); border: 1px solid rgba(104,160,99,0.2); border-radius: 12px; padding: 32px; }
+  .dont-card-photo { background: rgba(184,92,56,0.08); border: 1px solid rgba(184,92,56,0.2); border-radius: 12px; padding: 32px; }
+  .do-card h4 { color: #68A063; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .dont-card-photo h4 { color: var(--terracotta); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .do-card li, .dont-card-photo li { font-size: 14px; color: var(--linen); padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); list-style: none; display: flex; gap: 10px; }
+  body.light-mode .do-card li, body.light-mode .dont-card-photo li { color: var(--espresso); }
+  .do-card li::before { content: "✓"; color: #68A063; }
+  .dont-card-photo li::before { content: "✗"; color: var(--terracotta); }
+
+  .amber-vial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 48px 0;
+  }
+  .vial-svg-container {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .vial-caption { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--driftwood); }
+
+  /* ─── SECTION 7: DIGITAL GUIDELINES ─── */
+  .digital-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0;
+  }
+  @media (max-width: 768px) { .digital-grid { grid-template-columns: 1fr; } }
+  .digital-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  body.light-mode .digital-card { background: var(--cream); border-color: rgba(44,36,32,0.06); }
+  .digital-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 16px;
+  }
+  .digital-card ul { list-style: none; }
+  .digital-card li {
+    font-size: 14px;
+    color: var(--linen);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    line-height: 1.5;
+  }
+  body.light-mode .digital-card li { color: var(--espresso); border-bottom-color: rgba(44,36,32,0.04); }
+
+  .spacing-demo {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 24px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  body.light-mode .spacing-demo { background: var(--cream); border-color: rgba(44,36,32,0.06); }
+  .grid-unit { width: 8px; height: 8px; background: var(--terracotta); border-radius: 2px; flex-shrink: 0; }
+  .spacing-info { font-size: 14px; color: var(--driftwood); line-height: 1.6; }
+
+  /* SPS MARK */
+  .sps-mark {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--driftwood);
+    opacity: 0.4;
+    z-index: 50;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 48px 0;
+  }
+  body.light-mode .divider { background: rgba(44,36,32,0.06); }
+
+  /* POSITION STATEMENT */
+  .position-statement {
+    background: linear-gradient(135deg, rgba(184,92,56,0.08) 0%, rgba(212,165,116,0.05) 100%);
+    border: 1px solid rgba(184,92,56,0.15);
+    border-left: 4px solid var(--terracotta);
+    border-radius: 0 12px 12px 0;
+    padding: 32px 40px;
+    margin: 32px 0;
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--linen);
+    line-height: 1.5;
+    font-style: italic;
+  }
+  body.light-mode .position-statement { color: var(--espresso); }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="password-gate">
+  <div class="gate-logo">PARO</div>
+  <div class="gate-label">Brand Guide · v1.0 · Confidential</div>
+  <div class="gate-terracotta-line"></div>
+  <div class="gate-form">
+    <input type="password" id="pw-input" placeholder="Enter passphrase" onkeydown="if(event.key==='Enter')checkPW()">
+    <button onclick="checkPW()">Access Brand Guide</button>
+    <div class="gate-error" id="pw-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">PARO</span>
+      <span class="topbar-label">Brand Guide · v1.0</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-icon" onclick="toggleMode()" id="mode-btn">☀ Light</button>
+      <button class="btn-icon" onclick="window.print()">⬡ Print</button>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tabnav">
+    <button class="tab-btn active" onclick="showTab('foundation',this)">01 Foundation</button>
+    <button class="tab-btn" onclick="showTab('logo',this)">02 Logo</button>
+    <button class="tab-btn" onclick="showTab('colors',this)">03 Color</button>
+    <button class="tab-btn" onclick="showTab('type',this)">04 Typography</button>
+    <button class="tab-btn" onclick="showTab('voice',this)">05 Voice & Tone</button>
+    <button class="tab-btn" onclick="showTab('product',this)">06 Product</button>
+    <button class="tab-btn" onclick="showTab('digital',this)">07 Digital</button>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ─── TAB 1: BRAND FOUNDATION ─── -->
+    <div class="section active" id="tab-foundation">
+      <div class="section-header">
+        <span class="section-label">01 · Brand Foundation</span>
+        <div class="section-title" style="font-size:36px;margin-bottom:8px;">The Paro Brand</div>
+      </div>
+
+      <div class="big-name">PARO</div>
+      <div class="big-tagline">"Prepared by nature. Proven by science."</div>
+
+      <div class="card">
+        <div class="card-title">Name & Meaning</div>
+        <p style="font-size:16px;line-height:1.7;color:var(--driftwood);">
+          <span style="color:var(--linen);font-family:'Instrument Serif',serif;font-size:20px;">PARO</span>
+          &nbsp;— from Latin <em>parare</em>: to prepare, to make ready. The name carries scientific intention — a body 
+          prepared with the right inputs, at the right dose, backed by proof. Short. Memorable. Clinical. Warm.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Mission</div>
+        <p style="font-size:18px;line-height:1.7;color:var(--linen);">
+          To build the world's first subscription wellness shot backed by human clinical data — making pharmaceutical-grade 
+          anti-inflammatory science accessible as a daily ritual.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Brand Personality</div>
+        <div class="attribute-grid">
+          <div class="attribute-pill">Clinical</div>
+          <div class="attribute-pill">Warm</div>
+          <div class="attribute-pill">Considered</div>
+          <div class="attribute-pill">Honest</div>
+          <div class="attribute-pill">Premium</div>
+        </div>
+      </div>
+
+      <div class="archetype-card">
+        <div class="archetype-icon">⚗</div>
+        <div class="archetype-text">
+          <h3>The Sage × The Caregiver</h3>
+          <p>Paro holds the tension between two archetypes: The Sage — driven by knowledge, truth, and 
+          deep understanding — and The Caregiver — warm, nurturing, present. This is not a pharmaceutical 
+          brand wearing warm clothes. It is a wellness brand with the rigor to back every claim.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="position-statement">
+        "Where pharmaceutical rigor meets everyday wellness ritual."
+      </div>
+
+      <div class="card" style="margin-top:32px;">
+        <div class="card-title">Brand Position</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#68A063;margin-bottom:12px;">Paro Is</div>
+            <ul style="list-style:none;">
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:#68A063;">✓</span> The only clinical-data-backed ginger shot</li>
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:#68A063;">✓</span> Premium-priced, fully justified by proof</li>
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:#68A063;">✓</span> A daily ritual, not a pharmacy purchase</li>
+              <li style="padding:8px 0;font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:#68A063;">✓</span> Transparent about what's in it — and why</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:12px;">Paro Is Not</div>
+            <ul style="list-style:none;">
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:var(--terracotta);">✗</span> Another "ancient wisdom" wellness brand</li>
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:var(--terracotta);">✗</span> A pharmaceutical company</li>
+              <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:var(--terracotta);">✗</span> A supplement that makes vague claims</li>
+              <li style="padding:8px 0;font-size:14px;color:var(--linen);display:flex;gap:10px;"><span style="color:var(--terracotta);">✗</span> Cheap. Or ever trying to seem cheap.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 2: LOGO ─── -->
+    <div class="section" id="tab-logo">
+      <div class="section-header">
+        <span class="section-label">02 · Logo Usage</span>
+        <div class="section-title" style="font-size:36px;">The Wordmark</div>
+        <p class="section-subtitle">Full logomark in development. The PARO wordmark is primary until finalized.</p>
+      </div>
+
+      <div class="logo-showcase">
+        <div class="logo-variant v1">
+          <div class="logo-wordmark espresso">PARO</div>
+          <div class="logo-label dk">Espresso on Linen</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8A7A6C;letter-spacing:1px;">Primary · Light Backgrounds</div>
+        </div>
+        <div class="logo-variant v2">
+          <div class="logo-wordmark linen">PARO</div>
+          <div class="logo-label lt">Linen on Espresso</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(247,243,238,0.4);letter-spacing:1px;">Primary · Dark Backgrounds</div>
+        </div>
+        <div class="logo-variant v3">
+          <div class="logo-wordmark terracotta">PARO</div>
+          <div class="logo-label dk">Terracotta on Linen</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#8A7A6C;letter-spacing:1px;">Accent · Special Uses</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Icon Mark — Botanical Placeholder</div>
+        <div class="icon-mark-showcase">
+          <div class="icon-mark">
+            <!-- Botanical SVG — stylized ginger leaf / P mark -->
+            <svg class="paro-icon-svg" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="48" cy="48" r="46" stroke="#B85C38" stroke-width="2"/>
+              <circle cx="48" cy="48" r="38" fill="#B85C38" fill-opacity="0.08"/>
+              <!-- Stylized ginger root shape -->
+              <path d="M48 28 C52 28, 58 32, 58 40 C58 46, 54 50, 48 52 C42 50, 38 46, 38 40 C38 32, 44 28, 48 28Z" fill="#B85C38" fill-opacity="0.7"/>
+              <path d="M48 52 L48 68" stroke="#B85C38" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M42 58 C38 54, 34 56, 32 60" stroke="#B85C38" stroke-width="2" stroke-linecap="round"/>
+              <path d="M54 60 C58 56, 62 58, 64 62" stroke="#B85C38" stroke-width="2" stroke-linecap="round"/>
+              <path d="M48 42 C48 38, 44 36, 44 32" stroke="#FBF9F6" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.6"/>
+            </svg>
+            <div class="vial-caption">Botanical Mark · Terracotta</div>
+          </div>
+          <div class="icon-mark" style="margin-left:24px;">
+            <svg class="paro-icon-svg" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="48" cy="48" r="46" stroke="#2C2420" stroke-width="2"/>
+              <circle cx="48" cy="48" r="38" fill="#2C2420"/>
+              <path d="M48 28 C52 28, 58 32, 58 40 C58 46, 54 50, 48 52 C42 50, 38 46, 38 40 C38 32, 44 28, 48 28Z" fill="#B85C38"/>
+              <path d="M48 52 L48 68" stroke="#B85C38" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M42 58 C38 54, 34 56, 32 60" stroke="#B85C38" stroke-width="2" stroke-linecap="round"/>
+              <path d="M54 60 C58 56, 62 58, 64 62" stroke="#B85C38" stroke-width="2" stroke-linecap="round"/>
+              <path d="M48 42 C48 38, 44 36, 44 32" stroke="#F7F3EE" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.6"/>
+            </svg>
+            <div class="vial-caption">Dark Background Version</div>
+          </div>
+          <div style="flex:1;padding:0 32px;">
+            <p style="font-size:14px;color:var(--driftwood);line-height:1.7;">
+              The botanical icon represents Evithé's ginger extract — the living ingredient at the heart of Paro. 
+              The circular form conveys completeness and ritual. The stylized ginger root communicates the natural origin. 
+              <br><br>
+              <strong style="color:var(--terracotta);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;">NOTE:</strong> 
+              <span style="color:var(--driftwood);">This is a placeholder. Full logomark in professional development.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Clearspace & Minimum Size</div>
+        <div style="display:flex;gap:48px;align-items:center;flex-wrap:wrap;">
+          <div style="position:relative;padding:32px;border:1px dashed rgba(184,92,56,0.3);border-radius:8px;background:var(--linen);">
+            <div class="logo-wordmark espresso" style="font-size:40px;">PARO</div>
+            <div style="position:absolute;top:0;left:0;width:100%;height:4px;background:rgba(184,92,56,0.3);"></div>
+            <div style="position:absolute;bottom:0;left:0;width:100%;height:4px;background:rgba(184,92,56,0.3);"></div>
+            <div style="position:absolute;top:0;left:0;height:100%;width:4px;background:rgba(184,92,56,0.3);"></div>
+            <div style="position:absolute;top:0;right:0;height:100%;width:4px;background:rgba(184,92,56,0.3);"></div>
+          </div>
+          <div>
+            <ul style="list-style:none;">
+              <li style="font-size:14px;color:var(--driftwood);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">Clear space = ½× cap-height on all sides</li>
+              <li style="font-size:14px;color:var(--driftwood);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">Minimum digital size: 80px wide</li>
+              <li style="font-size:14px;color:var(--driftwood);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">Minimum print size: 0.75 inches wide</li>
+              <li style="font-size:14px;color:var(--driftwood);padding:8px 0;">Never place on pattern or photo without overlay</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:48px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px;">Logo DON'Ts</div>
+        <div class="logo-dont-grid">
+          <div class="dont-item">
+            <div style="font-family:'Instrument Serif',serif;font-size:40px;color:var(--linen);filter:drop-shadow(4px 4px 8px rgba(0,0,0,0.5));">PARO</div>
+            <div class="dont-badge">✗ No Drop Shadows</div>
+            <p>Drop shadows reduce credibility and legibility. Paro stands on its own.</p>
+          </div>
+          <div class="dont-item">
+            <div style="font-family:'Instrument Serif',serif;font-size:40px;color:var(--linen);transform:scaleX(1.4);display:inline-block;">PARO</div>
+            <div class="dont-badge">✗ No Stretching</div>
+            <p>Never alter proportions. The typeface geometry is intentional.</p>
+          </div>
+          <div class="dont-item">
+            <div style="font-family:'Instrument Serif',serif;font-size:40px;color:rgba(44,36,32,0.2);background:rgba(44,36,32,0.15);padding:8px 16px;border-radius:4px;">PARO</div>
+            <div class="dont-badge">✗ No Low Contrast</div>
+            <p>Never place logo on backgrounds where contrast ratio falls below 4.5:1.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 3: COLORS ─── -->
+    <div class="section" id="tab-colors">
+      <div class="section-header">
+        <span class="section-label">03 · Color System</span>
+        <div class="section-title" style="font-size:36px;">The Palette</div>
+        <p class="section-subtitle">Earthy, warm, and considered. Every color earns its place.</p>
+      </div>
+
+      <div class="color-swatches">
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#2C2420;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Espresso</div>
+            <div class="swatch-hex">#2C2420</div>
+            <div class="swatch-rgb">RGB 44 · 36 · 32</div>
+            <div class="swatch-usage">Primary dark background. Primary text on light surfaces. The anchor of the palette.</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#B85C38;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Terracotta</div>
+            <div class="swatch-hex">#B85C38</div>
+            <div class="swatch-rgb">RGB 184 · 92 · 56</div>
+            <div class="swatch-usage">Primary accent. CTAs, highlights, active states, data callouts, section headers.</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#D4A574;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Honey</div>
+            <div class="swatch-hex">#D4A574</div>
+            <div class="swatch-rgb">RGB 212 · 165 · 116</div>
+            <div class="swatch-usage">Secondary accent. Supporting warmth, tags, secondary CTAs, decorative elements.</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#8A7A6C;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Driftwood</div>
+            <div class="swatch-hex">#8A7A6C</div>
+            <div class="swatch-rgb">RGB 138 · 122 · 108</div>
+            <div class="swatch-usage">Muted text. Supporting copy, subheadings, metadata, secondary information.</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#F7F3EE;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Linen</div>
+            <div class="swatch-hex">#F7F3EE</div>
+            <div class="swatch-rgb">RGB 247 · 243 · 238</div>
+            <div class="swatch-usage">Primary light background. Text on dark surfaces. Cards on dark mode.</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-block" style="background:#FBF9F6;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Cream</div>
+            <div class="swatch-hex">#FBF9F6</div>
+            <div class="swatch-rgb">RGB 251 · 249 · 246</div>
+            <div class="swatch-usage">Secondary light background. Alternate cards, off-white sections, print background.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px;">Approved Color Pairings</div>
+      <div class="color-pairings">
+        <div class="pairing-card">
+          <div class="pairing-demo" style="background:#2C2420;">
+            <div style="font-family:'Instrument Serif',serif;font-size:24px;color:#F7F3EE;">Prepared by Nature.</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:14px;color:#8A7A6C;">Phase 1 validated. 0 adverse events.</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#B85C38;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">100mg Active Phenolics</div>
+          </div>
+          <div class="pairing-meta">
+            <div class="pairing-dot" style="background:#2C2420;border:1px solid rgba(255,255,255,0.2);"></div>
+            <div class="pairing-dot" style="background:#F7F3EE;"></div>
+            <div class="pairing-dot" style="background:#B85C38;"></div>
+            <div class="pairing-label">Dark Mode Primary</div>
+          </div>
+        </div>
+        <div class="pairing-card">
+          <div class="pairing-demo" style="background:#F7F3EE;">
+            <div style="font-family:'Instrument Serif',serif;font-size:24px;color:#2C2420;">Proven by Science.</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:14px;color:#8A7A6C;">7 validated inflammatory biomarkers.</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#B85C38;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Phase 1 Clinical Data</div>
+          </div>
+          <div class="pairing-meta">
+            <div class="pairing-dot" style="background:#F7F3EE;border:1px solid rgba(44,36,32,0.15);"></div>
+            <div class="pairing-dot" style="background:#2C2420;"></div>
+            <div class="pairing-dot" style="background:#B85C38;"></div>
+            <div class="pairing-label">Light Mode Primary</div>
+          </div>
+        </div>
+        <div class="pairing-card">
+          <div class="pairing-demo" style="background:#B85C38;">
+            <div style="font-family:'Instrument Serif',serif;font-size:24px;color:#F7F3EE;">The Daily Shot.</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:14px;color:rgba(247,243,238,0.7);">12 shots per month. $79.99.</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#D4A574;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">Subscribe & Save</div>
+          </div>
+          <div class="pairing-meta">
+            <div class="pairing-dot" style="background:#B85C38;"></div>
+            <div class="pairing-dot" style="background:#F7F3EE;"></div>
+            <div class="pairing-dot" style="background:#D4A574;"></div>
+            <div class="pairing-label">CTA / Accent</div>
+          </div>
+        </div>
+        <div class="pairing-card">
+          <div class="pairing-demo" style="background:#FBF9F6;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#D4A574;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Ingredient Label</div>
+            <div style="font-family:'Instrument Serif',serif;font-size:22px;color:#2C2420;">Evithé Extract</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:13px;color:#8A7A6C;">500mg · ~20% gingerols/shogaols</div>
+          </div>
+          <div class="pairing-meta">
+            <div class="pairing-dot" style="background:#FBF9F6;border:1px solid rgba(44,36,32,0.1);"></div>
+            <div class="pairing-dot" style="background:#2C2420;"></div>
+            <div class="pairing-dot" style="background:#D4A574;"></div>
+            <div class="pairing-label">Product / Label</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px;">Color DON'Ts</div>
+      <div class="card">
+        <ul style="list-style:none;">
+          <li style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;display:flex;gap:12px;align-items:center;">
+            <span style="color:var(--terracotta);font-size:18px;">✗</span>
+            <span style="color:var(--linen);">No pure black <code style="background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;font-size:12px;">#000000</code> — use Espresso <code style="background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;font-size:12px;">#2C2420</code> instead</span>
+          </li>
+          <li style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;display:flex;gap:12px;align-items:center;">
+            <span style="color:var(--terracotta);font-size:18px;">✗</span>
+            <span style="color:var(--linen);">No pure white <code style="background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;font-size:12px;">#FFFFFF</code> — use Linen <code style="background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;font-size:12px;">#F7F3EE</code> or Cream <code style="background:rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;font-size:12px;">#FBF9F6</code></span>
+          </li>
+          <li style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;display:flex;gap:12px;align-items:center;">
+            <span style="color:var(--terracotta);font-size:18px;">✗</span>
+            <span style="color:var(--linen);">No neon or saturated colors outside the defined palette</span>
+          </li>
+          <li style="padding:12px 0;font-size:14px;display:flex;gap:12px;align-items:center;">
+            <span style="color:var(--terracotta);font-size:18px;">✗</span>
+            <span style="color:var(--linen);">No off-brand colors for accents — Terracotta and Honey only</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ─── TAB 4: TYPOGRAPHY ─── -->
+    <div class="section" id="tab-type">
+      <div class="section-header">
+        <span class="section-label">04 · Typography</span>
+        <div class="section-title" style="font-size:36px;">Type System</div>
+        <p class="section-subtitle">Three typefaces. One purpose: clinical warmth at every scale.</p>
+      </div>
+
+      <div class="font-showcase">
+        <div class="font-name">Instrument Serif — Display & Headings</div>
+        <div class="type-display" style="margin-bottom:16px;">Prepared.</div>
+        <div class="type-h1" style="margin-bottom:12px;">Proven by Science.</div>
+        <div class="type-h2" style="margin-bottom:12px;">Phase 1 Clinical Data</div>
+        <p style="font-size:13px;color:var(--driftwood);margin-top:16px;">Editorial elegance with pharmaceutical authority. Used for all display text, h1, h2, pull quotes.</p>
+      </div>
+
+      <div class="font-showcase">
+        <div class="font-name">Outfit — Body & UI</div>
+        <p class="type-h3" style="margin-bottom:16px;">The World's First Clinical Ginger Shot</p>
+        <p class="type-body" style="margin-bottom:12px;">Paro is built on Evithé Biotechnology's patented, Phase 1-validated ginger extract — the only ginger extract in the world with human clinical data. 50 participants. 7 validated inflammatory biomarkers. 0 adverse events. 3 patents.</p>
+        <p class="type-caption">This is not a marketing story. It is a scientific moat.</p>
+        <p style="font-size:13px;color:var(--driftwood);margin-top:16px;">Clean and accessible. Used for all body text, UI elements, navigation, captions.</p>
+      </div>
+
+      <div class="font-showcase">
+        <div class="font-name">JetBrains Mono — Labels & Data</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="type-label">PHASE 1 VALIDATED · 50 PARTICIPANTS</div>
+          <div class="type-label" style="color:var(--honey);">7 BIOMARKERS · 0 ADVERSE EVENTS</div>
+          <div class="type-label" style="color:var(--driftwood);">30–50× MORE BIOAVAILABLE</div>
+        </div>
+        <p style="font-size:13px;color:var(--driftwood);margin-top:16px;">Technical precision for data, labels, eyebrows, counters, code. Never for body copy.</p>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin:40px 0 24px;">Type Scale</div>
+      <div class="card">
+        <div class="type-scale-item">
+          <div class="type-meta">Display · Instrument Serif 800 · 64px · -2px tracking</div>
+          <div class="type-display">Prepared.</div>
+        </div>
+        <div class="type-scale-item">
+          <div class="type-meta">H1 · Instrument Serif 700 · 48px</div>
+          <div class="type-h1">Proven by Science.</div>
+        </div>
+        <div class="type-scale-item">
+          <div class="type-meta">H2 · Instrument Serif 600 · 36px</div>
+          <div class="type-h2">Phase 1 Clinical Data</div>
+        </div>
+        <div class="type-scale-item">
+          <div class="type-meta">H3 · Outfit 600 · 24px</div>
+          <div class="type-h3">100mg Active Phenolics Per Shot</div>
+        </div>
+        <div class="type-scale-item">
+          <div class="type-meta">Body · Outfit 400 · 16px · 1.7 line height</div>
+          <div class="type-body">Your body deserves proof. Paro is built on the only clinical-data-backed ginger extract in the world — 100mg of standardized phenolics per shot, validated across 7 inflammatory biomarkers in a Phase 1 human trial.</div>
+        </div>
+        <div class="type-scale-item">
+          <div class="type-meta">Caption · Outfit 300 · 14px</div>
+          <div class="type-caption">Phase 1 trial data on file. Evithé Biotechnology Ltd. All claims substantiated by clinical evidence.</div>
+        </div>
+        <div class="type-scale-item" style="border-bottom:none;">
+          <div class="type-meta">Label · JetBrains Mono 500 · 11px · 3px tracking · Uppercase</div>
+          <div class="type-label">Phase 1 Validated · 3 Patents · 0 Adverse Events</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-title">Type DON'Ts</div>
+        <ul style="list-style:none;">
+          <li style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:12px;"><span style="color:var(--terracotta);">✗</span> No bold italic on body text — loses legibility fast</li>
+          <li style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--linen);display:flex;gap:12px;"><span style="color:var(--terracotta);">✗</span> No ALL CAPS on long text — use JetBrains Mono labels only</li>
+          <li style="padding:12px 0;font-size:14px;color:var(--linen);display:flex;gap:12px;"><span style="color:var(--terracotta);">✗</span> Never use more than 3 weights on one page — discipline = premium</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ─── TAB 5: VOICE & TONE ─── -->
+    <div class="section" id="tab-voice">
+      <div class="section-header">
+        <span class="section-label">05 · Voice & Tone</span>
+        <div class="section-title" style="font-size:36px;">How Paro Speaks</div>
+        <p class="section-subtitle">Five dimensions. Every word earns its place.</p>
+      </div>
+
+      <table class="voice-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Principle</th>
+            <th style="color:#68A063;">✓ Do Say</th>
+            <th style="color:var(--terracotta);">✗ Don't Say</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clinical<br><span style="font-weight:400;font-size:12px;color:var(--driftwood);">not cold</span></td>
+            <td>Lead with validated data. Numbers first. Specificity is warmth.</td>
+            <td class="good">"7 validated inflammatory biomarkers"</td>
+            <td class="bad">"may help with inflammation"</td>
+          </tr>
+          <tr>
+            <td>Warm<br><span style="font-weight:400;font-size:12px;color:var(--driftwood);">not fluffy</span></td>
+            <td>Connect data to human benefit. Never sacrifice specificity for feeling.</td>
+            <td class="good">"Your body deserves proof."</td>
+            <td class="bad">"Feel amazing every day!"</td>
+          </tr>
+          <tr>
+            <td>Considered<br><span style="font-weight:400;font-size:12px;color:var(--driftwood);">not over-explained</span></td>
+            <td>Lead with the claim. Support with science. Stop. No throat-clearing.</td>
+            <td class="good">"100mg. Phase 1 validated. No compromises."</td>
+            <td class="bad">"We believe that wellness should be backed by science, and that's why we partnered with..."</td>
+          </tr>
+          <tr>
+            <td>Honest<br><span style="font-weight:400;font-size:12px;color:var(--driftwood);">not hype</span></td>
+            <td>Specific claims backed by data. Never exaggerate beyond the evidence.</td>
+            <td class="good">"30–50× more bioavailable than commodity ginger"</td>
+            <td class="bad">"Revolutionary breakthrough formula"</td>
+          </tr>
+          <tr>
+            <td>Premium<br><span style="font-weight:400;font-size:12px;color:var(--driftwood);">not exclusive</span></td>
+            <td>Approachable excellence. Rigor without arrogance. Science for everyone.</td>
+            <td class="good">"The only ginger shot backed by human clinical data."</td>
+            <td class="bad">"For those who demand only the best."</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="divider"></div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:24px;">Claim Language Guidelines</div>
+      <div class="grid-2">
+        <div class="claim-card" style="background:rgba(104,160,99,0.08);border-color:rgba(104,160,99,0.2);">
+          <h4 style="color:#68A063;">✓ Backed by Phase 1 Data — You Can Say</h4>
+          <ul class="claim-list">
+            <li><span class="dot" style="color:#68A063;">→</span> "7 validated inflammatory biomarkers"</li>
+            <li><span class="dot" style="color:#68A063;">→</span> "50-participant Phase 1 clinical trial"</li>
+            <li><span class="dot" style="color:#68A063;">→</span> "0 adverse events reported"</li>
+            <li><span class="dot" style="color:#68A063;">→</span> "30–50× more bioavailable than commodity ginger"</li>
+            <li><span class="dot" style="color:#68A063;">→</span> "100mg standardized active phenolics per shot"</li>
+            <li><span class="dot" style="color:#68A063;">→</span> "The only ginger extract with Phase 1 human clinical data"</li>
+          </ul>
+        </div>
+        <div class="claim-card">
+          <h4>✗ Requires FDA/FTC Caution — Do Not Say</h4>
+          <ul class="claim-list">
+            <li><span class="dot">→</span> "Treats inflammation" (disease claim)</li>
+            <li><span class="dot">→</span> "Cures joint pain" (disease claim)</li>
+            <li><span class="dot">→</span> "Clinically proven" without disclaimer</li>
+            <li><span class="dot">→</span> Any claim implying Phase 3 drug approval</li>
+            <li><span class="dot">→</span> "FDA approved" (supplements are not drugs)</li>
+            <li><span class="dot">→</span> Guaranteed results on health outcomes</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-title">Required Disclaimer (Phase 1 References)</div>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--driftwood);line-height:1.7;">
+          *These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. 
+          Clinical data references Evithé Biotechnology's Phase 1 trial (n=50). Results may vary.
+        </p>
+      </div>
+    </div>
+
+    <!-- ─── TAB 6: PRODUCT PRESENTATION ─── -->
+    <div class="section" id="tab-product">
+      <div class="section-header">
+        <span class="section-label">06 · Product Presentation</span>
+        <div class="section-title" style="font-size:36px;">Visual Language</div>
+        <p class="section-subtitle">The amber glass vial is always the hero. Always.</p>
+      </div>
+
+      <!-- Amber Vial SVG -->
+      <div class="amber-vial">
+        <div class="vial-svg-container">
+          <svg width="120" height="200" viewBox="0 0 120 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Vial cap -->
+            <rect x="42" y="8" width="36" height="18" rx="4" fill="#2C2420"/>
+            <rect x="46" y="4" width="28" height="12" rx="3" fill="#3A3028"/>
+            <!-- Vial body -->
+            <path d="M38 26 L38 170 Q38 188 60 188 Q82 188 82 170 L82 26 Z" fill="#C8853A" fill-opacity="0.85"/>
+            <path d="M38 26 L38 170 Q38 188 60 188 Q82 188 82 170 L82 26 Z" fill="url(#vialGrad)"/>
+            <!-- Light reflection -->
+            <path d="M44 30 L44 168 Q44 180 52 184" stroke="#F7F3EE" stroke-width="3" stroke-opacity="0.25" stroke-linecap="round"/>
+            <!-- Label area -->
+            <rect x="44" y="70" width="32" height="60" rx="4" fill="#F7F3EE" fill-opacity="0.9"/>
+            <text x="60" y="92" text-anchor="middle" font-family="serif" font-size="10" font-weight="700" fill="#2C2420">PARO</text>
+            <line x1="50" y1="98" x2="70" y2="98" stroke="#B85C38" stroke-width="0.5"/>
+            <text x="60" y="108" text-anchor="middle" font-family="monospace" font-size="5.5" fill="#8A7A6C">DAILY SHOT</text>
+            <text x="60" y="118" text-anchor="middle" font-family="monospace" font-size="5" fill="#B85C38">2 FL OZ · 59mL</text>
+            <defs>
+              <linearGradient id="vialGrad" x1="38" y1="0" x2="82" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#8A5020" stop-opacity="0.4"/>
+                <stop offset="40%" stop-color="#C8853A" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#8A5020" stop-opacity="0.3"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="vial-caption">Paro Daily Shot · 2oz Amber Glass · Always the Hero</div>
+        </div>
+      </div>
+
+      <div class="photo-do-dont">
+        <div class="do-card">
+          <h4>✓ Shot Photography DOs</h4>
+          <ul>
+            <li>Natural light — golden hour, warm tones</li>
+            <li>Earthy surfaces: wood, stone, linen, marble</li>
+            <li>Botanical props: ginger root, herbs, leaves</li>
+            <li>Morning ritual setting — calm, intentional</li>
+            <li>Amber glass vial always visible and prominent</li>
+            <li>Warm color temperature throughout</li>
+            <li>Active wellness: yoga mat, morning coffee adjacent</li>
+            <li>Real hands, real settings — no sterility</li>
+          </ul>
+        </div>
+        <div class="dont-card-photo">
+          <h4>✗ Photography DON'Ts</h4>
+          <ul>
+            <li>Stock photo health imagery of any kind</li>
+            <li>Fake doctors, lab coats, clinical white settings</li>
+            <li>Before/after photography</li>
+            <li>Gym, CrossFit, heavy fitness contexts</li>
+            <li>Cool/blue color temperature</li>
+            <li>Overly retouched, perfected imagery</li>
+            <li>Pharmaceutical visual language</li>
+            <li>Plastic packaging visible</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Color Temperature & Mood</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
+          <div>
+            <div style="height:120px;border-radius:12px;background:linear-gradient(135deg,#8B6914,#C8853A,#D4A574,#E8C87A);margin-bottom:16px;"></div>
+            <div class="type-label" style="color:#68A063;margin-bottom:8px;">✓ WARM GOLDEN</div>
+            <p style="font-size:13px;color:var(--driftwood);">Color temp 2700–4000K. Think golden hour. Warm shadows. Amber tones dominant.</p>
+          </div>
+          <div>
+            <div style="height:120px;border-radius:12px;background:linear-gradient(135deg,#2A4A6B,#4A7A9B,#8AB4CC,#C5DDE8);margin-bottom:16px;"></div>
+            <div class="type-label" style="color:var(--terracotta);margin-bottom:8px;">✗ COOL CLINICAL</div>
+            <p style="font-size:13px;color:var(--driftwood);">Never. Cool blues and grays read pharmaceutical, not wellness ritual.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB 7: DIGITAL ─── -->
+    <div class="section" id="tab-digital">
+      <div class="section-header">
+        <span class="section-label">07 · Digital Guidelines</span>
+        <div class="section-title" style="font-size:36px;">Digital Standards</div>
+        <p class="section-subtitle">Consistent across every screen, every format.</p>
+      </div>
+
+      <div class="digital-grid">
+        <div class="digital-card">
+          <h4>Web</h4>
+          <ul>
+            <li>Dark mode default (Espresso background)</li>
+            <li>Light mode toggle available top-right</li>
+            <li>Terracotta as primary CTA color</li>
+            <li>Minimum 16px body text on desktop</li>
+            <li>Max content width: 1200px</li>
+            <li>Navigation: sticky, translucent on scroll</li>
+          </ul>
+        </div>
+        <div class="digital-card">
+          <h4>Email</h4>
+          <ul>
+            <li>Light background (Linen) always</li>
+            <li>Espresso header band with Linen logo</li>
+            <li>Max width: 600px</li>
+            <li>Terracotta CTA buttons only</li>
+            <li>Plain text fallback available</li>
+            <li>Preheader text: always present</li>
+          </ul>
+        </div>
+        <div class="digital-card">
+          <h4>Social Media</h4>
+          <ul>
+            <li>Square format (1080×1080) primary</li>
+            <li>Terracotta as social accent color</li>
+            <li>PARO wordmark always present</li>
+            <li>Minimal text overlay — visuals lead</li>
+            <li>Amber vial in 80%+ of product posts</li>
+            <li>JetBrains Mono for data callouts</li>
+          </ul>
+        </div>
+        <div class="digital-card">
+          <h4>Accessibility</h4>
+          <ul>
+            <li>WCAG 2.1 AA minimum contrast ratio</li>
+            <li>Espresso on Linen: 12.6:1 ✓</li>
+            <li>Terracotta on Linen: 4.8:1 ✓</li>
+            <li>Linen on Espresso: 12.6:1 ✓</li>
+            <li>Alt text on all product images</li>
+            <li>Keyboard navigation on all web assets</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin:40px 0 24px;">Spacing System — 8px Grid</div>
+      <div class="spacing-demo">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div class="grid-unit" style="width:8px;height:24px;" title="8px"></div>
+          <div class="grid-unit" style="width:16px;height:24px;" title="16px"></div>
+          <div class="grid-unit" style="width:24px;height:24px;" title="24px"></div>
+          <div class="grid-unit" style="width:32px;height:24px;" title="32px"></div>
+          <div class="grid-unit" style="width:40px;height:24px;" title="40px"></div>
+          <div class="grid-unit" style="width:48px;height:24px;" title="48px"></div>
+          <div class="grid-unit" style="width:64px;height:24px;" title="64px"></div>
+        </div>
+        <div class="spacing-info">
+          <strong style="color:var(--linen);">8px Grid</strong> — all spacing values are multiples of 8.
+          <br>8 · 16 · 24 · 32 · 40 · 48 · 64px
+          <br><span style="color:var(--driftwood);">Minimum padding: 16px on all sides. Generous section padding: 64px+.</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:24px;">
+        <div class="card-title">Button Standards</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+          <button style="background:var(--terracotta);color:var(--linen);border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;cursor:default;">Subscribe Now</button>
+          <button style="background:transparent;color:var(--terracotta);border:2px solid var(--terracotta);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:12px 30px;border-radius:8px;cursor:default;">Learn More</button>
+          <button style="background:var(--honey);color:var(--espresso);border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;cursor:default;">Secondary CTA</button>
+        </div>
+        <ul style="list-style:none;">
+          <li style="font-size:13px;color:var(--driftwood);padding:6px 0;">Primary: Terracotta fill, Linen text — subscription/purchase actions</li>
+          <li style="font-size:13px;color:var(--driftwood);padding:6px 0;">Secondary: Terracotta outline — learn more, secondary actions</li>
+          <li style="font-size:13px;color:var(--driftwood);padding:6px 0;">Tertiary: Honey fill, Espresso text — supporting CTAs</li>
+          <li style="font-size:13px;color:var(--driftwood);padding:6px 0;">Minimum size: 44px height (touch target)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- SPS Mark -->
+  <div class="sps-mark">SPS · Super Power Studios</div>
+</div>
+
+<script>
+function checkPW() {
+  const val = document.getElementById('pw-input').value;
+  if (val === 'Paro@2026') {
+    document.getElementById('password-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  } else {
+    const err = document.getElementById('pw-error');
+    err.textContent = 'Incorrect passphrase.';
+    document.getElementById('pw-input').value = '';
+    setTimeout(() => err.textContent = '', 2500);
+  }
+}
+
+function showTab(tabId, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleMode() {
+  document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('mode-btn');
+  btn.textContent = document.body.classList.contains('light-mode') ? '◑ Dark' : '☀ Light';
+}
+
+// Keyboard shortcut
+document.addEventListener('keydown', e => {
+  if (document.getElementById('password-gate').style.display !== 'none') return;
+  const tabs = ['foundation','logo','colors','type','voice','product','digital'];
+  const btns = document.querySelectorAll('.tab-btn');
+  const activeIdx = Array.from(document.querySelectorAll('.section')).findIndex(s => s.classList.contains('active'));
+  if (e.key === 'ArrowRight' && activeIdx < tabs.length - 1) showTab(tabs[activeIdx+1], btns[activeIdx+1]);
+  if (e.key === 'ArrowLeft' && activeIdx > 0) showTab(tabs[activeIdx-1], btns[activeIdx-1]);
+});
+</script>
+</body>
+</html>

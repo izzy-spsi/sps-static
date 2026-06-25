@@ -1,0 +1,2429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel Technologies — Investor Deck 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── VARIABLES ────────────────────────────────────────────── */
+:root{
+  --red:#E63027; --red-d:#B52520; --red-l:#FF5A52;
+  --bg:#0A0A0F; --bg-card:#12121A; --bg-card2:#181825;
+  --border:rgba(255,255,255,0.07); --border-bright:rgba(255,255,255,0.15);
+  --text:#FFFFFF; --muted:rgba(255,255,255,0.55); --dim:rgba(255,255,255,0.3);
+  --green:#00A651; --green2:#2ECC71; --teal:#00C2A8;
+  --gold:#F59E0B; --blue:#3B82F6;
+  --sidebar:240px;
+  --font-head:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --radius:14px; --radius-sm:8px;
+}
+[data-theme="light"]{
+  --bg:#F5F5FA; --bg-card:#FFFFFF; --bg-card2:#EEEEF5;
+  --border:rgba(0,0,0,0.07); --border-bright:rgba(0,0,0,0.15);
+  --text:#0A0A0F; --muted:rgba(0,0,0,0.55); --dim:rgba(0,0,0,0.3);
+}
+
+/* ── RESET ────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.65;transition:background .3s,color .3s;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:var(--red);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── AUTH OVERLAY ─────────────────────────────────────────── */
+#auth-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:#0A0A0F;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:0;
+}
+.auth-box{
+  background:#12121A;border:1px solid rgba(230,48,39,0.3);
+  border-radius:20px;padding:48px 44px;width:min(440px,90vw);
+  box-shadow:0 0 80px rgba(230,48,39,0.12);
+}
+.auth-logo{
+  display:flex;align-items:center;gap:12px;margin-bottom:32px;
+}
+.auth-logo-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--red);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-weight:800;font-size:22px;color:#fff;
+}
+.auth-logo-text{font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff}
+.auth-box h2{font-family:var(--font-head);font-size:20px;font-weight:600;color:#fff;margin-bottom:6px}
+.auth-box p{color:var(--muted);font-size:14px;margin-bottom:28px}
+.auth-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px;display:block}
+.auth-input{
+  width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border-bright);
+  background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:15px;
+  outline:none;transition:border-color .2s;margin-bottom:16px;
+}
+.auth-input:focus{border-color:var(--red)}
+.auth-btn{
+  width:100%;padding:14px;border-radius:10px;border:none;
+  background:var(--red);color:#fff;font-family:var(--font-head);
+  font-size:16px;font-weight:600;cursor:pointer;transition:background .2s,transform .1s;
+  margin-top:4px;
+}
+.auth-btn:hover{background:var(--red-l);transform:translateY(-1px)}
+.auth-btn:active{transform:translateY(0)}
+.auth-error{
+  background:rgba(230,48,39,0.12);border:1px solid rgba(230,48,39,0.4);
+  color:#FF7A72;border-radius:8px;padding:10px 14px;font-size:13px;
+  margin-top:12px;display:none;
+}
+.auth-footer{text-align:center;margin-top:24px;font-size:12px;color:var(--dim)}
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+#app{display:none}
+.layout{display:flex;min-height:100vh}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+#sidebar{
+  width:var(--sidebar);flex-shrink:0;position:fixed;top:0;left:0;
+  height:100vh;overflow-y:auto;z-index:100;
+  background:var(--bg-card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:24px 0 40px;
+}
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;padding:0 20px 24px;
+  border-bottom:1px solid var(--border);margin-bottom:16px;
+}
+.sidebar-logo-icon{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--red);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-weight:800;font-size:16px;color:#fff;flex-shrink:0;
+}
+.sidebar-logo-text{font-family:var(--font-head);font-size:14px;font-weight:700;line-height:1.2}
+.sidebar-logo-sub{font-size:10px;font-weight:400;color:var(--muted)}
+.nav-group-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--dim);padding:12px 20px 6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 20px;font-size:13px;font-weight:500;
+  color:var(--muted);cursor:pointer;transition:all .2s;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.nav-item.active{color:var(--text);border-left-color:var(--red);background:rgba(230,48,39,0.08)}
+.nav-item.mx-item.active{border-left-color:var(--green);background:rgba(0,166,81,0.08)}
+.nav-num{
+  width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,0.06);
+  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.nav-item.active .nav-num{background:var(--red);color:#fff}
+.nav-item.mx-item.active .nav-num{background:var(--green);color:#fff}
+.sidebar-actions{
+  margin-top:auto;padding:16px 20px 0;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px;
+}
+.sidebar-btn{
+  display:flex;align-items:center;gap:8px;padding:9px 14px;border-radius:8px;
+  font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;
+  font-family:var(--font-body);
+}
+.sidebar-btn-theme{background:rgba(255,255,255,0.06);color:var(--muted)}
+.sidebar-btn-theme:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.sidebar-btn-print{background:rgba(230,48,39,0.12);color:var(--red)}
+.sidebar-btn-print:hover{background:rgba(230,48,39,0.2)}
+
+/* ── MAIN CONTENT ─────────────────────────────────────────── */
+#content{margin-left:var(--sidebar);flex:1;min-width:0}
+
+/* ── SECTIONS ─────────────────────────────────────────────── */
+.section{
+  min-height:100vh;padding:80px 64px;position:relative;
+  border-bottom:1px solid var(--border);
+}
+.section:last-child{border-bottom:none}
+.section-mx{background:linear-gradient(135deg,rgba(0,166,81,0.03) 0%,transparent 60%)}
+.section-mx2{background:linear-gradient(135deg,rgba(0,194,168,0.03) 0%,transparent 60%)}
+
+/* ── SECTION HEADER ───────────────────────────────────────── */
+.section-eyebrow{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.section-eyebrow.green{color:var(--green)}
+.section-eyebrow.teal{color:var(--teal)}
+.section-eyebrow::before{content:'';width:24px;height:2px;background:currentColor;border-radius:2px}
+.section-title{
+  font-family:var(--font-head);font-size:clamp(32px,4vw,52px);
+  font-weight:800;line-height:1.1;margin-bottom:16px;
+}
+.section-subtitle{font-size:18px;color:var(--muted);max-width:680px;margin-bottom:48px;line-height:1.7}
+.red{color:var(--red)}
+.green-t{color:var(--green)}
+.teal-t{color:var(--teal)}
+.gold-t{color:var(--gold)}
+
+/* ── COVER SECTION ────────────────────────────────────────── */
+#cover{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(135deg,rgba(230,48,39,0.06) 0%,transparent 50%),
+              radial-gradient(ellipse at 80% 20%,rgba(230,48,39,0.08) 0%,transparent 60%);
+  position:relative;overflow:hidden;
+}
+#cover::before{
+  content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;
+  border-radius:50%;background:radial-gradient(circle,rgba(230,48,39,0.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cover-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 14px;
+  border-radius:20px;border:1px solid rgba(230,48,39,0.3);
+  background:rgba(230,48,39,0.08);font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:28px;width:fit-content;
+}
+.cover-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.cover-title{
+  font-family:var(--font-head);font-size:clamp(42px,6vw,76px);
+  font-weight:800;line-height:1.05;margin-bottom:20px;
+}
+.cover-sub{
+  font-size:clamp(17px,2vw,22px);color:var(--muted);
+  max-width:640px;margin-bottom:48px;line-height:1.7;
+}
+.cover-stats{
+  display:flex;flex-wrap:wrap;gap:24px;margin-bottom:60px;
+}
+.cover-stat{
+  padding:20px 28px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);min-width:160px;
+}
+.cover-stat-val{
+  font-family:var(--font-head);font-size:32px;font-weight:800;
+  color:var(--red);line-height:1;margin-bottom:4px;
+}
+.cover-stat-label{font-size:12px;color:var(--muted);font-weight:500}
+.cover-meta{
+  display:flex;flex-wrap:wrap;gap:20px;align-items:center;
+}
+.cover-meta-item{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);
+}
+.cover-meta-dot{width:4px;height:4px;border-radius:50%;background:var(--border-bright)}
+.cover-raise-badge{
+  padding:10px 20px;border-radius:10px;
+  background:rgba(230,48,39,0.12);border:1px solid rgba(230,48,39,0.25);
+  font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--red);
+}
+
+/* ── CARDS ────────────────────────────────────────────────── */
+.card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;
+}
+.card-grid{display:grid;gap:20px}
+.card-grid-2{grid-template-columns:repeat(2,1fr)}
+.card-grid-3{grid-template-columns:repeat(3,1fr)}
+.card-grid-4{grid-template-columns:repeat(4,1fr)}
+.card-title{
+  font-family:var(--font-head);font-size:16px;font-weight:700;
+  margin-bottom:8px;
+}
+.card-desc{font-size:14px;color:var(--muted);line-height:1.6}
+.card-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:16px;
+}
+.card-icon-red{background:rgba(230,48,39,0.12)}
+.card-icon-green{background:rgba(0,166,81,0.12)}
+.card-icon-gold{background:rgba(245,158,11,0.12)}
+.card-icon-blue{background:rgba(59,130,246,0.12)}
+
+/* ── STAT BLOCKS ──────────────────────────────────────────── */
+.stat-block{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;text-align:center;
+}
+.stat-val{
+  font-family:var(--font-head);font-size:36px;font-weight:800;
+  line-height:1;margin-bottom:6px;
+}
+.stat-label{font-size:13px;color:var(--muted);line-height:1.4}
+
+/* ── HIGHLIGHT BAR ────────────────────────────────────────── */
+.highlight-bar{
+  display:flex;flex-wrap:wrap;gap:0;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;margin-bottom:40px;
+}
+.hb-item{
+  flex:1;min-width:180px;padding:20px 24px;border-right:1px solid var(--border);
+}
+.hb-item:last-child{border-right:none}
+.hb-val{
+  font-family:var(--font-head);font-size:26px;font-weight:800;
+  color:var(--red);line-height:1;margin-bottom:4px;
+}
+.hb-val.green{color:var(--green)}
+.hb-val.teal{color:var(--teal)}
+.hb-val.gold{color:var(--gold)}
+.hb-label{font-size:12px;color:var(--muted);line-height:1.4}
+
+/* ── CHART CONTAINERS ─────────────────────────────────────── */
+.chart-wrap{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;
+}
+.chart-title{
+  font-family:var(--font-head);font-size:15px;font-weight:700;
+  margin-bottom:4px;
+}
+.chart-subtitle{font-size:12px;color:var(--muted);margin-bottom:20px}
+.chart-canvas-wrap{position:relative;height:280px}
+
+/* ── TABLES ───────────────────────────────────────────────── */
+.tbl-wrap{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;margin-bottom:28px;
+}
+.tbl-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 24px;border-bottom:1px solid var(--border);
+}
+.tbl-title{font-family:var(--font-head);font-size:15px;font-weight:700}
+.tbl-toggle{
+  display:flex;gap:8px;
+}
+.tbl-btn{
+  padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);background:transparent;
+  color:var(--muted);font-family:var(--font-body);transition:all .2s;
+}
+.tbl-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+table{width:100%;border-collapse:collapse}
+thead th{
+  padding:12px 16px;text-align:left;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;color:var(--dim);
+  background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);
+}
+thead th.sortable{cursor:pointer;user-select:none}
+thead th.sortable:hover{color:var(--text)}
+thead th.sort-asc::after{content:' ↑'}
+thead th.sort-desc::after{content:' ↓'}
+tbody td{
+  padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+.td-bold{font-weight:700;font-family:var(--font-head)}
+.td-red{color:var(--red);font-weight:700}
+.td-green{color:var(--green);font-weight:700}
+.td-gold{color:var(--gold);font-weight:700}
+.td-muted{color:var(--muted)}
+.tbl-foot{
+  padding:12px 16px;background:rgba(255,255,255,0.02);
+  border-top:2px solid var(--border);
+}
+.tbl-total td{
+  font-weight:700;background:rgba(230,48,39,0.06);
+  border-top:2px solid rgba(230,48,39,0.2);
+}
+
+/* ── PROBLEM SECTION ──────────────────────────────────────── */
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.problem-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;
+  border-top:3px solid var(--red);
+}
+.problem-num{
+  font-family:var(--font-head);font-size:48px;font-weight:800;
+  color:rgba(230,48,39,0.2);line-height:1;margin-bottom:12px;
+}
+.problem-title{font-family:var(--font-head);font-size:17px;font-weight:700;margin-bottom:10px}
+.problem-desc{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ── SOLUTION SECTION ─────────────────────────────────────── */
+.solution-split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.solution-features{display:flex;flex-direction:column;gap:16px}
+.solution-feature{
+  display:flex;gap:16px;padding:20px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.sol-icon{
+  width:40px;height:40px;border-radius:10px;background:rgba(230,48,39,0.1);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.sol-title{font-family:var(--font-head);font-size:15px;font-weight:700;margin-bottom:4px}
+.sol-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── COMPETITIVE TABLE ────────────────────────────────────── */
+.comp-table{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.comp-row{
+  display:grid;grid-template-columns:1.8fr repeat(4,1fr);
+  border-bottom:1px solid var(--border);
+}
+.comp-row:last-child{border-bottom:none}
+.comp-row.header{background:rgba(255,255,255,0.03)}
+.comp-cell{
+  padding:14px 16px;font-size:13px;border-right:1px solid var(--border);
+}
+.comp-cell:last-child{border-right:none}
+.comp-cell.header-cell{
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--dim);
+}
+.comp-cell.flywheel-col{background:rgba(230,48,39,0.04)}
+.check{color:var(--green);font-size:16px}
+.cross{color:#FF5A5A;font-size:16px}
+.partial{color:var(--gold);font-size:16px}
+
+/* ── TRACTION ─────────────────────────────────────────────── */
+.milestone-list{display:flex;flex-direction:column;gap:16px}
+.milestone{
+  display:flex;gap:20px;align-items:flex-start;
+  padding:20px;background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.ms-dot{
+  width:14px;height:14px;border-radius:50%;background:var(--red);
+  flex-shrink:0;margin-top:4px;
+}
+.ms-date{font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.ms-title{font-family:var(--font-head);font-size:15px;font-weight:700;margin-bottom:4px}
+.ms-desc{font-size:13px;color:var(--muted)}
+
+/* ── MEXICO SECTIONS ──────────────────────────────────────── */
+.mx-key-stats{
+  display:flex;flex-wrap:wrap;gap:0;
+  background:linear-gradient(135deg,rgba(0,166,81,0.1),rgba(0,166,81,0.05));
+  border:1px solid rgba(0,166,81,0.25);border-radius:var(--radius);
+  overflow:hidden;margin-bottom:40px;
+}
+.mx-stat{
+  flex:1;min-width:160px;padding:20px 24px;
+  border-right:1px solid rgba(0,166,81,0.15);
+}
+.mx-stat:last-child{border-right:none}
+.mx-stat-val{
+  font-family:var(--font-head);font-size:26px;font-weight:800;
+  color:var(--green);line-height:1;margin-bottom:4px;
+}
+.mx-stat-label{font-size:12px;color:var(--muted)}
+
+.mx2-key-stats{
+  display:flex;flex-wrap:wrap;gap:0;
+  background:linear-gradient(135deg,rgba(0,194,168,0.1),rgba(0,194,168,0.05));
+  border:1px solid rgba(0,194,168,0.25);border-radius:var(--radius);
+  overflow:hidden;margin-bottom:40px;
+}
+.mx2-stat{flex:1;min-width:160px;padding:20px 24px;border-right:1px solid rgba(0,194,168,0.15)}
+.mx2-stat:last-child{border-right:none}
+.mx2-stat-val{
+  font-family:var(--font-head);font-size:26px;font-weight:800;
+  color:var(--teal);line-height:1;margin-bottom:4px;
+}
+.mx2-stat-label{font-size:12px;color:var(--muted)}
+
+.market-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;
+  border-left:4px solid var(--green);margin-bottom:20px;
+}
+.market-card.teal{border-left-color:var(--teal)}
+.market-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.market-card-name{font-family:var(--font-head);font-size:17px;font-weight:700}
+.market-card-badge{
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  background:rgba(0,166,81,0.12);color:var(--green);text-transform:uppercase;letter-spacing:.06em;
+}
+.market-card-badge.teal{background:rgba(0,194,168,0.12);color:var(--teal)}
+.market-card-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.market-card-stats{display:flex;flex-wrap:wrap;gap:16px}
+.mc-stat{font-size:13px}
+.mc-stat-val{font-weight:700;color:var(--text)}
+.mc-stat-label{color:var(--muted);font-size:12px}
+
+.uber-note{
+  display:flex;gap:14px;padding:18px 20px;
+  background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);
+  border-radius:var(--radius);margin-top:24px;
+}
+.uber-note-icon{font-size:20px;flex-shrink:0}
+.uber-note-text{font-size:14px;color:var(--muted)}
+.uber-note-text strong{color:var(--gold)}
+
+/* ── FINANCIALS ───────────────────────────────────────────── */
+.pnl-view{display:none}
+.pnl-view.active{display:block}
+.financial-row-positive{color:var(--green)}
+.financial-row-negative{color:#FF7272}
+.financial-row-header td{
+  background:rgba(255,255,255,0.03);font-weight:700;
+  font-family:var(--font-head);font-size:12px;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--dim);
+  border-top:2px solid var(--border);padding-top:18px;
+}
+
+/* ── TEAM ─────────────────────────────────────────────────── */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.team-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;text-align:center;
+}
+.team-avatar{
+  width:72px;height:72px;border-radius:50%;background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);font-size:26px;font-weight:800;color:#fff;
+  margin:0 auto 16px;
+}
+.team-name{font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:4px}
+.team-role{font-size:13px;color:var(--red);font-weight:600;margin-bottom:10px}
+.team-bio{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── ASK SECTION ──────────────────────────────────────────── */
+.raise-box{
+  background:linear-gradient(135deg,rgba(230,48,39,0.1),rgba(230,48,39,0.04));
+  border:1px solid rgba(230,48,39,0.25);border-radius:20px;padding:48px;
+  text-align:center;margin-bottom:40px;
+}
+.raise-amount{
+  font-family:var(--font-head);font-size:72px;font-weight:800;
+  color:var(--red);line-height:1;margin-bottom:8px;
+}
+.raise-label{font-size:18px;color:var(--muted);margin-bottom:32px}
+.raise-details{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:40px;
+}
+.raise-detail{text-align:center}
+.raise-detail-val{
+  font-family:var(--font-head);font-size:24px;font-weight:700;
+  color:var(--text);margin-bottom:4px;
+}
+.raise-detail-label{font-size:13px;color:var(--muted)}
+
+.use-of-funds-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.fund-item{
+  display:flex;gap:14px;padding:16px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.fund-dot{
+  width:12px;height:12px;border-radius:3px;margin-top:3px;flex-shrink:0;
+}
+.fund-pct{font-family:var(--font-head);font-size:18px;font-weight:800;line-height:1;margin-bottom:2px}
+.fund-label{font-size:13px;font-weight:600;margin-bottom:2px}
+.fund-desc{font-size:12px;color:var(--muted)}
+
+/* ── DISCLAIMER ───────────────────────────────────────────── */
+.disclaimer{
+  font-size:11px;color:var(--dim);line-height:1.6;
+  padding:32px 64px;border-top:1px solid var(--border);
+  background:var(--bg-card);
+}
+
+/* ── PROGRESS BAR ─────────────────────────────────────────── */
+#progress-bar{
+  position:fixed;top:0;left:var(--sidebar);right:0;height:3px;
+  background:rgba(255,255,255,0.04);z-index:200;
+}
+#progress-fill{height:100%;background:var(--red);width:0%;transition:width .1s}
+
+/* ── PRINT ────────────────────────────────────────────────── */
+@media print{
+  #auth-overlay,#sidebar,#progress-bar{display:none!important}
+  #app{display:block!important}
+  #content{margin-left:0}
+  .section{page-break-after:always;min-height:auto;padding:40px}
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:900px){
+  :root{--sidebar:0px}
+  #sidebar{transform:translateX(-100%);transition:transform .3s}
+  #sidebar.open{transform:translateX(0)}
+  #content{margin-left:0}
+  .section{padding:60px 24px}
+  .card-grid-3,.card-grid-4,.problem-grid,.team-grid{grid-template-columns:1fr}
+  .card-grid-2,.solution-split,.use-of-funds-grid{grid-template-columns:1fr}
+  .cover-stats{flex-wrap:wrap}
+  .hamburger{display:flex}
+  #progress-bar{left:0}
+}
+.hamburger{
+  display:none;position:fixed;top:16px;left:16px;z-index:150;
+  width:44px;height:44px;border-radius:10px;
+  background:var(--bg-card);border:1px solid var(--border);
+  align-items:center;justify-content:center;flex-direction:column;gap:5px;
+  cursor:pointer;
+}
+.hamburger span{width:20px;height:2px;background:var(--text);border-radius:2px}
+
+/* ── ANIMATIONS ───────────────────────────────────────────── */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ── BADGE ────────────────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.badge-red{background:rgba(230,48,39,0.12);color:var(--red);border:1px solid rgba(230,48,39,0.25)}
+.badge-green{background:rgba(0,166,81,0.12);color:var(--green);border:1px solid rgba(0,166,81,0.25)}
+.badge-gold{background:rgba(245,158,11,0.12);color:var(--gold);border:1px solid rgba(245,158,11,0.25)}
+.badge-blue{background:rgba(59,130,246,0.12);color:var(--blue);border:1px solid rgba(59,130,246,0.25)}
+
+/* ── TWO COLUMN ───────────────────────────────────────────── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+.chart-two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px}
+
+/* ── SCROLL TO TOP ────────────────────────────────────────── */
+#scroll-top{
+  position:fixed;bottom:32px;right:32px;width:44px;height:44px;
+  border-radius:50%;background:var(--red);color:#fff;
+  display:none;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;z-index:200;
+  box-shadow:0 4px 20px rgba(230,48,39,0.4);transition:all .2s;
+  border:none;
+}
+#scroll-top:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(230,48,39,0.5)}
+#scroll-top.visible{display:flex}
+
+/* ── CALLOUT ──────────────────────────────────────────────── */
+.callout{
+  display:flex;gap:16px;padding:20px 24px;
+  border-radius:var(--radius);margin:24px 0;
+}
+.callout-red{background:rgba(230,48,39,0.07);border:1px solid rgba(230,48,39,0.2)}
+.callout-green{background:rgba(0,166,81,0.07);border:1px solid rgba(0,166,81,0.2)}
+.callout-gold{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2)}
+.callout-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.callout-body strong{font-weight:700;display:block;margin-bottom:4px;font-size:15px}
+.callout-body p{font-size:14px;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AUTH GATE
+═══════════════════════════════════════════════════════════ -->
+<div id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">FW</div>
+      <div>
+        <div class="auth-logo-text">Flywheel Technologies</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:400">Investor Deck · Confidential</div>
+      </div>
+    </div>
+    <h2>Restricted Access</h2>
+    <p>This document contains confidential financial information. Enter your investor credentials to continue.</p>
+    <label class="auth-label">Access Password</label>
+    <input class="auth-input" id="auth-pass" type="password" placeholder="Enter password" autocomplete="off">
+    <label class="auth-label">Investor Code</label>
+    <input class="auth-input" id="auth-code" type="text" placeholder="Enter investor code" autocomplete="off">
+    <button class="auth-btn" onclick="tryAuth()">Access Deck →</button>
+    <div class="auth-error" id="auth-error">Incorrect credentials. Please try again.</div>
+    <div class="auth-footer">Flywheel Technologies, Inc. · 2026 Series A · NDA Required</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════════════════════ -->
+<div id="app">
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+
+  <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="layout">
+    <!-- SIDEBAR NAV -->
+    <nav id="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">FW</div>
+        <div>
+          <div class="sidebar-logo-text">Flywheel</div>
+          <div class="sidebar-logo-sub">Investor Deck 2026</div>
+        </div>
+      </div>
+
+      <div class="nav-group-label">Overview</div>
+      <div class="nav-item active" data-target="cover" onclick="scrollTo('cover')">
+        <span class="nav-num">1</span> Cover
+      </div>
+      <div class="nav-item" data-target="problem" onclick="scrollTo('problem')">
+        <span class="nav-num">2</span> The Problem
+      </div>
+      <div class="nav-item" data-target="solution" onclick="scrollTo('solution')">
+        <span class="nav-num">3</span> Our Solution
+      </div>
+      <div class="nav-item" data-target="market" onclick="scrollTo('market')">
+        <span class="nav-num">4</span> Market Opportunity
+      </div>
+      <div class="nav-item" data-target="model" onclick="scrollTo('model')">
+        <span class="nav-num">5</span> Business Model
+      </div>
+      <div class="nav-item" data-target="traction" onclick="scrollTo('traction')">
+        <span class="nav-num">6</span> Traction
+      </div>
+
+      <div class="nav-group-label">Mexico 🇲🇽</div>
+      <div class="nav-item mx-item" data-target="mexico-wave1" onclick="scrollTo('mexico-wave1')">
+        <span class="nav-num">7</span> Wave 1 · Cancún
+      </div>
+      <div class="nav-item mx-item" data-target="mexico-wave2" onclick="scrollTo('mexico-wave2')">
+        <span class="nav-num">8</span> Wave 2 · CDMX
+      </div>
+      <div class="nav-item mx-item" data-target="mexico-combined" onclick="scrollTo('mexico-combined')">
+        <span class="nav-num">9</span> Mexico Combined
+      </div>
+
+      <div class="nav-group-label">Financials</div>
+      <div class="nav-item" data-target="financials" onclick="scrollTo('financials')">
+        <span class="nav-num">10</span> Pro Forma
+      </div>
+      <div class="nav-item" data-target="team" onclick="scrollTo('team')">
+        <span class="nav-num">11</span> Team
+      </div>
+      <div class="nav-item" data-target="ask" onclick="scrollTo('ask')">
+        <span class="nav-num">12</span> The Ask
+      </div>
+
+      <div class="sidebar-actions">
+        <button class="sidebar-btn sidebar-btn-theme" onclick="toggleTheme()">
+          <span id="theme-icon">☀️</span> <span id="theme-label">Light Mode</span>
+        </button>
+        <button class="sidebar-btn sidebar-btn-print" onclick="window.print()">
+          🖨️ Print / PDF
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="content">
+
+      <!-- ══════════════════════════════════════════
+           1. COVER
+      ══════════════════════════════════════════ -->
+      <section class="section" id="cover">
+        <div class="cover-badge">
+          <div class="cover-badge-dot"></div>
+          Series A · Actively Raising · 2026
+        </div>
+        <h1 class="cover-title">
+          The Operating System<br>for <span class="red">Professional</span><br>Transportation
+        </h1>
+        <p class="cover-sub">
+          Flywheel Technologies powers the world's professional taxi and rideshare fleets with a unified dispatch, payments, and intelligence platform — unlocking a $280B global market starting with the US and Mexico.
+        </p>
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <div class="cover-stat-val">$3.4B</div>
+            <div class="cover-stat-label">2030 Combined GMV</div>
+          </div>
+          <div class="cover-stat">
+            <div class="cover-stat-val">24,800</div>
+            <div class="cover-stat-label">Mexico TAV</div>
+          </div>
+          <div class="cover-stat">
+            <div class="cover-stat-val">$1B+</div>
+            <div class="cover-stat-label">Mexico 2030 GMV</div>
+          </div>
+          <div class="cover-stat">
+            <div class="cover-stat-val">4</div>
+            <div class="cover-stat-label">Mexico Markets</div>
+          </div>
+          <div class="cover-stat">
+            <div class="cover-stat-val">6+</div>
+            <div class="cover-stat-label">US Markets Active</div>
+          </div>
+        </div>
+        <div class="cover-meta">
+          <div class="cover-meta-item">📍 San Diego, CA (HQ)</div>
+          <div class="cover-meta-dot"></div>
+          <div class="cover-meta-item">🇺🇸 US · 🇲🇽 Mexico</div>
+          <div class="cover-meta-dot"></div>
+          <div class="cover-meta-item">Founded 2015</div>
+          <div class="cover-meta-dot"></div>
+          <div class="cover-raise-badge">Raising $15M Series A</div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           2. THE PROBLEM
+      ══════════════════════════════════════════ -->
+      <section class="section" id="problem">
+        <div class="section-eyebrow">The Problem</div>
+        <h2 class="section-title">The Taxi Industry is<br>Being Left <span class="red">Behind</span></h2>
+        <p class="section-subtitle">
+          600,000+ US professional taxi drivers and millions more globally are operating with broken tools — while Uber and Lyft extract billions in value from their network.
+        </p>
+        <div class="problem-grid">
+          <div class="problem-card fade-in">
+            <div class="problem-num">01</div>
+            <div class="problem-title">Fragmented Infrastructure</div>
+            <div class="problem-desc">Fleets run on 20-year-old dispatch software that can't talk to modern payment rails, mobility apps, or safety systems. No unified data layer.</div>
+          </div>
+          <div class="problem-card fade-in">
+            <div class="problem-num">02</div>
+            <div class="problem-title">Payments Are a Nightmare</div>
+            <div class="problem-desc">70%+ of taxi revenue still runs through outdated terminal hardware with 3-5% processing costs, slow settlement, and zero driver financial intelligence.</div>
+          </div>
+          <div class="problem-card fade-in">
+            <div class="problem-num">03</div>
+            <div class="problem-title">No Uber Integration Bridge</div>
+            <div class="problem-desc">Taxis can't access Uber's demand network competitively. The tools to bridge professional fleets to rideshare marketplaces don't exist yet.</div>
+          </div>
+          <div class="problem-card fade-in">
+            <div class="problem-num">04</div>
+            <div class="problem-title">Zero Driver Intelligence</div>
+            <div class="problem-desc">Drivers have no data: no earnings optimization, no route intelligence, no coaching, no safety scoring. Every trip is a blind decision.</div>
+          </div>
+          <div class="problem-card fade-in">
+            <div class="problem-num">05</div>
+            <div class="problem-title">Mexico: No Digital Layer</div>
+            <div class="problem-desc">50,000+ taxis in Cancún and CDMX alone operate completely cash-based with zero technology. A massive underserved market with no incumbent.</div>
+          </div>
+          <div class="problem-card fade-in">
+            <div class="problem-num">06</div>
+            <div class="problem-title">Operator Economics Are Broken</div>
+            <div class="problem-desc">Fleet operators have no visibility into vehicle performance, utilization, or revenue optimization. They're flying blind while losing market share to TNCs.</div>
+          </div>
+        </div>
+
+        <div class="callout callout-red" style="margin-top:40px">
+          <div class="callout-icon">⚡</div>
+          <div class="callout-body">
+            <strong>The Market Signal</strong>
+            <p>NYC alone has 80,000+ taxi medallion vehicles. San Diego has 1,200+. Mexico City has 100,000+ registered taxis. These fleets desperately need a modern OS. Nobody has built it yet — until Flywheel.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           3. OUR SOLUTION
+      ══════════════════════════════════════════ -->
+      <section class="section" id="solution">
+        <div class="section-eyebrow">Our Solution</div>
+        <h2 class="section-title">Flywheel: The <span class="red">Full Stack</span><br>Transportation OS</h2>
+        <p class="section-subtitle">
+          One platform. Dispatch, payments, AI intelligence, Uber integration, and fleet analytics — all unified under a single flywheel that compounds with every driver and every trip.
+        </p>
+        <div class="solution-split">
+          <div class="solution-features">
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">📱</div>
+              <div>
+                <div class="sol-title">Flywheel Connect — Driver App</div>
+                <div class="sol-desc">Real-time dispatch, earnings dashboard, navigation, safety tools, and AI coaching in one app. Works offline-first for Mexico markets.</div>
+              </div>
+            </div>
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">💳</div>
+              <div>
+                <div class="sol-title">Stripe-Powered Payments</div>
+                <div class="sol-desc">Card, contactless, QR, and cash digitization via Stripe Connect MoR model. Sub-2% processing with next-day settlement for drivers.</div>
+              </div>
+            </div>
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">🔗</div>
+              <div>
+                <div class="sol-title">Flywheel Advantage — Uber Integration</div>
+                <div class="sol-desc">Two-way integration with Uber's 3P and Advantage programs. Our drivers get Uber demand; Uber gets a compliant, professional fleet.</div>
+              </div>
+            </div>
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">🤖</div>
+              <div>
+                <div class="sol-title">Flywheel Copilot — AI Layer</div>
+                <div class="sol-desc">Computer vision safety scoring, earnings optimization AI, predictive demand routing, and natural language driver coaching. Built on GPT-4o.</div>
+              </div>
+            </div>
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">📊</div>
+              <div>
+                <div class="sol-title">Fleet Intelligence Dashboard</div>
+                <div class="sol-desc">Real-time fleet analytics for operators: utilization, revenue/vehicle, predictive maintenance, driver performance scoring, and benchmarking.</div>
+              </div>
+            </div>
+            <div class="solution-feature fade-in">
+              <div class="sol-icon">🌎</div>
+              <div>
+                <div class="sol-title">Mexico Localization</div>
+                <div class="sol-desc">Spanish-first UI, cash digitization via QR, colectivo/shuttle routing, Sitio taxi dispatch, AICM airport queue management. Built for the market.</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:24px">
+              <div class="card-title" style="margin-bottom:20px">Competitive Positioning</div>
+              <div class="comp-table">
+                <div class="comp-row header">
+                  <div class="comp-cell header-cell">Feature</div>
+                  <div class="comp-cell header-cell flywheel-col">Flywheel</div>
+                  <div class="comp-cell header-cell">Uber</div>
+                  <div class="comp-cell header-cell">CMT/CAB</div>
+                  <div class="comp-cell header-cell">iCabbi</div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">Taxi + TNC unified</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">Modern payments (Stripe)</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="partial">~</span></div>
+                  <div class="comp-cell"><span class="partial">~</span></div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">AI driver intelligence</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="partial">~</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">Mexico market-ready</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="partial">~</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">Fleet analytics</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="partial">~</span></div>
+                  <div class="comp-cell"><span class="check">✓</span></div>
+                </div>
+                <div class="comp-row">
+                  <div class="comp-cell">Driver owns their data</div>
+                  <div class="comp-cell flywheel-col"><span class="check">✓</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                  <div class="comp-cell"><span class="cross">✗</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-title">Competitive Radar</div>
+              <div class="chart-subtitle">Flywheel vs. incumbents across 6 dimensions</div>
+              <div class="chart-canvas-wrap"><canvas id="chart-radar"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           4. MARKET OPPORTUNITY
+      ══════════════════════════════════════════ -->
+      <section class="section" id="market">
+        <div class="section-eyebrow">Market Opportunity</div>
+        <h2 class="section-title">A <span class="red">$280B</span> Global Market<br>With No Clear Winner</h2>
+        <p class="section-subtitle">
+          The professional transportation market is larger than Uber's entire addressable market — and 80% of it is still operating without modern technology.
+        </p>
+        <div class="highlight-bar fade-in">
+          <div class="hb-item">
+            <div class="hb-val">$280B</div>
+            <div class="hb-label">Global Professional<br>Transportation TAM</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val">$48B</div>
+            <div class="hb-label">US Taxi + TNC<br>Annual GMV</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">$12B</div>
+            <div class="hb-label">Mexico Transportation<br>Market (2026)</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val gold">600K+</div>
+            <div class="hb-label">US Licensed<br>Professional Drivers</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val">$1.4B</div>
+            <div class="hb-label">Platform Revenue<br>SOM (Year 5)</div>
+          </div>
+        </div>
+        <div class="two-col" style="margin-bottom:28px">
+          <div class="chart-wrap">
+            <div class="chart-title">US TAM Breakdown</div>
+            <div class="chart-subtitle">Professional transportation by segment</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-tam"></canvas></div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:20px">
+              <div class="card-title">US Market — Key Cities</div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                  <div>
+                    <div style="font-weight:600;font-size:14px">San Diego</div>
+                    <div style="font-size:12px;color:var(--muted)">1,200+ taxis · Active</div>
+                  </div>
+                  <span class="badge badge-green">Live</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                  <div>
+                    <div style="font-weight:600;font-size:14px">San Francisco</div>
+                    <div style="font-size:12px;color:var(--muted)">1,800+ taxis · Expansion</div>
+                  </div>
+                  <span class="badge badge-gold">Q3 2026</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+                  <div>
+                    <div style="font-weight:600;font-size:14px">Miami</div>
+                    <div style="font-size:12px;color:var(--muted)">3,500+ vehicles · In progress</div>
+                  </div>
+                  <span class="badge badge-gold">Q3 2026</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0">
+                  <div>
+                    <div style="font-weight:600;font-size:14px">Las Vegas</div>
+                    <div style="font-size:12px;color:var(--muted)">2,200+ vehicles · Pipeline</div>
+                  </div>
+                  <span class="badge badge-blue">Q4 2026</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Why Now?</div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:10px;font-size:13px">
+                  <span style="color:var(--green);font-size:16px">▸</span>
+                  <span><strong>Post-COVID driver return:</strong> 180,000+ drivers re-entered the market 2022–2024, hungry for better tools.</span>
+                </div>
+                <div style="display:flex;gap:10px;font-size:13px">
+                  <span style="color:var(--green);font-size:16px">▸</span>
+                  <span><strong>Uber TNC 3P program opened:</strong> First time professional fleets can formally access Uber demand at scale.</span>
+                </div>
+                <div style="display:flex;gap:10px;font-size:13px">
+                  <span style="color:var(--green);font-size:16px">▸</span>
+                  <span><strong>Mexico digital boom:</strong> 4G/5G coverage now reaches 85% of Cancún and 95% of CDMX. Cash-to-digital shift accelerating.</span>
+                </div>
+                <div style="display:flex;gap:10px;font-size:13px">
+                  <span style="color:var(--green);font-size:16px">▸</span>
+                  <span><strong>AI infrastructure matured:</strong> GPT-4o APIs now make real-time driver coaching economically viable at $0.003/trip.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           5. BUSINESS MODEL
+      ══════════════════════════════════════════ -->
+      <section class="section" id="model">
+        <div class="section-eyebrow">Business Model</div>
+        <h2 class="section-title">Multiple Revenue Streams,<br><span class="red">One Compounding Platform</span></h2>
+        <p class="section-subtitle">
+          Flywheel captures value at every layer of the transportation stack — from dispatch to payments to AI intelligence — with high-margin, recurring revenue.
+        </p>
+        <div class="card-grid card-grid-3" style="margin-bottom:32px">
+          <div class="card fade-in">
+            <div class="card-icon card-icon-red">💳</div>
+            <div class="card-title">Payment Processing</div>
+            <div class="card-desc">1.5% take on every processed fare through Stripe Connect MoR. Scales directly with GMV. Low overhead, instant margin.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--red)">1.5%</div>
+              <div style="font-size:12px;color:var(--muted)">of processed GMV</div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-icon card-icon-blue">📡</div>
+            <div class="card-title">Platform SaaS</div>
+            <div class="card-desc">$49–$99/vehicle/month for dispatch, analytics, fleet management, and Copilot AI. Predictable MRR that compounds with fleet growth.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--blue)">$49–99</div>
+              <div style="font-size:12px;color:var(--muted)">per vehicle/month</div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-icon card-icon-gold">🔗</div>
+            <div class="card-title">Uber Integration Fee</div>
+            <div class="card-desc">3% dispatch fee on trips routed through Flywheel Advantage (Uber TNC integration). High-margin because the demand is Uber's.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--gold)">3%</div>
+              <div style="font-size:12px;color:var(--muted)">of Uber-routed trips</div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-icon card-icon-green">🛡️</div>
+            <div class="card-title">Insurance Facilitation</div>
+            <div class="card-desc">Commercial rideshare insurance marketplace. We earn a facilitation fee on commercial policies placed through our platform.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--green)">$8–12</div>
+              <div style="font-size:12px;color:var(--muted)">per driver/month (future)</div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-icon card-icon-red">🤖</div>
+            <div class="card-title">Copilot AI Add-on</div>
+            <div class="card-desc">Premium AI layer: computer vision safety, earnings optimizer, predictive demand, voice coaching. $29/month upsell per driver.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--red)">$29</div>
+              <div style="font-size:12px;color:var(--muted)">per driver/month</div>
+            </div>
+          </div>
+          <div class="card fade-in">
+            <div class="card-icon card-icon-blue">📊</div>
+            <div class="card-title">Data & Intelligence</div>
+            <div class="card-desc">Anonymized fleet performance data, demand forecasting reports, and market intelligence sold to municipalities and fleet operators.</div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--blue)">Future</div>
+              <div style="font-size:12px;color:var(--muted)">Year 3+ revenue line</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="chart-wrap">
+            <div class="chart-title">Revenue Mix — 2026 Target</div>
+            <div class="chart-subtitle">Blended ~8% take rate on processed GMV</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-rev-mix"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="margin-bottom:20px">Unit Economics — Per Vehicle</div>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                  <span>Monthly GMV/Vehicle (avg)</span>
+                  <strong>$3,200</strong>
+                </div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:8px">
+                  <div style="background:var(--red);height:100%;border-radius:4px;width:100%"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                  <span>Flywheel Net Revenue (8%)</span>
+                  <strong style="color:var(--green)">$256</strong>
+                </div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:8px">
+                  <div style="background:var(--green);height:100%;border-radius:4px;width:8%"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                  <span>COGS/Vehicle (infra, support)</span>
+                  <strong style="color:var(--gold)">$94</strong>
+                </div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:8px">
+                  <div style="background:var(--gold);height:100%;border-radius:4px;width:37%"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+                  <span>Gross Profit/Vehicle</span>
+                  <strong style="color:var(--blue)">$162</strong>
+                </div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:8px">
+                  <div style="background:var(--blue);height:100%;border-radius:4px;width:63%"></div>
+                </div>
+              </div>
+              <div style="padding-top:16px;border-top:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between">
+                  <span style="font-size:13px">Gross Margin</span>
+                  <strong style="color:var(--green);font-size:16px">63%</strong>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between">
+                  <span style="font-size:13px">LTV (3yr vehicle lifetime)</span>
+                  <strong style="color:var(--red);font-size:16px">$5,832</strong>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between">
+                  <span style="font-size:13px">CAC (fleet acquisition)</span>
+                  <strong style="font-size:16px">$280</strong>
+                </div>
+              </div>
+              <div style="padding:12px;background:rgba(0,166,81,0.08);border-radius:8px;border:1px solid rgba(0,166,81,0.2)">
+                <div style="display:flex;justify-content:space-between">
+                  <span style="font-size:13px;font-weight:600">LTV:CAC Ratio</span>
+                  <strong style="color:var(--green);font-size:18px;font-family:var(--font-head)">20.8x</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           6. TRACTION & MILESTONES
+      ══════════════════════════════════════════ -->
+      <section class="section" id="traction">
+        <div class="section-eyebrow">Traction &amp; Milestones</div>
+        <h2 class="section-title">10+ Years of Proof.<br><span class="red">Scaling Now.</span></h2>
+        <p class="section-subtitle">
+          Flywheel isn't a pitch deck with a prototype. We've been in market since 2015, powering real fleets, processing real payments, and signing real enterprise deals.
+        </p>
+        <div class="highlight-bar fade-in">
+          <div class="hb-item">
+            <div class="hb-val">$480M+</div>
+            <div class="hb-label">Cumulative GMV<br>Processed</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">12,000+</div>
+            <div class="hb-label">Active Drivers<br>on Platform</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val">6</div>
+            <div class="hb-label">US Markets<br>Operational</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val gold">3</div>
+            <div class="hb-label">Uber Integration<br>Agreements</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val">97%</div>
+            <div class="hb-label">Driver Retention<br>(12-month)</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:32px">
+          <div class="chart-wrap">
+            <div class="chart-title">Platform GMV Growth</div>
+            <div class="chart-subtitle">Annual GMV processed, 2020–2026E</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-gmv-growth"></canvas></div>
+          </div>
+          <div class="milestone-list">
+            <div class="milestone fade-in">
+              <div class="ms-dot"></div>
+              <div>
+                <div class="ms-date">2015</div>
+                <div class="ms-title">Founded in San Diego</div>
+                <div class="ms-desc">Launched with Yellow Cab fleet partnership. First 200 drivers onboarded.</div>
+              </div>
+            </div>
+            <div class="milestone fade-in">
+              <div class="ms-dot"></div>
+              <div>
+                <div class="ms-date">2018</div>
+                <div class="ms-title">Stripe Integration Live</div>
+                <div class="ms-desc">Migrated $40M+ in annual payment volume to Stripe Connect. Processing costs dropped from 4.2% to 1.6%.</div>
+              </div>
+            </div>
+            <div class="milestone fade-in">
+              <div class="ms-dot"></div>
+              <div>
+                <div class="ms-date">2021</div>
+                <div class="ms-title">Flywheel Advantage Launch</div>
+                <div class="ms-desc">First Uber 3P integration agreement signed. SD, SF markets onboarded to dual-dispatch model.</div>
+              </div>
+            </div>
+            <div class="milestone fade-in">
+              <div class="ms-dot"></div>
+              <div>
+                <div class="ms-date">2024</div>
+                <div class="ms-title">Copilot AI Beta</div>
+                <div class="ms-desc">Flywheel Copilot launched to 500 drivers. 23% earnings increase in beta cohort. Safety incidents down 31%.</div>
+              </div>
+            </div>
+            <div class="milestone fade-in">
+              <div class="ms-dot" style="background:var(--green)"></div>
+              <div>
+                <div class="ms-date" style="color:var(--green)">Q1 2026</div>
+                <div class="ms-title">Mexico Operations Begin</div>
+                <div class="ms-desc">Cancún launch: 100 vehicles Day 1. Sitio taxi partnerships signed. QR payment rails live.</div>
+              </div>
+            </div>
+            <div class="milestone fade-in">
+              <div class="ms-dot" style="background:var(--gold)"></div>
+              <div>
+                <div class="ms-date" style="color:var(--gold)">2026 Target</div>
+                <div class="ms-title">Series A Close + Scale</div>
+                <div class="ms-desc">$15M Series A to fund Mexico Wave 1 to 1,825 vehicles and US expansion to 6+ markets.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           7. MEXICO — WAVE 1
+      ══════════════════════════════════════════ -->
+      <section class="section section-mx" id="mexico-wave1">
+        <div class="section-eyebrow green">🇲🇽 Mexico Expansion — Wave 1</div>
+        <h2 class="section-title">Cancún · Tulum · Playa<br><span class="green-t">The Tourism Corridor</span></h2>
+        <p class="section-subtitle">
+          The Riviera Maya is Latin America's highest-density tourism market — 25M+ annual visitors, premium fares, and zero meaningful digital dispatch. Wave 1 targets <strong>1,825 vehicles</strong> with a clear path to <strong>9,800 total addressable vehicles</strong>.
+        </p>
+
+        <div class="mx-key-stats fade-in">
+          <div class="mx-stat">
+            <div class="mx-stat-val">9,800</div>
+            <div class="mx-stat-label">Total Addressable Vehicles<br>Wave 1</div>
+          </div>
+          <div class="mx-stat">
+            <div class="mx-stat-val">3</div>
+            <div class="mx-stat-label">Markets<br>Cancún · Tulum · Playa</div>
+          </div>
+          <div class="mx-stat">
+            <div class="mx-stat-val">$451M</div>
+            <div class="mx-stat-label">2030 GMV<br>Wave 1 Alone</div>
+          </div>
+          <div class="mx-stat">
+            <div class="mx-stat-val">+15–20%</div>
+            <div class="mx-stat-label">Uber Uplift<br>Incremental Trips</div>
+          </div>
+          <div class="mx-stat">
+            <div class="mx-stat-val">800</div>
+            <div class="mx-stat-label">Phase 1 Target<br>Funded Units</div>
+          </div>
+        </div>
+
+        <!-- Vehicle Breakdown Table -->
+        <div class="tbl-wrap" style="margin-bottom:28px">
+          <div class="tbl-header">
+            <div class="tbl-title">Vehicle Type Breakdown — Wave 1</div>
+            <div style="font-size:12px;color:var(--muted)">Click column headers to sort</div>
+          </div>
+          <table id="mx-vehicle-table">
+            <thead>
+              <tr>
+                <th class="sortable" data-col="0">Market</th>
+                <th class="sortable" data-col="1">Type</th>
+                <th class="sortable" data-col="2" style="text-align:right">Start Units</th>
+                <th class="sortable" data-col="3" style="text-align:right">Addressable</th>
+                <th class="sortable" data-col="4" style="text-align:right">Daily Trips</th>
+                <th class="sortable" data-col="5" style="text-align:right">Avg Fare</th>
+                <th class="sortable" data-col="6" style="text-align:right">Monthly GMV/Vehicle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Tulum</td><td>Hotel Taxi</td><td style="text-align:right" class="td-bold">100</td><td style="text-align:right">200</td><td style="text-align:right">6</td><td style="text-align:right">$50</td><td style="text-align:right" class="td-green">$9,000</td></tr>
+              <tr><td>Tulum</td><td>Local Taxi</td><td style="text-align:right" class="td-bold">100</td><td style="text-align:right">800</td><td style="text-align:right">12</td><td style="text-align:right">$8</td><td style="text-align:right">$2,880</td></tr>
+              <tr><td>Tulum</td><td>Local Shuttle</td><td style="text-align:right" class="td-bold">25</td><td style="text-align:right">200</td><td style="text-align:right">8 rds</td><td style="text-align:right">$2/pax</td><td style="text-align:right">$4,704</td></tr>
+              <tr><td>Tulum</td><td>Public Shuttle</td><td style="text-align:right" class="td-bold">100</td><td style="text-align:right">400</td><td style="text-align:right">4 rds</td><td style="text-align:right">$8/pax</td><td style="text-align:right" class="td-green">$9,408</td></tr>
+              <tr><td>Cancún</td><td>Local Taxi</td><td style="text-align:right" class="td-bold">1,000</td><td style="text-align:right">5,000</td><td style="text-align:right">12</td><td style="text-align:right">$8</td><td style="text-align:right">$2,880</td></tr>
+              <tr><td>Cancún</td><td>Airport Taxi</td><td style="text-align:right" class="td-bold">200</td><td style="text-align:right">200</td><td style="text-align:right">4</td><td style="text-align:right">$50</td><td style="text-align:right" class="td-green">$6,000</td></tr>
+              <tr><td>Cancún</td><td>Hotel Taxi</td><td style="text-align:right" class="td-bold">0</td><td style="text-align:right">200</td><td style="text-align:right">6</td><td style="text-align:right">$50</td><td style="text-align:right td-muted">$9,000</td></tr>
+              <tr><td>Playa del Carmen</td><td>Local Taxi</td><td style="text-align:right" class="td-bold">150</td><td style="text-align:right">200</td><td style="text-align:right">12</td><td style="text-align:right">$8</td><td style="text-align:right">$2,880</td></tr>
+              <tr><td>Playa del Carmen</td><td>Hotel Taxi</td><td style="text-align:right" class="td-bold">50</td><td style="text-align:right">100</td><td style="text-align:right">6</td><td style="text-align:right">$50</td><td style="text-align:right" class="td-green">$9,000</td></tr>
+              <tr><td>Playa del Carmen</td><td>Tuk-Tuk</td><td style="text-align:right" class="td-bold">100</td><td style="text-align:right">2,500</td><td style="text-align:right">15</td><td style="text-align:right">$5</td><td style="text-align:right">$2,250</td></tr>
+            </tbody>
+            <tfoot>
+              <tr class="tbl-total">
+                <td colspan="2" class="td-bold">TOTAL</td>
+                <td style="text-align:right" class="td-red td-bold">1,825</td>
+                <td style="text-align:right" class="td-bold">9,800</td>
+                <td></td><td></td>
+                <td style="text-align:right" class="td-green td-bold">$3,240 avg</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- 2026 Monthly Ramp -->
+        <div class="two-col">
+          <div class="chart-wrap">
+            <div class="chart-title">Chart 9 — Mexico Wave 1: 2026 Monthly GMV Ramp</div>
+            <div class="chart-subtitle">Jan–Dec 2026 · Target: 1,500+ vehicles by year-end · Running GMV: $45.77M</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-mx1-ramp"></canvas></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">Chart 10 — Mexico Wave 1: 5-Year GMV</div>
+            <div class="chart-subtitle">2026–2030 · $23M → $451M</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-mx1-5yr"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Monthly Ramp Table -->
+        <div class="tbl-wrap" style="margin-top:28px">
+          <div class="tbl-header">
+            <div class="tbl-title">2026 Monthly Ramp — Wave 1</div>
+            <div style="font-size:12px;color:var(--muted)">Phase 1 funded target: 800 units by Dec 2026</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th><th style="text-align:right">Total Units</th>
+                <th style="text-align:right">Monthly GMV</th>
+                <th style="text-align:right">Running GMV</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Jan 2026</td><td style="text-align:right">100</td><td style="text-align:right">$900K</td><td style="text-align:right">$900K</td></tr>
+              <tr><td>Feb 2026</td><td style="text-align:right">200</td><td style="text-align:right">$1.71M</td><td style="text-align:right">$2.61M</td></tr>
+              <tr><td>Mar 2026</td><td style="text-align:right">400</td><td style="text-align:right">$2.18M</td><td style="text-align:right">$4.79M</td></tr>
+              <tr><td>Apr 2026</td><td style="text-align:right">525</td><td style="text-align:right">$2.51M</td><td style="text-align:right">$7.30M</td></tr>
+              <tr><td>May 2026</td><td style="text-align:right">750</td><td style="text-align:right">$3.23M</td><td style="text-align:right">$10.53M</td></tr>
+              <tr><td>Jun 2026</td><td style="text-align:right">1,075</td><td style="text-align:right">$4.23M</td><td style="text-align:right">$14.76M</td></tr>
+              <tr><td>Jul 2026</td><td style="text-align:right">1,175</td><td style="text-align:right">$4.52M</td><td style="text-align:right">$19.29M</td></tr>
+              <tr><td>Aug 2026</td><td style="text-align:right">1,275</td><td style="text-align:right">$4.81M</td><td style="text-align:right">$24.10M</td></tr>
+              <tr><td>Sep 2026</td><td style="text-align:right">1,400</td><td style="text-align:right">$5.20M</td><td style="text-align:right">$29.29M</td></tr>
+              <tr><td>Oct 2026</td><td style="text-align:right">1,475</td><td style="text-align:right">$5.43M</td><td style="text-align:right">$34.72M</td></tr>
+              <tr><td>Nov 2026</td><td style="text-align:right">1,500</td><td style="text-align:right">$5.53M</td><td style="text-align:right">$40.25M</td></tr>
+              <tr><td>Dec 2026</td><td style="text-align:right">1,500</td><td style="text-align:right">$5.53M</td><td style="text-align:right td-green td-bold">$45.77M</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="uber-note">
+          <div class="uber-note-icon">🚗</div>
+          <div class="uber-note-text">
+            <strong>Uber Uplift:</strong> Integration with Uber's demand network is expected to add <strong>15–20% incremental trips per vehicle</strong> on top of these base projections. At full Wave 1 deployment (9,800 vehicles), this represents an additional <strong>$45–60M in annual GMV</strong> by 2027.
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           8. MEXICO — WAVE 2
+      ══════════════════════════════════════════ -->
+      <section class="section section-mx2" id="mexico-wave2">
+        <div class="section-eyebrow teal">🇲🇽 Mexico Expansion — Wave 2</div>
+        <h2 class="section-title">Mérida + Mexico City<br><span class="teal-t">The $560M Opportunity</span></h2>
+        <p class="section-subtitle">
+          Wave 2 targets two of Mexico's most strategically significant markets — Yucatán's booming capital and Latin America's largest taxi market. Combined: <strong>15,000 vehicles</strong> and <strong>$560M GMV by 2030</strong>.
+        </p>
+
+        <div class="mx2-key-stats fade-in">
+          <div class="mx2-stat">
+            <div class="mx2-stat-val">15,000</div>
+            <div class="mx2-stat-label">Wave 2 Total Vehicles<br>Mérida + CDMX</div>
+          </div>
+          <div class="mx2-stat">
+            <div class="mx2-stat-val">$560M</div>
+            <div class="mx2-stat-label">2030 GMV<br>Wave 2</div>
+          </div>
+          <div class="mx2-stat">
+            <div class="mx2-stat-val">100K+</div>
+            <div class="mx2-stat-label">Registered Taxis<br>in CDMX Alone</div>
+          </div>
+          <div class="mx2-stat">
+            <div class="mx2-stat-val">12M+</div>
+            <div class="mx2-stat-label">Monthly Uber Trips<br>CDMX (Existing Demand)</div>
+          </div>
+          <div class="mx2-stat">
+            <div class="mx2-stat-val">1M+</div>
+            <div class="mx2-stat-label">Mérida Population<br>Underserved by Digital</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="margin-bottom:28px">
+          <!-- Mérida Card -->
+          <div>
+            <div class="market-card">
+              <div class="market-card-header">
+                <div>
+                  <div class="market-card-name">🌴 Mérida — 5,000 Vehicles</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px">Yucatán State Capital</div>
+                </div>
+                <div class="market-card-badge">Wave 2A</div>
+              </div>
+              <div class="market-card-desc">
+                Yucatán's capital is a 1M+ population city with a booming tourism corridor and virtually zero digital transport infrastructure. High growth, low competition. Blended fare of <strong>$9</strong> across a diverse vehicle mix.
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vehicle Type</th>
+                    <th style="text-align:right">Units</th>
+                    <th style="text-align:right">Daily Trips</th>
+                    <th style="text-align:right">Avg Fare</th>
+                    <th style="text-align:right">Mo. GMV/Vehicle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Local Taxi (colectivo)</td><td style="text-align:right">3,500</td><td style="text-align:right">12</td><td style="text-align:right">$7</td><td style="text-align:right">$2,520</td></tr>
+                  <tr><td>Sitio Taxi</td><td style="text-align:right">800</td><td style="text-align:right">8</td><td style="text-align:right">$12</td><td style="text-align:right">$2,880</td></tr>
+                  <tr><td>Hotel/Tourist Taxi</td><td style="text-align:right">400</td><td style="text-align:right">5</td><td style="text-align:right">$35</td><td style="text-align:right" class="td-green">$5,250</td></tr>
+                  <tr><td>Mototaxi/Tuk-Tuk</td><td style="text-align:right">300</td><td style="text-align:right">18</td><td style="text-align:right">$3</td><td style="text-align:right">$1,620</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr class="tbl-total">
+                    <td class="td-bold">TOTAL</td>
+                    <td style="text-align:right" class="td-bold">5,000</td>
+                    <td></td>
+                    <td style="text-align:right">$9 blend</td>
+                    <td style="text-align:right" class="td-green td-bold">$2,850 avg</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="callout callout-green" style="margin-top:0">
+              <div class="callout-icon">📍</div>
+              <div class="callout-body">
+                <strong>Mérida Context</strong>
+                <p>Yucatán's capital — 1M+ population, high tourism corridor (Chichén Itzá, Uxmal), rapidly growing expatriate community, and severely underserved by digital platforms. Closest competitor is a WhatsApp-based dispatch group.</p>
+              </div>
+            </div>
+            <!-- Merida GMV table -->
+            <div class="tbl-wrap" style="margin-top:20px">
+              <div class="tbl-header"><div class="tbl-title">Mérida 5-Year GMV Projection</div></div>
+              <table>
+                <thead><tr><th>Year</th><th style="text-align:right">GMV</th><th style="text-align:right">Growth</th></tr></thead>
+                <tbody>
+                  <tr><td>2026</td><td style="text-align:right">$17M</td><td style="text-align:right;color:var(--green)">—</td></tr>
+                  <tr><td>2027</td><td style="text-align:right">$51M</td><td style="text-align:right;color:var(--green)">+200%</td></tr>
+                  <tr><td>2028</td><td style="text-align:right">$102M</td><td style="text-align:right;color:var(--green)">+100%</td></tr>
+                  <tr><td>2029</td><td style="text-align:right">$153M</td><td style="text-align:right;color:var(--green)">+50%</td></tr>
+                  <tr><td>2030</td><td style="text-align:right" class="td-green td-bold">$171M</td><td style="text-align:right;color:var(--muted)">+12%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CDMX Card -->
+          <div>
+            <div class="market-card teal">
+              <div class="market-card-header">
+                <div>
+                  <div class="market-card-name">🏙️ Mexico City (CDMX) — 10,000 Vehicles</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px">AICM + AIFA · Latin America's Largest Taxi Market</div>
+                </div>
+                <div class="market-card-badge teal">Wave 2B</div>
+              </div>
+              <div class="market-card-desc">
+                Mexico City is <strong>the prize</strong>. 100,000+ registered taxis, 12M+ monthly Uber trips, two major airports (AICM/AIFA), and a sophisticated urban market hungry for professional transport solutions. Blended fare of $11 with high-value airport and hotel segments.
+              </div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Vehicle Type</th>
+                    <th style="text-align:right">Units</th>
+                    <th style="text-align:right">Daily Trips</th>
+                    <th style="text-align:right">Avg Fare</th>
+                    <th style="text-align:right">Mo. GMV/Vehicle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Local Taxi (libre)</td><td style="text-align:right">6,000</td><td style="text-align:right">10</td><td style="text-align:right">$10</td><td style="text-align:right">$3,000</td></tr>
+                  <tr><td>Sitio Taxi</td><td style="text-align:right">2,000</td><td style="text-align:right">8</td><td style="text-align:right">$14</td><td style="text-align:right">$3,360</td></tr>
+                  <tr><td>Airport Taxi (AICM/AIFA)</td><td style="text-align:right">500</td><td style="text-align:right">4</td><td style="text-align:right">$60</td><td style="text-align:right" class="td-green">$7,200</td></tr>
+                  <tr><td>Hotel/Turismo</td><td style="text-align:right">800</td><td style="text-align:right">5</td><td style="text-align:right">$40</td><td style="text-align:right" class="td-green">$6,000</td></tr>
+                  <tr><td>Colectivo Van</td><td style="text-align:right">700</td><td style="text-align:right">6</td><td style="text-align:right">$15</td><td style="text-align:right">$2,700</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr class="tbl-total">
+                    <td class="td-bold">TOTAL</td>
+                    <td style="text-align:right" class="td-bold">10,000</td>
+                    <td></td>
+                    <td style="text-align:right">$11 blend</td>
+                    <td style="text-align:right" class="td-green td-bold">$3,240 avg</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div class="callout callout-gold" style="margin-top:0">
+              <div class="callout-icon">🏆</div>
+              <div class="callout-body">
+                <strong>CDMX Context</strong>
+                <p>Mexico City is the largest taxi market in Latin America with 100,000+ registered taxis. Already an active Uber market with 12M+ monthly trips — meaning Flywheel can immediately activate Uber Advantage integration for incremental demand on Day 1.</p>
+              </div>
+            </div>
+            <!-- CDMX GMV table -->
+            <div class="tbl-wrap" style="margin-top:20px">
+              <div class="tbl-header"><div class="tbl-title">CDMX 5-Year GMV Projection</div></div>
+              <table>
+                <thead><tr><th>Year</th><th style="text-align:right">GMV</th><th style="text-align:right">Growth</th></tr></thead>
+                <tbody>
+                  <tr><td>2026</td><td style="text-align:right">$19M</td><td style="text-align:right;color:var(--teal)">—</td></tr>
+                  <tr><td>2027</td><td style="text-align:right">$97M</td><td style="text-align:right;color:var(--teal)">+411%</td></tr>
+                  <tr><td>2028</td><td style="text-align:right">$194M</td><td style="text-align:right;color:var(--teal)">+100%</td></tr>
+                  <tr><td>2029</td><td style="text-align:right">$311M</td><td style="text-align:right;color:var(--teal)">+60%</td></tr>
+                  <tr><td>2030</td><td style="text-align:right" class="td-bold" style="color:var(--teal)">$389M</td><td style="text-align:right;color:var(--muted)">+25%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           9. MEXICO COMBINED
+      ══════════════════════════════════════════ -->
+      <section class="section section-mx" id="mexico-combined">
+        <div class="section-eyebrow green">🇲🇽 Mexico Combined Strategy</div>
+        <h2 class="section-title">$1 Billion GMV by 2030.<br><span class="green-t">Mexico is the Macro Story.</span></h2>
+        <p class="section-subtitle">
+          Wave 1 + Wave 2 combine to create a <strong>$1B+ GMV Mexico business</strong> by 2030 — rivaling and ultimately exceeding the US revenue line within 4 years of launch. This is the biggest expansion opportunity in Flywheel's history.
+        </p>
+
+        <!-- Combined Key Stats -->
+        <div class="highlight-bar fade-in" style="background:linear-gradient(135deg,rgba(0,166,81,0.08),rgba(0,194,168,0.05));border-color:rgba(0,166,81,0.2)">
+          <div class="hb-item">
+            <div class="hb-val green">24,800</div>
+            <div class="hb-label">Total Addressable<br>Vehicles (All Waves)</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">4</div>
+            <div class="hb-label">Mexico Markets<br>Cancún · Tulum · Mérida · CDMX</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">$1.01B</div>
+            <div class="hb-label">2030 Total Mexico GMV<br>All Waves Combined</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">$59M</div>
+            <div class="hb-label">2026 Mexico GMV<br>Year 1 Launch</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val teal">$80M+</div>
+            <div class="hb-label">Mexico Revenue (8%)<br>At $1B GMV</div>
+          </div>
+        </div>
+
+        <!-- Combined GMV Table -->
+        <div class="tbl-wrap" style="margin-bottom:28px">
+          <div class="tbl-header">
+            <div class="tbl-title">Combined Mexico GMV — All Waves</div>
+            <div style="font-size:12px;color:var(--muted)">Wave 1 = Cancún · Tulum · Playa · Wave 2 = Mérida + CDMX</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Market Segment</th>
+                <th style="text-align:right">2026</th>
+                <th style="text-align:right">2027</th>
+                <th style="text-align:right">2028</th>
+                <th style="text-align:right">2029</th>
+                <th style="text-align:right">2030</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-bold">🌴 Wave 1 (Cancún/Tulum/Playa)</td>
+                <td style="text-align:right">$23M</td>
+                <td style="text-align:right">$60M</td>
+                <td style="text-align:right">$129M</td>
+                <td style="text-align:right">$248M</td>
+                <td style="text-align:right" class="td-green td-bold">$451M</td>
+              </tr>
+              <tr>
+                <td class="td-bold">🏙️ Wave 2 (Mérida + CDMX)</td>
+                <td style="text-align:right">$36M</td>
+                <td style="text-align:right">$148M</td>
+                <td style="text-align:right">$296M</td>
+                <td style="text-align:right">$464M</td>
+                <td style="text-align:right" class="td-green td-bold">$560M</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="tbl-total">
+                <td class="td-bold">🇲🇽 TOTAL MEXICO</td>
+                <td style="text-align:right" class="td-bold">$59M</td>
+                <td style="text-align:right" class="td-bold">$208M</td>
+                <td style="text-align:right" class="td-bold">$425M</td>
+                <td style="text-align:right" class="td-bold">$712M</td>
+                <td style="text-align:right" class="td-green td-bold" style="font-size:15px">$1.01B 🎯</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Stacked Bar Chart -->
+        <div class="chart-wrap" style="margin-bottom:28px">
+          <div class="chart-title">Chart 11 — Combined Mexico GMV: Wave 1 + Wave 2 (2026–2030)</div>
+          <div class="chart-subtitle">Stacked view showing contribution from each wave — $59M → $1.01B</div>
+          <div style="position:relative;height:340px"><canvas id="chart-mx-combined"></canvas></div>
+        </div>
+
+        <div class="callout callout-green">
+          <div class="callout-icon">🚀</div>
+          <div class="callout-body">
+            <strong>The Mexico Thesis</strong>
+            <p>Mexico GMV alone reaches $1B+ by 2030 — comparable to many publicly-listed rideshare companies in their Year 5. This is not a side bet. It's a primary growth driver, activated by existing Uber relationships and a market that has no incumbent platform. Flywheel arrives with a proven US product, Stripe payment rails, and the Uber Advantage integration ready to deploy on Day 1 in CDMX.</p>
+          </div>
+        </div>
+
+        <!-- Wave progression visual -->
+        <div class="card-grid card-grid-4" style="margin-top:28px">
+          <div class="stat-block fade-in" style="border-top:3px solid var(--green)">
+            <div class="stat-val" style="color:var(--green);font-size:28px">Wave 1</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Cancún · Tulum · Playa</div>
+            <div style="font-size:12px;color:var(--muted)">9,800 TAV · $451M 2030 · Funded</div>
+          </div>
+          <div class="stat-block fade-in" style="border-top:3px solid var(--teal)">
+            <div class="stat-val" style="color:var(--teal);font-size:28px">Wave 2A</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Mérida · Yucatán</div>
+            <div style="font-size:12px;color:var(--muted)">5,000 TAV · $171M 2030 · Year 2</div>
+          </div>
+          <div class="stat-block fade-in" style="border-top:3px solid var(--blue)">
+            <div class="stat-val" style="color:var(--blue);font-size:28px">Wave 2B</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Mexico City · CDMX</div>
+            <div style="font-size:12px;color:var(--muted)">10,000 TAV · $389M 2030 · Year 2</div>
+          </div>
+          <div class="stat-block fade-in" style="border-top:3px solid var(--gold)">
+            <div class="stat-val" style="color:var(--gold);font-size:28px">Wave 3</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Guadalajara · Monterrey</div>
+            <div style="font-size:12px;color:var(--muted)">TBD · Year 3–4 · 20K+ TAV</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           10. FINANCIALS & PRO FORMA
+      ══════════════════════════════════════════ -->
+      <section class="section" id="financials">
+        <div class="section-eyebrow">Financials &amp; Pro Forma</div>
+        <h2 class="section-title">Path to <span class="red">$271M Revenue</span><br>by 2030</h2>
+        <p class="section-subtitle">
+          Combined US + Mexico GMV scales to $3.4B by 2030. At an 8% blended take rate, Flywheel's revenue trajectory reaches $271M with 38% EBITDA margins — driven by operational leverage across a platform model.
+        </p>
+
+        <div class="highlight-bar fade-in">
+          <div class="hb-item">
+            <div class="hb-val">$3.4B</div>
+            <div class="hb-label">2030 Total GMV<br>US + Mexico</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val red">$271M</div>
+            <div class="hb-label">2030 Net Revenue<br>at 8% Take Rate</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val green">38%</div>
+            <div class="hb-label">2030 EBITDA Margin<br>Platform Leverage</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val">64,800</div>
+            <div class="hb-label">2030 Total Vehicles<br>US + All Mexico</div>
+          </div>
+          <div class="hb-item">
+            <div class="hb-val gold">2028</div>
+            <div class="hb-label">EBITDA Positive<br>Year</div>
+          </div>
+        </div>
+
+        <!-- P&L Toggle -->
+        <div class="tbl-wrap">
+          <div class="tbl-header">
+            <div class="tbl-title">Pro Forma P&amp;L — 2026–2030</div>
+            <div class="tbl-toggle">
+              <button class="tbl-btn active" onclick="showPnL('summary')">Summary</button>
+              <button class="tbl-btn" onclick="showPnL('detailed')">Detailed</button>
+            </div>
+          </div>
+
+          <!-- Summary View -->
+          <div class="pnl-view active" id="pnl-summary">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th style="text-align:right">2026E</th>
+                  <th style="text-align:right">2027E</th>
+                  <th style="text-align:right">2028E</th>
+                  <th style="text-align:right">2029E</th>
+                  <th style="text-align:right">2030E</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="financial-row-header"><td colspan="6">VOLUME</td></tr>
+                <tr><td>US Vehicles (active)</td><td style="text-align:right">2,500</td><td style="text-align:right">6,000</td><td style="text-align:right">14,000</td><td style="text-align:right">25,000</td><td style="text-align:right">40,000</td></tr>
+                <tr><td>Mexico Vehicles (active)</td><td style="text-align:right">1,825</td><td style="text-align:right">5,000</td><td style="text-align:right">12,000</td><td style="text-align:right">20,800</td><td style="text-align:right">24,800</td></tr>
+                <tr><td class="td-bold">Total Vehicles</td><td style="text-align:right" class="td-bold">4,325</td><td style="text-align:right" class="td-bold">11,000</td><td style="text-align:right" class="td-bold">26,000</td><td style="text-align:right" class="td-bold">45,800</td><td style="text-align:right" class="td-bold">64,800</td></tr>
+                <tr class="financial-row-header"><td colspan="6">GMV</td></tr>
+                <tr><td>US GMV</td><td style="text-align:right">$180M</td><td style="text-align:right">$432M</td><td style="text-align:right">$874M</td><td style="text-align:right">$1.53B</td><td style="text-align:right">$2.37B</td></tr>
+                <tr><td>Mexico GMV</td><td style="text-align:right">$59M</td><td style="text-align:right">$208M</td><td style="text-align:right">$425M</td><td style="text-align:right">$712M</td><td style="text-align:right">$1.01B</td></tr>
+                <tr><td class="td-bold">Total GMV</td><td style="text-align:right" class="td-bold">$239M</td><td style="text-align:right" class="td-bold">$640M</td><td style="text-align:right" class="td-bold">$1.30B</td><td style="text-align:right" class="td-bold">$2.24B</td><td style="text-align:right" class="td-red td-bold">$3.38B</td></tr>
+                <tr class="financial-row-header"><td colspan="6">REVENUE &amp; PROFITABILITY</td></tr>
+                <tr><td class="td-bold">Net Revenue (8% take)</td><td style="text-align:right" class="td-bold">$19.1M</td><td style="text-align:right" class="td-bold">$51.2M</td><td style="text-align:right" class="td-bold">$103.8M</td><td style="text-align:right" class="td-bold">$179.2M</td><td style="text-align:right" class="td-red td-bold">$270.6M</td></tr>
+                <tr><td>Gross Profit</td><td style="text-align:right">$7.6M</td><td style="text-align:right">$28.2M</td><td style="text-align:right">$65.8M</td><td style="text-align:right">$122M</td><td style="text-align:right">$192M</td></tr>
+                <tr><td>Gross Margin %</td><td style="text-align:right">40%</td><td style="text-align:right">55%</td><td style="text-align:right">63%</td><td style="text-align:right">68%</td><td style="text-align:right" class="td-green">71%</td></tr>
+                <tr><td>EBITDA</td><td style="text-align:right" class="financial-row-negative">($10.4M)</td><td style="text-align:right" class="financial-row-negative">($1.8M)</td><td style="text-align:right" class="financial-row-positive">$20.8M</td><td style="text-align:right" class="financial-row-positive">$57.2M</td><td style="text-align:right" class="td-green td-bold">$102.6M</td></tr>
+                <tr><td>EBITDA Margin %</td><td style="text-align:right" class="financial-row-negative">-54%</td><td style="text-align:right" class="financial-row-negative">-4%</td><td style="text-align:right" class="financial-row-positive">20%</td><td style="text-align:right" class="financial-row-positive">32%</td><td style="text-align:right" class="td-green td-bold">38%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Detailed View -->
+          <div class="pnl-view" id="pnl-detailed">
+            <table>
+              <thead>
+                <tr>
+                  <th>Line Item</th>
+                  <th style="text-align:right">2026E</th>
+                  <th style="text-align:right">2027E</th>
+                  <th style="text-align:right">2028E</th>
+                  <th style="text-align:right">2029E</th>
+                  <th style="text-align:right">2030E</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="financial-row-header"><td colspan="6">REVENUE</td></tr>
+                <tr><td>Payment Processing (1.5% GMV)</td><td style="text-align:right">$3.6M</td><td style="text-align:right">$9.6M</td><td style="text-align:right">$19.5M</td><td style="text-align:right">$33.6M</td><td style="text-align:right">$50.7M</td></tr>
+                <tr><td>Platform SaaS ($49-99/vehicle/mo)</td><td style="text-align:right">$3.1M</td><td style="text-align:right">$8.0M</td><td style="text-align:right">$18.7M</td><td style="text-align:right">$33.0M</td><td style="text-align:right">$46.7M</td></tr>
+                <tr><td>Uber Integration Fee (3% of TNC trips)</td><td style="text-align:right">$7.2M</td><td style="text-align:right">$19.2M</td><td style="text-align:right">$39.0M</td><td style="text-align:right">$67.2M</td><td style="text-align:right">$101.4M</td></tr>
+                <tr><td>Copilot AI Add-on</td><td style="text-align:right">$1.1M</td><td style="text-align:right">$4.0M</td><td style="text-align:right">$11.0M</td><td style="text-align:right">$22.0M</td><td style="text-align:right">$35.0M</td></tr>
+                <tr><td>Insurance &amp; Other</td><td style="text-align:right">$4.1M</td><td style="text-align:right">$10.4M</td><td style="text-align:right">$15.6M</td><td style="text-align:right">$23.4M</td><td style="text-align:right">$36.8M</td></tr>
+                <tr><td class="td-bold">Total Net Revenue</td><td style="text-align:right" class="td-bold">$19.1M</td><td style="text-align:right" class="td-bold">$51.2M</td><td style="text-align:right" class="td-bold">$103.8M</td><td style="text-align:right" class="td-bold">$179.2M</td><td style="text-align:right" class="td-red td-bold">$270.6M</td></tr>
+                <tr class="financial-row-header"><td colspan="6">COST OF GOODS SOLD</td></tr>
+                <tr><td>Infrastructure &amp; Cloud</td><td style="text-align:right">$3.2M</td><td style="text-align:right">$6.4M</td><td style="text-align:right">$11.0M</td><td style="text-align:right">$16.5M</td><td style="text-align:right">$22.0M</td></tr>
+                <tr><td>Driver Support &amp; Ops</td><td style="text-align:right">$4.8M</td><td style="text-align:right">$8.4M</td><td style="text-align:right">$14.4M</td><td style="text-align:right">$21.6M</td><td style="text-align:right">$29.0M</td></tr>
+                <tr><td>Payment Processing Costs</td><td style="text-align:right">$3.5M</td><td style="text-align:right">$8.2M</td><td style="text-align:right">$13.0M</td><td style="text-align:right">$19.0M</td><td style="text-align:right">$27.0M</td></tr>
+                <tr><td class="td-bold">Total COGS</td><td style="text-align:right" class="td-bold">$11.5M</td><td style="text-align:right" class="td-bold">$23.0M</td><td style="text-align:right" class="td-bold">$38.4M</td><td style="text-align:right" class="td-bold">$57.1M</td><td style="text-align:right" class="td-bold">$78.0M</td></tr>
+                <tr><td class="td-bold">Gross Profit</td><td style="text-align:right" class="td-bold">$7.6M</td><td style="text-align:right" class="td-bold">$28.2M</td><td style="text-align:right" class="td-bold">$65.4M</td><td style="text-align:right" class="td-bold">$122.1M</td><td style="text-align:right" class="td-bold td-green">$192.6M</td></tr>
+                <tr><td>Gross Margin %</td><td style="text-align:right">40%</td><td style="text-align:right">55%</td><td style="text-align:right">63%</td><td style="text-align:right">68%</td><td style="text-align:right" class="td-green">71%</td></tr>
+                <tr class="financial-row-header"><td colspan="6">OPERATING EXPENSES</td></tr>
+                <tr><td>Engineering &amp; Product</td><td style="text-align:right">$6.5M</td><td style="text-align:right">$10.0M</td><td style="text-align:right">$15.0M</td><td style="text-align:right">$20.0M</td><td style="text-align:right">$27.0M</td></tr>
+                <tr><td>Sales &amp; Marketing</td><td style="text-align:right">$5.0M</td><td style="text-align:right">$9.0M</td><td style="text-align:right">$14.0M</td><td style="text-align:right">$22.0M</td><td style="text-align:right">$32.0M</td></tr>
+                <tr><td>G&amp;A</td><td style="text-align:right">$3.5M</td><td style="text-align:right">$5.5M</td><td style="text-align:right">$8.0M</td><td style="text-align:right">$12.0M</td><td style="text-align:right">$16.0M</td></tr>
+                <tr><td>Mexico Market Dev &amp; Ops</td><td style="text-align:right">$3.0M</td><td style="text-align:right">$5.5M</td><td style="text-align:right">$8.0M</td><td style="text-align:right">$11.0M</td><td style="text-align:right">$15.0M</td></tr>
+                <tr><td class="td-bold">Total OpEx</td><td style="text-align:right" class="td-bold">$18.0M</td><td style="text-align:right" class="td-bold">$30.0M</td><td style="text-align:right" class="td-bold">$45.0M</td><td style="text-align:right" class="td-bold">$65.0M</td><td style="text-align:right" class="td-bold">$90.0M</td></tr>
+                <tr><td class="td-bold">EBITDA</td><td style="text-align:right" class="financial-row-negative">($10.4M)</td><td style="text-align:right" class="financial-row-negative">($1.8M)</td><td style="text-align:right" class="financial-row-positive">$20.4M</td><td style="text-align:right" class="financial-row-positive">$57.1M</td><td style="text-align:right" class="td-green td-bold">$102.6M</td></tr>
+                <tr><td>EBITDA Margin %</td><td style="text-align:right" class="financial-row-negative">-54%</td><td style="text-align:right" class="financial-row-negative">-4%</td><td style="text-align:right" class="financial-row-positive">20%</td><td style="text-align:right" class="financial-row-positive">32%</td><td style="text-align:right" class="td-green td-bold">38%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Revenue & GMV Charts -->
+        <div class="two-col" style="margin-top:28px">
+          <div class="chart-wrap">
+            <div class="chart-title">Global GMV Trajectory (2026–2030)</div>
+            <div class="chart-subtitle">US + Mexico combined — $239M → $3.38B</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-global-gmv"></canvas></div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">Revenue &amp; EBITDA Bridge</div>
+            <div class="chart-subtitle">Net revenue vs. EBITDA, 2026–2030</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-rev-ebitda"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           11. TEAM
+      ══════════════════════════════════════════ -->
+      <section class="section" id="team">
+        <div class="section-eyebrow">The Team</div>
+        <h2 class="section-title">Operators First.<br><span class="red">Builders Always.</span></h2>
+        <p class="section-subtitle">
+          Flywheel is led by a team with deep roots in transportation operations, payments infrastructure, and AI product development — plus direct regulatory relationships in every market we operate.
+        </p>
+        <div class="team-grid">
+          <div class="team-card fade-in">
+            <div class="team-avatar">IA</div>
+            <div class="team-name">Izzy Aala</div>
+            <div class="team-role">Founder &amp; CEO</div>
+            <div class="team-bio">Multi-venture entrepreneur with 10+ years in professional transportation, mobility infrastructure, and AI platform development. Builder of ecosystems across mobility, hospitality, and digital platforms.</div>
+          </div>
+          <div class="team-card fade-in">
+            <div class="team-avatar" style="background:var(--blue)">CTO</div>
+            <div class="team-name">Technology Lead</div>
+            <div class="team-role">CTO</div>
+            <div class="team-bio">Former engineering leadership at Stripe and Lyft. Architected payment rails processing $2B+ annually. Leads Flywheel's platform engineering, Copilot AI, and Mexico infrastructure build-out.</div>
+          </div>
+          <div class="team-card fade-in">
+            <div class="team-avatar" style="background:var(--green)">COO</div>
+            <div class="team-name">Operations Lead</div>
+            <div class="team-role">COO &amp; Mexico GM</div>
+            <div class="team-bio">20+ years in fleet operations across US and Latin America. Former VP Operations at Yellow Cab (SF). Native Spanish speaker. Leading all Mexico partnerships, Sitio negotiations, and airport authority relationships.</div>
+          </div>
+          <div class="team-card fade-in">
+            <div class="team-avatar" style="background:var(--gold)">CFO</div>
+            <div class="team-name">Finance Lead</div>
+            <div class="team-role">CFO</div>
+            <div class="team-bio">Former investment banking (Goldman Sachs TMT) and Series A/B CFO experience across three venture-backed companies. Leads financial modeling, investor relations, and Stripe treasury operations.</div>
+          </div>
+          <div class="team-card fade-in">
+            <div class="team-avatar" style="background:#9333EA">VP</div>
+            <div class="team-name">Growth Lead</div>
+            <div class="team-role">VP Growth &amp; Partnerships</div>
+            <div class="team-bio">Former Uber Business Development (LATAM). Deep relationships with Uber's 3P and Advantage programs. Led 4 major market expansions across LatAm for Uber. Now building the same pipeline for Flywheel.</div>
+          </div>
+          <div class="team-card fade-in">
+            <div class="team-avatar" style="background:#0891B2">AI</div>
+            <div class="team-name">AI Lead</div>
+            <div class="team-role">Head of AI &amp; Data</div>
+            <div class="team-bio">Former research engineering at Anthropic. Built Flywheel Copilot from prototype to 500-driver beta. Leads computer vision safety pipeline and earnings optimization models. PhD, Stanford CS.</div>
+          </div>
+        </div>
+        <div class="callout callout-gold" style="margin-top:32px">
+          <div class="callout-icon">🤝</div>
+          <div class="callout-body">
+            <strong>Advisory Board</strong>
+            <p>Former SFMTA Commissioner · Ex-Lyft VP Product · Cancún Tourism Board Member · Latin America VC Partner · Former Stripe Head of LATAM Payments</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════
+           12. THE ASK
+      ══════════════════════════════════════════ -->
+      <section class="section" id="ask">
+        <div class="section-eyebrow">The Ask</div>
+        <h2 class="section-title">Raising <span class="red">$15M Series A</span><br>to Ignite the Flywheel</h2>
+        <p class="section-subtitle">
+          This is the capital that scales Mexico Wave 1 to 1,825 vehicles, expands US to 6 markets, completes Copilot AI, and funds 18 months of runway to EBITDA breakeven.
+        </p>
+
+        <div class="raise-box">
+          <div class="raise-amount">$15M</div>
+          <div class="raise-label">Series A — Actively Raising · 2026</div>
+          <div class="raise-details">
+            <div class="raise-detail">
+              <div class="raise-detail-val">$8M</div>
+              <div class="raise-detail-label">Lead Check Target</div>
+            </div>
+            <div class="raise-detail">
+              <div class="raise-detail-val">SAFE + Equity</div>
+              <div class="raise-detail-label">Instrument</div>
+            </div>
+            <div class="raise-detail">
+              <div class="raise-detail-val">$60M</div>
+              <div class="raise-detail-label">Pre-Money Valuation</div>
+            </div>
+            <div class="raise-detail">
+              <div class="raise-detail-val">18 Months</div>
+              <div class="raise-detail-label">Runway to EBITDA+</div>
+            </div>
+            <div class="raise-detail">
+              <div class="raise-detail-val">Q3 2026</div>
+              <div class="raise-detail-label">Target Close</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="use-of-funds-grid">
+          <div>
+            <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;margin-bottom:16px">Use of Proceeds</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div class="fund-item">
+                <div class="fund-dot" style="background:var(--red)"></div>
+                <div>
+                  <div class="fund-pct" style="color:var(--red)">35%</div>
+                  <div class="fund-label">Mexico Wave 1 Ops</div>
+                  <div class="fund-desc">Partner acquisition, driver onboarding, QR payment rails, Sitio negotiations, airport authority relationships. Target: 1,825 vehicles live.</div>
+                </div>
+              </div>
+              <div class="fund-item">
+                <div class="fund-dot" style="background:var(--blue)"></div>
+                <div>
+                  <div class="fund-pct" style="color:var(--blue)">25%</div>
+                  <div class="fund-label">US Market Expansion</div>
+                  <div class="fund-desc">Miami, Las Vegas, SF scale-up. Fleet operator partnerships. Uber Advantage expansion in 3 new markets.</div>
+                </div>
+              </div>
+              <div class="fund-item">
+                <div class="fund-dot" style="background:var(--green)"></div>
+                <div>
+                  <div class="fund-pct" style="color:var(--green)">20%</div>
+                  <div class="fund-label">Engineering &amp; AI</div>
+                  <div class="fund-desc">Copilot AI production launch. Mexico localization (offline-first, QR, Spanish UI). Fleet analytics v2. Stripe MoR expansion.</div>
+                </div>
+              </div>
+              <div class="fund-item">
+                <div class="fund-dot" style="background:var(--gold)"></div>
+                <div>
+                  <div class="fund-pct" style="color:var(--gold)">12%</div>
+                  <div class="fund-label">Team &amp; Leadership</div>
+                  <div class="fund-desc">Mexico GM hire, 3 senior engineers, VP Sales, 2 market ops leads.</div>
+                </div>
+              </div>
+              <div class="fund-item">
+                <div class="fund-dot" style="background:var(--muted)"></div>
+                <div>
+                  <div class="fund-pct">8%</div>
+                  <div class="fund-label">Working Capital &amp; Reserve</div>
+                  <div class="fund-desc">Legal, compliance, regulatory, Mexico entity setup, operating reserve.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-title">Use of Proceeds</div>
+            <div class="chart-subtitle">$15M Series A allocation</div>
+            <div class="chart-canvas-wrap"><canvas id="chart-proceeds"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Milestones with $15M -->
+        <div style="margin-top:40px">
+          <h3 style="font-family:var(--font-head);font-size:18px;font-weight:700;margin-bottom:20px">What $15M Unlocks</h3>
+          <div class="card-grid card-grid-3">
+            <div class="card fade-in" style="border-top:3px solid var(--green)">
+              <div style="font-size:28px;margin-bottom:12px">🇲🇽</div>
+              <div class="card-title">Mexico Wave 1: Live at Scale</div>
+              <div class="card-desc">1,825 vehicles across Cancún, Tulum, and Playa. QR payment rails deployed. $45M+ running GMV by Dec 2026.</div>
+            </div>
+            <div class="card fade-in" style="border-top:3px solid var(--blue)">
+              <div style="font-size:28px;margin-bottom:12px">🇺🇸</div>
+              <div class="card-title">US: 6 Markets, 6,000 Vehicles</div>
+              <div class="card-desc">Miami, SF, LV fully onboarded. Uber Advantage active in all 6 markets. $432M US GMV trajectory locked.</div>
+            </div>
+            <div class="card fade-in" style="border-top:3px solid var(--red)">
+              <div style="font-size:28px;margin-bottom:12px">🤖</div>
+              <div class="card-title">Copilot AI: Full Production</div>
+              <div class="card-desc">10,000+ drivers on Copilot. Computer vision safety scoring live. Earnings optimizer generating $280 avg monthly uplift per driver.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Return scenario -->
+        <div class="card" style="margin-top:28px;background:linear-gradient(135deg,rgba(230,48,39,0.06),rgba(230,48,39,0.02));border-color:rgba(230,48,39,0.2)">
+          <div class="card-title" style="margin-bottom:20px;font-size:18px">Investor Return Scenarios</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+            <div style="text-align:center;padding:20px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border)">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px">Base Case</div>
+              <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--text)">4x</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:6px">$240M revenue 2030<br>6x revenue multiple<br>$1.44B valuation</div>
+            </div>
+            <div style="text-align:center;padding:20px;background:rgba(230,48,39,0.06);border-radius:10px;border:1px solid rgba(230,48,39,0.2)">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:12px">Bull Case</div>
+              <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--red)">10x</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:6px">$271M revenue 2030<br>10x revenue multiple<br>$2.71B valuation</div>
+            </div>
+            <div style="text-align:center;padding:20px;background:rgba(0,166,81,0.06);border-radius:10px;border:1px solid rgba(0,166,81,0.2)">
+              <div style="font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:12px">Breakout Case</div>
+              <div style="font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--green)">20x+</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:6px">Mexico $1B+ GMV<br>Wave 3 + 4 launched<br>IPO / strategic exit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div style="text-align:center;margin-top:48px;padding:40px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)">
+          <div style="font-family:var(--font-head);font-size:24px;font-weight:800;margin-bottom:8px">Ready to Talk?</div>
+          <div style="color:var(--muted);margin-bottom:24px">Join the Flywheel. Let's build the OS for professional transportation together.</div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px">
+            <div style="font-size:14px"><span style="color:var(--muted)">Email:</span> <strong>izzy@flywheel.com</strong></div>
+            <div style="font-size:14px"><span style="color:var(--muted)">Deck Version:</span> <strong>v1.0 · June 2026</strong></div>
+            <div style="font-size:14px"><span style="color:var(--muted)">Data Room:</span> <strong>Available on NDA</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DISCLAIMER -->
+      <div class="disclaimer">
+        <strong>Important Disclaimer:</strong> This document contains forward-looking statements and financial projections based on management's current expectations and assumptions. Actual results may differ materially from those projected. This presentation is confidential and intended solely for the use of the recipient. It does not constitute an offer to sell or a solicitation of an offer to buy any securities. Past performance is not indicative of future results. All financial projections are estimates and subject to material uncertainty. Flywheel Technologies, Inc. — Series A Investor Materials — June 2026.
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ── AUTH ───────────────────────────────────────────────────
+const PASSWORDS = ['izzy@2026'];
+const CODES = ['flywheel2026'];
+
+function tryAuth(){
+  const pass = document.getElementById('auth-pass').value.trim();
+  const code = document.getElementById('auth-code').value.trim();
+  if(PASSWORDS.includes(pass) && CODES.includes(code)){
+    localStorage.setItem('fw_auth','1');
+    document.getElementById('auth-overlay').style.display='none';
+    document.getElementById('app').style.display='block';
+    initApp();
+  } else {
+    document.getElementById('auth-error').style.display='block';
+  }
+}
+
+// Allow Enter key
+['auth-pass','auth-code'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{
+    if(e.key==='Enter') tryAuth();
+  });
+});
+
+// Check stored auth
+if(localStorage.getItem('fw_auth')==='1'){
+  document.getElementById('auth-overlay').style.display='none';
+  document.getElementById('app').style.display='block';
+  initApp();
+}
+
+// ── INIT ───────────────────────────────────────────────────
+function initApp(){
+  initNav();
+  initCharts();
+  initSortableTables();
+  initScrollSpy();
+  initFadeIn();
+  initScrollTop();
+}
+
+// ── THEME ──────────────────────────────────────────────────
+let isDark = true;
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('theme-label').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+}
+
+// ── SIDEBAR MOBILE ─────────────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── SMOOTH SCROLL NAV ──────────────────────────────────────
+function scrollTo(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ── SCROLL SPY ─────────────────────────────────────────────
+function initScrollSpy(){
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const progressFill = document.getElementById('progress-fill');
+  const scrollTop = document.getElementById('scroll-top');
+
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = entry.target.id;
+        navItems.forEach(item=>{
+          item.classList.toggle('active', item.dataset.target === id);
+        });
+      }
+    });
+  },{rootMargin:'-40% 0px -40% 0px'});
+
+  sections.forEach(s => observer.observe(s));
+
+  window.addEventListener('scroll',()=>{
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    progressFill.style.width = Math.min(100, (scrolled/total)*100) + '%';
+    scrollTop.classList.toggle('visible', scrolled > 400);
+  });
+}
+
+// ── FADE IN ON SCROLL ──────────────────────────────────────
+function initFadeIn(){
+  const els = document.querySelectorAll('.fade-in');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.1});
+  els.forEach(el => obs.observe(el));
+}
+
+// ── SCROLL TOP ─────────────────────────────────────────────
+function initScrollTop(){
+  // handled inline
+}
+
+// ── P&L TOGGLE ─────────────────────────────────────────────
+function showPnL(mode){
+  document.querySelectorAll('.pnl-view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('pnl-'+mode).classList.add('active');
+  document.querySelectorAll('.tbl-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.textContent.toLowerCase().includes(mode));
+  });
+}
+
+// ── SORTABLE TABLE ─────────────────────────────────────────
+function initSortableTables(){
+  const table = document.getElementById('mx-vehicle-table');
+  if(!table) return;
+  const headers = table.querySelectorAll('th.sortable');
+  let lastCol = -1, lastDir = 1;
+
+  headers.forEach(th=>{
+    th.addEventListener('click',()=>{
+      const col = parseInt(th.dataset.col);
+      const dir = (col === lastCol) ? -lastDir : 1;
+      lastCol = col; lastDir = dir;
+
+      headers.forEach(h=>{ h.classList.remove('sort-asc','sort-desc'); });
+      th.classList.add(dir===1 ? 'sort-asc' : 'sort-desc');
+
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort((a,b)=>{
+        const aVal = a.cells[col]?.textContent.replace(/[$,K]/g,'').trim() || '';
+        const bVal = b.cells[col]?.textContent.replace(/[$,K]/g,'').trim() || '';
+        const aNum = parseFloat(aVal);
+        const bNum = parseFloat(bVal);
+        if(!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum)*dir;
+        return aVal.localeCompare(bVal)*dir;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+}
+
+// ── NAV INIT ───────────────────────────────────────────────
+function initNav(){
+  // nav items already have onclick handlers
+}
+
+// ── CHARTS ────────────────────────────────────────────────
+const DARK_GRID = 'rgba(255,255,255,0.06)';
+const DARK_TEXT = 'rgba(255,255,255,0.5)';
+const RED = '#E63027';
+const GREEN = '#00A651';
+const TEAL = '#00C2A8';
+const GOLD = '#F59E0B';
+const BLUE = '#3B82F6';
+const PURPLE = '#9333EA';
+
+function chartDefaults(){
+  Chart.defaults.color = DARK_TEXT;
+  Chart.defaults.borderColor = DARK_GRID;
+  Chart.defaults.font.family = "'Inter',sans-serif";
+}
+
+function initCharts(){
+  chartDefaults();
+
+  // ── RADAR: Competitive ──────────────────────────────────
+  new Chart(document.getElementById('chart-radar'),{
+    type:'radar',
+    data:{
+      labels:['Taxi Integration','TNC Bridge','Payments','AI Layer','Mexico Ready','Fleet Analytics'],
+      datasets:[
+        {label:'Flywheel',data:[9,9,8,9,10,9],
+         backgroundColor:'rgba(230,48,39,0.15)',borderColor:RED,borderWidth:2,pointBackgroundColor:RED},
+        {label:'Uber',data:[2,10,8,7,6,4],
+         backgroundColor:'rgba(59,130,246,0.1)',borderColor:BLUE,borderWidth:2,pointBackgroundColor:BLUE},
+        {label:'CMT/CAB',data:[8,2,4,2,1,5],
+         backgroundColor:'rgba(245,158,11,0.1)',borderColor:GOLD,borderWidth:2,pointBackgroundColor:GOLD},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      scales:{r:{grid:{color:DARK_GRID},pointLabels:{color:DARK_TEXT,font:{size:11}},ticks:{display:false},min:0,max:10}},
+      plugins:{legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,padding:12}}}
+    }
+  });
+
+  // ── DONUT: TAM ──────────────────────────────────────────
+  new Chart(document.getElementById('chart-tam'),{
+    type:'doughnut',
+    data:{
+      labels:['Taxi/Medallion ($18B)','Rideshare TNCs ($20B)','Airport/Shuttle ($6B)','Limo/Black Car ($4B)'],
+      datasets:[{data:[18,20,6,4],
+        backgroundColor:[RED,'rgba(230,48,39,0.5)','rgba(230,48,39,0.3)','rgba(230,48,39,0.15)'],
+        borderWidth:0}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'70%',
+      plugins:{
+        legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,padding:10,font:{size:11}}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: $${ctx.raw}B`}}
+      }
+    }
+  });
+
+  // ── BAR: Revenue Mix ────────────────────────────────────
+  new Chart(document.getElementById('chart-rev-mix'),{
+    type:'doughnut',
+    data:{
+      labels:['Uber Integration (3%)','Payment Processing (1.5%)','Platform SaaS','Copilot AI','Insurance & Other'],
+      datasets:[{data:[38,19,16,6,21],
+        backgroundColor:[RED,BLUE,GREEN,GOLD,PURPLE],
+        borderWidth:0}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{
+        legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,padding:8,font:{size:11}}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw}%`}}
+      }
+    }
+  });
+
+  // ── LINE: GMV Growth (Traction) ─────────────────────────
+  new Chart(document.getElementById('chart-gmv-growth'),{
+    type:'bar',
+    data:{
+      labels:['2020','2021','2022','2023','2024','2025','2026E'],
+      datasets:[{
+        label:'Annual GMV ($M)',
+        data:[28,42,61,95,148,195,239],
+        backgroundColor:Array(6).fill('rgba(230,48,39,0.5)').concat([RED]),
+        borderRadius:6,borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── AREA: Mexico Wave 1 Monthly Ramp ───────────────────
+  new Chart(document.getElementById('chart-mx1-ramp'),{
+    type:'line',
+    data:{
+      labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      datasets:[
+        {
+          label:'Monthly GMV ($M)',
+          data:[0.9,1.71,2.18,2.51,3.23,4.23,4.52,4.81,5.20,5.43,5.53,5.53],
+          borderColor:GREEN,backgroundColor:'rgba(0,166,81,0.12)',
+          fill:true,tension:0.4,pointBackgroundColor:GREEN,pointRadius:4
+        },
+        {
+          label:'Running GMV ($M)',
+          data:[0.9,2.61,4.79,7.30,10.53,14.76,19.29,24.10,29.29,34.72,40.25,45.77],
+          borderColor:'rgba(0,166,81,0.5)',borderDash:[5,5],
+          fill:false,tension:0.4,pointRadius:3,borderWidth:1.5
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,font:{size:11}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── BAR: Mexico Wave 1 5-Year ───────────────────────────
+  new Chart(document.getElementById('chart-mx1-5yr'),{
+    type:'bar',
+    data:{
+      labels:['2026','2027','2028','2029','2030'],
+      datasets:[{
+        label:'Wave 1 GMV ($M)',
+        data:[23,60,129,248,451],
+        backgroundColor:[GREEN+'33',GREEN+'55',GREEN+'77',GREEN+'99',GREEN],
+        borderRadius:6,borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`$${ctx.raw}M`}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── STACKED BAR: Combined Mexico ────────────────────────
+  new Chart(document.getElementById('chart-mx-combined'),{
+    type:'bar',
+    data:{
+      labels:['2026','2027','2028','2029','2030'],
+      datasets:[
+        {
+          label:'Wave 1 (Cancún/Tulum/Playa)',
+          data:[23,60,129,248,451],
+          backgroundColor:GREEN,borderRadius:0,borderSkipped:false
+        },
+        {
+          label:'Wave 2 (Mérida + CDMX)',
+          data:[36,148,296,464,560],
+          backgroundColor:TEAL,borderRadius:6,borderSkipped:false
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,font:{size:11}}},
+        tooltip:{callbacks:{footer:items=>{ const total=items.reduce((s,i)=>s+i.raw,0); return `Total: $${total}M`; }}}
+      },
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{stacked:true,grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── LINE: Global GMV ────────────────────────────────────
+  new Chart(document.getElementById('chart-global-gmv'),{
+    type:'line',
+    data:{
+      labels:['2026','2027','2028','2029','2030'],
+      datasets:[
+        {
+          label:'US GMV',
+          data:[180,432,874,1530,2370],
+          borderColor:RED,backgroundColor:'rgba(230,48,39,0.08)',
+          fill:true,tension:0.4,pointBackgroundColor:RED,pointRadius:5
+        },
+        {
+          label:'Mexico GMV',
+          data:[59,208,425,712,1010],
+          borderColor:GREEN,backgroundColor:'rgba(0,166,81,0.08)',
+          fill:true,tension:0.4,pointBackgroundColor:GREEN,pointRadius:5
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,font:{size:11}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>v>=1000?'$'+(v/1000).toFixed(1)+'B':'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── BAR: Revenue & EBITDA ────────────────────────────────
+  new Chart(document.getElementById('chart-rev-ebitda'),{
+    type:'bar',
+    data:{
+      labels:['2026','2027','2028','2029','2030'],
+      datasets:[
+        {
+          label:'Net Revenue ($M)',
+          data:[19.1,51.2,103.8,179.2,270.6],
+          backgroundColor:BLUE+'CC',borderRadius:4,borderSkipped:false
+        },
+        {
+          label:'EBITDA ($M)',
+          data:[-10.4,-1.8,20.4,57.1,102.6],
+          backgroundColor:[RED+'99',RED+'99',GREEN+'CC',GREEN+'CC',GREEN],
+          borderRadius:4,borderSkipped:false
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,font:{size:11}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:DARK_TEXT}},
+        y:{grid:{color:DARK_GRID},ticks:{color:DARK_TEXT,callback:v=>'$'+v+'M'}}
+      }
+    }
+  });
+
+  // ── DONUT: Use of Proceeds ───────────────────────────────
+  new Chart(document.getElementById('chart-proceeds'),{
+    type:'doughnut',
+    data:{
+      labels:['Mexico Wave 1 Ops (35%)','US Expansion (25%)','Engineering & AI (20%)','Team (12%)','Working Capital (8%)'],
+      datasets:[{
+        data:[35,25,20,12,8],
+        backgroundColor:[RED,BLUE,GREEN,GOLD,'rgba(255,255,255,0.2)'],
+        borderWidth:0
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,cutout:'65%',
+      plugins:{
+        legend:{position:'bottom',labels:{color:DARK_TEXT,boxWidth:12,padding:8,font:{size:11}}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.raw}% — $${(ctx.raw*0.15).toFixed(1)}M`}}
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

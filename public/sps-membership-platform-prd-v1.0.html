@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPS Membership Platform — PRD v1.0 | SPS Purity Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#111114;--surface:#18181c;--surface2:#1f1f25;
+  --orange:#FF5E1A;--orange-dim:rgba(255,94,26,0.10);
+  --ink:#FAF9F6;--muted:#888;--line:rgba(250,249,246,0.08);
+  --green:#4ade80;--yellow:#fbbf24;--red:#f87171;
+  --sidebar:260px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--bg);color:var(--ink);}
+#sidebar{position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;background:#0d0d10;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sb-header{padding:28px 24px 20px;border-bottom:1px solid var(--line);}
+.sb-badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.sb-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;line-height:1.3;}
+.sb-version{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px;}
+.sb-nav{padding:16px 0;flex:1;}
+.sb-section{padding:6px 24px 4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,94,26,0.5);margin-top:8px;}
+.sb-link{display:flex;align-items:center;gap:10px;padding:9px 24px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s;}
+.sb-link:hover{color:var(--ink);background:var(--orange-dim);}
+.sb-link.active{color:var(--orange);border-left-color:var(--orange);background:var(--orange-dim);}
+.sb-count{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);}
+.sb-footer{padding:16px 24px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;}
+#main{margin-left:var(--sidebar);min-height:100vh;}
+.topbar{position:sticky;top:0;background:rgba(17,17,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 48px;display:flex;align-items:center;justify-content:space-between;z-index:90;}
+.tb-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;}
+.tb-tag.sps{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,94,26,0.3);}
+.tb-tag.draft{color:var(--yellow);background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);}
+.section{padding:72px 64px;border-bottom:1px solid var(--line);}
+.section:last-child{border-bottom:none;}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--orange);margin-bottom:14px;}
+.sec-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:36px;letter-spacing:0px;line-height:1.05;margin-bottom:12px;}
+.sec-sub{font-size:15px;color:var(--muted);line-height:1.8;max-width:680px;margin-bottom:36px;}
+.rule{width:40px;height:3px;background:var(--orange);border-radius:2px;margin-bottom:32px;}
+#overview{min-height:55vh;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(135deg,#111114 0%,#18100a 100%);}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--orange);text-transform:uppercase;margin-bottom:20px;}
+.hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(32px,4vw,56px);letter-spacing:-0.3px;line-height:1.0;margin-bottom:8px;}
+.hero-subtitle{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;color:var(--muted);margin-bottom:32px;}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;}
+.meta-item{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.meta-item span{color:var(--ink);}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;background:rgba(251,191,36,0.1);color:var(--yellow);border:1px solid rgba(251,191,36,0.3);}
+.stats-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:40px;}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 28px;text-align:center;min-width:120px;}
+.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:32px;color:var(--orange);letter-spacing:0px;}
+.stat-lbl{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+.req-grid{display:flex;flex-direction:column;gap:12px;max-width:860px;}
+.req{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start;transition:border-color .2s;}
+.req:hover{border-color:rgba(255,94,26,0.2);}
+.req-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--orange);min-width:72px;padding-top:2px;}
+.req-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;}
+.req-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.req-status{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:4px;white-space:nowrap;background:rgba(251,191,36,0.1);color:var(--yellow);border:1px solid rgba(251,191,36,0.2);}
+.req-status.approved{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.flow-steps{display:flex;flex-direction:column;gap:0;max-width:600px;}
+.flow-step{display:grid;grid-template-columns:48px 1fr;gap:20px;align-items:start;}
+.flow-num{width:36px;height:36px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;color:#fff;flex-shrink:0;margin-top:14px;}
+.flow-content{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin-bottom:8px;}
+.flow-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;margin-bottom:4px;}
+.flow-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.flow-connector{width:2px;height:24px;background:var(--line);margin-left:17px;}
+.tier-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:900px;margin-bottom:32px;}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 16px;text-align:center;}
+.tier.founding{border-color:rgba(255,94,26,0.3);background:rgba(255,94,26,0.04);}
+.tier-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;margin-bottom:4px;}
+.tier-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:22px;color:var(--orange);margin-bottom:4px;}
+.tier-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.tier-discount{font-size:11px;color:var(--green);}
+.air-phases{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;}
+.air-phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px;}
+.air-phase.future{border-style:dashed;opacity:.7;}
+.air-phase-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--orange);margin-bottom:8px;}
+.air-phase-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;margin-bottom:8px;}
+.air-phase-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+.quote-box{border-left:3px solid var(--orange);padding:20px 28px;background:var(--orange-dim);border-radius:0 10px 10px 0;max-width:680px;margin-bottom:40px;}
+.quote-text{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1.4;margin-bottom:8px;}
+.quote-attr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:2px;}
+.pipeline-link{display:flex;align-items:center;gap:16px;padding:14px 20px;background:var(--surface);border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);transition:border-color .2s;margin-bottom:10px;max-width:600px;}
+.pipeline-link:hover{border-color:rgba(255,94,26,0.3);}
+.pipeline-link-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--orange);min-width:60px;}
+.pipeline-link-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:14px;}
+.pipeline-link-badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;padding:3px 10px;border-radius:4px;}
+.pipeline-link-badge.live{background:rgba(74,222,128,0.1);color:var(--green);border:1px solid rgba(74,222,128,0.2);}
+.pipeline-link-badge.prd{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,94,26,0.2);}
+.pipeline-link-badge.pending{background:rgba(250,249,246,0.06);color:var(--muted);border:1px solid var(--line);}
+@media(max-width:768px){#sidebar{display:none;}#main{margin-left:0;}.section{padding:48px 24px;}.tier-grid{grid-template-columns:1fr 1fr;}.air-phases{grid-template-columns:1fr;}.req{grid-template-columns:auto 1fr;}.req-status{display:none;}}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="sb-header">
+    <div class="sb-badge">Purity Portal</div>
+    <div class="sb-title">SPS Membership<br>Platform</div>
+    <div class="sb-version">PRD v1.0 · June 20, 2026</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <div class="sb-link active" onclick="navTo('overview')">🏠 Overview</div>
+    <div class="sb-link" onclick="navTo('vision')">🎯 Vision</div>
+    <div class="sb-section">Requirements</div>
+    <div class="sb-link" onclick="navTo('signup')">✍️ Signup Flow <span class="sb-count">REQ-001–007</span></div>
+    <div class="sb-link" onclick="navTo('chatbot')">💬 Intake Chatbot <span class="sb-count">REQ-008–013</span></div>
+    <div class="sb-link" onclick="navTo('persistent')">🧠 Persistent Chat <span class="sb-count">REQ-014–018</span></div>
+    <div class="sb-link" onclick="navTo('logging')">📋 Conv. Logging <span class="sb-count">REQ-019–022</span></div>
+    <div class="sb-link" onclick="navTo('brief')">📄 Venture Brief <span class="sb-count">REQ-023–027</span></div>
+    <div class="sb-link" onclick="navTo('portal')">🖥 Member Portal <span class="sb-count">REQ-028–033</span></div>
+    <div class="sb-link" onclick="navTo('billing')">💳 Billing <span class="sb-count">REQ-034–037</span></div>
+    <div class="sb-link" onclick="navTo('air')">⚡ A.I.R. <span class="sb-count">REQ-038–040</span></div>
+    <div class="sb-section">Agents</div>
+    <div class="sb-link" onclick="navTo('pipeline')">🔗 Agent Pipeline</div>
+  </nav>
+  <div class="sb-footer">SPS · Membership Platform</div>
+</div>
+
+<div id="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="tb-tag sps">Super Power Studios</span>
+      <span class="tb-tag draft">Draft</span>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;letter-spacing:2px;">40 Requirements · 8 Modules</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="hero-tag">SPS Purity Portal · Membership Platform</div>
+    <div class="hero-title">SPS Membership Platform</div>
+    <div class="hero-subtitle">Full Web App — Signup · Ideation · Portal · A.I.R.</div>
+    <div class="hero-meta">
+      <div class="meta-item">Version <span>v1.0</span></div>
+      <div class="meta-item">Date <span>June 20, 2026</span></div>
+      <div class="meta-item">Author <span>Izzy Aala</span></div>
+      <div class="meta-item">Domain <span>superpowerstudios.ai</span></div>
+      <div class="meta-item"><span class="status-pill">● Draft</span></div>
+    </div>
+  </section>
+
+  <!-- VISION -->
+  <section class="section" id="vision">
+    <div class="eyebrow">Vision</div>
+    <div class="sec-title">Not a SaaS signup.<br>An initiation.</div>
+    <div class="rule"></div>
+    <div class="quote-box">
+      <div class="quote-text">"Joining SPS shouldn't feel like signing up for a tool.<br>It should feel like being accepted into something."</div>
+      <div class="quote-attr">— Product Principle</div>
+    </div>
+    <p class="sec-sub">The SPS Membership Platform is a full web app that takes a founder from first visit to active member with a dedicated AI Regent. The Ideation Agent is a mandatory first step — not optional. The chatbot grows with the member through all 10 stages of the SPS founder journey.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Membership Tiers</div></div>
+      <div class="stat"><div class="stat-num">$2</div><div class="stat-lbl">Founding Deposit</div></div>
+      <div class="stat"><div class="stat-num">40%</div><div class="stat-lbl">Lifetime Discount</div></div>
+      <div class="stat"><div class="stat-num">40</div><div class="stat-lbl">Requirements</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-lbl">Agent Pipeline</div></div>
+    </div>
+  </section>
+
+  <!-- SIGNUP FLOW -->
+  <section class="section" id="signup">
+    <div class="eyebrow">Requirements · Signup Flow</div>
+    <div class="sec-title">From first visit to active member.</div>
+    <div class="rule"></div>
+
+    <div class="tier-grid" style="margin-bottom:40px;">
+      <div class="tier founding"><div class="tier-badge">Founding</div><div class="tier-name">Global</div><div class="tier-price">$29<span style="font-size:13px;color:var(--muted)">/mo</span></div><div class="tier-discount">40% off for life</div></div>
+      <div class="tier founding"><div class="tier-badge">Founding</div><div class="tier-name">Spark</div><div class="tier-price">$179<span style="font-size:13px;color:var(--muted)">/mo</span></div><div class="tier-discount">40% off for life</div></div>
+      <div class="tier founding"><div class="tier-badge">Founding</div><div class="tier-name">Ignite</div><div class="tier-price">$329<span style="font-size:13px;color:var(--muted)">/mo</span></div><div class="tier-discount">40% off for life</div></div>
+      <div class="tier"><div class="tier-badge">Full Price</div><div class="tier-name">Surge</div><div class="tier-price">$549<span style="font-size:13px;color:var(--muted)">/mo</span></div><div class="tier-discount" style="color:var(--muted)">No discount</div></div>
+      <div class="tier"><div class="tier-badge">Full Price</div><div class="tier-name">Superpower</div><div class="tier-price">$999<span style="font-size:13px;color:var(--muted)">/mo</span></div><div class="tier-discount" style="color:var(--muted)">No discount</div></div>
+    </div>
+
+    <div class="flow-steps">
+      <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><div class="flow-title">Landing — Apply / Begin</div><div class="flow-desc">Intentional entry point. CTA: "Begin Your Journey" or "Apply for Membership." Short context on what SPS is and what membership means.</div></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><div class="flow-title">Intake Chatbot</div><div class="flow-desc">Locked, constrained chatbot collects member profile info. Only answers SPS membership questions. Cannot go off-topic.</div></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><div class="flow-title">Email Verification</div><div class="flow-desc">Email verified before proceeding. No anonymous memberships.</div></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-step"><div class="flow-num">4</div><div class="flow-content"><div class="flow-title">$2 Founding Deposit + Tier Selection</div><div class="flow-desc">$2 fully refundable VIP deposit locks in 40% founding discount for life (Global/Spark/Ignite only). 500 spots per tier. Stripe payment.</div></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-step"><div class="flow-num">5</div><div class="flow-content"><div class="flow-title">Welcome → Ideation Agent</div><div class="flow-desc">"Welcome to Super Power Studios. Your first step is your Founder Discovery session." Mandatory — member cannot skip. Launches immediately.</div></div></div>
+    </div>
+
+    <div class="req-grid" style="margin-top:40px;">
+      <div class="req"><div class="req-id">REQ-001</div><div class="req-body"><div class="req-title">Open Signup</div><div class="req-desc">Signup is open to anyone. No invite or application approval required. First-come-first-served for founding spots.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-002</div><div class="req-body"><div class="req-title">$2 Founding Deposit</div><div class="req-desc">$2 fully refundable deposit required to lock in founding member status. Amount configurable via env var VIP_DEPOSIT_AMOUNT_CENTS.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-003</div><div class="req-body"><div class="req-title">40% Lifetime Founding Discount</div><div class="req-desc">40% off applied permanently to Global, Spark, and Ignite tiers only. Does not apply to Surge ($549) or Superpower ($999). Configurable via FOUNDING_MEMBER_DISCOUNT_PCT.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-004</div><div class="req-body"><div class="req-title">Spot Limits Per Tier</div><div class="req-desc">500 founding spots per discounted tier (1,500 total). Sold out message shown per tier when limit reached. Configurable via VIP_SPOTS_PER_TIER.</div></div><div class="req-status approved">Approved</div></div>
+      <div class="req"><div class="req-id">REQ-005</div><div class="req-body"><div class="req-title">Email Verification Required</div><div class="req-desc">Email must be verified before membership is activated. Verification link sent immediately after intake chatbot completes.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-006</div><div class="req-body"><div class="req-title">Ideation Agent — Mandatory Onboarding</div><div class="req-desc">Every new member must complete the Ideation Agent session. It cannot be skipped. Member status remains "Onboarding" until session is complete.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-007</div><div class="req-body"><div class="req-title">Login — Email + Password</div><div class="req-desc">Standard email/password auth. Forgot password via email reset. After login, member lands on their SPS Portal dashboard.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- INTAKE CHATBOT -->
+  <section class="section" id="chatbot">
+    <div class="eyebrow">Requirements · Intake Chatbot</div>
+    <div class="sec-title">A locked, constrained conversation.</div>
+    <div class="rule"></div>
+    <p class="sec-sub">The intake chatbot collects member profile information through natural conversation. It is not a general AI — it has one job. It cannot be manipulated into going off-topic.</p>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-008</div><div class="req-body"><div class="req-title">Constrained Scope</div><div class="req-desc">Chatbot only performs two functions: (1) collect intake profile info and (2) answer questions about SPS membership tiers and benefits. Any other topic is redirected.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-009</div><div class="req-body"><div class="req-title">Required Fields Collection</div><div class="req-desc">Chatbot must collect: Full Name, Email, Phone (optional), LinkedIn URL, Current Role, Industry, Location, and a brief statement of what they're working on or thinking about building.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-010</div><div class="req-body"><div class="req-title">Off-Topic Redirect</div><div class="req-desc">If user asks anything outside membership scope, chatbot responds: "I'm here to help you get started with SPS membership. Let me pick up where we left off..." and resumes intake.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-011</div><div class="req-body"><div class="req-title">Membership FAQ Awareness</div><div class="req-desc">Chatbot knows all 5 membership tiers, pricing, founding discount eligibility, spot limits, and the $2 deposit model. Can answer any question about membership.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-012</div><div class="req-body"><div class="req-title">Graceful Completion</div><div class="req-desc">When all required fields are collected, chatbot confirms the information, thanks the member, and transitions them to email verification.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-013</div><div class="req-body"><div class="req-title">Session Persistence</div><div class="req-desc">Intake session is saved continuously. If user closes the browser and returns, they resume exactly where they left off.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- PERSISTENT CHAT -->
+  <section class="section" id="persistent">
+    <div class="eyebrow">Requirements · Persistent Context Chatbot</div>
+    <div class="sec-title">Grows with the member.<br>Never resets.</div>
+    <div class="rule"></div>
+    <div class="quote-box">
+      <div class="quote-text">"Welcome back Izzy. You completed your Ideation session last week — your SPS Score was 87. Your next step is Market Research. Ready to begin?"</div>
+      <div class="quote-attr">— Example login experience</div>
+    </div>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-014</div><div class="req-body"><div class="req-title">Persistent Conversation History</div><div class="req-desc">Every conversation is stored permanently per member. Each login session creates a new entry linked to the member's account. History is never deleted.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-015</div><div class="req-body"><div class="req-title">Member Identity Injection</div><div class="req-desc">On every login, the chatbot is briefed with the member's full context: name, current stage, last session summary, Founder Venture Brief (if completed), and SPS scores.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-016</div><div class="req-body"><div class="req-title">Stage Awareness</div><div class="req-desc">Chatbot knows exactly which of the 10 SPS stages the member is in, what they completed in the previous stage, and what is required to advance to the next stage.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-017</div><div class="req-body"><div class="req-title">Personal Greeting</div><div class="req-desc">Chatbot always addresses the member by their first name. First message of every session references their current state and suggests a next action.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-018</div><div class="req-body"><div class="req-title">Stage Transition Guidance</div><div class="req-desc">When a member completes a stage, chatbot celebrates the milestone and clearly explains what comes next — including a direct action button to begin the next agent.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- LOGGING -->
+  <section class="section" id="logging">
+    <div class="eyebrow">Requirements · Conversation Logging</div>
+    <div class="sec-title">Every word. Every session. Forever.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-019</div><div class="req-body"><div class="req-title">Full Message Logging</div><div class="req-desc">Every message (member + chatbot/agent) is logged to the database with: content, role (user/assistant), timestamp, session ID, stage, phase.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-020</div><div class="req-body"><div class="req-title">Session Tracking</div><div class="req-desc">Each login creates a new session record. All sessions are linked to the member account. Session metadata: start time, end time, stage active, messages count.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-021</div><div class="req-body"><div class="req-title">Action Event Logging</div><div class="req-desc">Significant actions are logged as events: stage completed, brief generated, brief version created, tier upgraded, payment processed.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-022</div><div class="req-body"><div class="req-title">SPS Admin Access</div><div class="req-desc">SPS administrators can view any member's full conversation history and session log. Used for coaching, quality review, and dispute resolution.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- VENTURE BRIEF -->
+  <section class="section" id="brief">
+    <div class="eyebrow">Requirements · Founder Venture Brief</div>
+    <div class="sec-title">Versioned. Online. Downloadable.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-023</div><div class="req-body"><div class="req-title">Formatted Online Page</div><div class="req-desc">The Founder Venture Brief is rendered as a formatted, branded online page — not a raw data dump. Accessible at a unique URL per member per version.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-024</div><div class="req-body"><div class="req-title">PDF Download</div><div class="req-desc">Member can download their brief as a PDF from the brief page. PDF is generated on-demand and matches the online formatting.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-025</div><div class="req-body"><div class="req-title">Database Storage</div><div class="req-desc">Every generated brief is saved to the database tied to the member's account. Content, scores, recommendation, and version number all stored.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-026</div><div class="req-body"><div class="req-title">Versioning</div><div class="req-desc">Each ideation session creates a new version (v1, v2, v3...). All versions are retained. Latest version is surfaced prominently on the member portal. Previous versions are accessible.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-027</div><div class="req-body"><div class="req-title">Retrievable from Portal</div><div class="req-desc">Member can access all versions of their brief at any time from their SPS member portal. Each version shows: date generated, overall SPS score, recommendation light.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- MEMBER PORTAL -->
+  <section class="section" id="portal">
+    <div class="eyebrow">Requirements · Member Portal</div>
+    <div class="sec-title">Your SPS home base.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-028</div><div class="req-body"><div class="req-title">My Ideation</div><div class="req-desc">Dedicated section showing: current brief (latest version), SPS scores, recommendation, version history with dates. Button to start a new ideation session.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-029</div><div class="req-body"><div class="req-title">My Journey</div><div class="req-desc">Visual display of the 10-stage SPS founder journey. Current stage highlighted. Completed stages marked. Next stage unlocked with a CTA to begin.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-030</div><div class="req-body"><div class="req-title">My Chat</div><div class="req-desc">Access to the persistent SPS chatbot. Shows conversation history. Chatbot is pre-briefed with member context on open.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-031</div><div class="req-body"><div class="req-title">My Profile</div><div class="req-desc">Member can view and edit their profile: name, email, LinkedIn, role, industry, location. Changes reflected in chatbot context.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-032</div><div class="req-body"><div class="req-title">My Membership</div><div class="req-desc">Current tier, billing status, founding member badge (if applicable), founding discount percentage, renewal date. Upgrade/downgrade options.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-033</div><div class="req-body"><div class="req-title">SPS Tools</div><div class="req-desc">Access to SPS agents unlocked at each stage. Locked agents shown with stage requirement. Grows as member progresses through the journey.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- BILLING -->
+  <section class="section" id="billing">
+    <div class="eyebrow">Requirements · Billing</div>
+    <div class="sec-title">Stripe from day one.</div>
+    <div class="rule"></div>
+    <div class="req-grid">
+      <div class="req"><div class="req-id">REQ-034</div><div class="req-body"><div class="req-title">Stripe Integration</div><div class="req-desc">All payments processed via Stripe. Test mode for development. Real SPS Inc. Stripe account for production. Payment intents + webhooks for confirmation.</div></div><div class="req-status approved">Approved</div></div>
+      <div class="req"><div class="req-id">REQ-035</div><div class="req-body"><div class="req-title">$2 Deposit Flow</div><div class="req-desc">$2 deposit processed via Stripe Payment Intent. Marked as refundable. On successful payment, VIPPass record created with status CONFIRMED and founding discount flag set.</div></div><div class="req-status approved">Approved</div></div>
+      <div class="req"><div class="req-id">REQ-036</div><div class="req-body"><div class="req-title">Recurring Subscription</div><div class="req-desc">Monthly subscription created via Stripe Subscriptions at activation. Founding discount applied as a permanent Stripe coupon on the subscription.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-037</div><div class="req-body"><div class="req-title">Webhook Handler</div><div class="req-desc">Stripe webhook endpoint handles: payment_intent.succeeded, customer.subscription.created, customer.subscription.deleted, invoice.payment_failed.</div></div><div class="req-status approved">Approved</div></div>
+    </div>
+  </section>
+
+  <!-- A.I.R. -->
+  <section class="section" id="air">
+    <div class="eyebrow">Requirements · A.I.R. — AI Regent</div>
+    <div class="sec-title">The north star.</div>
+    <div class="rule"></div>
+    <p class="sec-sub">Every SPS member eventually gets their own dedicated AI Regent — a personal AI that knows their entire story, hosted and maintained by SPS.</p>
+    <div class="air-phases">
+      <div class="air-phase">
+        <div class="air-phase-tag">PHASE 1 · NOW</div>
+        <div class="air-phase-title">Shared Chatbot</div>
+        <div class="air-phase-desc">Stage-aware, context-persistent chatbot guides all members through the 10-stage journey. Shared infrastructure, personalized context per member.</div>
+      </div>
+      <div class="air-phase future">
+        <div class="air-phase-tag">PHASE 2 · FUTURE</div>
+        <div class="air-phase-title">Dedicated A.I.R.</div>
+        <div class="air-phase-desc">Each member gets their own dedicated AI Regent — named by the member. Powered by OpenClaw/Hermes. Hosted and maintained by SPS. Full conversation history from Phase 1 transfers seamlessly.</div>
+      </div>
+    </div>
+    <div class="req-grid" style="margin-top:32px;">
+      <div class="req"><div class="req-id">REQ-038</div><div class="req-body"><div class="req-title">Phase 1 — Shared Stage-Aware Chatbot</div><div class="req-desc">The persistent chatbot described in REQ-014–018 serves as the Phase 1 A.I.R. for all members. Must be architected so conversation history can transfer to a dedicated instance in Phase 2.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-039</div><div class="req-body"><div class="req-title">Phase 2 — Dedicated Instance Architecture</div><div class="req-desc">System must be designed to provision a dedicated OpenClaw/Hermes instance per member. Each instance is isolated, persistent, and scoped to that member's data only.</div></div><div class="req-status">Proposed</div></div>
+      <div class="req"><div class="req-id">REQ-040</div><div class="req-body"><div class="req-title">History Portability</div><div class="req-desc">When a member graduates to a dedicated A.I.R., their full conversation history, brief versions, scores, and stage data migrate with zero data loss. Member names their A.I.R. at activation.</div></div><div class="req-status">Proposed</div></div>
+    </div>
+  </section>
+
+  <!-- AGENT PIPELINE -->
+  <section class="section" id="pipeline">
+    <div class="eyebrow">SPS Agent Pipeline</div>
+    <div class="sec-title">9 agents. One journey.</div>
+    <div class="rule"></div>
+    <p class="sec-sub">The Membership Platform is the container. These are the agents that live inside it.</p>
+    <a class="pipeline-link" href="/sps-ideation-agent-prd-v1.0.html" target="_blank"><div class="pipeline-link-num">Agent 01</div><div class="pipeline-link-name">Ideation Agent — Super Power Ideas™</div><span class="pipeline-link-badge live">PRD + Live</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 02</div><div class="pipeline-link-name">Market Research Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 03</div><div class="pipeline-link-name">TAM/SAM/SOM Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 04</div><div class="pipeline-link-name">Business Model Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 05</div><div class="pipeline-link-name">Cost & Asset Classification Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 06</div><div class="pipeline-link-name">Validation Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 07</div><div class="pipeline-link-name">Investor Readiness Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 08</div><div class="pipeline-link-name">Pitch Deck Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+    <a class="pipeline-link" href="#"><div class="pipeline-link-num">Agent 09</div><div class="pipeline-link-name">Fundraising Agent</div><span class="pipeline-link-badge pending">Pending</span></a>
+  </section>
+</div>
+
+<script>
+function navTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+const secs=['overview','vision','signup','chatbot','persistent','logging','brief','portal','billing','air','pipeline'];
+window.addEventListener('scroll',()=>{
+  let cur='overview';
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-120)cur=id;});
+  document.querySelectorAll('.sb-link').forEach(l=>{const t=l.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];l.classList.toggle('active',t===cur);});
+},{passive:true});
+</script>
+</body>
+</html>

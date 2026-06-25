@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Speech Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --cream: #FDF8F2;
+    --dark: #1C1008;
+    --muted: #9A7A5A;
+    --border: rgba(139,69,19,0.15);
+    --gold: #C9A052;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV ── */
+  .top-bar {
+    background: var(--brown);
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .top-bar-nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.25); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .slide-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    opacity: 0.7;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  /* ── SLIDE WRAPPER ── */
+  .slides { position: relative; }
+  .slide { display: none; animation: fadeIn 0.25s ease; }
+  .slide.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── COVER SLIDE ── */
+  .cover {
+    min-height: calc(100vh - 50px);
+    background: var(--brown);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 40%, rgba(201,160,82,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 80%, rgba(204,34,34,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .cover-domo {
+    font-size: 72px;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  }
+  .cover-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .cover-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 700;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .cover-title span { color: var(--gold); }
+  .cover-subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+    margin-bottom: 40px;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cover-meta-item {
+    text-align: center;
+  }
+  .cover-meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .cover-meta-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+  }
+  .cover-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 32px auto;
+    border-radius: 2px;
+  }
+
+  /* ── CONTENT SLIDES ── */
+  .slide-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 64px;
+  }
+
+  .slide-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .slide-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .slide-divider {
+    width: 48px;
+    height: 3px;
+    background: var(--red);
+    border-radius: 2px;
+    margin: 16px 0 32px;
+  }
+
+  /* ── BULLET POINTS BOX ── */
+  .bullets-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .bullets-box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .bullets-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bullets-list li {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .bullets-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--brown);
+    font-weight: 700;
+  }
+
+  /* ── FULL TEXT BOX ── */
+  .text-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .text-box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .speech-text {
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--dark);
+    font-weight: 300;
+  }
+  .speech-text p {
+    margin-bottom: 16px;
+  }
+  .speech-text p:last-child { margin-bottom: 0; }
+  .speech-text strong {
+    font-weight: 700;
+    color: var(--brown);
+  }
+  .speech-text em {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bottom-nav-btn {
+    background: var(--brown);
+    color: white;
+    border: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .bottom-nav-btn:hover { opacity: 0.85; }
+  .bottom-nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .bottom-nav-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--brown); }
+
+  /* ── PRINT ── */
+  @media print {
+    .top-bar, .bottom-nav { display: none; }
+    .slide { display: block !important; page-break-after: always; }
+    .cover { min-height: auto; padding: 40px; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    .slide-inner { padding: 28px 20px 48px; }
+    .bottom-nav { padding: 0 20px 36px; }
+    .slide-title { font-size: 26px; }
+    .speech-text { font-size: 16px; }
+    .text-box { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-title">🍡 Domo Cafe — Speech</div>
+  <div class="top-bar-nav">
+    <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Prev</button>
+    <div class="slide-counter" id="slideCounter">1 / 2</div>
+    <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDES -->
+<div class="slides">
+
+  <!-- ── SLIDE 1: COVER ── -->
+  <div class="slide active" id="slide-0">
+    <div class="cover">
+      <div class="cover-domo">🟫</div>
+      <div class="cover-tag">Speech · June 2026</div>
+      <div class="cover-title">Welcome to<br><span>Domo Cafe</span></div>
+      <div class="cover-subtitle">A presentation to influencers, media & partners<br>on the story, the culture, and what comes next.</div>
+      <div class="cover-divider"></div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Speaker</div>
+          <div class="cover-meta-val">Izzy Aala</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Location</div>
+          <div class="cover-meta-val">Buena Park, CA</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Audience</div>
+          <div class="cover-meta-val">Influencers · Media · Partners</div>
+        </div>
+        <div class="cover-meta-item">
+          <div class="cover-meta-label">Licensed By</div>
+          <div class="cover-meta-val">NHK · Japan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2: THE WELCOME ── -->
+  <div class="slide" id="slide-1">
+    <div class="slide-inner">
+      <div class="slide-label">Part 1 of 8</div>
+      <div class="slide-title">The Welcome</div>
+      <div class="slide-divider"></div>
+
+      <!-- BULLETS -->
+      <div class="bullets-box">
+        <div class="bullets-box-label">🗒 Quick Reference — Bullet Points</div>
+        <ul class="bullets-list">
+          <li>Thank them for being here — they showed up to be part of something</li>
+          <li>This is not a restaurant moment — it's a cultural moment</li>
+          <li>Three groups in the room: influencers, media, partners — all matter differently</li>
+          <li>Set the tone: this is the beginning, not the event</li>
+          <li>Keep it warm, keep it real</li>
+        </ul>
+      </div>
+
+      <!-- FULL TEXT -->
+      <div class="text-box">
+        <div class="text-box-label">📝 Full Text — Memorize This</div>
+        <div class="speech-text">
+          <p><strong>Welcome to Domo Cafe.</strong></p>
+          <p>I want to start by saying — thank you. Genuinely. Not the kind of thank you you say because it's polite. The kind you say because it means something.</p>
+          <p>You could be anywhere right now. And you're here.</p>
+          <p>That tells me you already get it — that this is more than a lunch, more than a media moment, more than a business meeting. You showed up because something about this felt worth showing up for.</p>
+          <p>You were right.</p>
+          <p>In this room right now, we have three groups of people who each play a different role in what happens next. We have <strong>influencers</strong> — the people who shape culture. We have <strong>media</strong> — the people who tell the story. And we have <strong>partners</strong> — the people who help build what comes after today.</p>
+          <p>All three of you matter. All three of you are part of this.</p>
+          <p>So settle in. Eat something. And let me tell you what we built here — and where we're going.</p>
+          <p><em>[Pause. Let them feel it. Then move into Part 2.]</em></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+      <button class="bottom-nav-btn" onclick="navigate(-1)" disabled id="prevBtnBottom">← Previous</button>
+      <div class="bottom-nav-dots" id="dots"></div>
+      <button class="bottom-nav-btn" onclick="navigate(1)" id="nextBtnBottom">Next →</button>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<script>
+  const TOTAL = 2;
+  let current = 0;
+
+  function buildDots() {
+    const d = document.getElementById('dots');
+    d.innerHTML = '';
+    for (let i = 0; i < TOTAL; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === current ? ' active' : '');
+      dot.onclick = () => goTo(i);
+      d.appendChild(dot);
+    }
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    window.scrollTo(0, 0);
+    document.getElementById('slideCounter').textContent = (current + 1) + ' / ' + TOTAL;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === TOTAL - 1;
+    const pb = document.getElementById('prevBtnBottom');
+    const nb = document.getElementById('nextBtnBottom');
+    if (pb) pb.disabled = current === 0;
+    if (nb) nb.disabled = current === TOTAL - 1;
+    buildDots();
+  }
+
+  function navigate(dir) { goTo(current + dir); }
+
+  buildDots();
+</script>
+</body>
+</html>

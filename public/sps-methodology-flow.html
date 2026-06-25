@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPS Methodology Flow — v0.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0C0C0C;--bg2:#1C1C1E;--bg3:#2C2C34;
+  --orange:#FF5E1A;--white:#F0EDE8;--muted:#A0A098;
+  --border:rgba(240,237,232,0.08);--gold:#C9A052;
+  --green:#2ECC71;--red:#E74C3C;--blue:#3498DB;--purple:#9B59B6;
+  --gap-color:rgba(231,76,60,0.15);--gap-border:rgba(231,76,60,0.4);
+  --built-color:rgba(46,204,113,0.08);--built-border:rgba(46,204,113,0.3);
+  --partial-color:rgba(201,160,82,0.08);--partial-border:rgba(201,160,82,0.3);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;padding:40px;}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:48px;}
+.header .label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+.header h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;letter-spacing:0px;margin-bottom:8px;}
+.header h1 span{color:var(--orange);}
+.header p{font-size:14px;color:var(--muted);}
+
+/* LEGEND */
+.legend{display:flex;gap:24px;justify-content:center;margin-bottom:48px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.dot-built{background:var(--green);opacity:0.7;}
+.dot-partial{background:var(--gold);opacity:0.7;}
+.dot-gap{background:var(--red);opacity:0.7;}
+.dot-new{background:var(--blue);opacity:0.7;}
+
+/* JOURNEY STAGES */
+.journey{display:flex;align-items:flex-start;gap:0;margin-bottom:48px;overflow-x:auto;padding-bottom:8px;}
+.stage{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;position:relative;}
+.stage-box{width:100%;padding:16px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;text-align:center;position:relative;z-index:2;}
+.stage-box.active{border-color:var(--orange);background:rgba(255,94,26,0.06);}
+.stage-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;}
+.stage-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--white);}
+.stage-arrow{flex-shrink:0;width:32px;display:flex;align-items:center;justify-content:center;color:var(--orange);font-size:18px;padding-top:20px;}
+
+/* LAYER SYSTEM */
+.layers{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:48px;}
+.layer{border-radius:12px;overflow:hidden;}
+.layer-header{padding:12px 20px;display:flex;align-items:center;gap:12px;}
+.layer-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;}
+.layer-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.layer-body{padding:0 20px 20px;}
+
+/* AGENT GRID */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.agent-card{padding:14px 16px;border-radius:8px;border:1px solid;position:relative;}
+.agent-card.built{background:var(--built-color);border-color:var(--built-border);}
+.agent-card.partial{background:var(--partial-color);border-color:var(--partial-border);}
+.agent-card.gap{background:var(--gap-color);border-color:var(--gap-border);}
+.agent-card.new{background:rgba(52,152,219,0.08);border-color:rgba(52,152,219,0.3);}
+.agent-name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;margin-bottom:4px;}
+.agent-stage{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.agent-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+.status-badge{position:absolute;top:10px;right:10px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
+.badge-built{background:rgba(46,204,113,0.2);color:var(--green);}
+.badge-partial{background:rgba(201,160,82,0.2);color:var(--gold);}
+.badge-gap{background:rgba(231,76,60,0.2);color:var(--red);}
+.badge-new{background:rgba(52,152,219,0.2);color:var(--blue);}
+
+/* INFRASTRUCTURE LAYER */
+.infra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.infra-card{padding:20px;border-radius:10px;border:1px solid;}
+
+/* MANIFEST FLOW */
+.manifest-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-bottom:8px;}
+.mf-step{text-align:center;padding:12px 8px;position:relative;}
+.mf-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:14px;}
+.mf-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:6px;}
+.mf-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+
+/* GAP SECTION */
+.gaps{margin-bottom:48px;}
+.gap-header{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.gap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.gap-card{padding:16px;border-radius:8px;background:var(--gap-color);border:1px solid var(--gap-border);}
+.gap-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:var(--red);margin-bottom:6px;}
+.gap-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.gap-impact{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-top:8px;color:rgba(231,76,60,0.7);}
+
+/* AIR LAYER */
+.air-bar{background:rgba(255,94,26,0.06);border:1px solid rgba(255,94,26,0.2);border-radius:10px;padding:16px 24px;margin-bottom:16px;display:flex;align-items:center;gap:20px;}
+.air-label{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--orange);white-space:nowrap;}
+.air-desc{font-size:13px;color:var(--muted);}
+.air-features{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
+.air-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid rgba(255,94,26,0.3);color:var(--orange);}
+
+/* SECTION HEADERS */
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:40px 0;}
+
+/* VERSION */
+.version{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(160,160,152,0.4);margin-top:48px;}
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:16px;right:16px;z-index:500;display:flex;gap:8px;">
+  <button id="_editToggleBtn" onclick="toggleEdit()" data-on="0" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">✏ Edit</button>
+  <button onclick="saveEdits()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">💾 Save</button>
+  <button onclick="restoreEdits()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">↺ Restore</button>
+</div>
+
+<div class="header">
+  <div class="label">Super Power Studios — Internal</div>
+  <h1>SPS <span>Methodology</span> Flow</h1>
+  <p>What exists, what's missing, and what we need to complete the workflow — v0.1</p>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-built"></div> Built</div>
+  <div class="legend-item"><div class="legend-dot dot-partial"></div> Partially Built</div>
+  <div class="legend-item"><div class="legend-dot dot-gap"></div> Gap — Missing</div>
+  <div class="legend-item"><div class="legend-dot dot-new"></div> New — Defined Today</div>
+</div>
+
+<!-- ======================== MEMBER JOURNEY ======================== -->
+<div class="section-label">01 — The Member Journey</div>
+<div class="section-title">From raw idea to funded, operating company.</div>
+
+<div class="journey">
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 1</div>
+      <div class="stage-name">💡 Ideate</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 2</div>
+      <div class="stage-name">✅ Validate</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 3</div>
+      <div class="stage-name">🏛 Form</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 4</div>
+      <div class="stage-name">🔨 Build</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 5</div>
+      <div class="stage-name">💰 Fund</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 6</div>
+      <div class="stage-name">🚀 Launch</div>
+    </div>
+  </div>
+  <div class="stage-arrow">→</div>
+  <div class="stage">
+    <div class="stage-box active">
+      <div class="stage-num">Stage 7</div>
+      <div class="stage-name">📈 Scale</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== A.I.R. LAYER ======================== -->
+<div class="section-label">02 — The A.I.R. Layer</div>
+<div class="section-title">AI Regent — Runs beneath every stage. Never stops.</div>
+
+<div class="air-bar">
+  <div class="air-label">⚙ A.I.R.</div>
+  <div class="air-desc">The member's personal AI Regent. Remembers everything. Orchestrates all agents. Manages the operation. Named by the member.</div>
+  <div class="air-features">
+    <div class="air-tag">Memory</div>
+    <div class="air-tag">Orchestration</div>
+    <div class="air-tag">Telegram</div>
+    <div class="air-tag">Dashboard</div>
+    <div class="air-tag">Yeego (future)</div>
+    <div class="air-tag" style="border-color:rgba(231,76,60,0.4);color:#E74C3C;">VPS Isolated</div>
+    <div class="air-tag" style="border-color:rgba(231,76,60,0.4);color:#E74C3C;">Provisioning</div>
+    <div class="air-tag" style="border-color:rgba(231,76,60,0.4);color:#E74C3C;">Naming Flow</div>
+    <div class="air-tag" style="border-color:rgba(231,76,60,0.4);color:#E74C3C;">BYO API Keys</div>
+  </div>
+</div>
+
+<!-- ======================== AGENTS ======================== -->
+<div class="section-label">03 — The Agent Layer</div>
+<div class="section-title">14 Agents. One per job. Orchestrated by A.I.R.</div>
+
+<div class="agent-grid" style="margin-bottom:48px;">
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 1 — Ideate</div>
+    <div class="agent-name">Ideation Agent</div>
+    <div class="agent-desc">Validates idea, assesses founder, produces Founder + Idea Profile.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 1–2 — Ideate/Validate</div>
+    <div class="agent-name">Brainstorm → Manifest</div>
+    <div class="agent-desc">Converts raw brainstorm into structured PRD requirements inside Manifest. Missing entirely.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 2 — Validate</div>
+    <div class="agent-name">Market Intelligence</div>
+    <div class="agent-desc">TAM/SAM/SOM research, competitive landscape, demand signals.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 3 — Form</div>
+    <div class="agent-name">Formation Agent</div>
+    <div class="agent-desc">Legal entity, EIN, operating agreement, bank account setup guidance.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 3–4 — Form/Build</div>
+    <div class="agent-name">Branding Agent</div>
+    <div class="agent-desc">Name, logo direction, brand guide, voice and tone.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 4 — Build</div>
+    <div class="agent-name">Business Model Agent</div>
+    <div class="agent-desc">Revenue streams, pricing, unit economics, pro forma, simulator.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 4 — Build</div>
+    <div class="agent-name">Manifest Agent</div>
+    <div class="agent-desc">Writes, updates, and manages the Living PRD. Runs impact analysis on every change. Not yet defined.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 4 — Build</div>
+    <div class="agent-name">UX/UI Agent</div>
+    <div class="agent-desc">Wireframes, screen flows, design system. Links screens to Manifest requirements. Not yet defined.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 4 — Build</div>
+    <div class="agent-name">QA / Test Agent</div>
+    <div class="agent-desc">Generates test scripts from requirements. Links test results back to Manifest. Not yet defined.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 5 — Fund</div>
+    <div class="agent-name">Legal Agent</div>
+    <div class="agent-desc">SAFEs, cap table, term sheets, NDAs. Attorney referral network.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 5 — Fund</div>
+    <div class="agent-name">Investor Portal Agent</div>
+    <div class="agent-desc">Investor deck, data room, outreach tracking, SAFE execution.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 5–6 — Fund/Launch</div>
+    <div class="agent-name">Financial Agent</div>
+    <div class="agent-desc">Accounting setup, tax structure, CPA referral, burn rate monitoring. Not yet defined.</div>
+  </div>
+
+  <div class="agent-card new">
+    <div class="status-badge badge-new">New</div>
+    <div class="agent-stage">Stage 6 — Launch</div>
+    <div class="agent-name">Cost & Ops Agent</div>
+    <div class="agent-desc">Vendor selection, cost structure, operational playbook.</div>
+  </div>
+
+  <div class="agent-card gap">
+    <div class="status-badge badge-gap">Gap</div>
+    <div class="agent-stage">Stage 7 — Scale</div>
+    <div class="agent-name">Growth Agent</div>
+    <div class="agent-desc">GTM execution, marketing automation, KPI tracking, hiring plan. Not yet defined.</div>
+  </div>
+
+</div>
+
+<!-- ======================== MANIFEST FLOW ======================== -->
+<div class="section-label">04 — Manifest: The Living PRD</div>
+<div class="section-title">How a requirement is born, tracked, changed, and retired.</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:48px;">
+
+  <div style="margin-bottom:24px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Requirement Lifecycle</div>
+    <div class="manifest-flow">
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">💬</div><div style="font-size:11px;font-weight:600;">Brainstorm</div></div>
+        <div class="mf-label">Raw idea</div>
+      </div>
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">📋</div><div style="font-size:11px;font-weight:600;">Proposed</div></div>
+        <div class="mf-label">REQ-001 created</div>
+      </div>
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">✅</div><div style="font-size:11px;font-weight:600;">Approved</div></div>
+        <div class="mf-label">Owner signs off</div>
+      </div>
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">🔨</div><div style="font-size:11px;font-weight:600;">In Dev</div></div>
+        <div class="mf-label">Linked to build</div>
+      </div>
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">🧪</div><div style="font-size:11px;font-weight:600;">Testing</div></div>
+        <div class="mf-label">Test scripts run</div>
+      </div>
+      <div class="mf-step">
+        <div class="mf-box"><div style="font-size:18px;margin-bottom:4px;">🚀</div><div style="font-size:11px;font-weight:600;">Live</div></div>
+        <div class="mf-label">Deployed</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding-top:20px;">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Change Management Flow</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;">
+      <div style="text-align:center;padding:12px 8px;position:relative;">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px;font-weight:600;">Change Requested</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">Any channel</div>
+        <div style="position:absolute;right:-8px;top:20px;color:var(--orange);font-size:14px;">→</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;position:relative;">
+        <div style="background:rgba(201,160,82,0.1);border:1px solid rgba(201,160,82,0.3);border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px;font-weight:600;">Impact Analysis</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">A.I.R. runs it</div>
+        <div style="position:absolute;right:-8px;top:20px;color:var(--orange);font-size:14px;">→</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;position:relative;">
+        <div style="background:rgba(52,152,219,0.08);border:1px solid rgba(52,152,219,0.3);border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px;font-weight:600;">Impact Report</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">Risks + effort</div>
+        <div style="position:absolute;right:-8px;top:20px;color:var(--orange);font-size:14px;">→</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;position:relative;">
+        <div style="background:rgba(255,94,26,0.08);border:1px solid rgba(255,94,26,0.2);border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px;font-weight:600;">Owner Approves</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">Or rejects</div>
+        <div style="position:absolute;right:-8px;top:20px;color:var(--orange);font-size:14px;">→</div>
+      </div>
+      <div style="text-align:center;padding:12px 8px;">
+        <div style="background:var(--built-color);border:1px solid var(--built-border);border-radius:6px;padding:10px;margin-bottom:6px;font-size:11px;font-weight:600;">PRD Updated</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);">Version bumped</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================== INFRASTRUCTURE ======================== -->
+<div class="section-label">05 — Infrastructure</div>
+<div class="section-title">The platform layer that powers everything.</div>
+
+<div class="infra-grid" style="margin-bottom:48px;">
+
+  <div class="infra-card built" style="background:var(--built-color);border-color:var(--built-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">✅ Built — Izzy's setup</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">OpenClaw Core</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">Gateway running on Mac Studio. Telegram connected. Memory system. Heartbeat. Multi-model fallback chain.</div>
+  </div>
+
+  <div class="infra-card" style="background:var(--gap-color);border-color:var(--gap-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">🔴 Gap — Core of A.I.R.</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">VPS Provisioning</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">Management system to spin up isolated OpenClaw instances per member. Docker containers or dedicated VPS. Control plane dashboard.</div>
+  </div>
+
+  <div class="infra-card" style="background:var(--gap-color);border-color:var(--gap-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">🔴 Gap — New Today</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">Manifest</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">Living PRD system. Built into SPS. Not optional. Tracks requirements, changes, test scripts, impact analysis. Every project has one.</div>
+  </div>
+
+  <div class="infra-card partial" style="background:var(--partial-color);border-color:var(--partial-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">🟡 Partial — Needs full build</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">SPS Dashboard</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">Member-facing control center. Projects, presentations, Manifest PRDs, A.I.R. status. Defined but not built as a full product.</div>
+  </div>
+
+  <div class="infra-card partial" style="background:var(--partial-color);border-color:var(--partial-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">🟡 Partial — Izzy's working</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">SPS Membership Site</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">Tier signup, billing, member portal. Exists in early form. Needs full integration with A.I.R. provisioning and Manifest.</div>
+  </div>
+
+  <div class="infra-card" style="background:var(--gap-color);border-color:var(--gap-border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">🔴 Gap — Critical</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px;">API Key Management</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;">SPS-managed → BYO transition system. Secure key storage per member. Usage monitoring. Credit alerts. OpenRouter integration.</div>
+  </div>
+
+</div>
+
+<!-- ======================== GAPS SUMMARY ======================== -->
+<div class="section-label">06 — Gap Analysis</div>
+<div class="section-title">What's missing before this is a complete workflow.</div>
+
+<div class="gap-grid" style="margin-bottom:48px;">
+
+  <div class="gap-card">
+    <div class="gap-title">A.I.R. Provisioning System</div>
+    <div class="gap-desc">No system exists to spin up isolated OpenClaw instances for members. This is the entire infrastructure foundation of A.I.R. — it doesn't exist yet.</div>
+    <div class="gap-impact">Impact: Critical — blocks all of A.I.R.</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Member Naming Flow</div>
+    <div class="gap-desc">"Name your Regent" onboarding moment doesn't exist. This is the first personalization step — sets IDENTITY.md, SOUL.md template, and Telegram bot name.</div>
+    <div class="gap-impact">Impact: High — core UX moment</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Manifest System</div>
+    <div class="gap-desc">The Living PRD system is fully defined but not built. No requirement tracking, no impact engine, no changelog, no access control.</div>
+    <div class="gap-impact">Impact: High — blocks all PRD work</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Manifest Agent</div>
+    <div class="gap-desc">The agent that converts brainstorm → structured PRD and manages changes with impact analysis. Not defined in agent spec.</div>
+    <div class="gap-impact">Impact: High — core Manifest function</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">UX/UI Agent</div>
+    <div class="gap-desc">No agent defined for wireframes, screen flows, or design system generation. UI changes need to link back to Manifest requirements.</div>
+    <div class="gap-impact">Impact: Medium — needed for Build stage</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">QA / Test Agent</div>
+    <div class="gap-desc">No agent generates test scripts from requirements or links test results back to Manifest. Core to the Living PRD concept.</div>
+    <div class="gap-impact">Impact: Medium — needed for Manifest loop</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Change Governance</div>
+    <div class="gap-desc">Who approves changes is defined (project owner). But the notification flow, approval UI, and rejection workflow are not designed.</div>
+    <div class="gap-impact">Impact: Medium — needed for Manifest</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">API Key Transition</div>
+    <div class="gap-desc">SPS manages keys at first → BYO later. The transition mechanism, key storage security, and OpenRouter integration are not designed.</div>
+    <div class="gap-impact">Impact: Medium — needed before launch</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Portability / Migration</div>
+    <div class="gap-desc">$1,500 migration fee is set. But the export format, migration tooling, and re-import process for A.I.R. instances are not designed.</div>
+    <div class="gap-impact">Impact: Medium — needed at launch</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Financial Agent</div>
+    <div class="gap-desc">Accounting, tax, CPA referral, and burn rate monitoring are undefined. Critical for Stage 5–6 members.</div>
+    <div class="gap-impact">Impact: Medium — Stage 5 blocker</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">Growth Agent</div>
+    <div class="gap-desc">GTM execution, marketing, KPI tracking, hiring plan — Stage 7 is entirely undefined. No agent covers post-launch scaling.</div>
+    <div class="gap-impact">Impact: Low now — future critical</div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-title">GitHub / Code Integration</div>
+    <div class="gap-desc">Commits linked to REQ IDs is designed for v2. The data model needs to support it from v1. Not yet in Manifest spec.</div>
+    <div class="gap-impact">Impact: Low for v1 — design now</div>
+  </div>
+
+</div>
+
+<!-- ======================== BUILD ORDER ======================== -->
+<div class="section-label">07 — Recommended Build Order</div>
+<div class="section-title">What to build, and when.</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:48px;">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Phase 1 — Foundation</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--orange);">Manifest v1 — Living PRD system</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--orange);">A.I.R. PRD — first Manifest entry</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--orange);">Manifest PRD — second entry</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--orange);">VPS Provisioning system</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Phase 2 — Core Product</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--gold);">A.I.R. naming + onboarding flow</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--gold);">SPS Dashboard (member-facing)</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--gold);">API key management + OpenRouter</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--gold);">Manifest Agent (impact engine)</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Phase 3 — Scale</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--bg3);">UX/UI Agent</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--bg3);">QA / Test Agent</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--bg3);">GitHub integration (v2)</div>
+        <div style="background:var(--bg3);border-radius:6px;padding:10px 14px;font-size:13px;border-left:3px solid var(--bg3);">Growth Agent + Scale stage</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="version">SPS Methodology Flow v0.1 — Confidential — Super Power Studios Inc.</div>
+
+<script>
+// ─── DECK EDIT FEATURE ───────────────────────────────────────────────────────
+const _EDIT_HASH = '08d2ccb2e858548c639f7fa890c5ccbf5d62be0be17183d8aabe5b406d288d42';
+async function _hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function requireEditAuth(onSuccess) {
+  if (sessionStorage.getItem('deck-edit-auth')==='1') { onSuccess(); return; }
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  ov.innerHTML=`<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;"><div style="font-size:32px;margin-bottom:16px;">🔒</div><div style="font-family:sans-serif;font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:6px;">Edit Access Required</div><div style="font-size:12px;color:#A0A098;margin-bottom:24px;">Contact Jarvis to receive the edit password.</div><input id="_ePwI" type="password" placeholder="Enter password" style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F0EDE8;font-size:14px;outline:none;font-family:monospace;margin-bottom:10px;"/><div id="_ePwE" style="color:#ef4444;font-size:12px;min-height:16px;margin-bottom:10px;"></div><button id="_ePwB" style="width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Unlock</button><button id="_ePwC" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#A0A098;font-size:13px;cursor:pointer;">Cancel</button></div>`;
+  document.body.appendChild(ov);
+  const inp=document.getElementById('_ePwI');
+  inp.focus();
+  const go=async()=>{
+    const h=await _hashStr(inp.value);
+    if(h===_EDIT_HASH){sessionStorage.setItem('deck-edit-auth','1');ov.remove();onSuccess();}
+    else{document.getElementById('_ePwE').textContent='Incorrect password. Contact Jarvis.';inp.value='';inp.focus();}
+  };
+  document.getElementById('_ePwB').onclick=go;
+  document.getElementById('_ePwC').onclick=()=>ov.remove();
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+const _DECK_KEY = 'sps-methodology-edits';
+let _origContent = {};
+function _captureOrig() {
+  document.querySelectorAll('body > div').forEach((el,i) => { _origContent[i] = el.innerHTML; });
+}
+function _loadSaved() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(_DECK_KEY) || '{}');
+    document.querySelectorAll('body > div').forEach((el,i) => { if(saved[i]) el.innerHTML = saved[i]; });
+  } catch(e){}
+}
+function saveEdits() {
+  const d = {};
+  document.querySelectorAll('body > div').forEach((el,i) => { d[i] = el.innerHTML; });
+  localStorage.setItem(_DECK_KEY, JSON.stringify(d));
+  _showEditToast('✓ Saved');
+}
+function restoreEdits() {
+  if (!confirm('Restore to original? All saved edits will be cleared.')) return;
+  localStorage.removeItem(_DECK_KEY);
+  document.querySelectorAll('body > div').forEach((el,i) => { if(_origContent[i]) el.innerHTML = _origContent[i]; });
+  const btn = document.getElementById('_editToggleBtn');
+  if (btn && btn.dataset.on==='1') _deactivateEdit();
+  _showEditToast('↺ Restored');
+}
+function _showEditInstructions(onConfirm) {
+  if (localStorage.getItem(_DECK_KEY+'-tip')) { onConfirm(); return; }
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.72);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  ov.innerHTML = `<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:36px 40px;max-width:420px;width:90%;text-align:left;">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#C9A052;margin-bottom:16px;font-weight:700;">Edit Mode</div>
+    <div style="font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:20px;">How to edit this deck</div>
+    <div style="font-size:13px;color:#A0A098;line-height:1.9;">
+      <div style="margin-bottom:6px;">✏️ &nbsp;Click <strong style="color:#F0EDE8;">✏ Edit</strong> to make all text editable</div>
+      <div style="margin-bottom:6px;">🖊 &nbsp;Click any text and type to change it</div>
+      <div style="margin-bottom:6px;">↵ &nbsp;Press <strong style="color:#F0EDE8;">Enter</strong> or click away to confirm</div>
+      <div style="margin-bottom:6px;">💾 &nbsp;Click <strong style="color:#F0EDE8;">Save</strong> — persists across sessions</div>
+      <div style="margin-bottom:6px;">↺ &nbsp;Click <strong style="color:#F0EDE8;">Restore</strong> to reset to original</div>
+      <div>✓ &nbsp;Click <strong style="color:#F0EDE8;">✓ Done</strong> to exit edit mode</div>
+    </div>
+    <div style="margin-top:10px;"><label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#A0A098;cursor:pointer;"><input type="checkbox" id="_eTipChk" style="accent-color:#C9A052"> Don't show again</label></div>
+    <button id="_eTipOk" style="margin-top:24px;width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Got it — let's edit</button>
+  </div>`;
+  document.body.appendChild(ov);
+  document.getElementById('_eTipOk').onclick = () => {
+    if(document.getElementById('_eTipChk').checked) localStorage.setItem(_DECK_KEY+'-tip','1');
+    ov.remove(); onConfirm();
+  };
+}
+function _activateEdit() {
+  document.querySelectorAll('body > div').forEach(el => el.setAttribute('contenteditable','true'));
+  const btn = document.getElementById('_editToggleBtn');
+  if(btn){btn.textContent='✓ Done';btn.style.color='#C9A052';btn.style.borderColor='#C9A052';btn.dataset.on='1';}
+}
+function _deactivateEdit() {
+  document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  const btn = document.getElementById('_editToggleBtn');
+  if(btn){btn.textContent='✏ Edit';btn.style.color='';btn.style.borderColor='';btn.dataset.on='0';}
+}
+function toggleEdit() {
+  const btn = document.getElementById('_editToggleBtn');
+  if(!btn||btn.dataset.on!=='1') requireEditAuth(() => _showEditInstructions(_activateEdit));
+  else _deactivateEdit();
+}
+function _showEditToast(msg) {
+  let t = document.getElementById('_editToast');
+  if(!t){t=document.createElement('div');t.id='_editToast';t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(201,160,82,0.95);color:#0C0C0C;font-family:monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:20px;opacity:0;transition:opacity 0.25s,transform 0.25s;z-index:9999;pointer-events:none';document.body.appendChild(t);}
+  t.textContent=msg;
+  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';});
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},2000);
+}
+_captureOrig(); _loadSaved();
+</script>
+</body>
+</html>

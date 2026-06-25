@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paro Wellness — License Agreement Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --espresso: #2C2420;
+  --terracotta: #B85C38;
+  --honey: #D4A574;
+  --driftwood: #8A7A6C;
+  --linen: #F7F3EE;
+  --cream: #FBF9F6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Outfit',sans-serif; background:var(--linen); color:var(--espresso); min-height:100vh; }
+
+/* GATE */
+#gate {
+  position:fixed; inset:0; background:var(--espresso);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:24px; z-index:9999;
+}
+#gate .g-logo { font-family:'Instrument Serif',serif; font-size:72px; color:var(--linen); letter-spacing:-3px; }
+#gate .g-sub { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--driftwood); text-align:center; line-height:1.8; }
+#gate .g-line { width:48px; height:2px; background:var(--terracotta); }
+#gate input {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(247,243,238,0.15);
+  color:var(--linen); font-family:'Outfit',sans-serif; font-size:16px;
+  padding:13px 24px; border-radius:8px; width:300px; outline:none;
+  text-align:center; letter-spacing:2px;
+}
+#gate input:focus { border-color:var(--terracotta); }
+#gate button {
+  background:var(--terracotta); color:var(--linen); border:none;
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:600;
+  padding:13px 40px; border-radius:8px; cursor:pointer; width:300px;
+}
+#gate button:hover { opacity:0.88; }
+#gate .g-err { color:var(--terracotta); font-family:'JetBrains Mono',monospace; font-size:11px; min-height:18px; }
+
+/* MAIN */
+#main { display:none; }
+
+/* TOP BAR */
+.topbar {
+  position:fixed; top:0; left:0; right:0; height:56px;
+  background:var(--espresso); display:flex; align-items:center;
+  justify-content:space-between; padding:0 32px; z-index:100;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.tb-left { display:flex; align-items:center; gap:16px; }
+.tb-logo { font-family:'Instrument Serif',serif; font-size:22px; color:var(--linen); }
+.tb-doc { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--driftwood); }
+.tb-draft {
+  background:rgba(184,92,56,0.2); border:1px solid rgba(184,92,56,0.4);
+  color:var(--terracotta); font-family:'JetBrains Mono',monospace;
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  padding:5px 12px; border-radius:4px;
+}
+.tb-btns { display:flex; gap:10px; }
+.tb-btn {
+  background:none; border:1px solid rgba(247,243,238,0.15); color:var(--linen);
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; padding:7px 14px; border-radius:5px; cursor:pointer;
+  transition:all 0.2s;
+}
+.tb-btn:hover { border-color:var(--terracotta); color:var(--terracotta); }
+.tb-btn.primary { background:var(--terracotta); border-color:var(--terracotta); }
+
+/* LAYOUT */
+.layout {
+  margin-top:56px;
+  display:grid;
+  grid-template-columns:260px 1fr;
+  min-height:calc(100vh - 56px);
+}
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+}
+
+/* SIDEBAR TOC */
+.sidebar {
+  position:sticky; top:56px; height:calc(100vh - 56px);
+  overflow-y:auto; background:var(--cream);
+  border-right:1px solid rgba(44,36,32,0.08);
+  padding:32px 0;
+}
+.toc-header {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--driftwood); padding:0 24px 16px;
+  border-bottom:1px solid rgba(44,36,32,0.07); margin-bottom:8px;
+}
+.toc-link {
+  display:block; padding:9px 24px; font-size:13px; color:var(--driftwood);
+  text-decoration:none; cursor:pointer; transition:all 0.15s;
+  border-left:2px solid transparent;
+}
+.toc-link:hover { color:var(--espresso); background:rgba(44,36,32,0.03); }
+.toc-link.active { color:var(--terracotta); border-left-color:var(--terracotta); background:rgba(184,92,56,0.05); font-weight:600; }
+.toc-link .toc-num {
+  font-family:'JetBrains Mono',monospace; font-size:10px; margin-right:8px; color:var(--terracotta);
+}
+
+/* CONTENT */
+.doc-content {
+  max-width:800px;
+  padding:64px 64px 80px;
+  margin:0 auto;
+}
+@media (max-width:768px) { .doc-content { padding:40px 24px; } }
+
+/* COVER PAGE */
+.cover {
+  padding:64px 0 80px;
+  border-bottom:2px solid rgba(44,36,32,0.08);
+  margin-bottom:64px;
+}
+.cover-parties {
+  display:grid; grid-template-columns:1fr auto 1fr; gap:24px;
+  align-items:center; margin:48px 0;
+}
+.cover-party { }
+.cover-party-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--driftwood); margin-bottom:8px;
+}
+.cover-party-name { font-family:'Instrument Serif',serif; font-size:22px; color:var(--espresso); margin-bottom:4px; }
+.cover-party-sub { font-size:13px; color:var(--driftwood); }
+.cover-vs {
+  font-family:'Instrument Serif',serif; font-size:28px;
+  color:var(--terracotta); text-align:center;
+}
+.cover-meta {
+  background:rgba(44,36,32,0.04); border-radius:12px; padding:24px 32px;
+  display:flex; gap:32px; align-items:center; flex-wrap:wrap;
+}
+.cover-meta-item { }
+.cover-meta-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--driftwood); margin-bottom:4px;
+}
+.cover-meta-val { font-size:14px; font-weight:600; color:var(--espresso); }
+.draft-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(184,92,56,0.1); border:1px solid rgba(184,92,56,0.3);
+  color:var(--terracotta); font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  padding:8px 16px; border-radius:6px; margin-top:32px;
+}
+
+/* SECTION STYLES */
+.sec { margin-bottom:56px; scroll-margin-top:80px; }
+.sec-header {
+  display:flex; align-items:flex-start; gap:16px;
+  margin-bottom:28px; padding-bottom:16px;
+  border-bottom:2px solid rgba(184,92,56,0.15);
+}
+.sec-num {
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--terracotta); white-space:nowrap; padding-top:4px;
+}
+.sec-title {
+  font-family:'Instrument Serif',serif; font-size:28px;
+  color:var(--espresso); line-height:1.2;
+}
+
+.subsec { margin:20px 0; }
+.subsec-label {
+  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--driftwood); margin-bottom:10px;
+}
+.subsec-num {
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+  color:var(--terracotta); margin-right:8px;
+}
+p.clause {
+  font-size:14px; line-height:1.85; color:var(--espresso);
+  margin-bottom:16px;
+}
+.clause-heading {
+  font-size:15px; font-weight:600; color:var(--espresso);
+  margin-bottom:8px; margin-top:20px;
+}
+
+/* TBD field */
+.tbd {
+  display:inline-block;
+  background:rgba(184,92,56,0.1); border:1px solid rgba(184,92,56,0.3);
+  color:var(--terracotta); font-family:'JetBrains Mono',monospace;
+  font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase;
+  padding:2px 8px; border-radius:4px;
+}
+
+/* TABLE */
+.clause-table {
+  width:100%; border-collapse:collapse; margin:16px 0 24px;
+  font-size:13px;
+}
+.clause-table th {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--driftwood); padding:12px 16px;
+  text-align:left; border-bottom:2px solid rgba(44,36,32,0.1);
+  background:rgba(44,36,32,0.03);
+}
+.clause-table td {
+  padding:12px 16px; border-bottom:1px solid rgba(44,36,32,0.06);
+  color:var(--espresso); line-height:1.5;
+}
+.clause-table tr:last-child td { border-bottom:none; }
+.clause-table td:first-child { font-weight:600; white-space:nowrap; }
+.clause-table td:last-child { color:var(--terracotta); font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+/* CALLOUT BOX */
+.callout {
+  background:rgba(184,92,56,0.07); border-left:4px solid var(--terracotta);
+  border-radius:0 10px 10px 0; padding:20px 24px; margin:20px 0;
+  font-size:13px; color:var(--espresso); line-height:1.7;
+}
+.callout strong { color:var(--terracotta); }
+
+/* RECUSAL BOX */
+.recusal-box {
+  background:rgba(212,165,116,0.12); border:1px solid rgba(212,165,116,0.3);
+  border-radius:10px; padding:20px 24px; margin:16px 0;
+  font-size:13px; color:var(--espresso); line-height:1.7;
+}
+.recusal-box .r-label {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--honey); margin-bottom:8px;
+}
+
+/* EXHIBIT */
+.exhibit {
+  background:rgba(44,36,32,0.04); border:1px solid rgba(44,36,32,0.08);
+  border-radius:10px; padding:24px 28px; margin-bottom:16px;
+}
+.exhibit-label {
+  font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--terracotta); margin-bottom:8px;
+}
+.exhibit-title { font-family:'Instrument Serif',serif; font-size:20px; color:var(--espresso); margin-bottom:8px; }
+.exhibit-note { font-size:13px; color:var(--driftwood); line-height:1.6; }
+
+/* PAGE FOOTER WATERMARK */
+.page-footer {
+  margin-top:64px; padding-top:24px;
+  border-top:1px solid rgba(44,36,32,0.08);
+  text-align:center;
+}
+.page-footer p {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+  text-transform:uppercase; color:rgba(44,36,32,0.25); line-height:1.8;
+}
+
+/* SPS */
+.sps-mark {
+  position:fixed; bottom:16px; right:16px;
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--driftwood); opacity:0.3; z-index:50;
+}
+
+@media print {
+  #gate, .topbar, .sidebar, .sps-mark { display:none !important; }
+  #main { display:block !important; }
+  .layout { grid-template-columns:1fr; margin-top:0; }
+  .doc-content { max-width:100%; padding:32px; }
+  body { background:white; }
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="g-logo">PARO</div>
+  <div class="g-sub">Paro Wellness Inc. × Evithé Biotechnology<br>License Agreement Framework · Draft v1.0</div>
+  <div class="g-line"></div>
+  <input type="password" id="pw" placeholder="Enter passphrase" onkeydown="if(event.key==='Enter')go()">
+  <button onclick="go()">Access Document</button>
+  <div class="g-err" id="err"></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <span class="tb-logo">PARO</span>
+      <span class="tb-doc">License Framework · v1.0</span>
+      <span class="tb-draft">DRAFT · Not Binding</span>
+    </div>
+    <div class="tb-btns">
+      <button class="tb-btn primary" onclick="window.print()">⬡ Print / PDF</button>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR TOC -->
+    <div class="sidebar">
+      <div class="toc-header">Table of Contents</div>
+      <a class="toc-link active" onclick="scrollTo('cover')"><span class="toc-num">—</span>Cover Page</a>
+      <a class="toc-link" onclick="scrollTo('s1')"><span class="toc-num">01</span>Parties</a>
+      <a class="toc-link" onclick="scrollTo('s2')"><span class="toc-num">02</span>Grant of License</a>
+      <a class="toc-link" onclick="scrollTo('s3')"><span class="toc-num">03</span>Licensed IP</a>
+      <a class="toc-link" onclick="scrollTo('s4')"><span class="toc-num">04</span>Financial Terms</a>
+      <a class="toc-link" onclick="scrollTo('s5')"><span class="toc-num">05</span>Supply Agreement</a>
+      <a class="toc-link" onclick="scrollTo('s6')"><span class="toc-num">06</span>Regulatory</a>
+      <a class="toc-link" onclick="scrollTo('s7')"><span class="toc-num">07</span>Confidentiality</a>
+      <a class="toc-link" onclick="scrollTo('s8')"><span class="toc-num">08</span>Term & Termination</a>
+      <a class="toc-link" onclick="scrollTo('s9')"><span class="toc-num">09</span>Representations</a>
+      <a class="toc-link" onclick="scrollTo('s10')"><span class="toc-num">10</span>Governing Law</a>
+      <a class="toc-link" onclick="scrollTo('exhibits')"><span class="toc-num">A–C</span>Exhibits</a>
+    </div>
+
+    <!-- DOC CONTENT -->
+    <div class="doc-content">
+
+      <!-- COVER PAGE -->
+      <div class="cover" id="cover">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--driftwood);margin-bottom:16px;">
+          Draft v1.0 · June 2026 · For Discussion Purposes Only
+        </div>
+
+        <div style="font-family:'Instrument Serif',serif;font-size:48px;color:var(--espresso);letter-spacing:-2px;line-height:1.1;margin-bottom:8px;">
+          Exclusive License<br>Agreement Framework
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--terracotta);margin-bottom:32px;">
+          Paro Wellness Inc. × Evithé Biotechnology Ltd.
+        </div>
+
+        <div class="cover-parties">
+          <div class="cover-party">
+            <div class="cover-party-label">Licensor</div>
+            <div class="cover-party-name">Evithé Biotechnology Ltd.</div>
+            <div class="cover-party-sub">New Zealand</div>
+            <div style="margin-top:8px;font-size:12px;color:var(--driftwood);">CEO: Cynthia Hunefeld</div>
+          </div>
+          <div class="cover-vs">×</div>
+          <div class="cover-party">
+            <div class="cover-party-label">Licensee</div>
+            <div class="cover-party-name">Paro Wellness Inc.</div>
+            <div class="cover-party-sub">To be formed · Delaware C-Corp</div>
+            <div style="margin-top:8px;font-size:12px;color:var(--driftwood);">Founder: Justin Lai</div>
+          </div>
+        </div>
+
+        <div class="cover-meta">
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Document</div>
+            <div class="cover-meta-val">License Agreement Framework</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Version</div>
+            <div class="cover-meta-val">Draft v1.0</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Date</div>
+            <div class="cover-meta-val">June 2026</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="cover-meta-label">Effective Date</div>
+            <div class="cover-meta-val"><span class="tbd">TBD</span></div>
+          </div>
+        </div>
+
+        <div class="draft-badge">
+          ⚠ Draft — For Discussion Purposes Only — Not a Binding Agreement
+        </div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div class="sec" id="s1">
+        <div class="sec-header">
+          <div class="sec-num">Section 01</div>
+          <div class="sec-title">Parties</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">1.1</span><strong>Licensor:</strong> Evithé Biotechnology Ltd., a company incorporated in New Zealand ("Licensor" or "Evithé").</p>
+        <p class="clause"><span class="subsec-num">1.2</span><strong>Licensee:</strong> Paro Wellness Inc., a Delaware corporation to be formed ("Licensee" or "Paro"). Until formal incorporation, Paro is operating under incubation by Super Power Studios Inc. ("SPS").</p>
+        <p class="clause"><span class="subsec-num">1.3</span><strong>Effective Date:</strong> <span class="tbd">TBD — upon execution by both parties</span>.</p>
+
+        <div class="recusal-box">
+          <div class="r-label">⚠ Recusal Protocol</div>
+          <p>John Clough serves as a Director of Evithé Biotechnology and as an advisor to Paro Wellness Inc. In accordance with standard corporate governance and conflict-of-interest protocols, <strong>John Clough shall recuse himself from negotiations on behalf of both parties</strong>. All material terms shall be negotiated at arm's length by parties without conflict of interest. This recusal shall be documented and acknowledged by both Licensor and Licensee prior to execution.</p>
+        </div>
+
+        <p class="clause"><span class="subsec-num">1.4</span><strong>Recital:</strong> Licensor possesses certain proprietary rights, including patents, trade secrets, and clinical data, relating to a hormesis-derived ginger extract ("Licensed Extract"). Licensee desires to obtain an exclusive license to use the Licensed Extract in consumer wellness products in the Territory. Licensor is willing to grant such license on the terms and conditions set forth herein.</p>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="sec" id="s2">
+        <div class="sec-header">
+          <div class="sec-num">Section 02</div>
+          <div class="sec-title">Grant of License</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">2.1</span><strong>Exclusive License Grant.</strong> Subject to the terms and conditions of this Agreement, Licensor hereby grants to Licensee an exclusive, non-transferable license to:</p>
+        <p class="clause" style="padding-left:24px;">(a) Use the Licensed Extract (Evithé's hormesis-derived ginger extract, standardized to approximately 20% gingerols/shogaols) in the formulation of consumer wellness products;</p>
+        <p class="clause" style="padding-left:24px;">(b) Market, sell, and distribute consumer wellness products containing the Licensed Extract within the Territory;</p>
+        <p class="clause" style="padding-left:24px;">(c) Reference and use the Phase 1 clinical trial data (50 participants, 7 validated inflammatory biomarkers, 0 adverse events) in marketing materials, product packaging, investor communications, and regulatory filings, subject to applicable law and the guidelines set forth in Exhibit C.</p>
+
+        <p class="clause"><span class="subsec-num">2.2</span><strong>Territory.</strong> The license granted herein applies exclusively to the United States of America. Licensee shall have a Right of First Negotiation to expand the Territory to Canada and Mexico for a period of <span class="tbd">TBD</span> days following written notice by Licensee of its intent to expand.</p>
+
+        <p class="clause"><span class="subsec-num">2.3</span><strong>Exclusivity Period.</strong> The exclusive nature of the license shall remain in effect for the Initial Term, provided Licensee meets the Performance Minimums set forth in Section 4.4. Proposed initial exclusivity: <span class="tbd">3 years with renewal options subject to performance</span>.</p>
+
+        <p class="clause"><span class="subsec-num">2.4</span><strong>Sublicensing.</strong> Licensee shall not sublicense any rights granted under this Agreement without the prior written consent of Licensor, which shall not be unreasonably withheld.</p>
+
+        <div class="callout">
+          <strong>Note:</strong> The exclusivity granted herein is limited to consumer wellness product categories. Licensor retains all rights to the Licensed Extract for pharmaceutical drug development, clinical research, and non-consumer commercial applications.
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="sec" id="s3">
+        <div class="sec-header">
+          <div class="sec-num">Section 03</div>
+          <div class="sec-title">Licensed Intellectual Property</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">3.1</span><strong>The Licensed Extract.</strong> Licensor's proprietary hormesis-derived ginger extract, manufactured using Licensor's patented process, standardized to approximately 20% gingerols/shogaols, delivering 100mg active phenolics per recommended serving, as further described in Exhibit A.</p>
+
+        <p class="clause"><span class="subsec-num">3.2</span><strong>Clinical Data Rights.</strong> All Phase 1 clinical trial data, biomarker results, safety data, and efficacy data generated by or on behalf of Licensor, as further described in Exhibit C. Licensee's right to reference clinical data is limited to accurate, non-misleading summaries consistent with applicable FTC and FDA guidelines.</p>
+
+        <p class="clause"><span class="subsec-num">3.3</span><strong>Patents.</strong> Licensor's patents relating to: (a) the hormesis extraction process, and (b) the composition of the Licensed Extract. Patent numbers: <span class="tbd">To be listed upon execution — 3 patents on file with Evithé Biotechnology</span>.</p>
+
+        <p class="clause"><span class="subsec-num">3.4</span><strong>New Clinical Data.</strong> As new clinical data relating to the Licensed Extract is generated during the Term, Licensee shall have the right to reference and use such data in marketing, claims, and communications upon providing 30 days written notice to Licensor. Licensor shall cooperate in providing documentation reasonably necessary to support Licensee's claims.</p>
+
+        <p class="clause"><span class="subsec-num">3.5</span><strong>Trademark.</strong> This Agreement does not grant Licensee any rights to use Licensor's trade name "Evithé" or any associated trademarks in consumer-facing marketing without separate written authorization. Licensee may reference the Evithé partnership in investor and B2B contexts.</p>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="sec" id="s4">
+        <div class="sec-header">
+          <div class="sec-num">Section 04</div>
+          <div class="sec-title">Financial Terms</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">4.1</span><strong>Royalty Rate.</strong> Licensee shall pay Licensor a royalty on Net Revenue from Licensed Products at the following tiered rates:</p>
+
+        <table class="clause-table">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Net Revenue</th>
+              <th>Royalty Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tier 1</td>
+              <td>$0 – $1,000,000</td>
+              <td>7%</td>
+            </tr>
+            <tr>
+              <td>Tier 2</td>
+              <td>$1,000,001 – $5,000,000</td>
+              <td>6%</td>
+            </tr>
+            <tr>
+              <td>Tier 3</td>
+              <td>$5,000,001+</td>
+              <td>5%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="clause">For purposes hereof, "Net Revenue" means gross revenue from Licensed Products less returns, chargebacks, and sales taxes, but not including royalty payments owed hereunder.</p>
+
+        <p class="clause"><span class="subsec-num">4.2</span><strong>Royalty Reporting.</strong> Licensee shall provide Licensor with monthly royalty reports within 30 days of the close of each calendar month, detailing unit sales, gross revenue, deductions, and net royalty owed, accompanied by payment.</p>
+
+        <p class="clause"><span class="subsec-num">4.3</span><strong>Upfront License Fee.</strong> <span class="tbd">TBD — Proposed: $[X] upfront fee payable upon execution</span>. This fee is non-refundable and shall be credited against the first [X] months of royalties.</p>
+
+        <p class="clause"><span class="subsec-num">4.4</span><strong>Performance Minimums.</strong> To maintain the exclusivity granted in Section 2.3, Licensee shall achieve the following minimum Net Revenue milestones:</p>
+        <p class="clause" style="padding-left:24px;">— End of Year 1: <span class="tbd">$[X] TBD</span></p>
+        <p class="clause" style="padding-left:24px;">— End of Year 2: <span class="tbd">$[X] TBD</span></p>
+        <p class="clause" style="padding-left:24px;">Failure to meet Performance Minimums shall entitle Licensor to convert the license from exclusive to non-exclusive upon 60 days written notice, but shall not terminate this Agreement.</p>
+
+        <p class="clause"><span class="subsec-num">4.5</span><strong>Payment Terms.</strong> All payments due hereunder shall be payable within 30 days of the applicable period (Net 30) by wire transfer to Licensor's designated account.</p>
+
+        <div class="callout">
+          <strong>4.6 Equity Consideration — Negotiation Card:</strong> Paro may offer an equity stake in Paro Wellness Inc. as additional or alternative consideration to the royalty structure above. The form, percentage, and vesting terms of any equity grant are TBD and shall be negotiated separately. Equity consideration is not included in this base framework proposal and may be offered at Licensee's discretion as a negotiation tool.
+        </div>
+      </div>
+
+      <!-- SECTION 5 -->
+      <div class="sec" id="s5">
+        <div class="sec-header">
+          <div class="sec-num">Section 05</div>
+          <div class="sec-title">Supply Agreement</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">5.1</span><strong>Guaranteed Supply.</strong> Licensor shall guarantee supply of the Licensed Extract sufficient to meet Licensee's reasonable production requirements, subject to advance purchase orders and lead times set forth herein.</p>
+
+        <p class="clause"><span class="subsec-num">5.2</span><strong>Extract Pricing.</strong> <span class="tbd">TBD — Proposed: fixed price per gram with annual CPI (US Urban) adjustment cap of 3% per year</span>. Pricing to be memorialized in Exhibit B.</p>
+
+        <p class="clause"><span class="subsec-num">5.3</span><strong>Quality Specifications.</strong> Each batch of Licensed Extract delivered to Licensee shall:</p>
+        <p class="clause" style="padding-left:24px;">(a) Meet the specifications set forth in Exhibit A, including minimum 20% gingerols/shogaols standardization;</p>
+        <p class="clause" style="padding-left:24px;">(b) Be accompanied by a Certificate of Analysis (COA) from an independent, accredited laboratory;</p>
+        <p class="clause" style="padding-left:24px;">(c) Meet all applicable FDA dietary supplement quality standards (21 CFR Part 111).</p>
+
+        <p class="clause"><span class="subsec-num">5.4</span><strong>Lead Time.</strong> <span class="tbd">Proposed: 90-day advance purchase orders</span>. Parties shall agree on a rolling forecast mechanism to reduce supply risk as Licensee scales.</p>
+
+        <p class="clause"><span class="subsec-num">5.5</span><strong>Supply Continuity.</strong> In the event Licensor reasonably anticipates an inability to fulfill purchase orders, Licensor shall provide Licensee with no less than 6 months advance written notice and shall use commercially reasonable efforts to assist Licensee in qualifying an alternative approved source for the Licensed Extract during any supply disruption period.</p>
+
+        <p class="clause"><span class="subsec-num">5.6</span><strong>GMP Compliance.</strong> The Licensed Extract shall be manufactured in GMP-compliant facilities meeting FDA 21 CFR Part 111 requirements or internationally equivalent standards acceptable to Licensee.</p>
+      </div>
+
+      <!-- SECTION 6 -->
+      <div class="sec" id="s6">
+        <div class="sec-header">
+          <div class="sec-num">Section 06</div>
+          <div class="sec-title">Regulatory</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">6.1</span><strong>NDI Notification.</strong> Licensee shall be solely responsible for filing an FDA New Dietary Ingredient (NDI) notification for the Licensed Extract prior to commercial sale in the United States, at Licensee's cost. Licensor shall cooperate fully in providing the documentation, safety data, and technical information required to support the NDI filing.</p>
+
+        <p class="clause"><span class="subsec-num">6.2</span><strong>Regulatory Cooperation.</strong> Licensor shall cooperate in providing documentation reasonably required for Licensee's regulatory filings, certifications (including NSF), and retail compliance programs, at no additional cost to Licensee except for extraordinary out-of-pocket expenses approved in advance.</p>
+
+        <p class="clause"><span class="subsec-num">6.3</span><strong>Marketing Claims.</strong> Licensee is solely responsible for ensuring all marketing, advertising, and labeling claims comply with applicable FTC and FDA regulations. Licensee shall not make any claims that constitute drug claims under 21 USC § 321(g). Licensor shall review and approve any direct references to Evithé's clinical trial data in consumer-facing materials prior to publication, such approval not to be unreasonably withheld or delayed beyond 10 business days.</p>
+
+        <p class="clause"><span class="subsec-num">6.4</span><strong>Adverse Event Reporting.</strong> Each party shall promptly notify the other of any adverse events associated with use of the Licensed Extract that come to its attention.</p>
+      </div>
+
+      <!-- SECTION 7 -->
+      <div class="sec" id="s7">
+        <div class="sec-header">
+          <div class="sec-num">Section 07</div>
+          <div class="sec-title">Confidentiality</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">7.1</span><strong>Mutual Non-Disclosure.</strong> Each party agrees to hold the terms and conditions of this Agreement in strict confidence and not to disclose them to any third party without the prior written consent of the other party, except as required by applicable law or as otherwise provided herein.</p>
+
+        <p class="clause"><span class="subsec-num">7.2</span><strong>Investor Disclosure.</strong> Licensee may disclose the existence and a reasonable summary of this Agreement to potential investors, lenders, and financial advisors under a confidentiality agreement providing no less protection than this Section 7. Full terms of this Agreement shall not be disclosed without Licensor's written consent, except as required by applicable securities law.</p>
+
+        <p class="clause"><span class="subsec-num">7.3</span><strong>Permitted Disclosures.</strong> Each party may disclose Confidential Information to its directors, officers, employees, advisors, attorneys, and accountants who have a need to know and who are bound by obligations of confidentiality no less restrictive than this Section.</p>
+
+        <p class="clause"><span class="subsec-num">7.4</span><strong>Duration.</strong> Confidentiality obligations shall survive termination of this Agreement for a period of 5 years.</p>
+      </div>
+
+      <!-- SECTION 8 -->
+      <div class="sec" id="s8">
+        <div class="sec-header">
+          <div class="sec-num">Section 08</div>
+          <div class="sec-title">Term & Termination</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">8.1</span><strong>Initial Term.</strong> <span class="tbd">Proposed: 5 years from the Effective Date</span>.</p>
+
+        <p class="clause"><span class="subsec-num">8.2</span><strong>Renewal.</strong> <span class="tbd">Proposed: Two (2) renewal options of two (2) years each</span>, exercisable by Licensee upon 90 days written notice prior to expiration of the then-current Term, subject to mutual agreement on updated Performance Minimums.</p>
+
+        <p class="clause"><span class="subsec-num">8.3</span><strong>Termination for Cause.</strong> Either party may terminate this Agreement upon a material breach by the other party that remains uncured 60 days after written notice specifying the breach in reasonable detail.</p>
+
+        <p class="clause"><span class="subsec-num">8.4</span><strong>Termination for Non-Performance.</strong> Licensor may, at its option, convert the license grant from exclusive to non-exclusive (but not terminate the Agreement in its entirety) upon Licensee's failure to achieve Performance Minimums in accordance with Section 4.4.</p>
+
+        <p class="clause"><span class="subsec-num">8.5</span><strong>Effect of Termination.</strong> Upon termination: (a) all licenses granted hereunder shall immediately terminate; (b) Licensee shall cease all use of Licensed IP; (c) outstanding royalties shall be paid within 30 days; (d) each party shall return or destroy Confidential Information of the other party.</p>
+      </div>
+
+      <!-- SECTION 9 -->
+      <div class="sec" id="s9">
+        <div class="sec-header">
+          <div class="sec-num">Section 09</div>
+          <div class="sec-title">Representations & Warranties</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">9.1</span><strong>Licensor Represents and Warrants:</strong></p>
+        <p class="clause" style="padding-left:24px;">(a) Licensor is the sole owner of the Licensed IP and has the full right and authority to grant the licenses set forth herein;</p>
+        <p class="clause" style="padding-left:24px;">(b) To Licensor's knowledge, the Licensed IP does not infringe any third-party intellectual property rights;</p>
+        <p class="clause" style="padding-left:24px;">(c) The Phase 1 clinical trial data provided to Licensee accurately represents the results of the trial and is not materially misleading;</p>
+        <p class="clause" style="padding-left:24px;">(d) There are no pending or threatened claims against the Licensed IP known to Licensor;</p>
+        <p class="clause" style="padding-left:24px;">(e) The Licensed Extract shall be manufactured in accordance with applicable GMP requirements.</p>
+
+        <p class="clause"><span class="subsec-num">9.2</span><strong>Licensee Represents and Warrants:</strong></p>
+        <p class="clause" style="padding-left:24px;">(a) Licensee has the capacity and authority to enter into this Agreement;</p>
+        <p class="clause" style="padding-left:24px;">(b) Licensee shall comply with all applicable federal, state, and local laws in connection with the marketing, sale, and distribution of Licensed Products;</p>
+        <p class="clause" style="padding-left:24px;">(c) Licensee shall not make any marketing claim that exceeds what is substantiated by the clinical data provided by Licensor.</p>
+
+        <p class="clause"><span class="subsec-num">9.3</span><strong>Disclaimer.</strong> EXCEPT AS EXPRESSLY SET FORTH HEREIN, NEITHER PARTY MAKES ANY WARRANTY, EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.</p>
+      </div>
+
+      <!-- SECTION 10 -->
+      <div class="sec" id="s10">
+        <div class="sec-header">
+          <div class="sec-num">Section 10</div>
+          <div class="sec-title">Governing Law & Disputes</div>
+        </div>
+
+        <p class="clause"><span class="subsec-num">10.1</span><strong>Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, United States, without regard to its conflict of law provisions.</p>
+
+        <p class="clause"><span class="subsec-num">10.2</span><strong>Dispute Resolution.</strong> Any dispute arising out of or relating to this Agreement shall be resolved by binding arbitration administered by JAMS pursuant to its Commercial Arbitration Rules. The arbitration shall be conducted in <span class="tbd">[City, State — TBD]</span> before a single arbitrator. Judgment on the award may be entered in any court of competent jurisdiction.</p>
+
+        <p class="clause"><span class="subsec-num">10.3</span><strong>Equitable Relief.</strong> Notwithstanding Section 10.2, either party may seek emergency equitable relief before a court of competent jurisdiction to prevent irreparable harm pending the outcome of arbitration, particularly in matters involving unauthorized use of Licensed IP or breach of confidentiality obligations.</p>
+
+        <p class="clause"><span class="subsec-num">10.4</span><strong>Attorneys' Fees.</strong> In any dispute arising under this Agreement, the prevailing party shall be entitled to recover its reasonable attorneys' fees and costs.</p>
+      </div>
+
+      <!-- EXHIBITS -->
+      <div class="sec" id="exhibits">
+        <div class="sec-header">
+          <div class="sec-num">Exhibits</div>
+          <div class="sec-title">Supporting Documents</div>
+        </div>
+
+        <div class="exhibit">
+          <div class="exhibit-label">Exhibit A</div>
+          <div class="exhibit-title">Licensed Extract Specifications</div>
+          <div class="exhibit-note">
+            To include: extract name and INCI designation, standardization requirements (minimum 20% gingerols/shogaols), 
+            active phenolic content (100mg per recommended serving), solubility specifications, shelf life, 
+            storage conditions, microbiological limits, heavy metal limits, and Certificate of Analysis format.
+            <br><br>
+            <span class="tbd">TBD — To be completed with Evithé technical documentation prior to execution</span>
+          </div>
+        </div>
+
+        <div class="exhibit">
+          <div class="exhibit-label">Exhibit B</div>
+          <div class="exhibit-title">Financial Terms Detail</div>
+          <div class="exhibit-note">
+            To include: extract unit pricing (per gram / per kg), minimum order quantities, pricing adjustment 
+            mechanism (CPI formula), upfront license fee amount, payment wire instructions, audit rights procedures,
+            and royalty calculation worked examples.
+            <br><br>
+            <span class="tbd">TBD — To be negotiated and finalized prior to execution</span>
+          </div>
+        </div>
+
+        <div class="exhibit">
+          <div class="exhibit-label">Exhibit C</div>
+          <div class="exhibit-title">Regulatory Documentation &amp; Claims Guidelines</div>
+          <div class="exhibit-note">
+            To include: list of Evithé patents (numbers and jurisdictions), Phase 1 trial summary (approved for 
+            Licensee reference), approved claim language and required disclaimers, regulatory documentation 
+            provided by Licensor for NDI filing, FTC/FDA claim substantiation memo, and review/approval 
+            procedure for new consumer claims referencing clinical data.
+            <br><br>
+            <span class="tbd">TBD — To be prepared with input from both parties' regulatory counsel</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="page-footer">
+        <p>DRAFT — FOR DISCUSSION PURPOSES ONLY — NOT A BINDING AGREEMENT</p>
+        <p>Paro Wellness Inc. © 2026 · A Super Power Studios Portfolio Company</p>
+        <p>All terms subject to negotiation · Parties advised to seek independent legal counsel</p>
+      </div>
+
+    </div><!-- /doc-content -->
+  </div><!-- /layout -->
+
+  <div class="sps-mark">SPS · Super Power Studios</div>
+</div><!-- /main -->
+
+<script>
+function go() {
+  if (document.getElementById('pw').value === 'Paro@2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  } else {
+    const e = document.getElementById('err');
+    e.textContent = 'Incorrect passphrase.';
+    document.getElementById('pw').value = '';
+    setTimeout(() => e.textContent = '', 2500);
+  }
+}
+document.getElementById('pw').addEventListener('keydown', ev => { if (ev.key === 'Enter') go(); });
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Active TOC on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.toc-link').forEach(l => {
+        l.classList.toggle('active', l.getAttribute('onclick') && l.getAttribute('onclick').includes(id));
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+document.querySelectorAll('.sec, .cover').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

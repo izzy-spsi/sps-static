@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paro Wellness Inc. — Financial Pro Forma v1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --espresso: #2C2420;
+      --terracotta: #B85C38;
+      --honey: #D4A574;
+      --driftwood: #8A7A6C;
+      --linen: #F7F3EE;
+      --cream: #FBF9F6;
+      --bg: #2C2420;
+      --bg2: #332823;
+      --bg-card: #3A302B;
+      --bg-alt: #302620;
+      --text: #F7F3EE;
+      --text2: #D4A574;
+      --text-muted: #8A7A6C;
+      --border: #4A3830;
+      --accent: #B85C38;
+    }
+    [data-theme="light"] {
+      --bg: #F7F3EE;
+      --bg2: #FBF9F6;
+      --bg-card: #FFFFFF;
+      --bg-alt: #F0EBE4;
+      --text: #2C2420;
+      --text2: #B85C38;
+      --text-muted: #8A7A6C;
+      --border: #E0D5CB;
+      --accent: #B85C38;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;-webkit-font-smoothing:antialiased;}
+
+    /* ── PASSWORD GATE ── */
+    #gate{position:fixed;inset:0;background:var(--espresso);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0;}
+    .g-card{background:#3A302B;border:1px solid #4A3830;border-radius:24px;padding:56px 64px;text-align:center;max-width:440px;width:92%;}
+    .g-logo{font-family:'Instrument Serif',serif;font-size:52px;color:var(--terracotta);letter-spacing:10px;margin-bottom:4px;}
+    .g-sub{font-size:11px;color:var(--driftwood);letter-spacing:3px;text-transform:uppercase;margin-bottom:44px;}
+    .g-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--driftwood);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;}
+    .g-input{width:100%;background:#252018;border:1.5px solid #4A3830;border-radius:12px;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--linen);text-align:center;letter-spacing:6px;outline:none;transition:border-color .2s;margin-bottom:16px;}
+    .g-input:focus{border-color:var(--terracotta);}
+    .g-btn{width:100%;background:var(--terracotta);color:#fff;border:none;border-radius:12px;padding:17px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;letter-spacing:.5px;cursor:pointer;transition:background .2s,transform .1s;}
+    .g-btn:hover{background:#C96A44;}
+    .g-btn:active{transform:scale(.98);}
+    .g-err{color:#FF6B6B;font-size:12px;margin-top:12px;min-height:18px;font-family:'JetBrains Mono',monospace;}
+    .g-badge{margin-top:36px;display:inline-flex;align-items:center;gap:8px;background:rgba(184,92,56,.08);border:1px solid rgba(184,92,56,.25);border-radius:20px;padding:8px 16px;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--terracotta);letter-spacing:2px;text-transform:uppercase;}
+
+    /* ── APP ── */
+    #app{display:none;}
+
+    /* ── HEADER ── */
+    .hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:200;gap:12px;}
+    .hdr-left{display:flex;align-items:center;gap:16px;min-width:0;}
+    .logo{font-family:'Instrument Serif',serif;font-size:26px;color:var(--terracotta);letter-spacing:7px;line-height:1;}
+    .logo-tagline{font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+    .hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .sps-pill{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--honey);border:1px solid rgba(212,165,116,.3);border-radius:20px;padding:4px 10px;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+    .hdr-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .hdr-btn:hover{border-color:var(--terracotta);color:var(--terracotta);}
+
+    /* ── TABS ── */
+    .tab-nav{display:flex;border-bottom:1px solid var(--border);padding:0 48px;background:var(--bg);overflow-x:auto;scrollbar-width:none;}
+    .tab-nav::-webkit-scrollbar{display:none;}
+    .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:15px 22px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.3px;}
+    .tab-btn:hover{color:var(--text);}
+    .tab-btn.active{color:var(--terracotta);border-bottom-color:var(--terracotta);}
+
+    /* ── SLIDER BAR ── */
+    .sbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:20px 48px;display:flex;gap:32px;flex-wrap:wrap;align-items:flex-end;}
+    .sg{flex:1;min-width:180px;}
+    .sg-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .sg-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
+    .sg-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--terracotta);}
+    input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:linear-gradient(to right,var(--terracotta) var(--prog,0%),var(--border) var(--prog,0%));border-radius:2px;outline:none;cursor:pointer;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--terracotta);cursor:pointer;box-shadow:0 2px 8px rgba(184,92,56,.5);}
+    input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--terracotta);cursor:pointer;border:none;}
+    .sg-ticks{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-muted);margin-top:5px;}
+    .scen-selector{display:flex;gap:8px;}
+    .scen-btn{padding:7px 18px;border:1px solid var(--border);border-radius:20px;background:none;color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;}
+    .scen-btn.active{background:var(--terracotta);border-color:var(--terracotta);color:#fff;font-weight:600;}
+    .scen-section{display:flex;flex-direction:column;gap:8px;}
+    .scen-section-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
+
+    /* ── TAB PANELS ── */
+    .tab-panel{display:none;padding:48px;max-width:1440px;margin:0 auto;}
+    .tab-panel.active{display:block;}
+
+    /* ── SECTION HEADERS ── */
+    .sec-title{font-family:'Instrument Serif',serif;font-size:34px;margin-bottom:6px;line-height:1.2;}
+    .sec-sub{color:var(--text-muted);font-size:13px;margin-bottom:40px;line-height:1.6;}
+    .subsec{font-family:'Instrument Serif',serif;font-size:22px;margin:44px 0 20px;}
+
+    /* ── CARDS ── */
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px 32px;transition:background .3s;}
+    .card-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+    .big-n{font-family:'Instrument Serif',serif;font-size:46px;line-height:1;color:var(--text);}
+    .big-n.tc{color:var(--terracotta);}
+    .big-n.hn{color:var(--honey);}
+    .big-n.green{color:#22C55E;}
+    .big-n.red{color:#FF6B6B;}
+    .n-sub{font-family:'Outfit',sans-serif;font-size:12px;color:var(--text-muted);margin-top:6px;}
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;margin-bottom:36px;}
+
+    /* ── TABLES ── */
+    .tw{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);padding:13px 18px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg2);}
+    td{padding:11px 18px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);}
+    tr:last-child td{border-bottom:none;}
+    tr:nth-child(even) td{background:var(--bg-alt);}
+    td.lc{font-family:'Outfit',sans-serif;color:var(--text-muted);font-size:13px;}
+    td.vc{color:var(--text);font-weight:500;}
+    td.ac{color:var(--terracotta);}
+    td.tbd{color:var(--terracotta);font-style:italic;}
+    td.grn{color:#22C55E;}
+    td.red{color:#FF6B6B;}
+    tr.hl td{background:rgba(184,92,56,.07)!important;}
+    tr.ms td{background:rgba(212,165,116,.08)!important;}
+    tr.be td{background:rgba(34,197,94,.08)!important;}
+
+    /* ── CHARTS ── */
+    .chart-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px;margin:28px 0;}
+    .chart-title{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+    .chart-box{position:relative;height:300px;}
+
+    /* ── TWO COL ── */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+    .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;}
+
+    /* ── SCENARIO CARDS ── */
+    .sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:36px;}
+    .sc-card{border:2px solid var(--border);border-radius:16px;padding:28px;background:var(--bg-card);}
+    .sc-card.c{border-color:rgba(138,122,108,.4);}
+    .sc-card.b{border-color:rgba(212,165,116,.55);}
+    .sc-card.a{border-color:rgba(184,92,56,.7);}
+    .sc-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+    .sc-lbl.c{color:var(--driftwood);}
+    .sc-lbl.b{color:var(--honey);}
+    .sc-lbl.a{color:var(--terracotta);}
+    .sc-m{margin-bottom:14px;}
+    .sc-ml{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;}
+    .sc-mv{font-family:'Instrument Serif',serif;font-size:26px;color:var(--text);}
+
+    /* ── MISSION BLOCK ── */
+    .mission{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--terracotta);border-radius:12px;padding:28px 32px;margin:28px 0;}
+    .mission p{font-family:'Instrument Serif',serif;font-style:italic;font-size:20px;line-height:1.7;color:var(--text);}
+
+    /* ── BADGE / PILL ── */
+    .sps-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(184,92,56,.07);border:1px solid rgba(184,92,56,.2);border-radius:12px;padding:12px 20px;margin-bottom:36px;}
+    .sps-s{width:28px;height:28px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:15px;color:#fff;flex-shrink:0;}
+    .sps-txt{font-size:12px;color:var(--text-muted);}
+    .sps-txt strong{color:var(--terracotta);}
+    .ms-badge{display:inline-block;background:rgba(212,165,116,.12);border:1px solid rgba(212,165,116,.35);border-radius:4px;padding:2px 8px;font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--honey);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+
+    /* ── DIVIDER ── */
+    hr.div{border:none;border-top:1px solid var(--border);margin:44px 0;}
+
+    /* ── SPS MARK ── */
+    .sps-mark{position:fixed;bottom:22px;right:22px;width:38px;height:38px;background:var(--terracotta);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:17px;color:#fff;z-index:400;box-shadow:0 4px 16px rgba(184,92,56,.45);cursor:default;transition:transform .2s;}
+    .sps-mark:hover{transform:scale(1.1);}
+    .sps-mark::after{content:'Super Power Studios';position:absolute;right:44px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-family:'Outfit',sans-serif;font-size:11px;color:var(--text-muted);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;}
+    .sps-mark:hover::after{opacity:1;}
+
+    /* ── INFO CALLOUT ── */
+    .callout{background:rgba(212,165,116,.06);border:1px solid rgba(212,165,116,.2);border-radius:12px;padding:20px 24px;font-size:13px;color:var(--text-muted);line-height:1.7;margin-top:20px;}
+    .callout strong{color:var(--honey);}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .hdr{padding:14px 18px;}
+      .tab-nav{padding:0 18px;}
+      .tab-panel{padding:24px 18px;}
+      .sbar{padding:18px 18px;gap:16px;}
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+      .sc-grid{grid-template-columns:1fr;}
+      .two-col{grid-template-columns:1fr;}
+      .three-col{grid-template-columns:1fr;}
+      .big-n{font-size:34px;}
+      .g-card{padding:40px 28px;}
+    }
+
+    /* ── PRINT ── */
+    @media print{
+      #gate{display:none!important;}
+      #app{display:block!important;}
+      .hdr-btn,.tab-nav,.sbar,.sps-mark{display:none!important;}
+      .tab-panel{display:block!important;padding:20px;}
+      body{background:#fff;color:#2C2420;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ PASSWORD GATE ═══════════════ -->
+<div id="gate">
+  <div class="g-card">
+    <div class="g-logo">PARO</div>
+    <div class="g-sub">Financial Pro Forma · v1.0</div>
+    <div class="g-label">Access Code</div>
+    <input type="password" id="pwIn" class="g-input" placeholder="••••••••••" autocomplete="off">
+    <button class="g-btn" id="unlockBtn">Unlock Pro Forma</button>
+    <div class="g-err" id="pwErr"></div>
+    <div class="g-badge">⬤&nbsp; SPS Confidential · June 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN APP ═══════════════ -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div>
+        <div class="logo">PARO</div>
+        <div class="logo-tagline">Wellness Inc. · Financial Pro Forma</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <span class="sps-pill">SPS Incubated</span>
+      <button class="hdr-btn" id="themeBtn" onclick="toggleTheme()">☀ Light</button>
+      <button class="hdr-btn" onclick="printPDF()">⎙ Print PDF</button>
+    </div>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('overview',this)">01 · Overview</button>
+    <button class="tab-btn" onclick="switchTab('ue',this)">02 · Unit Economics</button>
+    <button class="tab-btn" onclick="switchTab('revenue',this)">03 · Revenue Model</button>
+    <button class="tab-btn" onclick="switchTab('cashflow',this)">04 · Cash Flow</button>
+    <button class="tab-btn" onclick="switchTab('scenarios',this)">05 · Scenarios</button>
+  </div>
+
+  <!-- SLIDER BAR -->
+  <div class="sbar" id="sbar" style="display:none">
+    <div class="scen-section">
+      <div class="scen-section-label">Scenario</div>
+      <div class="scen-selector">
+        <button class="scen-btn" onclick="setScenario('conservative',this)">Conservative</button>
+        <button class="scen-btn active" onclick="setScenario('base',this)">Base</button>
+        <button class="scen-btn" onclick="setScenario('aggressive',this)">Aggressive</button>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-head">
+        <span class="sg-label">Monthly Churn</span>
+        <span class="sg-val" id="churnDisp">6.0%</span>
+      </div>
+      <input type="range" id="churnSlider" min="0" max="3" step="1" value="1" oninput="onChurn(this)">
+      <div class="sg-ticks"><span>4%</span><span>6%</span><span>8%</span><span>12%</span></div>
+    </div>
+    <div class="sg">
+      <div class="sg-head">
+        <span class="sg-label">DTC CAC</span>
+        <span class="sg-val" id="cacDisp">$120</span>
+      </div>
+      <input type="range" id="cacSlider" min="80" max="200" step="10" value="120" oninput="onCAC(this)">
+      <div class="sg-ticks"><span>$80</span><span>$120</span><span>$150</span><span>$200</span></div>
+    </div>
+    <div class="sg">
+      <div class="sg-head">
+        <span class="sg-label">Shot Price</span>
+        <span class="sg-val" id="priceDisp">$79.99</span>
+      </div>
+      <input type="range" id="priceSlider" min="0" max="2" step="1" value="1" oninput="onPrice(this)">
+      <div class="sg-ticks"><span>$69.99</span><span>$79.99</span><span>$89.99</span></div>
+    </div>
+    <div class="sg">
+      <div class="sg-head">
+        <span class="sg-label">Growth Rate</span>
+        <span class="sg-val" id="growthDisp">1.0×</span>
+      </div>
+      <input type="range" id="growthSlider" min="50" max="200" step="10" value="100" oninput="onGrowth(this)">
+      <div class="sg-ticks"><span>0.5×</span><span>1.0×</span><span>1.5×</span><span>2.0×</span></div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 1: OVERVIEW ══ -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="sps-badge">
+      <div class="sps-s">S</div>
+      <div class="sps-txt"><strong>Super Power Studios</strong> Incubated · Stage 1 → 2 · Confidential · June 2026</div>
+    </div>
+    <div class="sec-title">Paro Wellness Inc.</div>
+    <div class="sec-sub">Clinical wellness shots · <em>Prepared by nature. Proven by science.</em> · Financial Pro Forma v1.0</div>
+
+    <div class="mission">
+      <p>"The first subscription wellness shot with human clinical data backing every claim."</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="card">
+        <div class="card-lbl">Market Size</div>
+        <div class="big-n">$410M</div>
+        <div class="n-sub">US wellness shots sub-category</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Clinical Competitors</div>
+        <div class="big-n tc">0</div>
+        <div class="n-sub">Zero with Phase 1 human data</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Target Gross Margin</div>
+        <div class="big-n">70–75%</div>
+        <div class="n-sub">At scale · Month 18</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">18-Month Revenue Target</div>
+        <div class="big-n hn">$7M</div>
+        <div class="n-sub">Cumulative · Base case</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Target LTV</div>
+        <div class="big-n">$960</div>
+        <div class="n-sub">Per subscriber · 12-mo avg</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Target CAC</div>
+        <div class="big-n">$120</div>
+        <div class="n-sub">DTC base case</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">LTV : CAC Ratio</div>
+        <div class="big-n tc">6:1</div>
+        <div class="n-sub">Target (min 3:1 requirement)</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Month 18 Subscribers</div>
+        <div class="big-n">10,000</div>
+        <div class="n-sub">Base case target</div>
+      </div>
+    </div>
+
+    <hr class="div">
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">The Opportunity</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.85;margin-top:10px;">
+          Paro enters a $410M wellness shots market dominated by PE-backed brands with <strong style="color:var(--text)">zero clinical science</strong>.
+          Top 2 players — Suja ($327M) and So Good So You ($100M+) — control 73% of the market. Both are science-free.<br><br>
+          Paro's hero ingredient is Evithé's patented, Phase 1-validated ginger extract:
+          <strong style="color:var(--terracotta)">the only ginger extract in the world with human clinical trial data</strong>
+          (50 participants, 7 inflammatory biomarkers, 0 adverse events, 3 patents).
+          100mg active phenolics vs. 5–15mg commodity. 30–50× more bioavailable.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Revenue Architecture</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.85;margin-top:10px;">
+          <strong style="color:var(--text)">Core:</strong> DTC subscription (shot + capsules) — predictable recurring revenue with premium clinical pricing.<br><br>
+          <strong style="color:var(--text)">Phase 2:</strong> Erewhon exclusive (M4) → Whole Foods / Sprouts (M8) → Mass retail (Yr 2+)<br><br>
+          <strong style="color:var(--text)">SKUs:</strong><br>
+          Daily Shot — $79.99/mo (sub) · $89.99 one-time<br>
+          Daily Capsules — $49.99/mo · $59.99 one-time<br>
+          Bundle — $114.99/mo<br>
+          Annual Prepay — $799/yr
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <div class="card-lbl">Capital & Timeline</div>
+      <div class="three-col" style="margin-top:18px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Raise Target</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--terracotta)">TBD SAFE Round</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:5px">$1.3M – $2.0M range</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Break-Even</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--honey)">Month 17</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:5px">Base (M13 aggr · M22 conserv)</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Use of Funds</div>
+          <div style="font-size:13px;color:var(--text);line-height:2">
+            40% Product / Manufacturing<br>
+            35% Marketing / CAC<br>
+            15% Regulatory / Certifications<br>
+            10% Operations
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:24px">
+      <strong>Competitive Moat:</strong> The Evithé licensing structure gives Paro North America exclusive rights to the only Phase 1-validated ginger extract in the world.
+      3 patents cover the extract process, composition, and application. No competitor can legally claim equivalent efficacy.
+      This is a structural scientific moat, not a marketing differentiation.
+    </div>
+  </div>
+
+  <!-- ══ TAB 2: UNIT ECONOMICS ══ -->
+  <div class="tab-panel" id="tab-ue">
+    <div class="sec-title">Unit Economics</div>
+    <div class="sec-sub">Hero Shot (Daily Shot subscription) · Launch pricing · Base case assumptions</div>
+
+    <div class="subsec">Revenue Per Subscriber</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="lc">Monthly subscription price</td><td class="vc">$79.99</td><td class="lc">Hero Shot DTC</td></tr>
+          <tr><td class="lc">Annual revenue per subscriber</td><td class="vc">$959.88</td><td class="lc">12 × $79.99</td></tr>
+          <tr><td class="lc">Avg retention (base case)</td><td class="vc">12 months</td><td class="lc">6% monthly churn</td></tr>
+          <tr class="hl"><td class="lc"><strong>LTV (gross revenue)</strong></td><td class="ac"><strong>$959.88</strong></td><td class="lc">12-month avg retention</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsec">COGS Build — Per Shot (Launch Volume ~5K units)</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Cost Item</th><th>Per Shot</th><th>Per Month (12 shots)</th></tr></thead>
+        <tbody>
+          <tr><td class="lc">Manufacturing (co-packer)</td><td class="vc">$1.20</td><td class="vc">$14.40</td></tr>
+          <tr><td class="lc">Evithé extract royalty (~7% net)</td><td class="vc">$0.47</td><td class="vc">$5.64</td></tr>
+          <tr><td class="lc">Amber glass packaging</td><td class="vc">$0.25</td><td class="vc">$3.00</td></tr>
+          <tr><td class="lc">3PL receiving / storage</td><td class="vc">$0.15</td><td class="vc">$1.80</td></tr>
+          <tr><td class="lc">Fulfillment / shipping to consumer</td><td class="vc">$0.30</td><td class="vc">$3.60</td></tr>
+          <tr class="hl"><td class="lc"><strong>Total COGS</strong></td><td class="ac"><strong>$2.37</strong></td><td class="ac"><strong>$28.44</strong></td></tr>
+          <tr class="hl"><td class="lc"><strong>Gross Profit / subscriber / mo</strong></td><td class="ac"><strong>$51.55</strong></td><td class="lc">—</td></tr>
+          <tr class="hl"><td class="lc"><strong>Gross Margin %</strong></td><td class="ac"><strong>64.4%</strong></td><td class="lc">Launch volume</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsec">At Scale — Month 18 · ~10,000 Subscribers</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Metric</th><th>Launch</th><th>Month 18 Scale</th></tr></thead>
+        <tbody>
+          <tr><td class="lc">Manufacturing (co-packer)</td><td class="vc">$1.20/shot</td><td class="vc">$0.70/shot</td></tr>
+          <tr><td class="lc">Total COGS per shot</td><td class="vc">$2.37</td><td class="vc">$1.65</td></tr>
+          <tr class="hl"><td class="lc"><strong>Gross Margin</strong></td><td class="vc"><strong>64.4%</strong></td><td class="ac"><strong>~72%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsec">Marketing Economics</div>
+    <div class="kpi-grid" style="margin-top:20px">
+      <div class="card">
+        <div class="card-lbl">DTC CAC</div>
+        <div class="big-n">$120</div>
+        <div class="n-sub">Base case</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">CAC Payback</div>
+        <div class="big-n tc">2.3 mo</div>
+        <div class="n-sub">Months to recover acquisition cost</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">LTV (12-mo, 72% GM)</div>
+        <div class="big-n">$691</div>
+        <div class="n-sub">Net of COGS</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">LTV : CAC Ratio</div>
+        <div class="big-n tc">5.76:1</div>
+        <div class="n-sub">Well above 3:1 minimum</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Monthly Churn</div>
+        <div class="big-n">6%</div>
+        <div class="n-sub">Base case (clinical brand target)</div>
+      </div>
+    </div>
+
+    <div class="subsec">Capsules Unit Economics</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td class="lc">Monthly subscription price</td><td class="vc">$49.99/mo</td></tr>
+          <tr><td class="lc">COGS (60ct, 2/day)</td><td class="vc">~$12/mo</td></tr>
+          <tr class="hl"><td class="lc"><strong>Gross Margin</strong></td><td class="ac"><strong>~76%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Why Premium Pricing Holds:</strong> Paro delivers 100mg standardized active phenolics — 30–50× more bioavailable than commodity shots (5–15mg).
+      The Evithé extract carries 3 patents and is the only ginger extract with Phase 1 human clinical data.
+      No competitor can legally make equivalent efficacy claims. Premium pricing is earned, not assumed.
+    </div>
+  </div>
+
+  <!-- ══ TAB 3: REVENUE MODEL ══ -->
+  <div class="tab-panel" id="tab-revenue">
+    <div class="sec-title">Revenue Model</div>
+    <div class="sec-sub">18-month subscriber & revenue build · Real-time — use sliders above to adjust assumptions</div>
+
+    <div class="kpi-grid">
+      <div class="card">
+        <div class="card-lbl">Year 1 Cumulative Revenue</div>
+        <div class="big-n hn" id="yr1Rev">$1.8M</div>
+        <div class="n-sub">Base case</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Year 2 ARR</div>
+        <div class="big-n">$12M</div>
+        <div class="n-sub">Annualized run rate</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Month 18 MRR</div>
+        <div class="big-n tc" id="m18MRR">$830K</div>
+        <div class="n-sub">Monthly recurring revenue</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Month 18 Subscribers</div>
+        <div class="big-n" id="m18Subs">10,371</div>
+        <div class="n-sub">Total active</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Revenue Growth — 18-Month Line</div>
+      <div class="chart-box"><canvas id="revenueChart"></canvas></div>
+    </div>
+
+    <div class="subsec">18-Month Subscriber & Revenue Build</div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>Month</th><th>New Subs</th><th>Total Subs</th><th>Shot MRR</th><th>Capsule Rev</th><th>Total MRR</th><th>Milestone</th></tr>
+        </thead>
+        <tbody id="revTbody"></tbody>
+      </table>
+    </div>
+
+    <hr class="div">
+
+    <div class="subsec">Revenue by Channel — Month 18</div>
+    <div class="three-col">
+      <div class="card">
+        <div class="card-lbl">DTC Shopify Subscriptions</div>
+        <div class="big-n">65%</div>
+        <div class="n-sub">Primary D2C channel</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Erewhon Wholesale</div>
+        <div class="big-n">15%</div>
+        <div class="n-sub">Premium retail · Month 4+</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Whole Foods / Sprouts</div>
+        <div class="big-n">20%</div>
+        <div class="n-sub">Natural retail · Month 8+</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+      <div class="card-lbl">Annual Revenue Summary</div>
+      <div class="three-col" style="margin-top:18px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Year 1 Total</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--text)">~$1.8M</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Base case cumulative</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Year 2 ARR</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--honey)">~$12M</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Annualized run rate</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Year 3 ARR</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:30px;color:var(--terracotta)">~$28M</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Annualized run rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 4: CASH FLOW ══ -->
+  <div class="tab-panel" id="tab-cashflow">
+    <div class="sec-title">Cash Flow</div>
+    <div class="sec-sub">18-month EBITDA & cumulative burn · Interactive sliders above</div>
+
+    <div class="kpi-grid">
+      <div class="card">
+        <div class="card-lbl">Capital Required</div>
+        <div class="big-n tc tbd" style="font-size:28px">TBD SAFE Round</div>
+        <div class="n-sub">$1.3M – $2.0M range</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Break-Even Month</div>
+        <div class="big-n hn" id="beMonth">Month 17</div>
+        <div class="n-sub">Base case projection</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Total Cumulative Burn</div>
+        <div class="big-n red" id="totalBurn">–$1.5M</div>
+        <div class="n-sub">Pre break-even peak</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Month 18 EBITDA</div>
+        <div class="big-n green" id="m18EBITDA">+$0</div>
+        <div class="n-sub">Monthly</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Monthly EBITDA & Cumulative Cash Burn</div>
+      <div class="chart-box"><canvas id="cashflowChart"></canvas></div>
+    </div>
+
+    <div class="subsec">Monthly Cash Flow Detail</div>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr>
+            <th>Mo</th><th>Revenue</th><th>Gross Profit</th><th>GM%</th>
+            <th>Marketing</th><th>Ops</th><th>Other OpEx</th>
+            <th>EBITDA</th><th>Cum. Burn</th><th>Milestone</th>
+          </tr>
+        </thead>
+        <tbody id="cfTbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:28px">
+      <div class="card-lbl">Operating Expense Assumptions</div>
+      <div class="tw" style="border:none;margin-top:16px">
+        <table>
+          <thead><tr><th>Line Item</th><th>Months 1–3</th><th>Months 4–6</th><th>Months 7–18</th></tr></thead>
+          <tbody>
+            <tr><td class="lc">Marketing / CAC spend</td><td class="vc">New subs × CAC</td><td class="vc">New subs × CAC</td><td class="vc">New subs × CAC</td></tr>
+            <tr><td class="lc">Regulatory / Certifications</td><td class="vc">$15,000/mo</td><td class="vc">$5,000/mo</td><td class="vc">$5,000/mo</td></tr>
+            <tr><td class="lc">Operations / Team</td><td class="vc">$20,000/mo</td><td class="vc">$20,000/mo</td><td class="vc">$40,000/mo</td></tr>
+            <tr><td class="lc">Technology (Shopify + tools)</td><td class="vc">$2,000/mo</td><td class="vc">$2,000/mo</td><td class="vc">$2,000/mo</td></tr>
+            <tr><td class="lc">Legal / Admin</td><td class="vc">$5,000/mo</td><td class="vc">$5,000/mo</td><td class="vc">$5,000/mo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 5: SCENARIOS ══ -->
+  <div class="tab-panel" id="tab-scenarios">
+    <div class="sec-title">Scenarios</div>
+    <div class="sec-sub">Side-by-side comparison · Conservative · Base Case · Aggressive</div>
+
+    <div class="sc-grid">
+      <div class="sc-card c">
+        <div class="sc-lbl c">Conservative</div>
+        <div class="sc-m"><div class="sc-ml">Monthly Churn</div><div class="sc-mv">12%</div></div>
+        <div class="sc-m"><div class="sc-ml">DTC CAC</div><div class="sc-mv">$180</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 Subscribers</div><div class="sc-mv">4,500</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 MRR</div><div class="sc-mv">$360K</div></div>
+        <div class="sc-m"><div class="sc-ml">Year 1 Revenue</div><div class="sc-mv">$750K</div></div>
+        <div class="sc-m"><div class="sc-ml">Break-Even</div><div class="sc-mv">Month 22</div></div>
+        <div class="sc-m"><div class="sc-ml">Capital Required</div><div class="sc-mv">$2.0M</div></div>
+      </div>
+      <div class="sc-card b">
+        <div class="sc-lbl b">Base Case ✓</div>
+        <div class="sc-m"><div class="sc-ml">Monthly Churn</div><div class="sc-mv">6%</div></div>
+        <div class="sc-m"><div class="sc-ml">DTC CAC</div><div class="sc-mv">$120</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 Subscribers</div><div class="sc-mv">10,000</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 MRR</div><div class="sc-mv">$800K</div></div>
+        <div class="sc-m"><div class="sc-ml">Year 1 Revenue</div><div class="sc-mv">$1.8M</div></div>
+        <div class="sc-m"><div class="sc-ml">Break-Even</div><div class="sc-mv">Month 17</div></div>
+        <div class="sc-m"><div class="sc-ml">Capital Required</div><div class="sc-mv">$1.5M</div></div>
+      </div>
+      <div class="sc-card a">
+        <div class="sc-lbl a">Aggressive</div>
+        <div class="sc-m"><div class="sc-ml">Monthly Churn</div><div class="sc-mv">4%</div></div>
+        <div class="sc-m"><div class="sc-ml">DTC CAC</div><div class="sc-mv">$80</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 Subscribers</div><div class="sc-mv">18,000</div></div>
+        <div class="sc-m"><div class="sc-ml">M18 MRR</div><div class="sc-mv">$1.44M</div></div>
+        <div class="sc-m"><div class="sc-ml">Year 1 Revenue</div><div class="sc-mv">$3.2M</div></div>
+        <div class="sc-m"><div class="sc-ml">Break-Even</div><div class="sc-mv">Month 13</div></div>
+        <div class="sc-m"><div class="sc-ml">Capital Required</div><div class="sc-mv">$1.2M</div></div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Subscriber Growth Comparison — All 3 Scenarios · 18 Months</div>
+      <div class="chart-box"><canvas id="scenChart"></canvas></div>
+    </div>
+
+    <div class="subsec">Scenario Comparison Table</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Metric</th><th>Conservative</th><th>Base Case</th><th>Aggressive</th></tr></thead>
+        <tbody>
+          <tr><td class="lc">Monthly Churn</td><td class="vc">12%</td><td class="ac">6%</td><td class="vc">4%</td></tr>
+          <tr><td class="lc">DTC CAC</td><td class="vc">$180</td><td class="ac">$120</td><td class="vc">$80</td></tr>
+          <tr><td class="lc">M18 Subscribers</td><td class="vc">4,500</td><td class="ac">10,000</td><td class="vc">18,000</td></tr>
+          <tr><td class="lc">M18 MRR</td><td class="vc">$360K</td><td class="ac">$800K</td><td class="vc">$1.44M</td></tr>
+          <tr><td class="lc">Year 1 Revenue</td><td class="vc">$750K</td><td class="ac">$1.8M</td><td class="vc">$3.2M</td></tr>
+          <tr><td class="lc">Break-Even Month</td><td class="vc">Month 22</td><td class="ac">Month 17</td><td class="vc">Month 13</td></tr>
+          <tr><td class="lc">Capital Required</td><td class="vc">$2.0M</td><td class="ac">$1.5M</td><td class="vc">$1.2M</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- SPS S-MARK -->
+<div class="sps-mark" title="Super Power Studios">S</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const CHURN_VALS  = [0.04, 0.06, 0.08, 0.12];
+const PRICE_VALS  = [69.99, 79.99, 89.99];
+
+const st = {
+  churn:   0.06,
+  cac:     120,
+  price:   79.99,
+  growth:  1.0,
+  scenario:'base'
+};
+
+const SCENARIO_PRESETS = {
+  conservative: { churn:0.12, cac:180, price:79.99, growth:0.45 },
+  base:         { churn:0.06, cac:120, price:79.99, growth:1.0  },
+  aggressive:   { churn:0.04, cac:80,  price:79.99, growth:1.8  }
+};
+
+const BASE_NEW_SUBS = [50,80,120,160,200,250,320,400,500,600,700,850,1000,1200,1400,1600,1800,2000];
+
+const MILESTONES = {1:'DTC Launch',4:'Erewhon Exclusive',8:'WF / Sprouts',12:'End of Year 1',17:'Break-even ✓'};
+
+// chart instances
+let revChart=null, cfChart=null, scChart=null;
+
+// ═══════════════════════════════════════════════
+//  MODEL
+// ═══════════════════════════════════════════════
+function buildModel(churn, cac, price, growth) {
+  const months = [];
+  let subs = 0;
+  for (let i=0; i<18; i++) {
+    const newS = Math.round(BASE_NEW_SUBS[i] * growth);
+    subs = Math.round(subs * (1 - churn) + newS);
+    const capSubs = Math.round(subs * 0.25);
+    const shotMRR = subs * price;
+    const capMRR  = capSubs * 49.99;
+    const totalMRR = shotMRR + capMRR;
+    const gm = 0.644 + 0.076 * i / 17;
+    const gp = totalMRR * gm;
+    const mkt = newS * cac;
+    const reg  = i < 3 ? 15000 : 5000;
+    const ops  = i < 6 ? 20000 : 40000;
+    const tech = 2000;
+    const leg  = 5000;
+    const opex = mkt + reg + ops + tech + leg;
+    const ebitda = gp - opex;
+    months.push({m:i+1, newS, subs, capSubs, shotMRR, capMRR, totalMRR, gm, gp, mkt, reg, ops, tech, leg, opex, ebitda, cumBurn:0});
+  }
+  let cum=0, beMonth=null;
+  for (const mo of months) {
+    cum += mo.ebitda;
+    mo.cumBurn = cum;
+    if (mo.ebitda >= 0 && beMonth===null) beMonth = mo.m;
+  }
+  return {months, beMonth};
+}
+
+// ═══════════════════════════════════════════════
+//  FORMAT
+// ═══════════════════════════════════════════════
+function f$(n) {
+  const abs = Math.abs(n), sign = n<0?'-':'';
+  if (abs>=1e6) return sign+'$'+(abs/1e6).toFixed(2)+'M';
+  if (abs>=1e4) return sign+'$'+(abs/1e3).toFixed(0)+'K';
+  if (abs>=1e3) return sign+'$'+abs.toLocaleString('en-US',{maximumFractionDigits:0});
+  return sign+'$'+abs.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+function fN(n){ return Math.round(n).toLocaleString('en-US'); }
+function fP(n){ return (n*100).toFixed(1)+'%'; }
+
+// ═══════════════════════════════════════════════
+//  UPDATE ALL
+// ═══════════════════════════════════════════════
+function updateAll() {
+  const {months,beMonth} = buildModel(st.churn, st.cac, st.price, st.growth);
+  updateRevTab(months);
+  updateCFTab(months, beMonth);
+  drawRevChart(months);
+  drawCFChart(months);
+}
+
+function updateRevTab(months) {
+  const m18 = months[17];
+  const yr1 = months.slice(0,12).reduce((s,m)=>s+m.totalMRR,0);
+  safeText('yr1Rev',  f$(yr1));
+  safeText('m18MRR',  f$(m18.shotMRR));
+  safeText('m18Subs', fN(m18.subs));
+
+  const tbody = document.getElementById('revTbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  months.forEach(mo => {
+    const tr = document.createElement('tr');
+    if (mo.m===12) tr.classList.add('hl');
+    if (MILESTONES[mo.m]) tr.classList.add('ms');
+    tr.innerHTML = `
+      <td class="vc">M${mo.m}</td>
+      <td>${fN(mo.newS)}</td>
+      <td>${fN(mo.subs)}</td>
+      <td>${f$(mo.shotMRR)}</td>
+      <td>${f$(mo.capMRR)}</td>
+      <td>${f$(mo.totalMRR)}</td>
+      <td>${MILESTONES[mo.m]?`<span class="ms-badge">${MILESTONES[mo.m]}</span>`:''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateCFTab(months, beMonth) {
+  const m18 = months[17];
+  const minBurn = Math.min(...months.map(m=>m.cumBurn));
+  safeText('beMonth',  beMonth ? 'Month '+beMonth : 'Post-M18');
+  safeText('totalBurn', f$(minBurn));
+  safeText('m18EBITDA', (m18.ebitda>=0?'+':'')+f$(m18.ebitda));
+
+  // color classes
+  const burnEl = document.getElementById('totalBurn');
+  if (burnEl) burnEl.className = 'big-n '+(minBurn<0?'red':'green');
+  const ebEl = document.getElementById('m18EBITDA');
+  if (ebEl) ebEl.className = 'big-n '+(m18.ebitda>=0?'green':'red');
+
+  const tbody = document.getElementById('cfTbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  months.forEach(mo => {
+    const tr = document.createElement('tr');
+    if (mo.m === beMonth) tr.classList.add('be');
+    const otherOpex = mo.reg + mo.tech + mo.leg;
+    tr.innerHTML = `
+      <td class="vc">M${mo.m}</td>
+      <td>${f$(mo.totalMRR)}</td>
+      <td>${f$(mo.gp)}</td>
+      <td>${fP(mo.gm)}</td>
+      <td>${f$(mo.mkt)}</td>
+      <td>${f$(mo.ops)}</td>
+      <td>${f$(otherOpex)}</td>
+      <td class="${mo.ebitda>=0?'grn':'red'}">${(mo.ebitda>=0?'+':'')+f$(mo.ebitda)}</td>
+      <td class="${mo.cumBurn>=0?'grn':'red'}">${f$(mo.cumBurn)}</td>
+      <td>${MILESTONES[mo.m]?`<span class="ms-badge">${MILESTONES[mo.m]}</span>`:''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function safeText(id, txt) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = txt;
+}
+
+// ═══════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════
+function chartColors() {
+  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return {
+    grid: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)',
+    tick: dark ? '#8A7A6C' : '#8A7A6C',
+    tc:   '#B85C38',
+    hn:   '#D4A574',
+    dw:   '#8A7A6C',
+    gn:   '#22C55E',
+    rd:   '#FF6B6B'
+  };
+}
+
+function drawRevChart(months) {
+  const c = chartColors();
+  const labels = months.map(m=>'M'+m.m);
+  const canvas = document.getElementById('revenueChart');
+  if (!canvas) return;
+  if (revChart) revChart.destroy();
+  revChart = new Chart(canvas, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Total MRR',
+          data: months.map(m=>Math.round(m.totalMRR)),
+          borderColor: c.tc,
+          backgroundColor:'rgba(184,92,56,0.12)',
+          fill:true, tension:0.4, pointRadius:3, borderWidth:2.5,
+          pointBackgroundColor: c.tc
+        },
+        {
+          label:'Subscribers',
+          data: months.map(m=>m.subs * (months[17].totalMRR/Math.max(1,months[17].subs))),
+          borderColor: c.hn,
+          backgroundColor:'transparent',
+          fill:false, tension:0.4, pointRadius:2, borderWidth:1.5,
+          borderDash:[6,3], pointBackgroundColor: c.hn
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'top', labels:{ usePointStyle:true, padding:20, color:c.tick }},
+        tooltip:{
+          callbacks:{
+            label(ctx) {
+              if (ctx.datasetIndex===0) return ' MRR: '+f$(ctx.parsed.y);
+              return ' Subs (scaled): '+fN(ctx.parsed.y);
+            }
+          }
+        }
+      },
+      scales:{
+        y:{ ticks:{ callback:v=>f$(v), color:c.tick }, grid:{ color:c.grid } },
+        x:{ ticks:{ color:c.tick }, grid:{ color:c.grid } }
+      }
+    }
+  });
+}
+
+function drawCFChart(months) {
+  const c = chartColors();
+  const labels = months.map(m=>'M'+m.m);
+  const canvas = document.getElementById('cashflowChart');
+  if (!canvas) return;
+  if (cfChart) cfChart.destroy();
+  cfChart = new Chart(canvas, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Monthly EBITDA',
+          data: months.map(m=>Math.round(m.ebitda)),
+          backgroundColor: months.map(m=>m.ebitda>=0?'rgba(34,197,94,0.65)':'rgba(255,107,107,0.65)'),
+          borderColor: months.map(m=>m.ebitda>=0?c.gn:c.rd),
+          borderWidth:1, order:2
+        },
+        {
+          label:'Cumulative Burn',
+          data: months.map(m=>Math.round(m.cumBurn)),
+          type:'line',
+          borderColor: c.hn,
+          backgroundColor:'transparent',
+          fill:false, tension:0.3, pointRadius:3, borderWidth:2.5,
+          pointBackgroundColor: c.hn, order:1
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'top', labels:{ usePointStyle:true, padding:20, color:c.tick }},
+        tooltip:{ callbacks:{ label(ctx){ return ' '+ctx.dataset.label+': '+f$(ctx.parsed.y); }}}
+      },
+      scales:{
+        y:{ ticks:{ callback:v=>f$(v), color:c.tick }, grid:{ color:c.grid } },
+        x:{ ticks:{ color:c.tick }, grid:{ color:c.grid } }
+      }
+    }
+  });
+}
+
+function drawScenChart() {
+  const c = chartColors();
+  const labels = Array.from({length:18},(_,i)=>'M'+(i+1));
+  const cons = buildModel(0.12,180,79.99,0.45).months;
+  const base = buildModel(0.06,120,79.99,1.0).months;
+  const aggr = buildModel(0.04,80, 79.99,1.8).months;
+  const canvas = document.getElementById('scenChart');
+  if (!canvas) return;
+  if (scChart) scChart.destroy();
+  scChart = new Chart(canvas, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Conservative',
+          data: cons.map(m=>m.subs),
+          borderColor: c.dw,
+          backgroundColor:'transparent',
+          fill:false, tension:0.4, pointRadius:2, borderWidth:2,
+          borderDash:[6,4], pointBackgroundColor:c.dw
+        },
+        {
+          label:'Base Case',
+          data: base.map(m=>m.subs),
+          borderColor: c.hn,
+          backgroundColor:'rgba(212,165,116,0.08)',
+          fill:true, tension:0.4, pointRadius:3, borderWidth:2.5,
+          pointBackgroundColor:c.hn
+        },
+        {
+          label:'Aggressive',
+          data: aggr.map(m=>m.subs),
+          borderColor: c.tc,
+          backgroundColor:'rgba(184,92,56,0.06)',
+          fill:true, tension:0.4, pointRadius:2, borderWidth:2,
+          pointBackgroundColor:c.tc
+        }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ position:'top', labels:{ usePointStyle:true, padding:20, color:c.tick }},
+        tooltip:{ callbacks:{ label(ctx){ return ' '+ctx.dataset.label+': '+fN(ctx.parsed.y)+' subs'; }}}
+      },
+      scales:{
+        y:{ ticks:{ callback:v=>fN(v), color:c.tick }, grid:{ color:c.grid } },
+        x:{ ticks:{ color:c.tick }, grid:{ color:c.grid } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const panel = document.getElementById('tab-'+id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  const showBar = ['revenue','cashflow','scenarios'].includes(id);
+  document.getElementById('sbar').style.display = showBar ? 'flex' : 'none';
+  if (id==='revenue'||id==='cashflow') setTimeout(()=>updateAll(),50);
+  if (id==='scenarios') setTimeout(()=>drawScenChart(),50);
+}
+
+// ═══════════════════════════════════════════════
+//  SCENARIO
+// ═══════════════════════════════════════════════
+function setScenario(s, btn) {
+  st.scenario = s;
+  const p = SCENARIO_PRESETS[s];
+  st.churn=p.churn; st.cac=p.cac; st.price=p.price; st.growth=p.growth;
+  // sync sliders
+  setSlider('churnSlider',  CHURN_VALS.indexOf(p.churn));
+  setSlider('cacSlider',    p.cac);
+  setSlider('priceSlider',  PRICE_VALS.indexOf(p.price));
+  setSlider('growthSlider', Math.round(p.growth*100));
+  refreshDispAll();
+  document.querySelectorAll('.scen-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  updateAll();
+  drawScenChart();
+}
+
+function setSlider(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = val;
+  updateTrack(el);
+}
+
+// ═══════════════════════════════════════════════
+//  SLIDERS
+// ═══════════════════════════════════════════════
+function onChurn(el) {
+  const i = parseInt(el.value);
+  st.churn = CHURN_VALS[Math.min(i, CHURN_VALS.length-1)];
+  document.getElementById('churnDisp').textContent = (st.churn*100).toFixed(0)+'%';
+  updateTrack(el); updateAll();
+}
+function onCAC(el) {
+  st.cac = parseInt(el.value);
+  document.getElementById('cacDisp').textContent = '$'+st.cac;
+  updateTrack(el); updateAll();
+}
+function onPrice(el) {
+  const i = parseInt(el.value);
+  st.price = PRICE_VALS[Math.min(i, PRICE_VALS.length-1)];
+  document.getElementById('priceDisp').textContent = '$'+st.price.toFixed(2);
+  updateTrack(el); updateAll();
+}
+function onGrowth(el) {
+  st.growth = parseInt(el.value)/100;
+  document.getElementById('growthDisp').textContent = st.growth.toFixed(2)+'×';
+  updateTrack(el); updateAll();
+}
+
+function updateTrack(el) {
+  const min=parseFloat(el.min), max=parseFloat(el.max), val=parseFloat(el.value);
+  el.style.setProperty('--prog', ((val-min)/(max-min)*100)+'%');
+}
+
+function refreshDispAll() {
+  safeText('churnDisp', (st.churn*100).toFixed(0)+'%');
+  safeText('cacDisp',   '$'+st.cac);
+  safeText('priceDisp', '$'+st.price.toFixed(2));
+  safeText('growthDisp', st.growth.toFixed(2)+'×');
+  setSlider('churnSlider',  CHURN_VALS.indexOf(st.churn));
+  setSlider('cacSlider',    st.cac);
+  setSlider('priceSlider',  PRICE_VALS.indexOf(st.price));
+  setSlider('growthSlider', Math.round(st.growth*100));
+}
+
+// ═══════════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const nowDark = html.getAttribute('data-theme') !== 'light';
+  html.setAttribute('data-theme', nowDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = nowDark ? '🌙 Dark' : '☀ Light';
+  // redraw charts
+  if (revChart||cfChart) updateAll();
+  const sc = document.getElementById('tab-scenarios');
+  if (sc && sc.classList.contains('active')) drawScenChart();
+}
+
+// ═══════════════════════════════════════════════
+//  PRINT
+// ═══════════════════════════════════════════════
+function printPDF() {
+  const wasDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  if (wasDark) document.documentElement.setAttribute('data-theme','light');
+  setTimeout(()=>{
+    window.print();
+    if (wasDark) setTimeout(()=>document.documentElement.setAttribute('data-theme','dark'),300);
+  },250);
+}
+
+// ═══════════════════════════════════════════════
+//  PASSWORD
+// ═══════════════════════════════════════════════
+function unlock() {
+  const pw = document.getElementById('pwIn').value;
+  if (pw === 'Paro@2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display  = 'block';
+    setTimeout(()=>{ updateAll(); refreshDispAll(); }, 150);
+  } else {
+    const e = document.getElementById('pwErr');
+    e.textContent = 'Incorrect access code. Try again.';
+    document.getElementById('pwIn').value = '';
+    document.getElementById('pwIn').focus();
+    setTimeout(()=>{ e.textContent=''; },3000);
+  }
+}
+
+document.getElementById('unlockBtn').addEventListener('click', unlock);
+document.getElementById('pwIn').addEventListener('keydown', e=>{ if(e.key==='Enter') unlock(); });
+
+// init track fills for sliders
+document.querySelectorAll('input[type=range]').forEach(updateTrack);
+</script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Marketing Portal PRD v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;--tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);--bg:var(--dark);--text:var(--warm);--sub:var(--muted)}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v,.badge-date{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:560px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:32px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout p{font-size:13.5px;margin:0;color:var(--sub)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+body.light .card{background:#fff}
+.card-icon{font-size:22px;margin-bottom:10px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-body{font-size:12.5px;color:var(--sub);line-height:1.6}
+.phase{display:inline-flex;align-items:center;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.p0{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.p1{background:rgba(139,69,19,0.15);color:var(--tan)}
+.p2{background:rgba(212,165,116,0.12);color:var(--muted)}
+.ch{display:inline-flex;align-items:center;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:10px;margin:2px 3px 2px 0}
+.ch-ig{background:rgba(225,48,108,0.15);color:#e1306c}
+.ch-tt{background:rgba(0,0,0,0.3);color:#ccc}
+body.light .ch-tt{background:rgba(0,0,0,0.08);color:#555}
+.ch-em{background:rgba(139,69,19,0.15);color:var(--tan)}
+.ch-ev{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.ch-lo{background:rgba(212,165,116,0.15);color:var(--muted)}
+.ch-fb{background:rgba(24,119,242,0.12);color:#4b8ef5}
+.workflow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:20px 0}
+.wf-step{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:6px 12px;color:var(--text)}
+body.light .wf-step{background:#fff}
+.wf-arrow{color:var(--muted);font-size:14px}
+.wf-step.nhk{border-color:var(--red);color:var(--red)}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--sub);line-height:1.5}
+tr:last-child td{border-bottom:none}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px;text-align:center}
+body.light .kpi{background:#fff}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--red);margin-bottom:4px}
+.kpi-label{font-size:11px;color:var(--sub)}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.role-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px}
+body.light .role-card{background:#fff}
+.role-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.role-perms{font-size:12px;color:var(--sub);line-height:1.6}
+</style>
+</head>
+<body>
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☾ DARK':'☀ LIGHT'">☀ LIGHT</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">Marketing Portal · PRD v1.0</div>
+  </div>
+  <span class="nav-section">Overview</span>
+  <a class="nav-item" href="#s1">01 · Executive Summary</a>
+  <a class="nav-item" href="#s2">02 · Problem Statement</a>
+  <a class="nav-item" href="#s3">03 · Goals & Metrics</a>
+  <a class="nav-item" href="#s4">04 · User Roles</a>
+  <span class="nav-section">Features</span>
+  <a class="nav-item" href="#s5">05 · Content Calendar</a>
+  <a class="nav-item" href="#s6">06 · Campaign Management</a>
+  <a class="nav-item" href="#s7">07 · Asset Library</a>
+  <a class="nav-item" href="#s8">08 · Influencer & Creators</a>
+  <a class="nav-item" href="#s9">09 · Email Marketing</a>
+  <a class="nav-item" href="#s10">10 · Loyalty Marketing</a>
+  <a class="nav-item" href="#s11">11 · Events & Activations</a>
+  <a class="nav-item" href="#s12">12 · Subscription Box</a>
+  <a class="nav-item" href="#s13">13 · Press & PR</a>
+  <a class="nav-item" href="#s14">14 · Analytics</a>
+  <span class="nav-section">Technical</span>
+  <a class="nav-item" href="#s15">15 · Architecture</a>
+  <a class="nav-item" href="#s16">16 · Integrations</a>
+  <a class="nav-item" href="#s17">17 · Phases</a>
+  <a class="nav-item" href="#s18">18 · Open Questions</a>
+  <a class="nav-item" href="#s19">19 · Appendix</a>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v1.0</span>
+      <span class="badge-date">June 2026 · GFC BP LLC</span>
+    </div>
+    <div class="doc-title">Marketing<br><span>Portal</span></div>
+    <div class="doc-sub">Product Requirements Document for the Domo Cafe Marketing Portal — centralizing campaigns, content, influencers, email, loyalty, events, and press for the first official Domo-kun cafe in the USA.</div>
+  </div>
+
+  <section class="section" id="s1">
+    <div class="section-num">01</div>
+    <div class="section-label">Executive Summary</div>
+    <div class="section-title">The Opportunity</div>
+    <p>Domo Cafe is the first official Domo-kun cafe in the United States — a licensed, NHK-sanctioned destination with built-in global brand recognition and a passionate fanbase. The marketing opportunity is extraordinary: earned media is abundant, the audience is pre-qualified, and the Grand Opening on June 13, 2026 is a one-time moment that demands flawless execution.</p>
+    <p>The Domo Cafe Marketing Portal centralizes every marketing operation — content planning, campaign management, influencer partnerships, email automation, loyalty triggers, event coordination, subscription box marketing, and press — in a single system purpose-built for this brand.</p>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">📍</div><div class="card-title">Local</div><div class="card-body">Buena Park/SoCal community. Families, anime fans, foodies. Drive repeat visits and word-of-mouth.</div></div>
+      <div class="card"><div class="card-icon">✈️</div><div class="card-title">Destination</div><div class="card-body">Disney-area tourists, Japanese culture visitors. Position Domo Cafe as a must-visit SoCal stop.</div></div>
+      <div class="card"><div class="card-icon">🌐</div><div class="card-title">National</div><div class="card-body">Domo fans everywhere via subscription box, digital drops, social content, and online merch.</div></div>
+    </div>
+    <div class="callout brown">
+      <div class="callout-label">Grand Opening Embargo</div>
+      <p>Interior photos and full website are embargoed until June 13, 2026 at 10:00 AM. The Marketing Portal must enforce this embargo in the content calendar — no interior content may be scheduled or published before that moment. Media gets the first reveal.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s2">
+    <div class="section-num">02</div>
+    <div class="section-label">Problem Statement</div>
+    <div class="section-title">Where We Are Today</div>
+    <p>With Grand Opening approaching, Domo Cafe has no centralized marketing system. Content is created and posted ad hoc. There is no campaign calendar, no approval workflow, no influencer database, and no analytics view. For a brand of this significance, that gap is a risk.</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">No Content Calendar</div><div class="card-body">Posts go live without coordination across channels. No visibility into what's going out when, or who approved it.</div></div>
+      <div class="card"><div class="card-title">NHK Compliance Gap</div><div class="card-body">No system to flag content using Domo-kun assets for compliance review before publishing. Any unauthorized use risks the license.</div></div>
+      <div class="card"><div class="card-title">No Campaign ROI</div><div class="card-body">No way to measure which campaigns drive visits, Chomps redemptions, or subscription sign-ups. Marketing spend is blind.</div></div>
+      <div class="card"><div class="card-title">Scattered Influencers</div><div class="card-body">No database of creator contacts, rates, past performance, or content review status. Relationships managed via DMs.</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Compliance Risk</div>
+      <p>All content using Domo-kun character imagery must align with NHK licensing guidelines. Unauthorized use — including by influencers — could constitute a breach of the Merchandising License Agreement. A compliance gate in the content workflow is non-negotiable.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s3">
+    <div class="section-num">03</div>
+    <div class="section-label">Goals & Metrics</div>
+    <div class="section-title">What Success Looks Like</div>
+    <h4>P0 — Must Have at Launch</h4>
+    <p><span class="phase p0">P0</span> Content calendar with multi-channel scheduling<br>
+    <span class="phase p0">P0</span> NHK compliance workflow gate for any Domo-kun content<br>
+    <span class="phase p0">P0</span> Asset library with licensed vs. unlicensed flagging<br>
+    <span class="phase p0">P0</span> Campaign tracker — status, budget, KPIs</p>
+    <h4>P1 — Ship Within 60 Days</h4>
+    <p><span class="phase p1">P1</span> Email marketing with list segmentation and automations<br>
+    <span class="phase p1">P1</span> Influencer & creator database with workflow<br>
+    <span class="phase p1">P1</span> Analytics dashboard (social + email + campaign ROI)<br>
+    <span class="phase p1">P1</span> Events calendar with RSVP management</p>
+    <h4>P2 — Phase 3</h4>
+    <p><span class="phase p2">P2</span> Social scheduling via Instagram + TikTok API<br>
+    <span class="phase p2">P2</span> Loyalty marketing integration (Chomps multipliers via Toast)<br>
+    <span class="phase p2">P2</span> Subscription box marketing hub<br>
+    <span class="phase p2">P2</span> Press & PR tracker</p>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val">10K</div><div class="kpi-label">Instagram followers by Month 3</div></div>
+      <div class="kpi"><div class="kpi-val">5K</div><div class="kpi-label">Email list by Grand Opening</div></div>
+      <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">Unauthorized NHK content published</div></div>
+      <div class="kpi"><div class="kpi-val">4%+</div><div class="kpi-label">Instagram engagement rate target</div></div>
+      <div class="kpi"><div class="kpi-val">500</div><div class="kpi-label">Sub box subscribers in 6 months</div></div>
+      <div class="kpi"><div class="kpi-val">30%</div><div class="kpi-label">Repeat visit rate at 90 days</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s4">
+    <div class="section-num">04</div>
+    <div class="section-label">User Roles</div>
+    <div class="section-title">Who Uses the Portal</div>
+    <div class="role-grid">
+      <div class="role-card"><div class="role-name">👑 Brand Operator (Izzy)</div><div class="role-perms">Full access. Approves campaigns, manages budget, views all analytics. Sets NHK compliance policy.</div></div>
+      <div class="role-card"><div class="role-name">📣 Marketing Manager</div><div class="role-perms">Creates and manages campaigns. Schedules content. Manages influencer relationships. Views analytics.</div></div>
+      <div class="role-card"><div class="role-name">✏️ Content Creator</div><div class="role-perms">Uploads assets, writes copy, submits content for review. Cannot publish directly.</div></div>
+      <div class="role-card"><div class="role-name">📱 Social Media Manager</div><div class="role-perms">Schedules and publishes approved content. Monitors engagement and responds to comments.</div></div>
+      <div class="role-card"><div class="role-name">⚖️ NHK Compliance Reviewer</div><div class="role-perms">Reviews content flagged as using Domo-kun assets. Approves or rejects before publish. Can be Striker Entertainment contact.</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s5">
+    <div class="section-num">05</div>
+    <div class="section-label">Content Calendar</div>
+    <div class="section-title">Plan, Review, Schedule</div>
+    <p>The content calendar is the heartbeat of the Marketing Portal. Every piece of content across every channel flows through it.</p>
+    <h4>Channels</h4>
+    <p>
+      <span class="ch ch-ig">📸 Instagram</span>
+      <span class="ch ch-tt">🎵 TikTok</span>
+      <span class="ch ch-fb">👥 Facebook</span>
+      <span class="ch ch-em">✉️ Email</span>
+      <span class="ch ch-ev">🎪 Events</span>
+      <span class="ch ch-lo">🏪 In-Store Digital</span>
+    </p>
+    <h4>Content Status Workflow</h4>
+    <div class="workflow">
+      <div class="wf-step">Draft</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Review</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">NHK Check ⚠️</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Approved</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Scheduled</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Published</div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Check Trigger</div>
+      <p>Any content tagged with a Domo-kun character asset automatically routes through the NHK Check stage before it can be scheduled. Content using only Domo Cafe brand assets (logo, colors, typography) does not require NHK review. The system enforces this gate — no character content can be scheduled without compliance approval.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📅 Calendar Views</div><div class="card-body">Monthly overview, weekly detail, daily list. Color-coded by channel and campaign. Filter by status, channel, or campaign.</div></div>
+      <div class="card"><div class="card-title">🔗 Asset Linking</div><div class="card-body">Each calendar item links to its asset(s) from the library and its parent campaign. One source of truth per post.</div></div>
+    </div>
+    <div class="callout brown">
+      <div class="callout-label">Grand Opening Embargo Rule</div>
+      <p>All interior photography is embargoed in the calendar system until June 13, 2026 at 10:00 AM Pacific. The system displays a hard embargo warning on any interior asset selected before that date and time.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s6">
+    <div class="section-num">06</div>
+    <div class="section-label">Campaign Management</div>
+    <div class="section-title">From Concept to Results</div>
+    <p>Every marketing effort is organized as a campaign with a brief, budget, KPIs, and a results dashboard.</p>
+    <table>
+      <tr><th>Campaign Type</th><th>Channels</th><th>Phase</th></tr>
+      <tr><td>Grand Opening (June 13, 2026)</td><td>All channels simultaneously</td><td><span class="phase p0">P0</span></td></tr>
+      <tr><td>Monthly Pin Drop</td><td>IG, TikTok, Email, In-Store</td><td><span class="phase p0">P0</span></td></tr>
+      <tr><td>Holiday / Seasonal</td><td>IG, TikTok, Email</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>New Menu Item Launch</td><td>IG, TikTok, In-Store</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>Influencer Collab</td><td>Creator + IG + TikTok</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>Paid Social</td><td>Meta Ads, TikTok Ads</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>Subscription Box Drop</td><td>Email, IG, TikTok</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>PR Push</td><td>Press + IG</td><td><span class="phase p1">P1</span></td></tr>
+    </table>
+    <h4>Campaign Status Flow</h4>
+    <div class="workflow">
+      <div class="wf-step">Concept</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Brief Approved</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Active</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Complete</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Analyzed</div>
+    </div>
+  </section>
+
+  <section class="section" id="s7">
+    <div class="section-num">07</div>
+    <div class="section-label">Asset Library</div>
+    <div class="section-title">One Home for All Brand Assets</div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🏷️</div><div class="card-title">Logo Files</div><div class="card-body">Primary, chef composite, dark/light variants. Always current version. Version-controlled.</div></div>
+      <div class="card"><div class="card-icon">⭐</div><div class="card-title">Domo-kun Character</div><div class="card-body">NHK-licensed assets only. Each asset flagged — cannot be downloaded without logging usage.</div></div>
+      <div class="card"><div class="card-icon">📸</div><div class="card-title">Photography</div><div class="card-body">Food, interior (embargoed until June 13), staff, events. Categorized + tagged.</div></div>
+      <div class="card"><div class="card-icon">🎨</div><div class="card-title">Templates</div><div class="card-body">IG story, feed post, TikTok overlay, email header. Pre-branded, editable.</div></div>
+      <div class="card"><div class="card-icon">📄</div><div class="card-title">Press Kit</div><div class="card-body">Press release, fact sheet, boilerplate, brand guide PDF. Shareable link for media.</div></div>
+      <div class="card"><div class="card-icon">🎬</div><div class="card-title">Video</div><div class="card-body">B-roll, Reels, TikTok clips. Duration and format metadata. NHK flag if character appears.</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Asset Tracking</div>
+      <p>Every download or use of a Domo-kun licensed asset is logged: who, when, for which campaign, and on which channel. This usage log is available for NHK audit at any time under the licensing agreement.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s8">
+    <div class="section-num">08</div>
+    <div class="section-label">Influencer & Creator Management</div>
+    <div class="section-title">Creator Partnerships at Scale</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📋 Creator Database</div><div class="card-body">Handle, platform, followers, niche (anime/food/lifestyle/family), engagement rate, past collab performance, rate card, contact, status (prospect/active/alumni).</div></div>
+      <div class="card"><div class="card-title">📬 Outreach Workflow</div><div class="card-body">Identify → Brief → Contract → Content Submit → NHK Review (if character used) → Approve → Publish → Report performance.</div></div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">⚠️ Influencer NHK Compliance</div>
+      <p>Any influencer content featuring Domo-kun must be reviewed and approved by the NHK Compliance Reviewer before the creator publishes it. Influencer contracts must include a clause requiring pre-approval of any Domo-kun character usage. A violation by an influencer could trigger a breach claim under the NHK license.</p>
+    </div>
+    <h4>Performance Tracking</h4>
+    <p>After each influencer campaign: reach, impressions, engagement, link clicks, Chomps sign-ups attributed, estimated media value. Benchmarked against rate paid. Used to build tiered creator roster.</p>
+  </section>
+
+  <section class="section" id="s9">
+    <div class="section-num">09</div>
+    <div class="section-label">Email Marketing</div>
+    <div class="section-title">List, Campaigns & Automations</div>
+    <h4>List Segments</h4>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Grand Opening Signups</div><div class="card-body">Captured via domokuncafe.com form. Priority segment — these are the most engaged fans.</div></div>
+      <div class="card"><div class="card-title">Loyalty Members</div><div class="card-body">Chomps account holders. Segmented by tier: Domo Friend / Fan / Obsessed / Legend.</div></div>
+      <div class="card"><div class="card-title">Subscription Box Customers</div><div class="card-body">Active + lapsed subscribers. High-value segment — national reach.</div></div>
+      <div class="card"><div class="card-title">Press & Media</div><div class="card-body">Journalists, bloggers, food writers, anime press. Press releases and event invites.</div></div>
+    </div>
+    <h4>Automated Flows</h4>
+    <table>
+      <tr><th>Flow</th><th>Trigger</th><th>Emails</th></tr>
+      <tr><td>Welcome Series</td><td>Sign-up</td><td>3 emails — Welcome · Domo's Story · First Visit Offer</td></tr>
+      <tr><td>Birthday</td><td>Birthday date on file</td><td>1 email — Chomps bonus gift</td></tr>
+      <tr><td>Post-Visit Survey</td><td>Toast visit detected</td><td>1 email — survey + Chomps reward</td></tr>
+      <tr><td>Pin Drop Announcement</td><td>Drop date set in system</td><td>2 emails — teaser + day-of</td></tr>
+      <tr><td>Sub Box Shipping</td><td>Box shipped</td><td>1 email — tracking + unboxing challenge</td></tr>
+      <tr><td>Win-Back</td><td>90 days no visit</td><td>2 emails — we miss you + Chomps offer</td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s10">
+    <div class="section-num">10</div>
+    <div class="section-label">Loyalty Marketing</div>
+    <div class="section-title">Chomps as a Marketing Lever</div>
+    <p>Chomps — Domo Cafe's loyalty currency — is also the primary marketing activation tool. The Marketing Portal controls when and how Chomps multipliers and bonuses are deployed.</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-icon">✖️</div><div class="card-title">Dynamic Multipliers</div><div class="card-body">Set 2x or 3x Chomps windows for off-peak hours. Example: 2x Chomps every Tuesday 2–5pm. Triggered via Toast occupancy data — auto-activates when occupancy drops below threshold.</div></div>
+      <div class="card"><div class="card-icon">🎁</div><div class="card-title">Campaign Bonuses</div><div class="card-body">Tie Chomps bonuses to campaign actions — sign up for email = 50 Chomps. Share a post = 100 Chomps. First visit of the month = 2x.</div></div>
+      <div class="card"><div class="card-icon">🏆</div><div class="card-title">Tier-Based Campaigns</div><div class="card-body">Target campaigns by loyalty tier. Domo Legend members get early access to pin drops. Domo Obsessed get exclusive event invites.</div></div>
+      <div class="card"><div class="card-icon">📊</div><div class="card-title">Chomps Analytics</div><div class="card-body">Track Chomps issued per campaign, redemption rate, Chomps-to-visit conversion, and revenue generated per Chomps campaign.</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s11">
+    <div class="section-num">11</div>
+    <div class="section-label">Events & Activations</div>
+    <div class="section-title">Experience-First Marketing</div>
+    <table>
+      <tr><th>Event Type</th><th>Frequency</th><th>Key Elements</th></tr>
+      <tr><td>Grand Opening</td><td>One-time — June 13, 2026</td><td>Full media moment. Interior reveal. Live social. Press.</td></tr>
+      <tr><td>Monthly Pin Drop</td><td>Monthly</td><td>New Domo Cafe Crew pin. Limited quantity. Chomps bonus.</td></tr>
+      <tr><td>Seasonal Menu Launch</td><td>Quarterly</td><td>New items, themed Domo-kun art, campaign push.</td></tr>
+      <tr><td>Anime / Pop Culture Tie-ins</td><td>Ad hoc</td><td>Align with major anime events, cons, NHK releases.</td></tr>
+      <tr><td>Birthday Parties</td><td>On-demand</td><td>Domo-themed private events. High-margin. Reservation system.</td></tr>
+      <tr><td>Influencer Previews</td><td>Per campaign</td><td>Pre-opening access for selected creators. NHK approved content.</td></tr>
+    </table>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📋 Event Brief Builder</div><div class="card-body">Objective, date, venue setup, guest list, budget, content plan, post-event report template.</div></div>
+      <div class="card"><div class="card-title">👥 RSVP Management</div><div class="card-body">Guest list, confirmation emails, check-in at door. Tied to loyalty system — auto-award Chomps for attendance.</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s12">
+    <div class="section-num">12</div>
+    <div class="section-label">Subscription Box Marketing</div>
+    <div class="section-title">Domo Subscription Box — $29–$49/mo</div>
+    <p>The Domo Subscription Box extends the brand nationally — every subscriber is an ambassador. The Marketing Portal manages the content and campaign side of the box program.</p>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">📦</div><div class="card-title">Box Content Planning</div><div class="card-body">Monthly theme, items included (merch + exclusives), teaser content calendar, unboxing asset kit.</div></div>
+      <div class="card"><div class="card-icon">📸</div><div class="card-title">Unboxing Campaigns</div><div class="card-body">Ship date triggers social challenge prompt. Subscribers share unboxing → Chomps reward. UGC harvesting.</div></div>
+      <div class="card"><div class="card-icon">🌱</div><div class="card-title">Influencer Seeding</div><div class="card-body">Send boxes to 20–50 creators each month. Track which seeds generate posts and reach.</div></div>
+    </div>
+    <div class="callout brown">
+      <div class="callout-label">Platform Decision Needed</div>
+      <p>Subscription box fulfillment platform TBD: Cratejoy (marketplace + fulfillment), Shopify Subscriptions (own stack), or custom-built within the portal. Recommendation: Shopify Subscriptions for control and data ownership. Open question — see Section 18.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s13">
+    <div class="section-num">13</div>
+    <div class="section-label">Press & PR</div>
+    <div class="section-title">Media Relations Hub</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">📰 Media Database</div><div class="card-body">Journalists, bloggers, local press, food press, anime press, lifestyle media. Beat, outlet, contact, last coverage date.</div></div>
+      <div class="card"><div class="card-title">📁 Press Kit</div><div class="card-body">Always-current shareable link. Brand guide, photography (embargo-aware), fact sheet, boilerplate, founder bio.</div></div>
+      <div class="card"><div class="card-title">📝 Press Releases</div><div class="card-body">Draft, review, NHK check (if character mentioned), approve, distribute. Coverage logged when published.</div></div>
+      <div class="card"><div class="card-title">📊 Coverage Tracker</div><div class="card-body">Log every mention — outlet, date, URL, reach estimate, sentiment. Monthly earned media value report.</div></div>
+    </div>
+    <p><strong>NHK-Approved Story Angles:</strong> First official Domo-kun cafe in the USA · NHK IP licensed for food service (first of its kind) · Japanese character culture meets Southern California · Domo-kun's 28-year journey to a US cafe table</p>
+  </section>
+
+  <section class="section" id="s14">
+    <div class="section-num">14</div>
+    <div class="section-label">Analytics Dashboard</div>
+    <div class="section-title">Data-Driven Decisions</div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">📸</div><div class="card-title">Social Analytics</div><div class="card-body">Followers, reach, impressions, engagement rate, top posts by channel. IG + TikTok + Facebook.</div></div>
+      <div class="card"><div class="card-icon">✉️</div><div class="card-title">Email Analytics</div><div class="card-body">List size, open rate, CTR, unsubscribe rate, revenue per email send, automation conversion.</div></div>
+      <div class="card"><div class="card-icon">📣</div><div class="card-title">Campaign ROI</div><div class="card-body">Reach, engagement, estimated visits generated, Chomps issued, revenue lift per campaign.</div></div>
+      <div class="card"><div class="card-icon">🪙</div><div class="card-title">Chomps Analytics</div><div class="card-body">Chomps issued vs. redeemed. Multiplier campaign performance. Tier progression rates.</div></div>
+      <div class="card"><div class="card-icon">🌐</div><div class="card-title">Website Traffic</div><div class="card-body">domokuncafe.com sessions, sources, conversion to sign-up, subscription box click-through.</div></div>
+      <div class="card"><div class="card-icon">📦</div><div class="card-title">Sub Box Metrics</div><div class="card-body">Subscriber count, MRR, churn rate, net new per month, revenue by tier ($29 vs. $49).</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s15">
+    <div class="section-num">15</div>
+    <div class="section-label">Technical Architecture</div>
+    <div class="section-title">How It's Built</div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Frontend</div><div class="card-body">Next.js 14 + TypeScript. React Server Components. Tailwind CSS. Railway hosting.</div></div>
+      <div class="card"><div class="card-title">Database</div><div class="card-body">PostgreSQL on Railway. Prisma ORM. Tables for campaigns, content, assets, creators, contacts, events.</div></div>
+      <div class="card"><div class="card-title">Auth</div><div class="card-body">Clerk or NextAuth. Roles: Operator, Marketing Manager, Content Creator, Social Manager, NHK Reviewer.</div></div>
+      <div class="card"><div class="card-title">Asset Storage</div><div class="card-body">Cloudflare R2 or S3. NHK assets in separate, access-logged bucket.</div></div>
+      <div class="card"><div class="card-title">Email</div><div class="card-body">Resend API. Campaigns + transactional + automations.</div></div>
+      <div class="card"><div class="card-title">Jarvis API</div><div class="card-body">GET /api/jarvis/status + full CRUD. Auth: x-api-key = JARVIS_API_KEY. Required on all builds.</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s16">
+    <div class="section-num">16</div>
+    <div class="section-label">Integrations</div>
+    <div class="section-title">Connected Systems</div>
+    <table>
+      <tr><th>System</th><th>Integration</th><th>Purpose</th><th>Phase</th></tr>
+      <tr><td>Toast POS</td><td>API</td><td>Occupancy → Chomps multiplier triggers, visit attribution</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>Instagram Graph API</td><td>API</td><td>Post scheduling + analytics pull</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>TikTok Content Posting API</td><td>API</td><td>Content publishing</td><td><span class="phase p2">P2</span></td></tr>
+      <tr><td>Resend</td><td>Email API</td><td>All email campaigns and automations</td><td><span class="phase p0">P0</span></td></tr>
+      <tr><td>Notion</td><td>API sync</td><td>Campaign calendar to Notion</td><td><span class="phase p1">P1</span></td></tr>
+      <tr><td>Domo Loyalty App</td><td>API</td><td>Chomps campaign triggers, tier targeting</td><td><span class="phase p2">P2</span></td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s17">
+    <div class="section-num">17</div>
+    <div class="section-label">Phases & Timeline</div>
+    <div class="section-title">Build Roadmap</div>
+    <div class="card" style="margin-bottom:14px"><div class="card-title"><span class="phase p0">Phase 1 · MVP · 2 Weeks</span></div><div class="card-body">Content calendar (multi-channel) · Asset library with NHK flag + embargo system · Campaign tracker · NHK compliance workflow gate · Grand Opening campaign setup · Resend email integration</div></div>
+    <div class="card" style="margin-bottom:14px"><div class="card-title"><span class="phase p1">Phase 2 · 4 Weeks</span></div><div class="card-body">Email list management + automation flows · Influencer & creator database · Analytics dashboard (social + email + campaigns) · Events calendar + RSVP management · Press kit + PR tracker</div></div>
+    <div class="card"><div class="card-title"><span class="phase p2">Phase 3 · 8 Weeks</span></div><div class="card-body">Instagram + TikTok API scheduling · Loyalty marketing integration (Chomps via Toast) · Subscription box marketing hub · Paid ad campaign tracker · Full analytics suite with campaign ROI</div></div>
+  </section>
+
+  <section class="section" id="s18">
+    <div class="section-num">18</div>
+    <div class="section-label">Open Questions</div>
+    <div class="section-title">Decisions Needed</div>
+    <table>
+      <tr><th>#</th><th>Question</th><th>Options</th><th>Owner</th></tr>
+      <tr><td>1</td><td>Social scheduling approach</td><td>Build in-house vs. Buffer/Hootsuite API vs. native APIs</td><td>Izzy</td></tr>
+      <tr><td>2</td><td>NHK compliance review: sync or async?</td><td>Synchronous (block publish) vs. async (flag, review within 24h)</td><td>Russell Binder + Izzy</td></tr>
+      <tr><td>3</td><td>Toast occupancy API</td><td>Confirm real-time availability for Chomps multiplier triggers</td><td>Domo Cafe ops</td></tr>
+      <tr><td>4</td><td>Subscription box platform</td><td>Cratejoy vs. Shopify Subscriptions vs. custom-built</td><td>Izzy</td></tr>
+      <tr><td>5</td><td>NHK influencer content review</td><td>Portal-based review vs. email-based submission to Striker</td><td>Russell Binder</td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s19">
+    <div class="section-num">19</div>
+    <div class="section-label">Appendix</div>
+    <div class="section-title">Reference Material</div>
+    <h4>NHK Content Usage Checklist</h4>
+    <div class="callout">
+      <div class="callout-label">⚠️ Required Before Publishing Any Domo-kun Content</div>
+      <p>☐ Asset is from the official NHK-licensed library (no fan art, no AI-generated Domo-kun) · ☐ Character is not recolored, distorted, or modified · ☐ Content does not associate Domo-kun with inappropriate themes · ☐ If content features alcohol, explicit NHK approval is required · ☐ NHK Compliance Reviewer has approved this specific piece · ☐ Usage is logged in the asset library</p>
+    </div>
+    <h4>Brand Voice Quick Reference</h4>
+    <table>
+      <tr><th>We Say</th><th>We Don't Say</th></tr>
+      <tr><td>"Come as you are. Domo's been waiting."</td><td>"Best value in Buena Park!"</td></tr>
+      <tr><td>"Handcrafted with care, served with warmth."</td><td>"Fast, fresh, and convenient."</td></tr>
+      <tr><td>"Your new favorite spot — Domo says so."</td><td>"A curated dining experience."</td></tr>
+      <tr><td>"Made fresh. Made with love. Made for you."</td><td>"Premium quality at competitive prices."</td></tr>
+      <tr><td>"Every visit is a little bit of Japan, right here."</td><td>"Industry-leading hospitality solutions."</td></tr>
+    </table>
+    <h4>Key Contacts</h4>
+    <table>
+      <tr><th>Role</th><th>Name</th><th>Email</th></tr>
+      <tr><td>Brand Operator</td><td>Izzy Aala (GFC BP LLC)</td><td>izzy@domokuncafe.com</td></tr>
+      <tr><td>Licensing Agent (USA)</td><td>Russell Binder, Striker Entertainment</td><td>Russell@strikerent.com</td></tr>
+      <tr><td>NHK Licensing</td><td>Shiraya Tanaka, NHK Enterprises</td><td>tanaka-shi@nhk-ep.co.jp</td></tr>
+    </table>
+  </section>
+</main>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      navItems.forEach(n=>n.classList.remove('active'));
+      const a = document.querySelector('.nav-item[href="#'+e.target.id+'"]');
+      if(a) a.classList.add('active');
+    }
+  });
+},{threshold:0.2});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

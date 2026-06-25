@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Waitlist Signs & Host Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --domo-brown: #6B3A1F;
+    --domo-brown-light: #8B4513;
+    --domo-red: #CC2222;
+    --domo-cream: #FDF6EE;
+    --domo-warm: #F5ECD8;
+    --domo-border: #D4A96A;
+    --domo-text: #2C1A0E;
+    --domo-muted: #7A5C42;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #E8DDD0;
+    color: var(--domo-text);
+    padding: 40px 20px;
+  }
+
+  h1.page-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    color: var(--domo-muted);
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--domo-muted);
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+
+  .print-btn {
+    display: block;
+    margin: 0 auto 40px;
+    padding: 12px 32px;
+    background: var(--domo-brown);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+
+  .sign-wrapper {
+    max-width: 500px;
+    margin: 0 auto 48px;
+  }
+
+  .sign-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--domo-muted);
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  /* ===================== SIGN STYLES ===================== */
+
+  .sign {
+    background: var(--domo-cream);
+    border: 3px solid var(--domo-brown);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+
+  .sign-header {
+    background: var(--domo-brown);
+    padding: 20px 28px 16px;
+    text-align: center;
+  }
+
+  .sign-header .logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .sign-header .cafe-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: white;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sign-header .cafe-name span {
+    color: var(--domo-border);
+  }
+
+  .sign-body {
+    padding: 28px 32px 32px;
+  }
+
+  /* Sign 1 — JOIN THE WAITLIST */
+
+  .sign-1 .sign-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--domo-brown);
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .sign-1 .sign-sub {
+    font-size: 13px;
+    color: var(--domo-muted);
+    text-align: center;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .sign-1 .steps {
+    list-style: none;
+    border-top: 1px solid var(--domo-border);
+    padding-top: 20px;
+  }
+
+  .sign-1 .steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--domo-text);
+  }
+
+  .sign-1 .steps li .num {
+    background: var(--domo-brown);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .sign-1 .notice-box {
+    background: var(--domo-warm);
+    border-left: 4px solid var(--domo-border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 12.5px;
+    color: var(--domo-muted);
+    line-height: 1.6;
+  }
+
+  .sign-1 .notice-box strong {
+    color: var(--domo-brown);
+  }
+
+  /* Sign 2 — RETURNING WAITLIST GUESTS */
+
+  .sign-2 .sign-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--domo-brown);
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .sign-2 .question {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--domo-red);
+    text-align: center;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--domo-border);
+  }
+
+  .sign-2 .arrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .sign-2 .arrow-box {
+    background: var(--domo-brown);
+    color: white;
+    border-radius: 6px;
+    padding: 14px 20px;
+    text-align: center;
+    flex: 1;
+  }
+
+  .sign-2 .arrow-box .arrow-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .sign-2 .arrow-box .arrow-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .sign-2 .arrow-connector {
+    font-size: 22px;
+    color: var(--domo-border);
+    font-weight: 300;
+  }
+
+  .sign-2 .notice {
+    background: var(--domo-warm);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: var(--domo-muted);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .sign-2 .notice strong {
+    color: var(--domo-brown);
+  }
+
+  /* Sign 3 — RETURNING GUEST CHECK-IN (queue sign, compact) */
+
+  .sign-3 {
+    max-width: 320px;
+  }
+
+  .sign-3 .sign-body {
+    padding: 24px 24px 28px;
+    text-align: center;
+  }
+
+  .sign-3 .arrow-big {
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: 12px;
+    color: var(--domo-brown);
+  }
+
+  .sign-3 .sign-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--domo-brown);
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .sign-3 .divider {
+    width: 48px;
+    height: 3px;
+    background: var(--domo-red);
+    margin: 0 auto 14px;
+    border-radius: 2px;
+  }
+
+  .sign-3 .body-text {
+    font-size: 14px;
+    color: var(--domo-muted);
+    line-height: 1.6;
+  }
+
+  /* ===================== TRAINING DOC ===================== */
+
+  .training-wrapper {
+    max-width: 700px;
+    margin: 0 auto 48px;
+  }
+
+  .training-doc {
+    background: white;
+    border: 1px solid #D0C4B4;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  }
+
+  .training-header {
+    background: var(--domo-text);
+    padding: 20px 32px;
+  }
+
+  .training-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .training-header p {
+    font-size: 12px;
+    color: #A89880;
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .training-body {
+    padding: 28px 32px;
+  }
+
+  .script-block {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #EDE4D8;
+  }
+
+  .script-block:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .script-context {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--domo-muted);
+    margin-bottom: 10px;
+  }
+
+  .script-bubble {
+    background: var(--domo-warm);
+    border-left: 4px solid var(--domo-brown);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 18px;
+  }
+
+  .script-bubble p {
+    font-size: 14.5px;
+    color: var(--domo-text);
+    line-height: 1.7;
+  }
+
+  .script-bubble p + p {
+    margin-top: 10px;
+  }
+
+  .key-notes {
+    background: #FFF8F0;
+    border: 1px solid var(--domo-border);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-top: 28px;
+  }
+
+  .key-notes h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--domo-brown);
+    margin-bottom: 10px;
+  }
+
+  .key-notes ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .key-notes ul li {
+    font-size: 13px;
+    color: var(--domo-text);
+    line-height: 1.6;
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .key-notes ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--domo-brown);
+    font-weight: 700;
+  }
+
+  /* ===================== PRINT ===================== */
+
+  @media print {
+    body { background: white; padding: 0; }
+    .print-btn, h1.page-title, .subtitle, .sign-label { display: none; }
+    .sign-wrapper, .training-wrapper { max-width: 100%; margin: 0; page-break-after: always; }
+    .sign-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .training-wrapper { min-height: auto; page-break-after: always; }
+    .sign, .training-doc { box-shadow: none; }
+    .sign-3 { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Domo Cafe — Waitlist Signs & Host Training</h1>
+<p class="subtitle">Print each section · One sign per page</p>
+<button class="print-btn" onclick="window.print()">🖨️ Print All</button>
+
+<!-- ======================== SIGN 1 ======================== -->
+<div class="sign-wrapper">
+  <div class="sign-label">Sign #1 — Waitlist Sign-Up Area</div>
+  <div class="sign sign-1">
+    <div class="sign-header">
+      <div class="logo-area">
+        <div class="cafe-name">DOMO <span>CAFE</span></div>
+      </div>
+    </div>
+    <div class="sign-body">
+      <div class="sign-title">JOIN THE<br>WAITLIST</div>
+      <div class="sign-sub">No need to wait in line — explore the mall while we hold your spot.</div>
+      <ul class="steps">
+        <li><span class="num">1</span> Check in with a Host</li>
+        <li><span class="num">2</span> Receive text updates on your wait</li>
+        <li><span class="num">3</span> Enjoy the mall while you wait</li>
+        <li><span class="num">4</span> Return within 10 minutes when notified</li>
+      </ul>
+      <div class="notice-box">
+        <strong>Please note:</strong> Your text notification is a request to return to the café. Once you arrive, you'll be placed in the seating queue and seated as tables become available.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SIGN 2 ======================== -->
+<div class="sign-wrapper">
+  <div class="sign-label">Sign #2 — Returning Waitlist Guests</div>
+  <div class="sign sign-2">
+    <div class="sign-header">
+      <div class="logo-area">
+        <div class="cafe-name">DOMO <span>CAFE</span></div>
+      </div>
+    </div>
+    <div class="sign-body">
+      <div class="sign-title">RETURNING<br>WAITLIST GUESTS</div>
+      <div class="question">Received a text notification?</div>
+      <div class="arrow-row">
+        <div class="arrow-box">
+          <div class="arrow-icon">📱</div>
+          <div class="arrow-label">Got a text?</div>
+        </div>
+        <div class="arrow-connector">→</div>
+        <div class="arrow-box">
+          <div class="arrow-icon">🙋</div>
+          <div class="arrow-label">Check in here</div>
+        </div>
+      </div>
+      <div class="notice">
+        Guests who return within <strong>10 minutes</strong> will be added to the seating queue and seated as tables become available.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SIGN 3 ======================== -->
+<div class="sign-wrapper">
+  <div class="sign-label">Sign #3 — Queue Line Sign (compact)</div>
+  <div class="sign sign-3">
+    <div class="sign-header">
+      <div class="logo-area">
+        <div class="cafe-name">DOMO <span>CAFE</span></div>
+      </div>
+    </div>
+    <div class="sign-body">
+      <div class="arrow-big">↓</div>
+      <div class="sign-title">RETURNING<br>GUEST<br>CHECK-IN</div>
+      <div class="divider"></div>
+      <div class="body-text">If you've received a text notification,<br>please check in here.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== HOST TRAINING ======================== -->
+<div class="training-wrapper">
+  <div class="sign-label">Host Training Scripts</div>
+  <div class="training-doc">
+    <div class="training-header">
+      <h2>Host Training Guide — Waitlist Process</h2>
+      <p>Domo Cafe · Internal Use Only</p>
+    </div>
+    <div class="training-body">
+
+      <div class="script-block">
+        <div class="script-context">When adding guests to the waitlist</div>
+        <div class="script-bubble">
+          <p>"I'm adding you to our waitlist now. You'll receive text updates throughout your wait. Feel free to enjoy the mall while you wait.</p>
+          <p>When you receive a notification to return, please come back within 10 minutes and check in with us.</p>
+          <p>The notification means it's time to return to the café. Once you arrive, we'll place you in our seating queue and seat you as tables become available."</p>
+        </div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-context">When guests return after receiving notification</div>
+        <div class="script-bubble">
+          <p>"Welcome back! I'll check you in now.</p>
+          <p>You're in the seating queue and we'll get you seated as soon as the next appropriate table becomes available."</p>
+        </div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-context">If a guest asks: "Do we get seated immediately?"</div>
+        <div class="script-bubble">
+          <p>"Not necessarily. The text notification lets you know it's time to return to the café. Once you check in, you're placed in the seating queue and we'll seat you as tables become available."</p>
+        </div>
+      </div>
+
+      <div class="key-notes">
+        <h3>Why This Language Works</h3>
+        <ul>
+          <li>Prevents guests from expecting an immediate table when they return</li>
+          <li>Encourages them to come back promptly (10-minute window)</li>
+          <li>Gives the team flexibility to keep tables turning without holding them for guests still in the mall</li>
+          <li>Avoids implying that returning guests "cut" ahead of physically waiting guests</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EZLiving — Access Code Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0C1B2A; --bg2: #142236; --bg3: #1C2E42;
+      --text: #F0EDE8; --muted: #8A9BB0;
+      --accent: #C9A052; --accent2: #E8C07A;
+      --border: rgba(240,237,232,0.08);
+      --card: rgba(255,255,255,0.04);
+      --green: #22c55e; --red: #ef4444; --yellow: #f59e0b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* AUTH */
+    #authGate {
+      position: fixed; inset: 0; background: rgba(12,27,42,0.98);
+      display: flex; align-items: center; justify-content: center; z-index: 999;
+    }
+    .auth-box {
+      background: var(--bg2); border: 1px solid rgba(201,160,82,0.2);
+      border-radius: 20px; padding: 48px 44px; width: 100%; max-width: 380px; text-align: center;
+    }
+    .auth-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: var(--accent); margin-bottom: 4px; }
+    .auth-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .auth-input {
+      width: 100%; padding: 11px 16px; margin-bottom: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; color: var(--text); font-size: 14px;
+      font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+    }
+    .auth-input:focus { border-color: var(--accent); }
+    .auth-btn {
+      width: 100%; padding: 12px; margin-top: 6px;
+      background: linear-gradient(135deg, #C9A052, #E8C07A);
+      border: none; border-radius: 10px; color: #0C1B2A;
+      font-size: 14px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; cursor: pointer;
+    }
+    .auth-error { color: var(--red); font-size: 12px; min-height: 18px; margin: 6px 0; }
+
+    /* LAYOUT */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px; border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .nav-brand { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; }
+    .nav-brand span { color: var(--accent); }
+    .nav-sub { font-size: 12px; color: var(--muted); font-family: 'Outfit', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px; }
+
+    /* STATS ROW */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 36px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px;
+    }
+    .stat-label { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .stat-value { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; color: var(--accent); }
+
+    /* GENERATE FORM */
+    .section-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 16px; }
+    .gen-form {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 32px; margin-bottom: 36px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 16px; align-items: end;
+    }
+    .field label { display: block; font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .field input, .field select {
+      width: 100%; padding: 10px 14px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 14px;
+      font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--accent); }
+    .field select option { background: #1C2E42; }
+    .gen-btn {
+      padding: 10px 24px; background: linear-gradient(135deg, #C9A052, #E8C07A);
+      border: none; border-radius: 8px; color: #0C1B2A;
+      font-size: 13px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer; white-space: nowrap; height: 42px;
+    }
+    .gen-btn:hover { opacity: 0.9; }
+
+    /* SUCCESS FLASH */
+    .code-flash {
+      display: none; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 12px; padding: 20px 28px; margin-bottom: 24px;
+      display: none; align-items: center; gap: 20px;
+    }
+    .code-flash.show { display: flex; }
+    .code-flash .code-value {
+      font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700;
+      color: var(--green); letter-spacing: 3px;
+    }
+    .code-flash .code-info { font-size: 13px; color: var(--muted); }
+    .copy-btn {
+      margin-left: auto; padding: 8px 18px;
+      background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 8px; color: var(--green); font-size: 12px; font-weight: 600;
+      font-family: 'Outfit', sans-serif; cursor: pointer; letter-spacing: 0.5px;
+    }
+
+    /* TABLE */
+    .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 28px; border-bottom: 1px solid var(--border);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+      padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td { padding: 14px 20px; font-size: 13px; vertical-align: middle; }
+    .code-pill {
+      font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700;
+      color: var(--accent); letter-spacing: 2px;
+    }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    .badge-active { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: var(--green); }
+    .badge-expired { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: var(--red); }
+    .badge-revoked { background: rgba(156,163,175,0.1); border: 1px solid rgba(156,163,175,0.2); color: #9CA3AF; }
+    .badge-maxed { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: var(--yellow); }
+
+    .action-btn {
+      padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      font-family: 'Outfit', sans-serif; cursor: pointer; border: 1px solid; letter-spacing: 0.3px;
+      transition: all 0.15s;
+    }
+    .btn-revoke { background: transparent; border-color: rgba(239,68,68,0.3); color: var(--red); }
+    .btn-revoke:hover { background: rgba(239,68,68,0.1); }
+    .btn-restore { background: transparent; border-color: rgba(34,197,94,0.3); color: var(--green); }
+    .btn-restore:hover { background: rgba(34,197,94,0.1); }
+    .btn-delete { background: transparent; border-color: var(--border); color: var(--muted); }
+    .btn-delete:hover { border-color: rgba(239,68,68,0.3); color: var(--red); }
+
+    /* USES DRAWER */
+    .uses-row { display: none; }
+    .uses-row.open { display: table-row; }
+    .uses-inner { padding: 0 20px 16px; background: rgba(0,0,0,0.2); }
+    .use-entry {
+      display: flex; gap: 24px; padding: 8px 0;
+      border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted);
+    }
+    .use-entry:last-child { border-bottom: none; }
+    .use-entry strong { color: var(--text); }
+
+    .toggle-uses {
+      background: none; border: none; color: var(--accent); cursor: pointer;
+      font-size: 12px; font-family: 'Outfit', sans-serif; font-weight: 600;
+      letter-spacing: 0.5px; padding: 0;
+    }
+    .toggle-uses:hover { text-decoration: underline; }
+
+    .refresh-btn {
+      padding: 7px 16px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--muted); font-size: 12px; font-weight: 600;
+      font-family: 'Outfit', sans-serif; cursor: pointer; transition: all 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 768px) {
+      .gen-form { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .container { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="authGate">
+  <div class="auth-box">
+    <div class="auth-logo"><span>EZ</span>Living</div>
+    <div class="auth-sub">Access Code Manager — Admin Only</div>
+    <input class="auth-input" id="adminKey" type="password" placeholder="Admin password"
+      onkeydown="if(event.key==='Enter')doAdminAuth()" />
+    <div class="auth-error" id="authErr"></div>
+    <button class="auth-btn" onclick="doAdminAuth()">Sign In</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <div>
+    <div class="nav-brand"><span>EZ</span>Living</div>
+    <div class="nav-sub">Access Code Manager</div>
+  </div>
+  <a href="/ezliving-storyboard-v0.2.0.html" target="_blank" style="font-size:12px;color:var(--muted);text-decoration:none;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.5px;">View Storyboard →</a>
+</nav>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats" id="statsRow">
+    <div class="stat-card"><div class="stat-label">Total Codes</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value" id="statActive" style="color:var(--green);">—</div></div>
+    <div class="stat-card"><div class="stat-label">Total Uses</div><div class="stat-value" id="statUses">—</div></div>
+    <div class="stat-card"><div class="stat-label">Used Today</div><div class="stat-value" id="statToday">—</div></div>
+  </div>
+
+  <!-- GENERATE -->
+  <div class="section-title">Generate Access Code</div>
+  <div class="gen-form">
+    <div class="field">
+      <label>Label / Recipient</label>
+      <input type="text" id="genLabel" placeholder="e.g. John Smith — Investor Meeting" />
+    </div>
+    <div class="field">
+      <label>Expires In</label>
+      <select id="genExpiry">
+        <option value="1">1 hour</option>
+        <option value="24" selected>24 hours</option>
+        <option value="72">3 days</option>
+        <option value="168">7 days</option>
+        <option value="720">30 days</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Max Uses</label>
+      <select id="genMaxUses">
+        <option value="1">1 use</option>
+        <option value="3">3 uses</option>
+        <option value="5">5 uses</option>
+        <option value="10">10 uses</option>
+        <option value="0" selected>Unlimited</option>
+      </select>
+    </div>
+    <button class="gen-btn" onclick="generateCode()">+ Generate</button>
+  </div>
+
+  <!-- CODE FLASH -->
+  <div class="code-flash" id="codeFlash">
+    <div>
+      <div class="code-value" id="flashCode">—</div>
+      <div class="code-info" id="flashInfo">—</div>
+    </div>
+    <button class="copy-btn" onclick="copyCode()">📋 Copy Code</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="section-title" style="margin:0;">Access Codes</div>
+      <button class="refresh-btn" onclick="loadCodes()">↻ Refresh</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Label</th>
+          <th>Status</th>
+          <th>Uses</th>
+          <th>Expires</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="codesTable">
+        <tr><td colspan="7" class="empty-state">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  let ADMIN_KEY = '';
+  const API_BASE = '/api/ezliving/admin/codes';
+
+  // ── AUTH ──
+  function doAdminAuth() {
+    const key = document.getElementById('adminKey').value.trim();
+    if (!key) return;
+    ADMIN_KEY = key;
+    loadCodes().then(ok => {
+      if (ok) document.getElementById('authGate').style.display = 'none';
+      else {
+        document.getElementById('authErr').textContent = 'Invalid password.';
+        ADMIN_KEY = '';
+      }
+    });
+  }
+  document.getElementById('adminKey').focus();
+
+  // ── LOAD CODES ──
+  async function loadCodes() {
+    try {
+      const res = await fetch(API_BASE, { headers: { 'x-admin-key': ADMIN_KEY } });
+      if (!res.ok) return false;
+      const { codes } = await res.json();
+      renderCodes(codes);
+      renderStats(codes);
+      return true;
+    } catch { return false; }
+  }
+
+  function getStatus(code) {
+    if (!code.active) return 'revoked';
+    if (new Date() > new Date(code.expiresAt)) return 'expired';
+    if (code.maxUses > 0 && code.uses.length >= code.maxUses) return 'maxed';
+    return 'active';
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function timeLeft(expiresAt) {
+    const diff = new Date(expiresAt) - new Date();
+    if (diff <= 0) return 'Expired';
+    const h = Math.floor(diff / 3600000);
+    const d = Math.floor(h / 24);
+    if (d > 0) return `${d}d ${h % 24}h`;
+    const m = Math.floor((diff % 3600000) / 60000);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  }
+
+  function renderStats(codes) {
+    const now = new Date();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const active = codes.filter(c => getStatus(c) === 'active').length;
+    const totalUses = codes.reduce((s, c) => s + c.uses.length, 0);
+    const todayUses = codes.reduce((s, c) => s + c.uses.filter(u => new Date(u.usedAt) >= today).length, 0);
+    document.getElementById('statTotal').textContent = codes.length;
+    document.getElementById('statActive').textContent = active;
+    document.getElementById('statUses').textContent = totalUses;
+    document.getElementById('statToday').textContent = todayUses;
+  }
+
+  function renderCodes(codes) {
+    const tbody = document.getElementById('codesTable');
+    if (!codes.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No codes yet. Generate your first one above.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = codes.map(c => {
+      const status = getStatus(c);
+      const badgeClass = { active: 'badge-active', expired: 'badge-expired', revoked: 'badge-revoked', maxed: 'badge-maxed' }[status];
+      const usesText = c.maxUses > 0 ? `${c.uses.length} / ${c.maxUses}` : `${c.uses.length}`;
+      const expiry = status === 'active' ? `<span style="color:var(--green);">${timeLeft(c.expiresAt)}</span>` : fmtDate(c.expiresAt);
+
+      const actions = status === 'active'
+        ? `<button class="action-btn btn-revoke" onclick="revokeCode('${c.id}', false)">Revoke</button>`
+        : status === 'revoked'
+        ? `<button class="action-btn btn-restore" onclick="revokeCode('${c.id}', true)">Restore</button>`
+        : '';
+
+      const usesRows = c.uses.length ? c.uses.map(u => `
+        <div class="use-entry">
+          <span><strong>${fmtDate(u.usedAt)}</strong></span>
+          <span>IP: <strong>${u.ip || '—'}</strong></span>
+          <span style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${u.userAgent || '—'}</span>
+        </div>`).join('') : '<div class="use-entry" style="color:var(--muted);">No uses recorded yet.</div>';
+
+      return `
+        <tr>
+          <td><span class="code-pill">${c.code}</span></td>
+          <td style="color:var(--text);">${c.label}</td>
+          <td><span class="badge ${badgeClass}">${status.toUpperCase()}</span></td>
+          <td>
+            ${usesText}
+            ${c.uses.length ? `<button class="toggle-uses" onclick="toggleUses('${c.id}')" style="margin-left:8px;">▾ Details</button>` : ''}
+          </td>
+          <td>${expiry}</td>
+          <td style="color:var(--muted);">${fmtDate(c.createdAt)}</td>
+          <td style="display:flex;gap:8px;align-items:center;">
+            ${actions}
+            <button class="action-btn btn-delete" onclick="deleteCode('${c.id}')">Delete</button>
+          </td>
+        </tr>
+        <tr class="uses-row" id="uses-${c.id}">
+          <td colspan="7">
+            <div class="uses-inner">${usesRows}</div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function toggleUses(id) {
+    const row = document.getElementById('uses-' + id);
+    row.classList.toggle('open');
+  }
+
+  // ── GENERATE ──
+  async function generateCode() {
+    const label = document.getElementById('genLabel').value.trim();
+    const hours = parseInt(document.getElementById('genExpiry').value);
+    const maxUses = parseInt(document.getElementById('genMaxUses').value);
+
+    if (!label) { alert('Please enter a label / recipient name.'); return; }
+
+    const expiresAt = new Date(Date.now() + hours * 3600 * 1000).toISOString();
+
+    const res = await fetch(API_BASE, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ label, expiresAt, maxUses }),
+    });
+
+    const { code, error } = await res.json();
+    if (error) { alert(error); return; }
+
+    const flash = document.getElementById('codeFlash');
+    document.getElementById('flashCode').textContent = code.code;
+    document.getElementById('flashInfo').textContent =
+      `For: ${code.label}  ·  Expires in ${hours >= 24 ? Math.floor(hours/24)+'d' : hours+'h'}  ·  ${maxUses === 0 ? 'Unlimited uses' : maxUses + ' use' + (maxUses > 1 ? 's' : '')}`;
+    flash.classList.add('show');
+    document.getElementById('genLabel').value = '';
+
+    loadCodes();
+    flash.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function copyCode() {
+    const code = document.getElementById('flashCode').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Code', 2000);
+    });
+  }
+
+  // ── REVOKE ──
+  async function revokeCode(id, active) {
+    if (!active && !confirm('Revoke this code? It will stop working immediately.')) return;
+    await fetch(API_BASE, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ id, active }),
+    });
+    loadCodes();
+  }
+
+  // ── DELETE ──
+  async function deleteCode(id) {
+    if (!confirm('Permanently delete this code and all its usage history?')) return;
+    await fetch(API_BASE, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ id }),
+    });
+    loadCodes();
+  }
+</script>
+</body>
+</html>

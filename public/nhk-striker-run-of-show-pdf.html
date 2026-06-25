@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run of Show — NHK & Striker Visit · Domo Cafe</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --dark: #1A0A00;
+    --text: #1C1007;
+    --muted: #6B5040;
+    --line: #D4B8A0;
+    --bg: #FFFDF9;
+    --card: #FFF8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    padding: 48px 44px 64px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: var(--brown);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(139,69,19,0.3);
+    z-index: 100;
+  }
+  .print-btn:hover { opacity: 0.85; }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--brown);
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .brand-lockup { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .brand-domo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--brown);
+    letter-spacing: -0.02em;
+  }
+  .brand-cafe { color: var(--red); }
+  .brand-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--line);
+  }
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .event-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--red);
+    text-transform: uppercase;
+    background: rgba(204,34,34,0.07);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(204,34,34,0.18);
+  }
+  .event-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .event-title .hl { color: var(--brown); }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 7px 28px;
+    width: fit-content;
+  }
+  .meta-item { display: flex; gap: 8px; align-items: baseline; }
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .meta-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .header-right { text-align: right; }
+  .conf-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--brown);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    margin-top: 28px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* PEOPLE */
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .person-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 12px 15px;
+  }
+  .person-org {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--brown);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .person-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .person-role { font-size: 12px; color: var(--muted); }
+  .person-email {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--brown);
+    margin-top: 4px;
+  }
+  .host-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .host-chip {
+    background: var(--card);
+    border: 1.5px solid var(--brown);
+    color: var(--brown);
+    border-radius: 6px;
+    padding: 7px 16px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* CHECKLIST */
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px 13px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: #FFF0E0; }
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--line);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .check-item.done .checkbox {
+    background: var(--brown);
+    border-color: var(--brown);
+  }
+  .check-item.done .checkbox::after {
+    content: '✓';
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .check-item.done .check-text {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .check-text { font-size: 13px; line-height: 1.45; }
+
+  /* TIMELINE */
+  .phase {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .phase-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--brown);
+    color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .phase-body {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brown);
+    border-radius: 7px;
+    padding: 13px 16px;
+  }
+  .phase-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 7px;
+    flex-wrap: wrap;
+  }
+  .phase-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .phase-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--brown);
+    background: rgba(139,69,19,0.07);
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid rgba(139,69,19,0.18);
+  }
+  .phase-action {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .phase-desc { font-size: 13px; line-height: 1.65; color: #3D2010; margin-bottom: 8px; }
+  .phase-vibe {
+    font-size: 11px;
+    color: var(--brown);
+    font-style: italic;
+    background: rgba(139,69,19,0.05);
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 36px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* PRINT */
+  @media print {
+    body { padding: 20px 24px; background: #fff; max-width: 100%; }
+    .print-btn { display: none; }
+    .check-item, .person-card, .phase-body { background: #faf7f3 !important; }
+    .phase { break-inside: avoid; }
+    @page { margin: 16mm; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="brand-lockup">
+      <div class="brand-domo">Domo <span class="brand-cafe">Cafe</span></div>
+      <div class="brand-divider"></div>
+      <div class="brand-sub">Buena Park, CA<br>Run of Show</div>
+    </div>
+    <div class="event-badge">Internal Document · Confidential</div>
+    <div class="event-title">NHK & <span class="hl">Striker</span><br>Cafe Visit</div>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="meta-label">Date</span><span class="meta-value">Tuesday, June 10, 2026</span></div>
+      <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value">1:00 PM PT</span></div>
+      <div class="meta-item"><span class="meta-label">Format</span><span class="meta-value">Private Tour & Table Service</span></div>
+      <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value">Domo Cafe — Buena Park, CA</span></div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="conf-tag">NHK × Striker × Domo</div>
+  </div>
+</div>
+
+<!-- HOSTS -->
+<div class="section-label">Hosts</div>
+<div class="host-chips">
+  <div class="host-chip">Izzy Aala</div>
+  <div class="host-chip">Hailey</div>
+</div>
+
+<!-- GUESTS -->
+<div class="section-label">Guests</div>
+<div class="people-grid">
+  <div class="person-card">
+    <div class="person-org">NHK</div>
+    <div class="person-name">Shiraya Tanaka</div>
+    <div class="person-role">NHK Licensing Representative</div>
+    <div class="person-email">tanaka-shi@nhk-ep.co.jp</div>
+  </div>
+  <div class="person-card">
+    <div class="person-org">Striker Entertainment</div>
+    <div class="person-name">Russell Binder</div>
+    <div class="person-role">Licensing Agent</div>
+  </div>
+</div>
+
+<!-- PRE-EVENT CHECKLIST -->
+<div class="section-label">Pre-Event Checklist</div>
+<div class="checklist-grid">
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Tables set up</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Merchandise wall, 3-tier, and counters dressed with merchandise display</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Food and drinks prepped</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Menu with prices — printed and laminated</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Music playing (conversation-friendly volume)</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Bathroom cleaned and stocked</span></div>
+  <div class="check-item" onclick="toggleCheck(this)"><div class="checkbox"></div><span class="check-text">Gifts packed in Domo Bags</span></div>
+</div>
+
+<!-- TIMELINE -->
+<div class="section-label">Run of Show</div>
+
+<div class="phase">
+  <div class="phase-num">01</div>
+  <div class="phase-body">
+    <div class="phase-header">
+      <div class="phase-name">The Arrival & Welcome</div>
+      <div class="phase-time">1:00 PM</div>
+    </div>
+    <div class="phase-action">↳ Arrival & Exterior Tour</div>
+    <div class="phase-desc">NHK & Striker arrive at the venue. Greet guests at the entrance — warm, energetic welcome from Izzy & Hailey. Begin the exterior tour: architecture, signage, outdoor seating, and unique storefront features.</div>
+    <div class="phase-vibe">✦ Welcoming · Energetic · Sets the stage</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">02</div>
+  <div class="phase-body">
+    <div class="phase-header">
+      <div class="phase-name">Crossing the Threshold</div>
+      <div class="phase-time">~1:15 PM</div>
+    </div>
+    <div class="phase-action">↳ Interior Tour</div>
+    <div class="phase-desc">Transition guests inside. Curated walkthrough of the interior — decor, seating areas, kitchen and barista setup, merchandise displays, and overall ambiance. Let the space speak for itself.</div>
+    <div class="phase-vibe">✦ Intimate · Exclusive</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">03</div>
+  <div class="phase-body">
+    <div class="phase-header">
+      <div class="phase-name">The Showcase & Service</div>
+      <div class="phase-time">~1:30 PM</div>
+    </div>
+    <div class="phase-action">↳ Dining & Visual Display</div>
+    <div class="phase-desc">Guests are seated. All food and drink options beautifully displayed on a central counter or station — for viewing, photographing, and selecting. Once selections are made, full table service begins with freshly prepared items delivered directly to NHK & Striker.</div>
+    <div class="phase-vibe">✦ Indulgent · Hospitable</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">04</div>
+  <div class="phase-body">
+    <div class="phase-header">
+      <div class="phase-name">Gratitude</div>
+      <div class="phase-time">~2:15 PM</div>
+    </div>
+    <div class="phase-action">↳ Thank You Speech</div>
+    <div class="phase-desc">As dining winds down, Izzy takes the floor. Brief, heartfelt speech expressing gratitude for NHK & Striker's visit and celebrating the partnership and collaboration ahead.</div>
+    <div class="phase-vibe">✦ Genuine · Appreciative</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-num">05</div>
+  <div class="phase-body">
+    <div class="phase-header">
+      <div class="phase-name">Farewell & Wrap Up</div>
+      <div class="phase-time">~2:30 PM</div>
+    </div>
+    <div class="phase-action">↳ Gift Presentation & Close</div>
+    <div class="phase-desc">Present NHK & Striker with closing gifts in Domo Bags. Final photos together. Warm goodbyes and official wrap-up of the visit.</div>
+    <div class="phase-vibe">✦ Warm · Memorable · Polished</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-text">Domo Cafe · NHK & Striker Visit · June 10, 2026</div>
+  <div class="footer-text">CONFIDENTIAL — INTERNAL USE ONLY</div>
+</div>
+
+<script>
+  function toggleCheck(el) {
+    el.classList.toggle('done');
+    const items = document.querySelectorAll('.check-item');
+    localStorage.setItem('nhk_pdf_checklist', JSON.stringify(
+      Array.from(items).map(e => e.classList.contains('done'))
+    ));
+  }
+  (function() {
+    const saved = localStorage.getItem('nhk_pdf_checklist');
+    if (!saved) return;
+    JSON.parse(saved).forEach((done, i) => {
+      const items = document.querySelectorAll('.check-item');
+      if (done && items[i]) items[i].classList.add('done');
+    });
+  })();
+</script>
+</body>
+</html>

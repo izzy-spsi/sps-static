@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  @page { size:Letter; margin:0; }
+  body { padding:0.65in 0.8in 1.25in 0.8in; font-family:'DM Sans',-apple-system,Arial,sans-serif; color:#1a1a1a; font-size:10.5pt; line-height:1.65; background:#fff; }
+
+  /* ─── TITLE PAGE ─── */
+  .title-page { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:9in; text-align:center; page-break-after:always; }
+  .title-page img { width:160px; margin-bottom:32px; }
+  .title-page .cafe-name { font-size:34pt; font-weight:800; color:#8B4513; line-height:1.05; }
+  .title-page .cafe-name span { color:#CC2222; }
+  .title-page .doc-label { font-size:11pt; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:#aaa; margin:12px 0 28px; }
+  .title-page .tagline { font-size:11.5pt; color:#555; max-width:400px; line-height:1.75; margin-bottom:36px; }
+  .title-page .conf-badge { font-size:8pt; letter-spacing:2px; text-transform:uppercase; color:#ccc; border:1px solid #ddd; border-radius:20px; padding:5px 16px; }
+
+  /* ─── PAGE HEADER (repeating) ─── */
+  .page-header { display:flex; justify-content:space-between; align-items:flex-end; padding-bottom:14px; border-bottom:3px solid #8B4513; margin-bottom:22px; }
+  .page-header .brand { font-size:13pt; font-weight:800; color:#8B4513; }
+  .page-header .brand span { color:#CC2222; }
+  .page-header .label { font-size:8pt; color:#bbb; letter-spacing:1px; text-transform:uppercase; }
+
+  /* ─── PART HEADER ─── */
+  .part-header { background:#8B4513; color:#fff; padding:12px 20px; border-radius:8px; margin-bottom:22px; page-break-before:always; page-break-after:avoid; }
+  .part-header .part-num { font-size:7pt; letter-spacing:3px; text-transform:uppercase; opacity:0.65; margin-bottom:2px; }
+  .part-header .part-title { font-size:14pt; font-weight:800; }
+
+  /* ─── TOC ─── */
+  .toc-page { page-break-after:always; }
+  .toc-section-label { font-size:7.5pt; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#8B4513; margin:16px 0 6px; }
+  .toc-item { display:flex; justify-content:space-between; align-items:baseline; padding:5px 0 5px 10px; border-bottom:1px dotted #e8e0dc; font-size:10pt; }
+  .toc-item:last-child { border-bottom:none; }
+  .toc-item .t-name { color:#1a1a1a; }
+  .toc-item .t-num { font-size:9pt; color:#bbb; min-width:24px; text-align:right; }
+  .toc-item .t-pg { font-size:9pt; color:#8B4513; font-weight:600; min-width:28px; text-align:right; }
+  .toc-exhibit { margin-top:12px; padding-top:12px; border-top:2px solid #f0ddd6; }
+  .toc-exhibit .toc-item .t-name { color:#8B4513; font-weight:700; }
+
+  /* ─── SECTION HEADINGS ─── */
+  h2 { font-size:8pt; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#CC2222; margin:20px 0 9px; padding-bottom:5px; border-bottom:1px solid #f0ddd6; page-break-after:avoid; }
+  h3 { font-size:9.5pt; font-weight:700; color:#8B4513; margin:13px 0 5px; page-break-after:avoid; }
+
+  /* ─── LISTS ─── */
+  ul.bl { list-style:none; margin-bottom:10px; }
+  ul.bl li { padding:4px 0 4px 16px; position:relative; border-bottom:1px solid #f9f5f3; font-size:10.5pt; }
+  ul.bl li:last-child { border-bottom:none; }
+  ul.bl li::before { content:"\2022"; position:absolute; left:2px; color:#CC2222; font-size:9pt; line-height:1.9; }
+  ul.yn { list-style:none; margin-bottom:10px; }
+  ul.yn li { padding:4px 0 4px 4px; font-size:10.5pt; border-bottom:1px solid #f9f5f3; }
+  ul.yn li:last-child { border-bottom:none; }
+
+  /* ─── INFO BOX (brown) ─── */
+  .box-brown { background:#FFF8F0; border-left:4px solid #8B4513; border-radius:0 8px 8px 0; padding:12px 16px; margin:10px 0 14px; page-break-inside:avoid; }
+  .box-brown .bx-label { font-size:7.5pt; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#8B4513; margin-bottom:5px; }
+  .box-brown p { font-size:10pt; color:#2a1a0a; line-height:1.65; margin-bottom:6px; }
+  .box-brown p:last-child { margin-bottom:0; }
+
+  /* ─── RIGHTS BOX (blue) ─── */
+  .box-blue { background:#f2f6ff; border-left:4px solid #2255CC; border-radius:0 8px 8px 0; padding:12px 16px; margin:10px 0 14px; page-break-inside:avoid; }
+  .box-blue .bx-label { font-size:7.5pt; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#2255CC; margin-bottom:5px; }
+  .box-blue p, .box-blue li { font-size:10pt; color:#0a1a2a; line-height:1.65; }
+  .box-blue ul { list-style:none; margin-top:4px; }
+  .box-blue ul li { padding:3px 0 3px 14px; position:relative; }
+  .box-blue ul li::before { content:"\2022"; position:absolute; left:2px; color:#2255CC; font-size:9pt; line-height:1.9; }
+
+  /* ─── ALERT (red) ─── */
+  .box-red { background:#FFF3F3; border:1.5px solid #CC2222; border-radius:7px; padding:11px 14px; margin:10px 0 14px; page-break-inside:avoid; font-size:10pt; }
+  .box-red strong { color:#CC2222; }
+
+  /* ─── WARNING (yellow) ─── */
+  .box-yellow { background:#fffbf0; border:1.5px solid #d4a017; border-radius:7px; padding:11px 14px; margin:10px 0 14px; page-break-inside:avoid; font-size:10pt; }
+  .box-yellow strong { color:#8a6500; }
+
+  /* ─── AT-WILL BOX ─── */
+  .atwill-box { background:#1a1a1a; color:#fff; border-radius:8px; padding:16px 20px; margin:10px 0 18px; page-break-inside:avoid; }
+  .atwill-box .aw-label { font-size:7.5pt; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#CC2222; margin-bottom:6px; }
+  .atwill-box p { font-size:10pt; color:#e8e8e8; line-height:1.65; margin-bottom:6px; }
+  .atwill-box p:last-child { margin-bottom:0; }
+
+  /* ─── ZERO TOLERANCE ─── */
+  .zt-header { background:#1a1a1a; color:#fff; border-radius:8px 8px 0 0; padding:12px 18px; font-size:9pt; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; }
+  .zt-definition { background:#f5f5f5; border:1.5px solid #1a1a1a; border-top:none; padding:12px 18px; font-size:10pt; color:#333; line-height:1.6; }
+  .zt-wrap { border:1.5px solid #e0e0e0; border-radius:0 0 8px 8px; margin-bottom:16px; }
+  .zt-item { display:flex; gap:12px; align-items:flex-start; padding:10px 14px; border-bottom:1px solid #f0e8e0; page-break-inside:avoid; }
+  .zt-item:last-child { border-bottom:none; }
+  .zt-badge { flex-shrink:0; background:#CC2222; color:#fff; font-size:7pt; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:3px; margin-top:2px; }
+  .zt-text { font-size:10pt; color:#1a1a1a; line-height:1.55; }
+  .zt-text strong { display:block; margin-bottom:2px; }
+
+  /* ─── PROGRESSIVE DISCIPLINE ─── */
+  .pd-steps { display:flex; gap:0; margin:12px 0; page-break-inside:avoid; }
+  .pd-step { flex:1; text-align:center; padding:10px 8px; border:1.5px solid #e0e0e0; border-right:none; font-size:9pt; }
+  .pd-step:first-child { border-radius:7px 0 0 7px; }
+  .pd-step:last-child { border-right:1.5px solid #e0e0e0; border-radius:0 7px 7px 0; }
+  .pd-step.final { border-color:#CC2222; background:#fff8f8; }
+  .pd-step .pd-num { font-size:14pt; font-weight:800; color:#8B4513; }
+  .pd-step.final .pd-num { color:#CC2222; }
+  .pd-step .pd-name { font-weight:700; font-size:9pt; margin:2px 0; }
+  .pd-step .pd-sub { font-size:8pt; color:#999; }
+
+  /* ─── VALUES GRID ─── */
+  .values-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .value-card { border:1.5px solid #f0ddd6; border-radius:8px; padding:12px 14px; background:#fffaf8; page-break-inside:avoid; }
+  .value-card .v-icon { font-size:16pt; margin-bottom:5px; }
+  .value-card .v-name { font-size:8.5pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8B4513; margin-bottom:3px; }
+  .value-card p { font-size:9.5pt; color:#444; line-height:1.55; }
+
+  /* ─── PAY TABLE ─── */
+  .pay-table { width:100%; border-collapse:collapse; margin-bottom:8px; page-break-inside:avoid; }
+  .pay-table th { background:#8B4513; color:#fff; padding:8px 14px; text-align:left; font-size:8.5pt; font-weight:600; }
+  .pay-table td { padding:10px 14px; border-bottom:1px solid #f5ece6; vertical-align:middle; }
+  .pay-table tr:last-child td { border-bottom:none; }
+  .pay-table tr:nth-child(even) td { background:#fdf7f4; }
+  .rate { font-size:15pt; font-weight:800; color:#CC2222; line-height:1; }
+  .rate.boh { color:#2255CC; }
+  .rate-sub { font-size:8.5pt; color:#999; margin-top:1px; }
+  .pay-sched { background:#f9f9f9; border-radius:7px; padding:10px 14px; font-size:10pt; margin-top:6px; page-break-inside:avoid; }
+  .pay-sched strong { color:#8B4513; }
+
+  /* ─── TIP POOL ─── */
+  .pool-visual { display:flex; gap:12px; margin:14px 0 14px; page-break-inside:avoid; }
+  .pool-bucket { flex:1; border-radius:9px; padding:14px 16px; text-align:center; }
+  .pool-bucket.foh { background:#FFF3F3; border:2px solid #CC2222; }
+  .pool-bucket.boh { background:#F3F8FF; border:2px solid #2255CC; }
+  .pool-pct { font-size:30pt; font-weight:800; line-height:1; }
+  .pool-bucket.foh .pool-pct { color:#CC2222; }
+  .pool-bucket.boh .pool-pct { color:#2255CC; }
+  .pool-label { font-size:8pt; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-top:3px; }
+  .pool-bucket.foh .pool-label { color:#CC2222; }
+  .pool-bucket.boh .pool-label { color:#2255CC; }
+  .pool-roles { font-size:8pt; color:#666; margin-top:5px; line-height:1.5; }
+  .rules { list-style:none; margin-bottom:6px; }
+  .rules li { padding:5px 0 5px 20px; position:relative; border-bottom:1px solid #f5f0ee; font-size:10.5pt; }
+  .rules li:last-child { border-bottom:none; }
+  .rules li::before { content:'\2192'; position:absolute; left:0; color:#CC2222; font-weight:700; }
+
+  /* ─── EXAMPLE ─── */
+  .example-box { background:#f9f9f9; border:1px solid #e5e5e5; border-radius:9px; padding:16px 18px; margin-top:8px; page-break-inside:avoid; }
+  .example-pool { font-size:12pt; font-weight:800; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #e0e0e0; }
+  .example-pool span { color:#CC2222; }
+  .example-cols { display:flex; gap:12px; }
+  .example-col { flex:1; background:#fff; border-radius:7px; padding:11px 13px; border:1px solid #eaeaea; }
+  .example-col-title { font-size:8pt; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:7px; padding-bottom:5px; border-bottom:2px solid; }
+  .example-col.foh .example-col-title { color:#CC2222; border-color:#CC2222; }
+  .example-col.boh .example-col-title { color:#2255CC; border-color:#2255CC; }
+  .example-col .total { font-size:9pt; font-weight:600; color:#777; margin-bottom:5px; }
+  .example-row { display:flex; justify-content:space-between; font-size:9pt; padding:3px 0; border-bottom:1px solid #f5f5f5; }
+  .example-row:last-child { border-bottom:none; }
+  .example-row .earn { font-weight:700; }
+  .example-note { font-size:8pt; color:#bbb; margin-top:7px; font-style:italic; }
+
+  /* ─── SIGNATURE ─── */
+  .sig-section { page-break-before:always; }
+  .sig-pg-header { display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:2px solid #8B4513; margin-bottom:26px; }
+  .sig-pg-header .left { font-size:13pt; font-weight:800; color:#8B4513; }
+  .sig-pg-header .left span { color:#CC2222; }
+  .sig-pg-header .right { font-size:8pt; color:#bbb; }
+  .sig-block { border:1.5px solid #ddd; border-radius:9px; padding:22px; background:#fdfaf8; page-break-inside:avoid; }
+  .sig-block .sig-title { font-size:8pt; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#8B4513; margin-bottom:10px; }
+  .sig-block .sig-intro { font-size:10pt; color:#555; margin-bottom:18px; line-height:1.6; }
+  .sig-row { display:flex; gap:22px; margin-bottom:20px; }
+  .sig-row:last-child { margin-bottom:0; }
+  .sig-field { flex:1; border-bottom:1.5px solid #ccc; padding-bottom:4px; }
+  .sig-field.wide { flex:2; }
+  .sig-field-label { font-size:7.5pt; color:#bbb; letter-spacing:1px; text-transform:uppercase; margin-top:5px; }
+
+  /* ─── EXHIBIT A HEADER ─── */
+  .exhibit-header { text-align:center; padding:18px 0 14px; border-bottom:3px solid #8B4513; margin-bottom:26px; page-break-before:always; }
+  .exhibit-label { font-size:8pt; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#999; margin-bottom:5px; }
+  .exhibit-title { font-size:18pt; font-weight:800; color:#8B4513; }
+  .exhibit-title span { color:#CC2222; }
+  .exhibit-sub { font-size:9pt; color:#888; margin-top:3px; }
+
+  /* ─── MISC ─── */
+  hr { border:none; border-top:1px solid #f0e8e0; margin:18px 0; }
+  .new-page { page-break-before:always; }
+  .names { font-size:9.5pt; color:#555; margin:4px 0 10px; line-height:1.7; }
+  .footer { margin-top:26px; padding-top:12px; border-top:1px solid #f0e8e0; font-size:8pt; color:#ccc; text-align:center; }
+  p.body { font-size:10.5pt; line-height:1.65; margin-bottom:10px; }
+
+  p.body:last-child { margin-bottom:0; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ TITLE PAGE ════════════════════ -->
+<div class="title-page">
+  <img src="file:///Users/izzyaala/.openclaw/workspace/storage/domo-cafe-logo-transparent.png" alt="Domo Cafe">
+
+  <div class="doc-label">Staff Handbook</div>
+  <div class="tagline">Welcome to the team. This handbook is your guide to who we are, how we operate, and the standards we hold ourselves to every single day.</div>
+  <div class="conf-badge">Confidential &#8212; For Team Members Only</div>
+</div>
+
+<!-- ════════════════════ TABLE OF CONTENTS ════════════════════ -->
+<div class="toc-page">
+  <div class="page-header">
+    <div class="brand">Domo <span>Cafe</span></div>
+    <div class="label">Contents</div>
+  </div>
+
+  <div class="toc-section-label">Part One &#8212; Who We Are</div>
+  <div class="toc-item"><span class="t-name">About Domo Cafe</span><span class="t-pg">4</span></div>
+  <div class="toc-item"><span class="t-name">Our Values</span><span class="t-pg">4</span></div>
+  <div class="toc-item"><span class="t-name">Equal Opportunity Statement</span><span class="t-pg">5</span></div>
+
+  <div class="toc-section-label">Part Two &#8212; Your Employment</div>
+  <div class="toc-item"><span class="t-name">At-Will Employment</span><span class="t-pg">6</span></div>
+  <div class="toc-item"><span class="t-name">60-Day Probation &amp; Permanent Team Member Status</span><span class="t-pg">6</span></div>
+  <div class="toc-item"><span class="t-name">Background Check Notice</span><span class="t-pg">6</span></div>
+  <div class="toc-item"><span class="t-name">Food Handler Certification</span><span class="t-pg">7</span></div>
+  <div class="toc-item"><span class="t-name">Sexual Harassment Prevention Training</span><span class="t-pg">7</span></div>
+
+  <div class="toc-section-label">Part Three &#8212; Your Rights &amp; Benefits</div>
+  <div class="toc-item"><span class="t-name">Pay &amp; Compensation Overview</span><span class="t-pg">8</span></div>
+  <div class="toc-item"><span class="t-name">Overtime</span><span class="t-pg">8</span></div>
+  <div class="toc-item"><span class="t-name">Meal &amp; Rest Breaks</span><span class="t-pg">8</span></div>
+  <div class="toc-item"><span class="t-name">Paid Sick Leave</span><span class="t-pg">9</span></div>
+  <div class="toc-item"><span class="t-name">Family &amp; Medical Leave (CFRA / PDL)</span><span class="t-pg">9</span></div>
+  <div class="toc-item"><span class="t-name">Lactation Accommodation</span><span class="t-pg">9</span></div>
+  <div class="toc-item"><span class="t-name">Voting &amp; Jury Duty Leave</span><span class="t-pg">10</span></div>
+  <div class="toc-item"><span class="t-name">Reporting Time Pay &amp; Split Shift Premium</span><span class="t-pg">10</span></div>
+  <div class="toc-item"><span class="t-name">Final Paycheck</span><span class="t-pg">10</span></div>
+  <div class="toc-item"><span class="t-name">Pay Stubs</span><span class="t-pg">11</span></div>
+  <div class="toc-item"><span class="t-name">Workers&#8217; Compensation</span><span class="t-pg">11</span></div>
+
+  <div class="toc-section-label">Part Four &#8212; Standards &amp; Conduct</div>
+  <div class="toc-item"><span class="t-name">Uniform Standards</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Hair</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Jewelry &amp; Accessories</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Nails</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Fragrance</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Personal Hygiene</span><span class="t-pg">12</span></div>
+  <div class="toc-item"><span class="t-name">Tattoos</span><span class="t-pg">13</span></div>
+  <div class="toc-item"><span class="t-name">Food Safety &amp; Hygiene</span><span class="t-pg">13</span></div>
+  <div class="toc-item"><span class="t-name">Phone Policy</span><span class="t-pg">13</span></div>
+  <div class="toc-item"><span class="t-name">Arrival &amp; Attendance</span><span class="t-pg">14</span></div>
+  <div class="toc-item"><span class="t-name">Social Media Policy</span><span class="t-pg">14</span></div>
+  <div class="toc-item"><span class="t-name">Clock-In &amp; Clock-Out Policy</span><span class="t-pg">15</span></div>
+  <div class="toc-item"><span class="t-name">Smoke-Free &amp; Vape-Free Policy</span><span class="t-pg">15</span></div>
+
+  <div class="toc-section-label">Part Five &#8212; Policies &amp; Protections</div>
+  <div class="toc-item"><span class="t-name">Zero Tolerance Policies</span><span class="t-pg">16</span></div>
+  <div class="toc-item"><span class="t-name">Harassment &amp; Discrimination &#8212; How to Report</span><span class="t-pg">17</span></div>
+  <div class="toc-item"><span class="t-name">Workplace Relationship Disclosure</span><span class="t-pg">17</span></div>
+  <div class="toc-item"><span class="t-name">Progressive Discipline &amp; Performance Reviews</span><span class="t-pg">18</span></div>
+  <div class="toc-item"><span class="t-name">Workplace Neutrality &amp; Political Activity</span><span class="t-pg">19</span></div>
+
+  <div class="toc-exhibit">
+    <div class="toc-item"><span class="t-name">Exhibit A &#8212; Pay &amp; Tip Structure</span><span class="t-pg">21</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════ PART ONE: WHO WE ARE ════════════════════ -->
+<div class="part-header" style="page-break-before:auto;">
+  <div class="part-num">Part One</div>
+  <div class="part-title">Who We Are</div>
+</div>
+
+<h2>About Domo Cafe</h2>
+<p class="body">Domo Cafe is an immersive dining experience inspired by Domo &#8212; the beloved NHK character known around the world. We&#8217;re more than a cafe. We&#8217;re a destination. From the moment a guest walks through our doors, we transport them into a world of warmth, joy, and unforgettable moments.</p>
+<p class="body">We obsess over the details: the food, the drinks, the atmosphere, and above all, the people who make it all happen. That&#8217;s you. Located in Buena Park, California, Domo Cafe is built on the belief that hospitality, done right, is one of the most powerful things in the world.</p>
+
+<h2>Our Values</h2>
+<div class="values-grid">
+  <div class="value-card">
+    <div class="v-icon">&#10024;</div>
+    <div class="v-name">Guest First, Always</div>
+    <p>Every decision starts and ends with the guest. Their experience is the product. We don&#8217;t just serve food &#8212; we create memories.</p>
+  </div>
+  <div class="value-card">
+    <div class="v-icon">&#129309;</div>
+    <div class="v-name">One Team</div>
+    <p>There are no stars here &#8212; only a team. FOH and BOH win together. We share the work, we share the wins, and we have each other&#8217;s backs.</p>
+  </div>
+  <div class="value-card">
+    <div class="v-icon">&#11088;</div>
+    <div class="v-name">Excellence in Everything</div>
+    <p>We hold ourselves to a high standard &#8212; in our food, our appearance, our communication, and our conduct. Good enough is never the goal.</p>
+  </div>
+  <div class="value-card">
+    <div class="v-icon">&#128515;</div>
+    <div class="v-name">Bring the Energy</div>
+    <p>Domo Cafe is a fun, immersive place. Your energy is contagious. Show up present, engaged, and genuinely happy to be here.</p>
+  </div>
+  <div class="value-card">
+    <div class="v-icon">&#129312;</div>
+    <div class="v-name">Integrity</div>
+    <p>Do the right thing even when no one is watching. Be honest with guests, honest with your team, and honest with yourself.</p>
+  </div>
+  <div class="value-card">
+    <div class="v-icon">&#127807;</div>
+    <div class="v-name">Grow Every Day</div>
+    <p>We invest in our people. We expect our people to invest in themselves. There is always something to learn, improve, or teach.</p>
+  </div>
+</div>
+
+<h2 style="margin-top:22px;">Equal Opportunity Statement</h2>
+<div class="box-blue">
+  <div class="bx-label">Equal Opportunity Employer</div>
+  <p>Domo Cafe is an equal opportunity employer. We do not discriminate against any employee or applicant based on race, color, religion, sex, national origin, age (40+), disability (physical or mental), marital status, medical condition, genetic information, sexual orientation, gender identity or expression, pregnancy, reproductive health decisions, military or veteran status, or any other characteristic protected under California&#8217;s Fair Employment and Housing Act (FEHA) or any other applicable law.</p>
+  <p style="margin-top:8px;">This policy applies to all aspects of employment including hiring, compensation, scheduling, training, promotion, and termination. Any team member who believes they have experienced or witnessed discrimination should report it immediately using the procedure in Part Five of this handbook.</p>
+</div>
+
+<!-- ════════════════════ PART TWO: YOUR EMPLOYMENT ════════════════════ -->
+<div class="part-header">
+  <div class="part-num">Part Two</div>
+  <div class="part-title">Your Employment</div>
+</div>
+
+<h2>At-Will Employment</h2>
+<div class="atwill-box">
+  <div class="aw-label">Important &#8212; Please Read</div>
+  <p>Your employment with Domo Cafe is <strong style="color:#fff;">at-will.</strong> This means either you or Domo Cafe may end the employment relationship at any time, with or without cause, and with or without advance notice, subject to applicable law.</p>
+  <p>This handbook is not a contract of employment and does not guarantee employment for any specific duration. Nothing in this handbook &#8212; including confirmation as a permanent team member &#8212; alters your at-will status or creates any implied employment contract.</p>
+  <p>No manager, supervisor, or representative of Domo Cafe has the authority to modify your at-will status except the Owner, in a written agreement signed by both parties.</p>
+</div>
+
+<h2>60-Day Probation &amp; Permanent Team Member Status</h2>
+<ul class="bl">
+  <li>All new staff begin on a 60-day probationary period from their first day of training</li>
+  <li>Performance, attendance, and conduct are reviewed throughout the period</li>
+  <li>Staff who meet expectations are confirmed as <strong>permanent team members</strong> at the end of the period</li>
+</ul>
+<div class="box-brown">
+  <div class="bx-label">What does it mean to be a permanent team member?</div>
+  <p>Being confirmed as a permanent team member means you have completed your 60-day probationary period and have demonstrated the conduct, reliability, and performance Domo Cafe expects. It signals a mutual commitment &#8212; Domo Cafe is invested in your growth, and you are a core part of this team.</p>
+  <p>Being confirmed as permanent does <strong>not</strong> change your scheduled hours (hours are determined by operational needs), does not constitute a contract of employment, and does not alter your at-will status. It means you are no longer on probationary status and are considered a regular ongoing employee.</p>
+</div>
+
+<h2>Background Check Notice</h2>
+<p class="body">As a condition of employment, all team members may be subject to a background check conducted at some point during their 90-day probation period. A separate written disclosure and consent form will be provided to you before any background check is conducted. Background check results that reveal disqualifying information may result in the termination of employment, consistent with applicable law.</p>
+
+<h2>Food Handler Certification</h2>
+<div class="box-yellow">
+  <strong>&#9888; Deadline: June 4, 2026</strong> &#8212; All staff must hold a valid Food Handler&#8217;s Card by end of training week.
+</div>
+<ul class="bl">
+  <li>Domo Cafe will provide access to an approved course for any staff member without a valid card</li>
+  <li>If your existing card expires within 3 months &#8212; renew before your first day of service</li>
+</ul>
+
+<h2>Sexual Harassment Prevention Training</h2>
+<p class="body">California law requires all employees to complete sexual harassment prevention training. Domo Cafe will provide and schedule this training for all team members.</p>
+<ul class="bl">
+  <li><strong>All employees:</strong> 1 hour of training, to be completed within 14 days of your first day of employment, and every 2 years thereafter</li>
+  <li><strong>Supervisors and managers:</strong> 2 hours of training, to be completed within 14 days of hire or promotion, and every 2 years thereafter</li>
+  <li>Training covers: types of harassment, applicable laws, how to report, and corrective procedures</li>
+  <li>Completion records are maintained on file. You will be notified when training is scheduled.</li>
+</ul>
+
+<!-- ════════════════════ PART THREE: YOUR RIGHTS & BENEFITS ════════════════════ -->
+<div class="part-header">
+  <div class="part-num">Part Three</div>
+  <div class="part-title">Your Rights &amp; Benefits</div>
+</div>
+
+<h2>Pay &amp; Compensation Overview</h2>
+<p class="body">Your hourly rate and pay schedule are detailed in <strong>Exhibit A</strong> attached to this handbook. Your pay is issued <strong>bi-weekly</strong>. Pay periods run Monday through Sunday for two consecutive weeks. Payday is the <strong>Friday following the close of each two-week pay period</strong>. If payday falls on a holiday, payment is issued the preceding business day.</p>
+<p class="body">California law does not permit tips to be credited toward your base hourly wage. Your base pay rate applies regardless of tips received.</p>
+<p class="body"><strong>Workweek:</strong> Domo Cafe&#8217;s workweek runs from <strong>Monday through Sunday.</strong> This fixed workweek is used to calculate overtime and scheduling across all roles.</p>
+
+<h2>Overtime</h2>
+<div class="box-blue">
+  <div class="bx-label">California Daily Overtime &#8212; Your Rights</div>
+  <p>California overtime law is stricter than federal law. Overtime is calculated <strong>daily</strong>, not just weekly.</p>
+  <ul>
+    <li>Hours 8&#8211;12 in a single workday: <strong>1.5&#215; your regular rate</strong></li>
+    <li>Hours over 12 in a single workday: <strong>2&#215; your regular rate</strong></li>
+    <li>First 8 hours on the 7th consecutive day in a workweek: <strong>1.5&#215; your regular rate</strong></li>
+    <li>Hours over 8 on the 7th consecutive day: <strong>2&#215; your regular rate</strong></li>
+    <li>Hours over 40 in a workweek (not covered above): <strong>1.5&#215; your regular rate</strong></li>
+  </ul>
+  <p style="margin-top:8px;">Overtime must be approved in advance by your manager. Working unauthorized overtime may result in disciplinary action, but you will always be compensated for all hours worked.</p>
+</div>
+
+<h2>Meal &amp; Rest Breaks</h2>
+<div class="box-blue">
+  <div class="bx-label">California Break Rights &#8212; Mandatory</div>
+  <p>These are legal rights, not optional perks. You are entitled to breaks as follows:</p>
+  <ul>
+    <li><strong>Meal Break:</strong> One 30-minute <em>unpaid</em> meal break for any shift over 5 hours, scheduled near the midpoint of your shift. A second 30-minute meal break is required for shifts over 10 hours.</li>
+    <li><strong>Rest Break:</strong> One 10-minute <em>paid</em> rest break for every 4 hours worked (or a major fraction thereof &#8212; more than 2 hours). A standard 8-hour shift includes 2 rest breaks.</li>
+    <li><strong>Waiver:</strong> A meal break may be waived only if your shift is 6 hours or less <em>and</em> both you and your manager agree in writing.</li>
+  </ul>
+</div>
+<div class="box-red">
+  <strong>If your break is missed, late, or cut short:</strong> You are entitled to 1 additional hour of pay at your regular rate for each violation. Never skip a break without reporting it. Report any missed or shortened break to your manager immediately &#8212; or to the Owner if your manager was the cause.
+</div>
+<ul class="bl">
+  <li>Paid rest breaks cannot be skipped to leave early or arrive late</li>
+  <li>You may not be required to remain on premises during an off-duty meal break</li>
+  <li>Your manager will schedule breaks. If a break is delayed significantly, notify your manager.</li>
+</ul>
+
+<h2>Paid Sick Leave</h2>
+<div class="box-blue">
+  <div class="bx-label">California Healthy Workplaces Healthy Families Act</div>
+  <p>All employees &#8212; full-time, part-time, and seasonal &#8212; are entitled to paid sick leave under California law.</p>
+  <ul>
+    <li><strong>Accrual:</strong> 1 hour of paid sick leave for every 30 hours worked</li>
+    <li><strong>Cap:</strong> Accrual may be capped at 80 hours; use is capped at 40 hours (5 days) per year</li>
+    <li><strong>When you can use it:</strong> Your own illness, injury, or preventive care appointment; care for a family member&#8217;s illness or appointment; issues related to domestic violence, sexual assault, or stalking</li>
+    <li><strong>Your balance</strong> will appear on your pay stub each pay period</li>
+  </ul>
+</div>
+<div class="box-red">
+  <strong>Retaliation prohibited:</strong> You cannot be disciplined, terminated, or penalized in any way for using your accrued sick leave. An absence covered by sick leave does not count as an attendance violation under our arrival policy.
+</div>
+
+<h2>Family &amp; Medical Leave (CFRA / PDL)</h2>
+<div class="box-blue">
+  <div class="bx-label">California Family Rights Act (CFRA)</div>
+  <p>After 12 months of employment and 1,250 hours worked in the prior 12 months, you are eligible for up to <strong>12 weeks of unpaid, job-protected leave</strong> per year for:</p>
+  <ul>
+    <li>Birth, adoption, or foster placement of a child (baby bonding)</li>
+    <li>Your own serious health condition</li>
+    <li>Care for a seriously ill family member (child, parent, spouse, domestic partner, grandparent, grandchild, or sibling)</li>
+  </ul>
+</div>
+<div class="box-blue" style="margin-top:10px;">
+  <div class="bx-label">Pregnancy Disability Leave (PDL)</div>
+  <p>Regardless of length of employment, if you are disabled due to pregnancy, childbirth, or a related medical condition, you may be entitled to up to <strong>4 months of unpaid, job-protected leave.</strong> This is separate from and in addition to CFRA leave.</p>
+</div>
+<p class="body" style="margin-top:8px;">To request any family or medical leave, contact Izzy Aala, Owner, as early as possible. Leave requests will be handled confidentially.</p>
+
+<h2>Lactation Accommodation</h2>
+<p class="body">California law requires Domo Cafe to provide reasonable break time and a private, clean space &#8212; <strong>not a restroom</strong> &#8212; for nursing employees to express breast milk during the workday. If you need lactation accommodation, speak with the Owner directly. Your request will be handled confidentially.</p>
+
+<h2>Voting &amp; Jury Duty Leave</h2>
+<h3>Voting Leave</h3>
+<p class="body">If you do not have sufficient time outside of your working hours to vote in a statewide election, you are entitled to up to <strong>2 hours of paid time off</strong> to vote. Advance notice of at least 2 days before the election is required. Voting leave will not be approved without prior notification. Voting leave should be taken at the beginning or end of your shift when possible.</p>
+<h3>Jury Duty</h3>
+<p class="body">If you receive a jury summons, notify your manager as soon as possible. You will not be retaliated against or penalized for serving on jury duty. California law requires us to provide time off for jury service.</p>
+
+<h2>Reporting Time Pay &amp; Split Shift Premium</h2>
+<h3>Reporting Time Pay</h3>
+<p class="body">If you report to work as scheduled and are sent home early &#8212; or are not given work &#8212; you are entitled to pay for at least <strong>half of your scheduled shift</strong>, with a minimum of 2 hours and a maximum of 4 hours pay. This applies regardless of the reason, including slow business or overstaffing. If you are sent home early, confirm with your manager that reporting time pay will be included in your paycheck.</p>
+<h3>Split Shift Premium</h3>
+<p class="body">If your shift is split with an unpaid gap of more than 1 hour (outside of a standard meal break), you may be entitled to a split shift premium equal to 1 additional hour at the state minimum wage &#8212; unless your total compensation already exceeds the minimum wage by that amount. If you work a split shift, confirm with your manager that the premium is applied.</p>
+
+<h2>Final Paycheck</h2>
+<div class="box-blue">
+  <div class="bx-label">When You Will Receive Your Final Pay</div>
+  <ul>
+    <li><strong>Terminated (involuntary):</strong> Final paycheck due immediately on your last day</li>
+    <li><strong>Resigned without notice:</strong> Final paycheck due within 72 hours of your last day</li>
+    <li><strong>Resigned with 72+ hours notice:</strong> Final paycheck due on your last day of work</li>
+  </ul>
+  <p style="margin-top:8px;">California law imposes <strong>waiting time penalties</strong> of one additional day&#8217;s wages for each day a final paycheck is late, up to 30 days. If you believe your final paycheck is late or incorrect, contact Izzy Aala, Owner, immediately.</p>
+</div>
+
+<h2>Pay Stubs</h2>
+<p class="body">Your pay stub is issued every pay period and will include the following information as required by California Labor Code &#167;226:</p>
+<ul class="bl">
+  <li>Gross wages earned for the pay period</li>
+  <li>Total hours worked (all non-exempt employees)</li>
+  <li>Itemized deductions</li>
+  <li>Net wages</li>
+  <li>Dates of the pay period</li>
+  <li>Your name and last four digits of your Social Security Number</li>
+  <li>Domo Cafe&#8217;s legal name and business address</li>
+  <li>Your applicable hourly rate(s) and hours worked at each rate</li>
+  <li>Accrued paid sick leave balance</li>
+</ul>
+<p class="body">If you believe there is an error in your pay stub or paycheck, report it to your manager immediately. Do not wait &#8212; errors must be corrected promptly.</p>
+
+<h2>Workers&#8217; Compensation</h2>
+<p class="body">Domo Cafe carries workers&#8217; compensation insurance as required by California law. If you are injured on the job &#8212; no matter how minor &#8212; <strong>report it to your manager immediately.</strong> Do not delay. Delayed reporting can affect your ability to receive benefits.</p>
+<ul class="bl">
+  <li>Workers&#8217; compensation covers medical treatment and wage replacement for work-related injuries and illnesses</li>
+  <li>You will not be retaliated against for filing a workers&#8217; compensation claim</li>
+  <li>A notice of workers&#8217; compensation rights is posted in the workplace</li>
+</ul>
+
+<!-- ════════════════════ PART FOUR: STANDARDS & CONDUCT ════════════════════ -->
+<div class="part-header">
+  <div class="part-num">Part Four</div>
+  <div class="part-title">Standards &amp; Conduct</div>
+</div>
+
+<h2>Uniform Standards</h2>
+<ul class="bl">
+  <li><strong>Top:</strong> Provided by Domo Cafe &#8212; wear the uniform top issued to you. No substitutions.</li>
+  <li><strong>Bottoms:</strong> Black slim-fit or straight-leg jeans or black work pants. No ripped or distressed denim, no baggy fits, no other colors. <strong>Employee must provide.</strong></li>
+  <li><strong>Shoes:</strong> Black non-slip shoes required for ALL staff. No exceptions. You will not be permitted on the floor without them. <strong>Employee must provide.</strong></li>
+</ul>
+
+<h2>Hair</h2>
+<ul class="bl">
+  <li><strong>FOH:</strong> Long hair must be tied back or secured during service</li>
+  <li><strong>BOH:</strong> Hairnet and hat required at all times in the kitchen &#8212; no exceptions</li>
+  <li>All hair colors welcome. Hair must be fully secured before entering any food prep or service area.</li>
+</ul>
+
+<h2>Jewelry &amp; Accessories</h2>
+<ul class="yn">
+  <li>&#10003;&nbsp; Small stud earrings</li>
+  <li>&#10003;&nbsp; Simple close-fitting necklaces</li>
+  <li>&#10007;&nbsp; Large hoop or dangling earrings</li>
+  <li>&#10007;&nbsp; Long chains that hang loosely</li>
+  <li>&#10007;&nbsp; Dangling or loose bracelets</li>
+  <li>Minimal facial piercings acceptable &#8212; use good judgment</li>
+</ul>
+
+<h2>Nails</h2>
+<ul class="yn">
+  <li>&#10003;&nbsp; Acrylic nails (including longer lengths)</li>
+  <li>&#10003;&nbsp; Standard nail art and polish</li>
+  <li>&#10007;&nbsp; 3D nail art or raised nail embellishments &#8212; food safety risk</li>
+</ul>
+
+<h2>Fragrance</h2>
+<ul class="yn">
+  <li>&#10003;&nbsp; Light, subtle fragrance</li>
+  <li>&#10007;&nbsp; Strong perfume or cologne</li>
+</ul>
+
+<h2>Personal Hygiene</h2>
+<p class="body">Team members are expected to report to every shift clean and well-groomed. This includes a freshly laundered uniform, clean hair, and attention to personal hygiene. Strong body odor &#8212; whether from insufficient hygiene or overpowering fragrance &#8212; is not appropriate in a food service environment where guests and coworkers are in close proximity. We ask that all team members be considerate of guests and coworkers in this regard.</p>
+
+<h2>Tattoos</h2>
+<ul class="yn">
+  <li>&#10003;&nbsp; Visible tattoos welcome</li>
+  <li>&#10007;&nbsp; Tattoos with profanity or explicit imagery must be covered during service</li>
+</ul>
+
+<hr>
+
+<h2>Food Safety &amp; Hygiene</h2>
+<h3>Handwashing (required):</h3>
+<ul class="bl">
+  <li>Before starting your shift and after any break</li>
+  <li>After handling raw proteins, trash, or chemicals</li>
+  <li>After touching your face, hair, or phone</li>
+  <li>After using the restroom &#8212; without exception</li>
+  <li>Soap and warm water, 20 seconds minimum. <strong>Gloves do not replace handwashing.</strong></li>
+</ul>
+<h3>Eating &amp; Drinking</h3>
+<ul class="bl">
+  <li>No eating or drinking on the service floor or in food prep areas</li>
+  <li>Staff meals and beverages in the designated break area only</li>
+</ul>
+<h3>Illness Policy &#8212; Do NOT report to work if you are experiencing:</h3>
+<ul class="bl">
+  <li>Vomiting, diarrhea, or nausea</li>
+  <li>Fever of 100&#176;F or higher</li>
+  <li>Jaundice, sore throat with fever, or infected skin lesions</li>
+  <li>Notify your shift lead as early as possible &#8212; do not wait until your shift starts</li>
+  <li>Absences for illness may be covered by your accrued paid sick leave (see Part Three)</li>
+  <li>If you call out sick and have a scheduled shift the following day, management will work to reassign that shift to another available team member. Notify management as early as possible to allow adequate time to arrange coverage.</li>
+</ul>
+
+<hr>
+
+<h2>Phone Policy</h2>
+<ul class="bl">
+  <li>Personal phones kept <strong>out of sight</strong> during your shift</li>
+  <li>No phone use on the service floor or behind the counter while guests are present</li>
+  <li>Urgent calls: step to the designated staff area and keep it brief</li>
+  <li>Phones permitted during scheduled breaks only</li>
+</ul>
+
+<h2>Arrival &amp; Attendance</h2>
+<ul class="bl">
+  <li>Arrive on time and ready &#8212; in uniform, hair secured, before your shift starts</li>
+  <li>5 or more minutes late without prior notice = documented late arrival</li>
+  <li>3 documented late arrivals = corrective action review</li>
+  <li>If you know you will be late or absent: contact your shift lead or manager immediately &#8212; do not wait until your start time</li>
+  <li>Absences covered by accrued sick leave will not count as attendance violations (see Paid Sick Leave)</li>
+</ul>
+
+<h2>Social Media Policy</h2>
+<p class="body">You are free to use social media on your own time. When you do, please keep the following in mind:</p>
+<ul class="bl">
+  <li>Do not photograph, film, or share images of guests without their explicit consent</li>
+  <li>Do not post confidential business information &#8212; including recipes, financials, internal processes, or guest information</li>
+  <li>Do not post content that could harm, embarrass, or misrepresent the Domo Cafe brand</li>
+  <li>Be thoughtful about how you represent yourself as a team member in public forums</li>
+</ul>
+<div class="box-blue">
+  <div class="bx-label">Protected Activity &#8212; Federal Law</div>
+  <p>Nothing in this policy restricts your right to discuss your wages, hours, working conditions, or other terms of employment with your coworkers or in any public forum. This is protected activity under the National Labor Relations Act (NLRA) and cannot be prohibited or penalized by your employer.</p>
+</div>
+
+<h3>Post-Employment</h3>
+<p class="body">The following obligations survive the end of your employment with Domo Cafe:</p>
+<ul class="bl">
+  <li><strong>Confidentiality:</strong> You may not share trade secrets, recipes, financial information, supplier details, guest data, or any proprietary operational information at any time &#8212; including after your employment ends</li>
+  <li><strong>Non-disparagement of false statements:</strong> You may not make false or defamatory statements about Domo Cafe, its team members, or its guests after your employment ends</li>
+</ul>
+<div class="box-blue">
+  <div class="bx-label">Your Rights Are Protected</div>
+  <p>Nothing in this post-employment policy restricts your right to share honest opinions about your work experience. Only false or defamatory statements and disclosure of confidential business information are restricted after employment ends.</p>
+</div>
+
+<h2>Clock-In &amp; Clock-Out Policy</h2>
+<p class="body">You are responsible for accurately clocking in and out for every shift using Toast. This is not optional &#8212; your clock records directly affect your pay and your teammates&#8217; tip calculations. Because tips are distributed proportionally by hours worked per shift, inaccurate time entries affect everyone on the floor, not just you.</p>
+
+<h3>The Rules</h3>
+<ul class="bl">
+  <li>Clock in when your shift begins &#8212; not before, not after</li>
+  <li>Clock out immediately when your shift ends</li>
+  <li>If you take a meal break off-premises, clock out and back in</li>
+  <li><strong>Never clock in or out for another team member</strong> &#8212; this is a Zero Tolerance offense (falsifying records)</li>
+</ul>
+
+<h3>Forgot to Clock Out?</h3>
+<div class="box-red">
+  If you forget to clock out, your hours will be <strong>reverted to your scheduled shift</strong> for that day. You will not be paid beyond your scheduled end time for a missed clock-out. A formal reminder will be issued and documented. Repeat occurrences are subject to corrective action under our progressive discipline process.
+</div>
+
+<h3>Disputes</h3>
+<p class="body">If you believe your recorded hours are incorrect, notify your manager before the end of your shift whenever possible &#8212; or no later than the following business day. Time record disputes cannot be accepted more than one pay period after the shift in question.</p>
+
+
+<h2>Smoke-Free &amp; Vape-Free Policy</h2>
+<p class="body">Domo Cafe is a completely smoke-free and vape-free environment. The following are strictly prohibited:</p>
+<ul class="bl">
+  <li>Smoking, vaping, or use of e-cigarettes, tobacco, or any nicotine products anywhere on Domo Cafe premises</li>
+  <li>Smoking, vaping, or use of any such products while wearing the Domo Cafe uniform &#8212; whether on or off premises. Stepping outside to take out trash or perform any other work duty does not create an exception.</li>
+</ul>
+<div class="box-red">
+  If you need to smoke or vape, you must be off the clock, off premises, and out of uniform. There are no exceptions to this policy while in uniform.
+</div>
+
+<!-- ════════════════════ PART FIVE: POLICIES & PROTECTIONS ════════════════════ -->
+<div class="part-header">
+  <div class="part-num">Part Five</div>
+  <div class="part-title">Policies &amp; Protections</div>
+</div>
+
+<h2>Zero Tolerance Policies</h2>
+<div class="zt-header">&#9888; Zero Tolerance &#8212; Immediate Termination</div>
+<div class="zt-definition">
+  <strong>Zero tolerance means exactly that.</strong> The following violations result in immediate termination of employment. There is no warning, no performance review process, and no progressive discipline for these offenses. There are no exceptions. Where appropriate, violations may also be reported to law enforcement.
+</div>
+<div class="zt-wrap">
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Theft</strong>Any theft of cash, product, company property, or time &#8212; including misreporting hours or tip amounts &#8212; is grounds for immediate termination and may be reported to law enforcement.</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Harassment</strong>Sexual, verbal, physical, or any other form of workplace harassment directed at a team member or guest will not be tolerated under any circumstances.</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Violence or Threats of Violence</strong>Physical altercations, threats, intimidation, or any behavior that creates a reasonable fear of harm &#8212; toward staff or guests &#8212; will result in immediate termination.</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Discrimination</strong>Discriminatory treatment of any team member or guest based on any protected class under California&#8217;s Fair Employment and Housing Act &#8212; including race, color, religion, sex, national origin, age, disability, sexual orientation, gender identity, pregnancy, or any other protected characteristic &#8212; will not be tolerated. Substantiated violations are subject to immediate termination.</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>On-Duty Impairment</strong>Reporting to work under the influence of, or impaired by, alcohol, cannabis, or any controlled substance creates serious safety risks for your team and our guests. On-duty impairment is grounds for immediate termination. Note: Off-duty cannabis use that does not affect your ability to perform your job is not a basis for discipline under California law (AB 2188).</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Retaliation</strong>Retaliating against any team member who reports misconduct, files a complaint, requests a leave, or cooperates in an investigation is a serious violation and will be treated accordingly.</div>
+  </div>
+  <div class="zt-item">
+    <div class="zt-badge">Zero Tolerance</div>
+    <div class="zt-text"><strong>Falsifying Records</strong>Falsifying timecards, tip reports, incident reports, or any other company documentation is grounds for immediate termination.</div>
+  </div>
+</div>
+
+<h2>Harassment &amp; Discrimination &#8212; How to Report</h2>
+<p class="body">If you experience or witness harassment, discrimination, or any other misconduct &#8212; whether from a coworker, manager, or guest &#8212; you are encouraged and expected to report it. You will not face retaliation for making a good-faith complaint.</p>
+
+<h3>How to Report</h3>
+<ul class="bl">
+  <li><strong>Step 1:</strong> Report to the Owner &#8212; in person, by phone, or in writing</li>
+  <li><strong>Step 2:</strong> If the concern involves the Owner directly, or if you are not comfortable reporting internally, you may contact the California Civil Rights Department (CRD) at <strong>calcivilrights.ca.gov</strong> or <strong>(800) 884-1684</strong></li>
+</ul>
+
+<h3>What Happens After You Report</h3>
+<ul class="bl">
+  <li>All complaints will be investigated promptly, fairly, and as confidentially as possible</li>
+  <li>You will be kept informed of the status and outcome to the extent permitted by law and confidentiality obligations</li>
+  <li>If the investigation finds a violation occurred, appropriate corrective action will be taken &#8212; up to and including immediate termination</li>
+  <li><strong>Retaliation of any kind against any person who reports in good faith is a zero tolerance violation</strong></li>
+</ul>
+
+
+<h2>Workplace Relationship Disclosure</h2>
+<p class="body">Team members who enter into a romantic or personal relationship with another Domo Cafe team member are required to notify management promptly. This allows management to assess any potential conflicts of interest &#8212; particularly where one person may have scheduling, supervisory, or performance influence over the other.</p>
+<ul class="bl">
+  <li>Disclosure must be made to the Owner or a manager as soon as the relationship begins</li>
+  <li>Disclosure is not grounds for disciplinary action</li>
+  <li>Management may make scheduling adjustments to address any conflict of interest</li>
+  <li>Failure to disclose a relationship that creates a conflict of interest, or any conduct that disrupts the workplace or makes other team members uncomfortable, may result in corrective action under our progressive discipline process</li>
+</ul>
+
+<h2>Progressive Discipline &amp; Performance Reviews</h2>
+<p class="body">Conduct and performance issues that do not fall under our Zero Tolerance policies will be addressed through a structured, documented process. Our goal is always to give team members a fair opportunity to understand expectations and improve.</p>
+
+<div class="pd-steps">
+  <div class="pd-step">
+    <div class="pd-num">1</div>
+    <div class="pd-name">Verbal Warning</div>
+    <div class="pd-sub">Documented conversation with your manager</div>
+  </div>
+  <div class="pd-step">
+    <div class="pd-num">2</div>
+    <div class="pd-name">Written Warning</div>
+    <div class="pd-sub">Formal written notice, signed by both parties</div>
+  </div>
+  <div class="pd-step">
+    <div class="pd-num">3</div>
+    <div class="pd-name">Final Warning</div>
+    <div class="pd-sub">Performance improvement plan with clear timeline</div>
+  </div>
+  <div class="pd-step final">
+    <div class="pd-num">4</div>
+    <div class="pd-name">Termination</div>
+    <div class="pd-sub">Employment ended</div>
+  </div>
+</div>
+
+<div class="box-brown">
+  <div class="bx-label">Note</div>
+  <p>Steps in this process may be skipped based on the nature or severity of the issue. Repeated violations, significant misconduct, or behavior that falls just short of a zero tolerance offense may result in immediate termination without completing all steps. All disciplinary actions are documented and kept on file.</p>
+</div>
+
+
+<div style="background:#fffaf8;border:1.5px solid #8B4513;border-radius:8px;padding:14px 18px;margin:0 0 18px;page-break-inside:avoid;">
+  <div style="font-size:7.5pt;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8B4513;margin-bottom:8px;">A Note from Izzy Aala, Owner</div>
+  <p style="font-size:10.5pt;color:#2a1a0a;line-height:1.7;font-style:italic;">&#8220;This is a diverse team in a diverse community, and I&#8217;m proud of that. Whatever is happening politically in the world outside these walls, I want every person on this team to feel safe at work. The policies in this section aren&#8217;t just legal requirements &#8212; they reflect who we are.&#8221;</p>
+</div>
+
+<h2>Workplace Neutrality &amp; Political Activity</h2>
+
+<h3>Political Neutrality During Work Hours</h3>
+<p class="body">Domo Cafe is a welcoming environment for all guests and team members, regardless of political beliefs. To protect that environment, the following apply while you are on shift and in uniform:</p>
+<ul class="bl">
+  <li>No political buttons, pins, patches, or signage of any kind while in uniform or on the floor</li>
+  <li>No political discussions with guests during service</li>
+  <li>No political campaigning, leafleting, or organizing activities during scheduled work hours</li>
+  <li>Do not post content while on shift that represents or implies Domo Cafe&#8217;s position on any political issue</li>
+</ul>
+
+<h3>Off-Duty Political Activity</h3>
+<div class="box-blue">
+  <div class="bx-label">Your Rights &#8212; California Labor Code &#167;1101&#8211;1102</div>
+  <p>California law prohibits Domo Cafe from controlling, directing, or influencing your political activities, beliefs, or affiliations outside of work. Your off-duty political activity &#8212; including attending protests, rallies, or community events &#8212; is your own business and is legally protected.</p>
+  <ul>
+    <li>You cannot be terminated, demoted, or penalized for lawful off-duty political activity</li>
+    <li>Your political beliefs and affiliations will never be a factor in hiring, scheduling, or performance reviews</li>
+    <li>Off-duty social media posts about political topics are protected, subject to the standards in our Social Media Policy</li>
+    <li>If protest or political activity causes an absence, standard attendance policy applies &#8212; you may use accrued sick leave or take the time unpaid</li>
+  </ul>
+</div>
+
+<h3>Immigration Enforcement &#8212; ICE Protocol</h3>
+<div class="box-blue">
+  <div class="bx-label">California AB 450 &#8212; Immigrant Worker Protection Act</div>
+  <p>California law protects employees and employers in the event of an immigration enforcement action. Domo Cafe will fully comply with AB 450 and will not voluntarily cooperate with immigration enforcement beyond what is legally required.</p>
+</div>
+
+<p class="body"><strong>Your rights as an employee:</strong></p>
+<ul class="bl">
+  <li>You have the right to remain silent and to decline to answer questions from any government agent</li>
+  <li>You have the right to speak with an attorney before answering questions</li>
+  <li>You may not be retaliated against for exercising these rights</li>
+</ul>
+
+<p class="body"><strong>Manager protocol if immigration enforcement agents arrive:</strong></p>
+<ul class="bl">
+  <li>Remain calm and professional at all times</li>
+  <li>Ask: <em>&#8220;Do you have a judicial warrant signed by a judge?&#8221;</em> &#8212; an administrative warrant is not sufficient</li>
+  <li>If no judicial warrant is presented: politely decline access to all non-public areas (kitchen, back office, break room, storage)</li>
+  <li>Call the Owner immediately &#8212; do not handle this situation alone</li>
+  <li>Do not voluntarily disclose any employee information, records, or schedules without a valid subpoena or judicial order</li>
+  <li>Do not interfere with any employee who wishes to exercise their legal rights</li>
+  <li>Document the date, time, agents&#8217; names, badge numbers, and any documents presented</li>
+</ul>
+
+<div class="box-red">
+  <strong>I-9 Inspection Notice:</strong> If Domo Cafe receives a Notice of Inspection for I-9 employment eligibility records, all affected employees and their representatives must be notified within <strong>72 hours.</strong> Failure to comply with AB 450 carries penalties of $2,000&#8211;$10,000 per violation. We will always notify our team.
+</div>
+
+<h3>Civil Unrest &amp; Safety Closures</h3>
+<p class="body">If there is active civil unrest, protest activity, or any safety concern near our location, Domo Cafe management reserves the right to close the restaurant for the safety of staff and guests. This is an operational safety decision &#8212; not a political one. Affected team members will be notified as early as possible. Reporting time pay rules apply to any shift that is cancelled after staff have been called in (see Part Three).</p>
+
+
+<!-- ════════════════════ ACKNOWLEDGMENT PAGE ════════════════════ -->
+<div class="sig-section">
+  <div class="sig-pg-header">
+    <div class="left">Domo <span>Cafe</span> <span style="font-size:10pt;font-weight:400;color:#999;">&#8212; Staff Handbook Acknowledgment</span></div>
+    <div class="right">Confidential</div>
+  </div>
+
+  <div class="sig-block">
+    <div class="sig-title">Employee Acknowledgment</div>
+    <div class="sig-intro">By signing below, I confirm the following:
+      <br><br>
+      1. I have received, read, and understood the Domo Cafe Staff Handbook, including all Parts One through Five and Exhibit A (Pay &amp; Tip Structure).<br><br>
+      2. I agree to comply with the standards, policies, and procedures described in this handbook.<br><br>
+      3. I understand that all tips &#8212; cash and credit &#8212; are pooled per shift and distributed proportionally by hours worked, and that accurate cash tip reporting in Toast before clocking out is mandatory.<br><br>
+      4. I understand that violation of any Zero Tolerance policy results in immediate termination without a progressive discipline process.<br><br>
+      5. <strong>I understand that this handbook is not a contract of employment and does not guarantee employment for any specific duration. My employment at Domo Cafe is at-will, and either party may end the employment relationship at any time, with or without cause or advance notice, subject to applicable law. This at-will status cannot be modified except by a written agreement signed by the Owner.</strong>
+    </div>
+
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Employee Name (print)</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Role</div></div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Employee Signature</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Date</div></div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Owner Signature</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Date</div></div>
+    </div>
+  </div>
+
+  <div class="footer">This document is confidential &#8212; for Domo Cafe team members only. Do not share or distribute.</div>
+</div>
+
+<!-- ════════════════════ EXHIBIT A ════════════════════ -->
+<div class="exhibit-header">
+  <div class="exhibit-label">Exhibit A</div>
+  <div class="exhibit-title">Domo <span>Cafe</span> &#8212; Pay &amp; Tip Structure</div>
+  <div class="exhibit-sub">Confidential &#8212; for team members only</div>
+</div>
+
+<div class="box-brown">
+  <div class="bx-label">Our Philosophy</div>
+  <p>At Domo Cafe, every person on this floor is responsible for every guest. There are no sections to protect. No roles more important than others. The host who greets someone at the door, the barista who crafts their drink, the team member who checks on their table &#8212; everyone is delivering the same experience together.</p>
+  <p style="margin-top:8px;font-weight:700;color:#8B4513;">We are one team. We share one pool.</p>
+</div>
+
+<h2>Base Pay</h2>
+<table class="pay-table">
+  <thead>
+    <tr>
+      <th style="width:58%">Role Group</th>
+      <th>Hourly Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Front of House (FOH)</strong><br><span style="font-size:8.5pt;color:#999;">Servers &middot; Baristas &middot; Dessert Specialists &middot; Cashiers &middot; Hosts</span></td>
+      <td><div class="rate">$16.90</div><div class="rate-sub">per hour + tips</div></td>
+    </tr>
+    <tr>
+      <td><strong>Back of House (BOH)</strong><br><span style="font-size:8.5pt;color:#999;">Kitchen Staff &middot; Expo</span></td>
+      <td><div class="rate boh">$18.90</div><div class="rate-sub">per hour + tips</div></td>
+    </tr>
+  </tbody>
+</table>
+<div class="pay-sched">
+  <strong>Pay Schedule:</strong> Bi-weekly &#8212; pay periods run <strong>Monday through Sunday</strong> (two-week cycles). Payday is the <strong>Friday following the close of each pay period</strong>. If payday falls on a holiday, payment is issued the preceding business day.
+</div>
+
+<h2>Tip Structure &#8212; One Pool, One Team</h2>
+<p style="font-size:10.5pt;color:#444;margin-bottom:12px;">All tips collected during a shift &#8212; cash and credit &#8212; go into one pool for that shift, split between FOH and BOH proportionally by hours worked.</p>
+
+<div class="pool-visual">
+  <div class="pool-bucket foh">
+    <div class="pool-pct">70%</div>
+    <div class="pool-label">Front of House</div>
+    <div class="pool-roles">Servers &middot; Baristas<br>Dessert Specialists<br>Cashiers &middot; Hosts</div>
+  </div>
+  <div class="pool-bucket boh">
+    <div class="pool-pct">30%</div>
+    <div class="pool-label">Back of House</div>
+    <div class="pool-roles">Kitchen Staff<br>Expo</div>
+  </div>
+</div>
+
+<div class="box-red" style="margin-bottom:10px;">
+  <strong>Manager and owner exclusion:</strong> Managers, supervisors, and owners do not participate in the tip pool. Tips belong exclusively to non-managerial employees as required by California Labor Code &#167;351.
+</div>
+
+<ul class="rules">
+  <li>Within each group, tips are split <strong>proportionally by hours worked during that shift</strong></li>
+  <li>No FOH role earns more than another &#8212; <strong>Server = Barista = Host = Cashier</strong></li>
+  <li>Tips are calculated <strong>per shift</strong> &#8212; you earn from the shift you worked, not the pay period</li>
+  <li>Session 1 staff earn Session 1 tips &middot; Session 2 staff earn Session 2 tips</li>
+</ul>
+
+<div class="box-red">
+  <strong>Cash tips are pooled &#8212; not pocketed.</strong> All cash tips must be reported in Toast before clocking out. Cash goes into the same pool as credit tips. Failure to report cash tips is a Zero Tolerance offense &#8212; it is theft from your teammates.
+</div>
+
+<h2>Example &#8212; How It Works</h2>
+<div class="example-box">
+  <div class="example-pool">Shift tip pool: <span>$600 total</span> (cash + credit combined)</div>
+  <div class="example-cols">
+    <div class="example-col foh">
+      <div class="example-col-title">FOH &#8212; 70% = $420</div>
+      <div class="total">20 total FOH hours worked</div>
+      <div class="example-row"><span>Server (6 hrs)</span><span class="earn">$126.00</span></div>
+      <div class="example-row"><span>Barista (5 hrs)</span><span class="earn">$105.00</span></div>
+      <div class="example-row"><span>Host (5 hrs)</span><span class="earn">$105.00</span></div>
+      <div class="example-row"><span>Cashier (4 hrs)</span><span class="earn">$84.00</span></div>
+      <div class="example-note">Same hours = same tip share, regardless of role</div>
+    </div>
+    <div class="example-col boh">
+      <div class="example-col-title">BOH &#8212; 30% = $180</div>
+      <div class="total">10 total BOH hours worked</div>
+      <div class="example-row"><span>Line Cook (6 hrs)</span><span class="earn">$108.00</span></div>
+      <div class="example-row"><span>Expo (4 hrs)</span><span class="earn">$72.00</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXHIBIT A SIGNATURE PAGE -->
+<div class="sig-section">
+  <div class="sig-pg-header">
+    <div class="left">Domo <span>Cafe</span> <span style="font-size:10pt;font-weight:400;color:#999;">&#8212; Exhibit A Acknowledgment</span></div>
+    <div class="right">Confidential</div>
+  </div>
+
+  <div class="sig-block">
+    <div class="sig-title">Pay &amp; Tip Structure Acknowledgment</div>
+    <div class="sig-intro">By signing below, I confirm that I have read and understood Domo Cafe&#8217;s Pay &amp; Tip Structure (Exhibit A). I understand that all tips &#8212; cash and credit &#8212; are pooled per shift and distributed proportionally by hours worked among FOH (70%) and BOH (30%). I understand that no FOH role receives a greater tip share than another based on job title. I understand that managers, supervisors, and owners do not participate in the tip pool. I understand that all cash tips must be accurately reported in Toast before clocking out, and that failure to do so is a Zero Tolerance violation.</div>
+
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Employee Name (print)</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Role</div></div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Employee Signature</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Date</div></div>
+    </div>
+    <div class="sig-row">
+      <div class="sig-field wide">&nbsp;<div class="sig-field-label">Owner Signature</div></div>
+      <div class="sig-field">&nbsp;<div class="sig-field-label">Date</div></div>
+    </div>
+  </div>
+
+  <div class="footer">This document is confidential &#8212; for Domo Cafe team members only. Do not share or distribute.</div>
+</div>
+
+<!-- ════════════════════ EXHIBIT B: SERVICE ANIMAL POLICY ════════════════════ -->
+<div style="page-break-before:always;"></div>
+<div class="page-header"><div class="brand">Domo <span>Cafe</span></div><div class="label">Exhibit B &mdash; Service Animal Policy</div></div>
+
+<div class="part-header" style="background:#8B4513;">
+  <div class="part-num">Exhibit B</div>
+  <div class="part-title">Service Animal Policy &amp; Training Guide</div>
+</div>
+
+<div class="box-brown">
+  <div class="bx-label">Purpose</div>
+  <p>Domo Caf&eacute; is committed to providing equal access to all guests, including those accompanied by service animals, in full compliance with the Americans with Disabilities Act (ADA) and California law. All team members are required to read, understand, and follow this policy.</p>
+</div>
+
+<h2>What Is a Service Animal?</h2>
+<p class="body">Under the ADA, a service animal is <strong>a dog</strong> (or, in limited cases, a miniature horse) that has been individually trained to perform a specific task or do work for a person with a disability. The animal&rsquo;s work must be directly related to the person&rsquo;s disability.</p>
+
+<h3>Examples of Qualifying Tasks</h3>
+<ul class="bl">
+  <li>Guiding a person who is blind</li>
+  <li>Alerting a person who is deaf</li>
+  <li>Detecting and alerting to a seizure before it occurs</li>
+  <li>Alerting to low blood sugar levels</li>
+  <li>Retrieving dropped items or pressing buttons</li>
+  <li>Providing balance or mobility assistance</li>
+  <li>Interrupting PTSD-related episodes</li>
+  <li>Reminding a person to take medication</li>
+</ul>
+
+<div class="box-red">
+  <strong>Not Service Animals Under the ADA:</strong> Emotional Support Animals (ESAs), comfort animals, therapy animals, and companion pets do not qualify. The defining requirement is that the animal must be trained to perform a specific task related to a disability &mdash; not simply provide emotional comfort by being present.
+</div>
+
+<h2>The Only Two Questions Staff May Ask</h2>
+<p class="body">If it is not immediately obvious that an animal is a service animal, staff are permitted to ask <strong>only these two questions</strong>:</p>
+
+<div class="box-brown">
+  <div class="bx-label">Permitted Questions &mdash; Memorize These</div>
+  <p><strong>Question 1:</strong> &ldquo;Is the animal required because of a disability?&rdquo;</p>
+  <p style="margin-top:8px;"><strong>Question 2:</strong> &ldquo;What work or task has the animal been trained to perform?&rdquo;</p>
+  <p style="margin-top:8px;color:#8B4513;">Once you receive an acceptable answer &mdash; the conversation ends. Do not continue to question the guest.</p>
+</div>
+
+<h2>Questions Staff Are Never Permitted to Ask</h2>
+<div class="box-red">
+  <strong>The following questions are prohibited under the ADA. Asking them may expose Domo Caf&eacute; to legal liability.</strong>
+</div>
+<ul class="bl">
+  <li>&ldquo;What is your disability?&rdquo;</li>
+  <li>&ldquo;Can you show documentation?&rdquo;</li>
+  <li>&ldquo;Can you show certification?&rdquo;</li>
+  <li>&ldquo;Does the dog have an ID card?&rdquo;</li>
+  <li>&ldquo;Can the dog demonstrate the task?&rdquo;</li>
+  <li>&ldquo;Why do you need the dog?&rdquo;</li>
+</ul>
+
+<h2>Vests, Certifications &amp; Documentation</h2>
+<p class="body">Staff must understand and accept the following:</p>
+<ul class="bl">
+  <li>Service animals are <strong>not required</strong> to wear a vest or identifying gear</li>
+  <li>Service animals are <strong>not required</strong> to carry identification</li>
+  <li>Service animals are <strong>not required</strong> to be professionally certified</li>
+  <li>Handlers may train their own service animals</li>
+  <li><strong>No paperwork of any kind may be required under the ADA</strong></li>
+</ul>
+
+<h2>Where Service Animals Are Permitted</h2>
+<p class="body">Service animals must be allowed to accompany their handler anywhere guests are normally permitted, including:</p>
+<ul class="bl">
+  <li>All dining areas (indoor and outdoor)</li>
+  <li>Waiting areas and ordering lines</li>
+  <li>Outdoor patios open to guests</li>
+</ul>
+<div class="box-red">
+  <strong>Do not seat guests with service animals separately or in an isolated area. Do not treat them differently from any other guest.</strong>
+</div>
+
+<h2>When a Service Animal May Be Asked to Leave</h2>
+<p class="body">A service animal may only be asked to leave the premises if <strong>one of the following conditions is met</strong>:</p>
+
+<h3>1. The Animal Is Out of Control</h3>
+<ul class="bl">
+  <li>Excessive or continuous barking</li>
+  <li>Aggressive behavior toward guests or staff</li>
+  <li>Jumping on customers</li>
+  <li>Running freely without handler control</li>
+</ul>
+
+<h3>2. The Animal Is Not Housebroken</h3>
+<ul class="bl">
+  <li>Urinating indoors</li>
+  <li>Defecating indoors</li>
+</ul>
+
+<div class="box-brown">
+  <div class="bx-label">Required Action on Removal</div>
+  <p>If a service animal must be removed from the premises, the guest must still be offered service. Suggest that they secure the animal outside and return. Never refuse service to the guest themselves.</p>
+</div>
+
+<h2>Food, Water &amp; Care</h2>
+<p class="body">Domo Caf&eacute; is not responsible for feeding, watering, walking, or supervising service animals. The handler is solely responsible for the animal&rsquo;s care at all times.</p>
+<p class="body">If a guest requests a plain food item for their service animal (for example, plain cooked chicken without seasoning), treat it as a normal customer request. If Domo Caf&eacute; can reasonably accommodate it, staff may do so.</p>
+
+<h2>Manager Quick Reference</h2>
+<div class="box-blue">
+  <div class="bx-label">Allow Entry If</div>
+  <ul>
+    <li>Guest states the animal is required because of a disability</li>
+    <li>AND guest identifies a trained task the animal performs</li>
+  </ul>
+</div>
+<div class="box-red">
+  <strong>Do Not Require:</strong> Certification &bull; Documentation &bull; Vest &bull; ID card &bull; Demonstration of task
+</div>
+<div class="box-yellow">
+  <strong>Remove Only If:</strong> Animal is out of control (barking, aggression, running freely) OR animal is not housebroken (elimination indoors). Guest must still be offered service.
+</div>
+
+<div class="box-brown" style="margin-top:24px;">
+  <div class="bx-label">Domo Caf&eacute; Service Commitment</div>
+  <p style="font-style:italic;">&ldquo;Domo Caf&eacute; welcomes guests accompanied by service animals. Our team is trained to provide respectful, lawful, and inclusive service to all guests while following ADA guidelines.&rdquo;</p>
+</div>
+
+<!-- EXHIBIT B SIGNATURE PAGE -->
+<div class="sig-section" style="page-break-before:always;">
+  <div class="page-header"><div class="brand">Domo <span>Cafe</span></div><div class="label">Exhibit B &mdash; Acknowledgment</div></div>
+  <div style="text-align:center;margin:32px 0 20px;">
+    <div style="font-size:8pt;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#8B4513;margin-bottom:8px;">Exhibit B Acknowledgment</div>
+    <div style="font-size:15pt;font-weight:800;color:#1a1a1a;">Service Animal Policy</div>
+  </div>
+  <div style="font-size:10.5pt;color:#2a1a0a;line-height:1.75;margin-bottom:24px;">
+    By signing below, I confirm that I have read and understood Domo Caf&eacute;&rsquo;s Service Animal Policy (Exhibit B). I understand the two permitted questions, the questions I am never allowed to ask, where service animals must be permitted, and the limited conditions under which a service animal may be asked to leave. I understand that failure to follow this policy may expose Domo Caf&eacute; to legal liability under the Americans with Disabilities Act and California law.
+  </div>
+  <table style="width:100%;border-collapse:collapse;margin-top:20px;">
+    <tr>
+      <td style="width:55%;padding-right:20px;vertical-align:bottom;">
+        <div style="border-bottom:1.5px solid #1a1a1a;padding-bottom:4px;margin-bottom:4px;height:32px;"></div>
+        <div style="font-size:8.5pt;color:#999;">Team Member Signature</div>
+      </td>
+      <td style="width:25%;padding-right:20px;vertical-align:bottom;">
+        <div style="border-bottom:1.5px solid #1a1a1a;padding-bottom:4px;margin-bottom:4px;height:32px;"></div>
+        <div style="font-size:8.5pt;color:#999;">Date</div>
+      </td>
+    </tr>
+    <tr style="margin-top:24px;">
+      <td style="padding-right:20px;vertical-align:bottom;padding-top:24px;">
+        <div style="border-bottom:1.5px solid #1a1a1a;padding-bottom:4px;margin-bottom:4px;height:32px;"></div>
+        <div style="font-size:8.5pt;color:#999;">Printed Name</div>
+      </td>
+      <td style="padding-right:20px;vertical-align:bottom;padding-top:24px;">
+        <div style="border-bottom:1.5px solid #1a1a1a;padding-bottom:4px;margin-bottom:4px;height:32px;"></div>
+        <div style="font-size:8.5pt;color:#999;">Position / Role</div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

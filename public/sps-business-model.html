@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Power Studios — Business Model v1.0.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0C0C0C;--bg2:#1C1C1E;--bg3:#2C2C34;
+  --orange:#FF5E1A;--white:#F0EDE8;--muted:#A0A098;
+  --border:rgba(240,237,232,0.08);--gold:#C9A052;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;}
+body.light{--bg:#F5F5F0;--bg2:#EEEEE8;--bg3:#E0E0D8;--white:#1C1C1E;--muted:#666;--border:rgba(0,0,0,0.08);}
+
+/* TOP BAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--orange);letter-spacing:0px;}
+.logo span{color:var(--white);}
+.tabs{display:flex;gap:0;}
+.tab{padding:0 24px;height:56px;display:flex;align-items:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;letter-spacing:0.5px;text-transform:uppercase;transition:all 0.2s;}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);}
+.tab:hover{color:var(--white);}
+.controls{display:flex;gap:8px;align-items:center;}
+.btn{padding:8px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.3px;}
+.btn:hover{border-color:var(--orange);color:var(--orange);}
+.btn.orange{background:var(--orange);border-color:var(--orange);color:#fff;}
+.btn.orange:hover{opacity:0.9;}
+
+/* LAYOUT */
+.page{padding-top:56px;}
+.section{display:none;padding:48px 64px;max-width:1200px;margin:0 auto;}
+.section.active{display:block;}
+
+/* TYPOGRAPHY */
+h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;line-height:1.1;letter-spacing:0px;}
+h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:0px;margin-bottom:8px;}
+h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;margin-bottom:8px;}
+p{font-size:15px;line-height:1.7;color:var(--muted);}
+.label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);}
+
+/* HERO */
+.hero{padding:64px 0 48px;border-bottom:1px solid var(--border);margin-bottom:56px;}
+.hero-badges{display:flex;gap:8px;margin-bottom:24px;}
+.badge{padding:4px 12px;border-radius:100px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.badge.live{border-color:var(--orange);color:var(--orange);}
+.hero h1{margin-bottom:16px;}
+.hero h1 span{color:var(--orange);}
+.hero-sub{font-size:18px;color:var(--muted);max-width:640px;line-height:1.6;margin-bottom:32px;}
+.hero-stats{display:flex;gap:48px;}
+.stat-item{display:flex;flex-direction:column;gap:4px;}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;color:var(--white);}
+.stat-num span{color:var(--orange);}
+.stat-label{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;}
+
+/* CARDS */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px;}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:48px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.card.accent{border-color:var(--orange);background:rgba(255,94,26,0.05);}
+.card h3{margin-bottom:12px;}
+.card p{font-size:14px;}
+
+/* SECTION HEADER */
+.section-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;margin-bottom:32px;}
+.tbl th{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.tbl td{padding:14px 16px;font-size:14px;border-bottom:1px solid var(--border);color:var(--white);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg2);}
+.tbl .orange{color:var(--orange);font-weight:600;}
+.tbl .muted{color:var(--muted);}
+
+/* TIER TABLE */
+.tier-row{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:10px;display:grid;grid-template-columns:140px 120px 1fr 180px;align-items:center;gap:16px;}
+.tier-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;}
+.tier-price{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--orange);}
+.tier-desc{font-size:13px;color:var(--muted);line-height:1.5;}
+.tier-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:right;}
+
+/* PRO FORMA */
+.scenario-btns{display:flex;gap:8px;margin-bottom:32px;}
+.s-btn{padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;}
+.s-btn.active{border-color:var(--orange);color:var(--orange);background:rgba(255,94,26,0.1);}
+.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;margin-bottom:24px;height:320px;position:relative;}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.kpi .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:var(--white);margin-bottom:4px;}
+.kpi .num span{color:var(--orange);}
+.kpi .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+
+/* SIMULATOR */
+.sim-layout{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;}
+.slider-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.slider-group{margin-bottom:24px;}
+.slider-label{display:flex;justify-content:space-between;margin-bottom:8px;}
+.slider-label span:first-child{font-size:13px;color:var(--white);}
+.slider-label span:last-child{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--orange);}
+input[type=range]{width:100%;accent-color:var(--orange);height:4px;cursor:pointer;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.sim-results{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.sim-kpi{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.sim-kpi .n{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:var(--white);}
+.sim-kpi .n span{color:var(--orange);}
+.sim-kpi .l{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.8px;text-transform:uppercase;margin-top:4px;}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:48px;}
+.team-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.team-role{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+.team-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;margin-bottom:8px;}
+.team-bio{font-size:13px;color:var(--muted);line-height:1.5;}
+
+/* ASK */
+.ask-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px;}
+.ask-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:32px;}
+.ask-card.accent{border-color:var(--orange);}
+.ask-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:42px;color:var(--orange);margin-bottom:8px;}
+.use-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;}
+.use-item:last-child{border-bottom:none;}
+.use-item span:last-child{font-family:'JetBrains Mono',monospace;color:var(--orange);}
+
+/* S-MARK */
+.s-mark{position:fixed;bottom:20px;right:24px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--border);pointer-events:none;}
+
+/* PRINT */
+@media print{
+  .topbar,.controls,.s-mark,.scenario-btns,.slider-panel{display:none!important;}
+  body{background:#fff!important;color:#000!important;}
+  .section{display:block!important;page-break-after:always;}
+  .card,.kpi,.tier-row{background:#f5f5f0!important;border-color:#ddd!important;}
+}
+
+/* TAM placeholder */
+.tam-note{background:rgba(255,94,26,0.08);border:1px solid rgba(255,94,26,0.3);border-radius:8px;padding:16px 20px;font-size:13px;color:var(--orange);margin-bottom:24px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">S<span>PS</span></div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('plan',this)">Business Plan</div>
+    <div class="tab" onclick="showTab('proforma',this)">Pro Forma</div>
+    <div class="tab" onclick="showTab('simulator',this)">Simulator</div>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="toggleMode()">☀ / ☾</button>
+    <button class="btn orange" onclick="window.print()">↓ Print PDF</button>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ======================== BUSINESS PLAN ======================== -->
+<div id="plan" class="section active">
+
+  <div class="hero">
+    <div class="hero-badges">
+      <div class="badge live">Live — v1.1</div>
+      <div class="badge">Nevada C-Corp</div>
+      <div class="badge">EIN 42-2336050</div>
+      <div class="badge">$5M SAFE — Open</div>
+    </div>
+    <h1>Super Power<br><span>Studios</span></h1>
+    <p class="hero-sub">The world's first AI-powered full-stack company building platform. From raw idea to investor-ready, funded, operating company — guided entirely by AI agents.</p>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num"><span>$</span>5M</div><div class="stat-label">SAFE Raise</div></div>
+      <div class="stat-item"><div class="stat-num"><span>$</span>25M</div><div class="stat-label">Pre-Money Cap</div></div>
+      <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Membership Tiers</div></div>
+      <div class="stat-item"><div class="stat-num">14</div><div class="stat-label">AI Agents</div></div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="section-header">
+    <div class="label">01 — Executive Summary</div>
+    <h2>The operating system for entrepreneurs.</h2>
+  </div>
+  <div class="grid3" style="margin-bottom:56px;">
+    <div class="card accent">
+      <div class="label" style="margin-bottom:12px;">The Problem</div>
+      <h3>Building a company is broken.</h3>
+      <p>Access to attorneys ($500/hr), accountants ($300/hr), consultants, and investors is locked behind money most founders don't have. Most companies fail not because of bad ideas — but because of poor execution infrastructure.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">The Solution</div>
+      <h3>AI agents that do the work.</h3>
+      <p>SPS deploys 14 specialized AI agents — Ideation, Formation, Market Intelligence, Legal, Branding, Investor Portal — all hosted and orchestrated by the Founder's personal OpenClaw AI. Available 24/7. Fraction of the cost.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">The Opportunity</div>
+      <h3>A $50–75B market. No full-stack AI-native leader.</h3>
+      <p>5.5M new US businesses in 2023 alone. 99% locked out of top accelerators. Traditional accelerator model cracking (Techstars -17% staff, 2024). Harvey AI proves AI legal is $11B+ — but nobody serves founders at scale. SPS owns the white space.</p>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="section-header">
+    <div class="label">02 — The Problem</div>
+    <h2>Founders fail because of execution, not ideas.</h2>
+  </div>
+  <div class="grid2" style="margin-bottom:56px;">
+    <div class="card">
+      <h3>The Cost Barrier</h3>
+      <p style="margin-bottom:12px;">Professional services are priced for funded companies, not aspiring founders.</p>
+      <table class="tbl" style="margin-bottom:0;">
+        <tr><th>Service</th><th>Market Rate</th></tr>
+        <tr><td>Attorney (formation)</td><td class="orange">$500–$1,000/hr</td></tr>
+        <tr><td>CPA / Accountant</td><td class="orange">$200–$400/hr</td></tr>
+        <tr><td>Business Consultant</td><td class="orange">$300–$500/hr</td></tr>
+        <tr><td>Accelerator (YC)</td><td class="orange">7% equity</td></tr>
+        <tr><td>Business Plan Service</td><td class="orange">$2,000–$10,000</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>The Knowledge Gap</h3>
+      <p style="margin-bottom:12px;">Most founders don't know what they don't know. There is no guided path from idea to operating company that is affordable, structured, and intelligent.</p>
+      <div style="margin-top:16px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div>
+          <p style="margin:0;font-size:13px;">90% of startups fail — most cite market fit and capital as root causes</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div>
+          <p style="margin:0;font-size:13px;">5.5M new businesses formed in the US in 2023 alone</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div>
+          <p style="margin:0;font-size:13px;">Less than 1% get into top accelerators (YC acceptance rate: 1.5%)</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div>
+          <p style="margin:0;font-size:13px;">The 99% have no structured, affordable alternative</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUTION -->
+  <div class="section-header">
+    <div class="label">03 — The Solution</div>
+    <h2>From idea to funded company. Guided by AI.</h2>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:32px;margin-bottom:48px;">
+    <div style="display:flex;gap:0;align-items:center;flex-wrap:wrap;">
+      <div style="text-align:center;padding:16px 20px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--orange);margin-bottom:6px;">SPARK</div>
+        <div style="font-size:12px;color:var(--muted);">Ideation</div>
+      </div>
+      <div style="color:var(--orange);font-size:18px;padding:0 8px;">→</div>
+      <div style="text-align:center;padding:16px 20px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--orange);margin-bottom:6px;">BUILDER</div>
+        <div style="font-size:12px;color:var(--muted);">Formation + Market + Branding</div>
+      </div>
+      <div style="color:var(--orange);font-size:18px;padding:0 8px;">→</div>
+      <div style="text-align:center;padding:16px 20px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--orange);margin-bottom:6px;">VENTURE</div>
+        <div style="font-size:12px;color:var(--muted);">Legal + Investor + Launch</div>
+      </div>
+      <div style="color:var(--orange);font-size:18px;padding:0 8px;">→</div>
+      <div style="text-align:center;padding:16px 20px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--orange);margin-bottom:6px;">SUPERPOWER</div>
+        <div style="font-size:12px;color:var(--muted);">SPS Partner + Full AI</div>
+      </div>
+      <div style="color:var(--orange);font-size:18px;padding:0 8px;">→</div>
+      <div style="text-align:center;padding:16px 20px;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--white);margin-bottom:6px;">FUNDED COMPANY</div>
+        <div style="font-size:12px;color:var(--muted);">Built and operating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKET OPPORTUNITY -->
+  <div class="section-header">
+    <div class="label">04 — Market Opportunity</div>
+    <h2>A $140B+ combined addressable market.</h2>
+  </div>
+  <div class="grid3" style="margin-bottom:32px;">
+    <div class="card accent">
+      <div class="label" style="margin-bottom:8px;">TAM</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;color:var(--orange);margin-bottom:8px;">$50–75B</div>
+      <p style="font-size:13px;">SPS-addressable across: entrepreneur education ($12B, 18%+ CAGR) + legal tech formation ($4B) + AI tools for SMBs ($28B+, 14% CAGR) + accelerators ($5–7B) + community platforms ($6.5B)</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:8px;">SAM</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;color:var(--white);margin-bottom:8px;">$1.2–2.4B</div>
+      <p style="font-size:13px;">5.5M new US businesses filed in 2023 (record high). ~220K–440K serious, digital-first, willing-to-pay founders. Blended annual spend: $3,600–7,200/founder across fragmented tools SPS replaces.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:8px;">SOM — 3 Year</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:36px;color:var(--white);margin-bottom:8px;">$50–100M</div>
+      <p style="font-size:13px;">Year 1: $2.7–8.1M ARR (500–1,500 members) &nbsp;|&nbsp; Year 2: $18–36M ARR (3K–6K members) &nbsp;|&nbsp; Year 3: $50–100M ARR (8K–15K members)</p>
+    </div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:32px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;">Key Signal</div><p style="font-size:13px;">YC accepts 1% of applicants. <strong style="color:var(--white);">99% of founders have no structured alternative.</strong></p></div>
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;">Market Shift</div><p style="font-size:13px;">Techstars laid off 17% of staff in 2024. <strong style="color:var(--white);">The traditional accelerator model is cracking.</strong></p></div>
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;">Validation</div><p style="font-size:13px;">Harvey AI: $11B valuation, $190M ARR — AI legal is massive. <strong style="color:var(--white);">Nobody is serving founders at this price point.</strong></p></div>
+    </div>
+  </div>
+
+  <!-- PRODUCT -->
+  <div class="section-header">
+    <div class="label">05 — Product</div>
+    <h2>Four tiers. Fourteen agents. One platform.</h2>
+  </div>
+  <div style="margin-bottom:48px;">
+    <div class="tier-row" style="background:rgba(255,94,26,0.05);border-color:var(--orange);">
+      <div class="tier-name">⚡ Spark</div>
+      <div class="tier-price">Free</div>
+      <div class="tier-desc">Ideation Agent — validates the idea, assesses the founder, produces Founder + Idea Profile. AI education + lesson plan.</div>
+      <div class="tier-tag">1 agent included</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-name">⚙️ Builder</div>
+      <div class="tier-price">$199/mo</div>
+      <div class="tier-desc">Formation + Market Intelligence + Cost & Ops + Branding + Business Review agents. OpenClaw Lite. Live Business Model. Community + Mentor matching. 30% off à la carte.</div>
+      <div class="tier-tag">6 agents included</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-name">🚀 Venture</div>
+      <div class="tier-price">$599/mo</div>
+      <div class="tier-desc">Everything in Builder + Business Plan + Simulator + Valuation + Legal + Attorney + Accounting agents. OpenClaw Pro. Investor Portal. Prototyping + Pre-Sales. OpenClaw Academy. 50% off à la carte.</div>
+      <div class="tier-tag">12 agents included</div>
+    </div>
+    <div class="tier-row" style="background:rgba(201,160,82,0.05);border-color:var(--gold);">
+      <div class="tier-name" style="color:var(--gold);">⚡ Superpower</div>
+      <div class="tier-price" style="color:var(--gold);">$1,499/mo</div>
+      <div class="tier-desc">Everything in Venture + OpenClaw Full (portable, custom agents). All SPS services as discounted add-ons. SPS as active partner. Priority access. 70% off à la carte.</div>
+      <div class="tier-tag">All agents unlimited</div>
+    </div>
+  </div>
+
+  <!-- COMPETITION -->
+  <div class="section-header">
+    <div class="label">06 — Competitive Landscape</div>
+    <h2>Nobody owns the full stack.</h2>
+  </div>
+  <div style="overflow-x:auto;margin-bottom:56px;">
+    <table class="tbl">
+      <tr>
+        <th>Competitor</th>
+        <th>Model</th>
+        <th>Price</th>
+        <th>AI-Native</th>
+        <th>Full Stack</th>
+        <th>Weakness vs SPS</th>
+      </tr>
+      <tr>
+        <td><strong>Y Combinator</strong></td>
+        <td>Equity accelerator</td>
+        <td class="orange">7% equity</td>
+        <td class="muted">No</td>
+        <td class="muted">Partial</td>
+        <td class="muted">1.5% acceptance rate, SF-centric, takes equity</td>
+      </tr>
+      <tr>
+        <td><strong>Techstars</strong></td>
+        <td>Equity accelerator</td>
+        <td class="orange">6% equity</td>
+        <td class="muted">No</td>
+        <td class="muted">Partial</td>
+        <td class="muted">Selective, city-specific, cohort model</td>
+      </tr>
+      <tr>
+        <td><strong>LegalZoom</strong></td>
+        <td>Formation only</td>
+        <td class="orange">$99–$299</td>
+        <td class="muted">No</td>
+        <td class="muted">No</td>
+        <td class="muted">One piece of the puzzle — no guidance, no business model</td>
+      </tr>
+      <tr>
+        <td><strong>LivePlan</strong></td>
+        <td>Business plan software</td>
+        <td class="orange">$20–$40/mo</td>
+        <td class="muted">Partial</td>
+        <td class="muted">No</td>
+        <td class="muted">Tools only — no agents, no legal, no services</td>
+      </tr>
+      <tr>
+        <td><strong>Udemy / Coursera</strong></td>
+        <td>Education only</td>
+        <td class="orange">$15–$200/course</td>
+        <td class="muted">No</td>
+        <td class="muted">No</td>
+        <td class="muted">Passive content — no agent, no execution, no services</td>
+      </tr>
+      <tr>
+        <td><strong>Carta</strong></td>
+        <td>Cap table mgmt</td>
+        <td class="orange">$2,400+/yr</td>
+        <td class="muted">No</td>
+        <td class="muted">No</td>
+        <td class="muted">Post-formation only — no ideation, no plan, no agents</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--orange);">SPS</strong></td>
+        <td style="color:var(--orange);">Full-stack AI platform</td>
+        <td class="orange">$0–$1,499/mo</td>
+        <td style="color:var(--orange);">✅ Yes</td>
+        <td style="color:var(--orange);">✅ Yes</td>
+        <td style="color:var(--orange);">Owns the entire founder journey end-to-end</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- BUSINESS MODEL -->
+  <div class="section-header">
+    <div class="label">07 — Business Model</div>
+    <h2>Nine revenue streams. 70%+ gross margin.</h2>
+  </div>
+  <div class="grid3" style="margin-bottom:56px;">
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Primary</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Membership fees</span><span style="color:var(--orange);">$199–$1,499/mo</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>À la carte services</span><span style="color:var(--orange);">$99–$1,499/each</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>OpenClaw setup + support</span><span style="color:var(--orange);">$299–$999</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Referral & Services</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Attorney referral fees</span><span style="color:var(--orange);">Rev share</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>CPA referral fees</span><span style="color:var(--orange);">Rev share</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Tech + marketing builds</span><span style="color:var(--orange);">Custom</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Long-Term</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Equity in Founder companies</span><span style="color:var(--orange);">Via ToS</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Royalties</span><span style="color:var(--orange);">Service agreements</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Migration fees</span><span style="color:var(--orange);">One-time</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GO TO MARKET -->
+  <div class="section-header">
+    <div class="label">08 — Go-to-Market</div>
+    <h2>Community-first. Content-driven. Network-amplified.</h2>
+  </div>
+  <div class="grid3" style="margin-bottom:56px;">
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Phase 1 — 0–6 Months</div>
+      <h3>Warm Network Launch</h3>
+      <p style="font-size:13px;">$2 VIP presale to SPS network. Target: 500 Spark signups, 100 converting to Builder. Use Flywheel, Domo, NASCAR, SailGP connections. Content from Brooklyn Foundry build.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Phase 2 — 6–18 Months</div>
+      <h3>Content + Community Flywheel</h3>
+      <p style="font-size:13px;">Weekly Zoom podcast, founder success stories, OpenClaw Academy as lead magnet. SEO targeting "how to start a business" + "AI business tools." Referral program: bring a founder, get a month free.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:12px;">Phase 3 — 18–36 Months</div>
+      <h3>B2B + Partner Channel</h3>
+      <p style="font-size:13px;">Corporate innovation programs. University partnerships (entrepreneurship programs). Law firm + CPA firm white-label partnerships. International expansion (Spanish-speaking markets via Flywheel network).</p>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section-header">
+    <div class="label">09 — Team</div>
+    <h2>Operators who've already built at scale.</h2>
+  </div>
+  <div class="team-grid" style="margin-bottom:56px;">
+    <div class="team-card">
+      <div class="team-role">Founder & CEO</div>
+      <div class="team-name">Isabelo "Izzy" Aala</div>
+      <div class="team-bio">Serial entrepreneur operating Flywheel (35K+ taxis, 55+ cities, $431M+ GMV), Domo Cafe, Blue Highway, and SPS simultaneously. Already built and deployed the AI infrastructure being productized here.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">Officer & Director</div>
+      <div class="team-name">Dwayne Gaulding</div>
+      <div class="team-bio">SPS officer and NASCAR network connector. Brings brand partnership and sponsorship expertise. Father of Gray Gaulding (#74 Flywheel Chevrolet).</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">Officer & Ops</div>
+      <div class="team-name">Boon Chew</div>
+      <div class="team-bio">SPS officer. Operations lead. Key partner in SPS venture development and execution.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">SPS Partner</div>
+      <div class="team-name">Justin Lai</div>
+      <div class="team-bio">Active SPS partner managing the Evithé Biotechnology deal and CPG network relationships. Brings pharmaceutical and consumer goods distribution expertise.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">First Portfolio Founder</div>
+      <div class="team-name">Tim Ziss</div>
+      <div class="team-bio">EZLiving Founder. 24 Hour Golf Founder. SPS investor and first proof-of-concept. Built GeoPulse AI and 24HG within the SPS ecosystem.</div>
+    </div>
+    <div class="team-card" style="border-style:dashed;">
+      <div class="team-role">Hiring — Use of Funds</div>
+      <div class="team-name">CTO / Platform Lead</div>
+      <div class="team-bio">Lead platform architect for the agent ecosystem. Full-stack, AI-native, experience with LLM orchestration and SaaS infrastructure at scale.</div>
+    </div>
+  </div>
+
+  <!-- THE ASK -->
+  <div class="section-header">
+    <div class="label">10 — The Ask</div>
+    <h2>$5M to own the white space.</h2>
+  </div>
+  <div class="ask-grid" style="margin-bottom:56px;">
+    <div class="ask-card accent">
+      <div class="label" style="margin-bottom:12px;">SAFE Terms</div>
+      <div class="ask-num">$5M</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="use-item"><span>Pre-money cap</span><span>$25M</span></div>
+        <div class="use-item"><span>Discount</span><span>20%</span></div>
+        <div class="use-item"><span>Pro-rata rights</span><span>Yes</span></div>
+        <div class="use-item"><span>MFN clause</span><span>Yes</span></div>
+        <div class="use-item"><span>Lead investor</span><span>Tim Ziss</span></div>
+      </div>
+    </div>
+    <div class="ask-card">
+      <div class="label" style="margin-bottom:12px;">Use of Funds</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="use-item"><span>Platform development (agents + infra)</span><span>$1.5M</span></div>
+        <div class="use-item"><span>Business development</span><span>$1.25M</span></div>
+        <div class="use-item"><span>Brooklyn Foundry buildout</span><span>$1.0M</span></div>
+        <div class="use-item"><span>Team (8–10 hires)</span><span>$750K</span></div>
+        <div class="use-item"><span>Tech infrastructure</span><span>$500K</span></div>
+        <div class="use-item" style="font-weight:600;"><span>Total</span><span style="color:var(--orange);">$5.0M</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end plan -->
+
+<!-- ======================== PRO FORMA ======================== -->
+<div id="proforma" class="section">
+
+  <div class="hero" style="padding-bottom:32px;">
+    <div class="label" style="margin-bottom:12px;">Financial Model</div>
+    <h1>Pro <span style="color:var(--orange);">Forma</span></h1>
+    <p class="hero-sub">36-month revenue projection. Three scenarios. Toggle to explore.</p>
+  </div>
+
+  <div class="scenario-btns">
+    <button class="s-btn" onclick="setScenario('conservative',this)">Conservative</button>
+    <button class="s-btn active" onclick="setScenario('base',this)">Base Case</button>
+    <button class="s-btn" onclick="setScenario('aggressive',this)">Aggressive</button>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi"><div class="num" id="kpi-arr"><span>$</span>0</div><div class="lbl">Year 3 ARR</div></div>
+    <div class="kpi"><div class="num" id="kpi-mrr"><span>$</span>0</div><div class="lbl">Month 36 MRR</div></div>
+    <div class="kpi"><div class="num" id="kpi-members">0</div><div class="lbl">Total Paid Members</div></div>
+    <div class="kpi"><div class="num" id="kpi-be">—</div><div class="lbl">Break-Even Month</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="revenueChart"></canvas>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:48px;">
+    <div class="chart-wrap" style="height:240px;">
+      <canvas id="memberChart"></canvas>
+    </div>
+    <div class="chart-wrap" style="height:240px;">
+      <canvas id="tierChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Year 1 Table -->
+  <div class="section-header">
+    <div class="label">Year 1 — Monthly Breakdown</div>
+    <h2 id="y1-title">Base Case</h2>
+  </div>
+  <div style="overflow-x:auto;margin-bottom:48px;">
+    <table class="tbl" id="y1table">
+      <tr>
+        <th>Month</th><th>Builders</th><th>Ventures</th><th>Superpowers</th>
+        <th>Membership MRR</th><th>À La Carte</th><th>Total MRR</th>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Cost structure -->
+  <div class="section-header">
+    <div class="label">Cost Structure</div>
+    <h2>Operating costs by year.</h2>
+  </div>
+  <div style="overflow-x:auto;margin-bottom:48px;">
+    <table class="tbl">
+      <tr><th>Cost Category</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr>
+      <tr><td>Team (salaries)</td><td>$750K</td><td>$1.2M</td><td>$2.0M</td></tr>
+      <tr><td>AI Infrastructure (API costs)</td><td>$50K</td><td>$150K</td><td>$400K</td></tr>
+      <tr><td>Marketing & Acquisition</td><td>$500K</td><td>$600K</td><td>$800K</td></tr>
+      <tr><td>Infrastructure & Hosting</td><td>$60K</td><td>$120K</td><td>$250K</td></tr>
+      <tr><td>Legal & Admin</td><td>$50K</td><td>$80K</td><td>$120K</td></tr>
+      <tr><td>Partner Development</td><td>$100K</td><td>$150K</td><td>$200K</td></tr>
+      <tr><td>Brooklyn Foundry (one-time)</td><td>$1.0M</td><td>—</td><td>—</td></tr>
+      <tr><td class="orange"><strong>Total OpEx</strong></td><td class="orange"><strong>$2.51M</strong></td><td class="orange"><strong>$2.3M</strong></td><td class="orange"><strong>$3.77M</strong></td></tr>
+      <tr><td><strong>Revenue (base)</strong></td><td>~$1.1M</td><td>~$4.5M</td><td>~$12M</td></tr>
+      <tr><td><strong>EBITDA</strong></td><td style="color:#e74c3c;">-$1.4M</td><td style="color:#2ecc71;">+$2.2M</td><td style="color:#2ecc71;">+$8.2M</td></tr>
+    </table>
+  </div>
+
+</div><!-- end proforma -->
+
+<!-- ======================== SIMULATOR ======================== -->
+<div id="simulator" class="section">
+
+  <div class="hero" style="padding-bottom:32px;">
+    <div class="label" style="margin-bottom:12px;">Interactive Simulator</div>
+    <h1>Run Your <span style="color:var(--orange);">Scenarios</span></h1>
+    <p class="hero-sub">Adjust the variables. Watch the model respond in real time.</p>
+  </div>
+
+  <div class="sim-layout">
+    <div class="slider-panel">
+      <div class="label" style="margin-bottom:20px;">Growth Variables</div>
+
+      <div class="slider-group">
+        <div class="slider-label"><span>Monthly new Sparks</span><span id="v-sparks">100</span></div>
+        <input type="range" id="sparks" min="20" max="500" value="100" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Spark → Builder %</span><span id="v-s2b">15%</span></div>
+        <input type="range" id="s2b" min="5" max="40" value="15" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Builder → Venture %</span><span id="v-b2v">20%</span></div>
+        <input type="range" id="b2v" min="5" max="40" value="20" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Venture → Super %</span><span id="v-v2s">15%</span></div>
+        <input type="range" id="v2s" min="5" max="35" value="15" oninput="simUpdate()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="label" style="margin-bottom:20px;">Retention Variables</div>
+
+      <div class="slider-group">
+        <div class="slider-label"><span>Builder monthly churn</span><span id="v-bchurn">5%</span></div>
+        <input type="range" id="bchurn" min="1" max="15" value="5" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Venture monthly churn</span><span id="v-vchurn">3%</span></div>
+        <input type="range" id="vchurn" min="1" max="10" value="3" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Super monthly churn</span><span id="v-schurn">2%</span></div>
+        <input type="range" id="schurn" min="1" max="8" value="2" oninput="simUpdate()">
+      </div>
+
+      <div class="divider"></div>
+      <div class="label" style="margin-bottom:20px;">Revenue Variables</div>
+
+      <div class="slider-group">
+        <div class="slider-label"><span>Builder à la carte / mo</span><span id="v-balc">$75</span></div>
+        <input type="range" id="balc" min="0" max="300" value="75" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Venture à la carte / mo</span><span id="v-valc">$200</span></div>
+        <input type="range" id="valc" min="0" max="800" value="200" oninput="simUpdate()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Monthly Spark growth</span><span id="v-sgrow">15%</span></div>
+        <input type="range" id="sgrow" min="0" max="40" value="15" oninput="simUpdate()">
+      </div>
+    </div>
+
+    <div>
+      <div class="sim-results">
+        <div class="sim-kpi"><div class="n" id="s-mrr"><span>$</span>0</div><div class="l">Month 36 MRR</div></div>
+        <div class="sim-kpi"><div class="n" id="s-arr"><span>$</span>0</div><div class="l">Year 3 ARR (est)</div></div>
+        <div class="sim-kpi"><div class="n" id="s-mem">0</div><div class="l">Total Paid Members</div></div>
+        <div class="sim-kpi"><div class="n" id="s-be">—</div><div class="l">Break-Even Month</div></div>
+        <div class="sim-kpi"><div class="n" id="s-ltv"><span>$</span>0</div><div class="l">Blended LTV</div></div>
+        <div class="sim-kpi"><div class="n" id="s-ratio">0<span>:1</span></div><div class="l">LTV : CAC (CAC=$200)</div></div>
+      </div>
+      <div class="chart-wrap" style="height:280px;margin-bottom:16px;">
+        <canvas id="simChart"></canvas>
+      </div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="simMixChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end simulator -->
+</div><!-- end page -->
+
+<div class="s-mark">S</div>
+<div style="position:fixed;bottom:20px;left:24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:rgba(160,160,152,0.4);pointer-events:none;">v1.0.0</div>
+
+<script>
+// ===================== UTILITIES =====================
+function fmt(n){
+  if(n>=1000000) return '$'+(n/1000000).toFixed(1)+'M';
+  if(n>=1000) return '$'+(n/1000).toFixed(0)+'K';
+  return '$'+Math.round(n).toLocaleString();
+}
+function fmtN(n){
+  if(n>=1000) return (n/1000).toFixed(1)+'K';
+  return Math.round(n).toString();
+}
+
+// ===================== TAB SWITCH =====================
+function showTab(id,el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='proforma') setTimeout(()=>initProforma('base'),100);
+  if(id==='simulator') setTimeout(()=>simUpdate(),100);
+}
+
+function toggleMode(){
+  document.body.classList.toggle('light');
+  if(revenueChart) { revenueChart.destroy(); revenueChart=null; }
+  if(memberChart) { memberChart.destroy(); memberChart=null; }
+  if(tierChart) { tierChart.destroy(); tierChart=null; }
+  if(simChartObj) { simChartObj.destroy(); simChartObj=null; }
+  if(simMixChartObj) { simMixChartObj.destroy(); simMixChartObj=null; }
+  const active = document.querySelector('.section.active').id;
+  if(active==='proforma') setTimeout(()=>initProforma(currentScenario),100);
+  if(active==='simulator') setTimeout(()=>simUpdate(),100);
+}
+
+// ===================== PRO FORMA CALC =====================
+const scenarios = {
+  conservative:{ startSparks:50, sparkGrowth:0.08, s2b:0.10, b2v:0.12, v2s:0.10, bchurn:0.08, vchurn:0.05, schurn:0.03, balc:40, valc:120 },
+  base:{ startSparks:100, sparkGrowth:0.15, s2b:0.15, b2v:0.20, v2s:0.15, bchurn:0.05, vchurn:0.03, schurn:0.02, balc:75, valc:200 },
+  aggressive:{ startSparks:150, sparkGrowth:0.25, s2b:0.22, b2v:0.28, v2s:0.20, bchurn:0.03, vchurn:0.02, schurn:0.01, balc:120, valc:350 }
+};
+
+let currentScenario='base';
+let revenueChart=null, memberChart=null, tierChart=null;
+
+function calcScenario(s){
+  const p=scenarios[s];
+  const data=[];
+  let builders=0,ventures=0,superpowers=0;
+  let sparks=p.startSparks;
+  const monthlyCost=[135000,140000,145000,150000,155000,160000,165000,175000,185000,195000,210000,225000,
+                     240000,255000,270000,285000,300000,320000,340000,360000,380000,400000,420000,440000,
+                     460000,480000,500000,520000,550000,580000,610000,640000,680000,720000,760000,800000];
+  for(let m=1;m<=36;m++){
+    sparks*=(1+p.sparkGrowth);
+    const nb=Math.round(sparks*p.s2b);
+    const nv=Math.round(builders*p.b2v/12);
+    const ns=Math.round(ventures*p.v2s/12);
+    builders=Math.round(builders*(1-p.bchurn))+nb;
+    ventures=Math.round(ventures*(1-p.vchurn))+nv;
+    superpowers=Math.round(superpowers*(1-p.schurn))+ns;
+    const memRev=builders*199+ventures*599+superpowers*1499;
+    const alcRev=builders*p.balc+ventures*p.valc;
+    const totalRev=memRev+alcRev;
+    const cost=monthlyCost[m-1]||800000;
+    const ebitda=totalRev-cost;
+    data.push({m,builders,ventures,superpowers,memRev,alcRev,totalRev,cost,ebitda});
+  }
+  return data;
+}
+
+function setScenario(s,el){
+  currentScenario=s;
+  document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(revenueChart){revenueChart.destroy();revenueChart=null;}
+  if(memberChart){memberChart.destroy();memberChart=null;}
+  if(tierChart){tierChart.destroy();tierChart=null;}
+  initProforma(s);
+}
+
+function initProforma(s){
+  currentScenario=s;
+  const data=calcScenario(s);
+  const last=data[35];
+  const totalMembers=last.builders+last.ventures+last.superpowers;
+  const year3Rev=data.slice(24).reduce((a,d)=>a+d.totalRev,0);
+  let beMonth='—';
+  for(let i=0;i<data.length;i++){
+    if(data[i].ebitda>0){beMonth=(i+1)+'';break;}
+  }
+
+  document.getElementById('kpi-arr').innerHTML='<span>$</span>'+(year3Rev/1000000).toFixed(1)+'M';
+  document.getElementById('kpi-mrr').innerHTML='<span>$</span>'+(last.totalRev/1000).toFixed(0)+'K';
+  document.getElementById('kpi-members').textContent=totalMembers.toLocaleString();
+  document.getElementById('kpi-be').textContent=beMonth==='—'?'—':'Mo. '+beMonth;
+
+  const labels=data.map(d=>'M'+d.m);
+  const bg=getComputedStyle(document.body).getPropertyValue('--orange').trim();
+
+  // Revenue chart
+  const rctx=document.getElementById('revenueChart').getContext('2d');
+  if(revenueChart)revenueChart.destroy();
+  revenueChart=new Chart(rctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Membership MRR',data:data.map(d=>d.memRev),borderColor:'#FF5E1A',backgroundColor:'rgba(255,94,26,0.1)',fill:true,tension:0.4,borderWidth:2,pointRadius:0},
+        {label:'À La Carte',data:data.map(d=>d.alcRev),borderColor:'#C9A052',backgroundColor:'rgba(201,160,82,0.1)',fill:true,tension:0.4,borderWidth:2,pointRadius:0},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:getComputedStyle(document.body).getPropertyValue('--white').trim(),font:{family:'JetBrains Mono',size:11}}}},scales:{x:{ticks:{color:'#A0A098',font:{size:10,family:'JetBrains Mono'}},grid:{color:'rgba(240,237,232,0.04)'}},y:{ticks:{color:'#A0A098',font:{size:10,family:'JetBrains Mono'},callback:v=>fmt(v)},grid:{color:'rgba(240,237,232,0.04)'}}}}
+  });
+
+  // Member chart
+  const mctx=document.getElementById('memberChart').getContext('2d');
+  if(memberChart)memberChart.destroy();
+  memberChart=new Chart(mctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Builders',data:data.map(d=>d.builders),borderColor:'#FF5E1A',tension:0.4,borderWidth:2,pointRadius:0},
+        {label:'Ventures',data:data.map(d=>d.ventures),borderColor:'#C9A052',tension:0.4,borderWidth:2,pointRadius:0},
+        {label:'Superpowers',data:data.map(d=>d.superpowers),borderColor:'#F0EDE8',tension:0.4,borderWidth:2,pointRadius:0},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#A0A098',font:{family:'JetBrains Mono',size:10}}}},scales:{x:{ticks:{color:'#A0A098',font:{size:10}},grid:{color:'rgba(240,237,232,0.04)'}},y:{ticks:{color:'#A0A098',font:{size:10}},grid:{color:'rgba(240,237,232,0.04)'}}}}
+  });
+
+  // Tier revenue donut at month 36
+  const tctx=document.getElementById('tierChart').getContext('2d');
+  if(tierChart)tierChart.destroy();
+  tierChart=new Chart(tctx,{
+    type:'doughnut',
+    data:{
+      labels:['Builder','Venture','Superpower','À La Carte'],
+      datasets:[{data:[last.builders*199,last.ventures*599,last.superpowers*1499,last.alcRev],backgroundColor:['#FF5E1A','#C9A052','#F0EDE8','#2C2C34'],borderWidth:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#A0A098',font:{family:'JetBrains Mono',size:10},padding:12}}}}
+  });
+
+  // Year 1 table
+  const tbody=document.getElementById('y1table');
+  const rows=tbody.querySelectorAll('tr.data-row');
+  rows.forEach(r=>r.remove());
+  data.slice(0,12).forEach(d=>{
+    const tr=document.createElement('tr');
+    tr.className='data-row';
+    tr.innerHTML=`<td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">Mo. ${d.m}</span></td><td>${d.builders.toLocaleString()}</td><td>${d.ventures.toLocaleString()}</td><td>${d.superpowers.toLocaleString()}</td><td style="color:var(--white);">${fmt(d.memRev)}</td><td style="color:var(--muted);">${fmt(d.alcRev)}</td><td style="color:var(--orange);font-weight:600;">${fmt(d.totalRev)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===================== SIMULATOR =====================
+let simChartObj=null, simMixChartObj=null;
+
+function simUpdate(){
+  const sparks=+document.getElementById('sparks').value;
+  const s2b=+document.getElementById('s2b').value/100;
+  const b2v=+document.getElementById('b2v').value/100;
+  const v2s=+document.getElementById('v2s').value/100;
+  const bchurn=+document.getElementById('bchurn').value/100;
+  const vchurn=+document.getElementById('vchurn').value/100;
+  const schurn=+document.getElementById('schurn').value/100;
+  const balc=+document.getElementById('balc').value;
+  const valc=+document.getElementById('valc').value;
+  const sgrow=+document.getElementById('sgrow').value/100;
+
+  document.getElementById('v-sparks').textContent=sparks;
+  document.getElementById('v-s2b').textContent=s2b*100+'%';
+  document.getElementById('v-b2v').textContent=b2v*100+'%';
+  document.getElementById('v-v2s').textContent=v2s*100+'%';
+  document.getElementById('v-bchurn').textContent=bchurn*100+'%';
+  document.getElementById('v-vchurn').textContent=vchurn*100+'%';
+  document.getElementById('v-schurn').textContent=schurn*100+'%';
+  document.getElementById('v-balc').textContent='$'+balc;
+  document.getElementById('v-valc').textContent='$'+valc;
+  document.getElementById('v-sgrow').textContent=sgrow*100+'%';
+
+  const data=[];
+  let builders=0,ventures=0,superpowers=0;
+  let curSparks=sparks;
+  const fixedCost=135000;
+  let beMonth=null;
+
+  for(let m=1;m<=36;m++){
+    curSparks*=(1+sgrow);
+    const nb=Math.round(curSparks*s2b);
+    const nv=Math.round(builders*b2v/12);
+    const ns=Math.round(ventures*v2s/12);
+    builders=Math.round(builders*(1-bchurn))+nb;
+    ventures=Math.round(ventures*(1-vchurn))+nv;
+    superpowers=Math.round(superpowers*(1-schurn))+ns;
+    const totalRev=builders*199+ventures*599+superpowers*1499+builders*balc+ventures*valc;
+    const cost=fixedCost*(1+m*0.02);
+    if(!beMonth && totalRev>cost) beMonth=m;
+    data.push({m,builders,ventures,superpowers,totalRev});
+  }
+
+  const last=data[35];
+  const totalMem=last.builders+last.ventures+last.superpowers;
+  const y3rev=data.slice(24).reduce((a,d)=>a+d.totalRev,0);
+  const blendedLTV=totalMem>0?((last.builders*199*18+last.ventures*599*24+last.superpowers*1499*30)/totalMem):0;
+  const cac=200;
+  const ratio=blendedLTV/cac;
+
+  document.getElementById('s-mrr').innerHTML='<span>$</span>'+(last.totalRev/1000).toFixed(0)+'K';
+  document.getElementById('s-arr').innerHTML='<span>$</span>'+(y3rev/1000000).toFixed(1)+'M';
+  document.getElementById('s-mem').textContent=totalMem.toLocaleString();
+  document.getElementById('s-be').textContent=beMonth?'Mo. '+beMonth:'36+';
+  document.getElementById('s-ltv').innerHTML='<span>$</span>'+(blendedLTV/1000).toFixed(0)+'K';
+  document.getElementById('s-ratio').innerHTML=ratio.toFixed(0)+'<span>:1</span>';
+
+  const labels=data.map(d=>'M'+d.m);
+
+  const sctx=document.getElementById('simChart').getContext('2d');
+  if(simChartObj)simChartObj.destroy();
+  simChartObj=new Chart(sctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[{label:'Total MRR',data:data.map(d=>d.totalRev),borderColor:'#FF5E1A',backgroundColor:'rgba(255,94,26,0.12)',fill:true,tension:0.4,borderWidth:2,pointRadius:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#A0A098',font:{family:'JetBrains Mono',size:10}}}},scales:{x:{ticks:{color:'#A0A098',font:{size:10}},grid:{color:'rgba(240,237,232,0.04)'}},y:{ticks:{color:'#A0A098',font:{size:10},callback:v=>fmt(v)},grid:{color:'rgba(240,237,232,0.04)'}}}}
+  });
+
+  const smctx=document.getElementById('simMixChart').getContext('2d');
+  if(simMixChartObj)simMixChartObj.destroy();
+  simMixChartObj=new Chart(smctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        {label:'Builder',data:data.map(d=>d.builders*199),backgroundColor:'rgba(255,94,26,0.7)',stack:'s'},
+        {label:'Venture',data:data.map(d=>d.ventures*599),backgroundColor:'rgba(201,160,82,0.7)',stack:'s'},
+        {label:'Superpower',data:data.map(d=>d.superpowers*1499),backgroundColor:'rgba(240,237,232,0.5)',stack:'s'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#A0A098',font:{family:'JetBrains Mono',size:10}}}},scales:{x:{ticks:{color:'#A0A098',font:{size:9}},grid:{display:false}},y:{ticks:{color:'#A0A098',font:{size:9},callback:v=>fmt(v)},grid:{color:'rgba(240,237,232,0.04)'}}}}
+  });
+}
+
+// ===================== INIT =====================
+window.onload=()=>{
+  initProforma('base');
+};
+</script>
+</body>
+</html>

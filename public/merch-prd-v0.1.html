@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Merchandise Portal — PRD v0.1 | Domo Cafe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0C0C0C;
+    --surface: #111111;
+    --surface2: #1A1A18;
+    --surface3: #222220;
+    --text: #F0EDE8;
+    --muted: #A0A098;
+    --accent: #C9A052;
+    --accent-hover: #e8c07a;
+    --border: rgba(240,237,232,0.08);
+    --border-accent: rgba(201,160,82,0.3);
+    --tbd: #C96A1A;
+    --tbd-bg: rgba(201,106,26,0.12);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #F8F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE8;
+    --surface3: #E8E4DC;
+    --text: #1A1A18;
+    --muted: #6A6A62;
+    --accent: #A07832;
+    --accent-hover: #C9A052;
+    --border: rgba(26,26,24,0.1);
+    --border-accent: rgba(160,120,50,0.3);
+    --tbd: #B85A10;
+    --tbd-bg: rgba(185,90,16,0.1);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  h1,h2,h3,h4,h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; line-height: 1.25; }
+
+  /* HEADER */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .version-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    background: var(--border-accent);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ctrl-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .ctrl-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-accent); }
+  .ctrl-btn.edit-active { background: var(--border-accent); color: var(--accent); border-color: var(--border-accent); }
+  .theme-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { background: var(--surface3); border-color: var(--border-accent); }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    padding-top: 60px;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    top: 60px; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 0;
+    z-index: 50;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 0 20px 10px;
+  }
+  .toc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .toc-link:hover { color: var(--text); background: var(--surface2); }
+  .toc-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--tbd-bg); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    max-width: 900px;
+    padding: 48px 60px 120px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 80px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--border-accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .section-title {
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  /* SUBSECTION */
+  .subsection { margin-bottom: 32px; }
+  .subsection-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .info-box.accent { border-color: var(--border-accent); background: rgba(201,160,82,0.05); }
+  .info-box.warning { border-color: rgba(201,106,26,0.3); background: var(--tbd-bg); }
+
+  /* TBD */
+  .tbd {
+    color: var(--tbd);
+    background: var(--tbd-bg);
+    border: 1px solid rgba(201,106,26,0.25);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* TABLES */
+  .table-wrap { overflow-x: auto; margin-bottom: 16px; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* PILL TAGS */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .pill-green { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+  .pill-yellow { background: rgba(201,160,82,0.12); color: var(--accent); border: 1px solid var(--border-accent); }
+  .pill-red { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+  .pill-blue { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
+  .pill-orange { background: var(--tbd-bg); color: var(--tbd); border: 1px solid rgba(201,106,26,0.25); }
+
+  /* WORKFLOW */
+  .workflow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .workflow-step {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .workflow-node {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .workflow-node.highlight { background: var(--border-accent); color: var(--accent); border-color: var(--border-accent); }
+  .workflow-arrow {
+    padding: 0 6px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* PHASE CARD */
+  .phase-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .phase-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .phase-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    flex: 1;
+  }
+  .phase-body { padding: 16px 20px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  /* STAT BOX */
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-lbl { font-size: 12px; color: var(--muted); }
+
+  /* LISTS */
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* EDITABLE */
+  [contenteditable="true"] {
+    outline: 2px dashed var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+    min-width: 40px;
+    min-height: 1em;
+    display: inline-block;
+    cursor: text;
+    transition: outline 0.2s;
+  }
+  [contenteditable="true"]:focus { outline-color: var(--accent-hover); background: rgba(201,160,82,0.05); }
+  .edit-mode-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
+    padding: 10px 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-mode-bar.visible { display: flex; }
+  .edit-bar-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-bar-btn.save { background: var(--accent); color: #0C0C0C; }
+  .edit-bar-btn.save:hover { background: var(--accent-hover); }
+  .edit-bar-btn.restore { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .edit-bar-btn.restore:hover { color: var(--text); }
+  .edit-bar-btn.exit { background: transparent; color: var(--muted); border: none; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 300;
+    background: var(--surface2);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transform: translateX(120%);
+    transition: transform 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show { transform: translateX(0); }
+
+  /* FOOTER */
+  .footer {
+    position: fixed;
+    bottom: 0; right: 0;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* PRINT */
+  @media print {
+    .header, .sidebar, .footer, .edit-mode-bar, .toast { display: none !important; }
+    .main { margin-left: 0; padding: 20px; max-width: 100%; }
+    body { background: white; color: black; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 32px 24px 80px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* CODE */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* INTRO CARD */
+  .intro-hero {
+    background: linear-gradient(135deg, rgba(201,160,82,0.08), rgba(201,106,26,0.05));
+    border: 1px solid var(--border-accent);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+  }
+  .intro-hero h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .intro-hero .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .meta-item span { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">
+    🛍️ Merchandise Portal — PRD
+    <span class="version-badge">v0.1</span>
+  </div>
+  <div class="header-controls">
+    <button class="ctrl-btn" onclick="window.print()">🖨️ Print / PDF</button>
+    <button class="ctrl-btn" id="editToggleBtn" onclick="toggleEditMode()">✏️ Edit</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle light/dark">🌙</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-label">Contents</div>
+  <a class="toc-link" href="#overview"><span class="toc-num">01</span>Overview</a>
+  <a class="toc-link" href="#house-merch"><span class="toc-num">02</span>House Merch</a>
+  <a class="toc-link" href="#licensed-merch"><span class="toc-num">03</span>Licensed Merch</a>
+  <a class="toc-link" href="#workflow"><span class="toc-num">04</span>Workflow</a>
+  <a class="toc-link" href="#portal-features"><span class="toc-num">05</span>Portal Features</a>
+  <a class="toc-link" href="#integrations"><span class="toc-num">06</span>Integrations</a>
+  <a class="toc-link" href="#roles"><span class="toc-num">07</span>Roles & Permissions</a>
+  <a class="toc-link" href="#mvp"><span class="toc-num">08</span>MVP Scope</a>
+  <a class="toc-link" href="#roadmap"><span class="toc-num">09</span>Roadmap</a>
+  <a class="toc-link" href="#open-questions"><span class="toc-num">10</span>Open Questions</a>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+<main class="main">
+
+  <!-- HERO -->
+  <div class="intro-hero">
+    <h1>Merchandise Portal</h1>
+    <p class="subtitle">Product Requirements Document — Domo Cafe Merchandise Management System</p>
+    <div class="meta-row">
+      <div class="meta-item">📅 Date: <span class="editable">June 2026</span></div>
+      <div class="meta-item">👤 Owner: <span class="editable">Izzy Aala</span></div>
+      <div class="meta-item">🏢 Venture: <span>Domo Cafe</span></div>
+      <div class="meta-item">📋 Status: <span class="pill pill-yellow">Draft</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Vision</div>
+      <div class="info-box accent">
+        <p class="editable">Build a unified merchandise management portal that enables Domo Cafe to design, produce, inventory, sell, and report on both house-branded and NHK-licensed merchandise — while maintaining full compliance with licensing agreements and streamlining the approval-to-shelf workflow.</p>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Problem Statement</div>
+      <p>Domo Cafe operates two distinct merchandise tracks — house-branded products and NHK/Domo-kun licensed items — each with fundamentally different compliance, approval, and royalty requirements. Without a centralized system:</p>
+      <ul>
+        <li>Design approvals are managed via email, creating audit gaps</li>
+        <li>Royalty calculations are manual and error-prone</li>
+        <li>Inventory visibility is siloed between POS and vendor systems</li>
+        <li>There is no single source of truth for product catalog, SKUs, or sales data</li>
+        <li>NHK reporting is time-consuming and inconsistent</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Scope</div>
+      <div class="grid-2">
+        <div class="info-box">
+          <div class="card-title">✅ In Scope</div>
+          <ul style="margin-top:8px">
+            <li>House merch catalog management</li>
+            <li>NHK-licensed product management</li>
+            <li>Design approval workflow</li>
+            <li>Inventory tracking</li>
+            <li>Sales & royalty reporting</li>
+            <li>Vendor management (L2P + others)</li>
+            <li>Toast POS integration</li>
+            <li>Shopify / storefront integration</li>
+          </ul>
+        </div>
+        <div class="info-box">
+          <div class="card-title">❌ Out of Scope (v0.1)</div>
+          <ul style="margin-top:8px">
+            <li>Full ERP / accounting integration</li>
+            <li>Manufacturing management</li>
+            <li>International shipping logistics</li>
+            <li>Consumer-facing storefront (integration only)</li>
+            <li>Brand licensing for non-NHK IP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Key Metrics</div>
+      <div class="grid-3">
+        <div class="stat-box">
+          <span class="stat-val">~30%</span>
+          <span class="stat-lbl">Reduction in approval cycle time (target)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">100%</span>
+          <span class="stat-lbl">NHK royalty accuracy (zero manual errors)</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val tbd">[ TBD ]</span>
+          <span class="stat-lbl">SKU count at launch</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: HOUSE MERCH -->
+  <section class="section" id="house-merch">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">House Merch</h2>
+    </div>
+    <p>Domo Cafe's own-branded merchandise — designed and produced under Domo Cafe's IP with no external licensing requirements. Higher margin, faster approval cycle, and full creative control.</p>
+
+    <div class="subsection">
+      <div class="subsection-title">Product Categories</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">👕 Apparel</div>
+          <ul>
+            <li>T-shirts (unisex, seasonal colorways)</li>
+            <li>Hoodies & crewnecks</li>
+            <li>Hats (snapback, dad hat, beanie)</li>
+            <li>Kids sizing available</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">☕ Drinkware</div>
+          <ul>
+            <li>Branded mugs (ceramic + enamel)</li>
+            <li>Tumblers & travel cups</li>
+            <li>Boba cups (custom branded)</li>
+            <li>Reusable straw sets</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">👜 Accessories</div>
+          <ul>
+            <li>Tote bags (canvas, reusable)</li>
+            <li>Enamel pins</li>
+            <li>Keychains</li>
+            <li>Sticker packs</li>
+            <li>Socks</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">🌟 Special</div>
+          <ul>
+            <li>Seasonal / limited edition drops</li>
+            <li>Holiday-themed collections</li>
+            <li>Collaboration items</li>
+            <li>Staff uniform items (internal use)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Production Notes</div>
+      <div class="info-box">
+        <ul>
+          <li>Primary vendor: <strong>L2P</strong> (current) — see Integrations section</li>
+          <li>No external approval required — internal review only</li>
+          <li>Staff uniforms flow through same catalog system but are flagged <code>internal_use</code></li>
+          <li>Seasonal drops require 90-day lead time minimum <span class="tbd">[ TBD: confirm with L2P ]</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: LICENSED MERCH -->
+  <section class="section" id="licensed-merch">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Licensed Merch</h2>
+    </div>
+    <p>NHK/Domo-kun licensed products are subject to a formal licensing agreement with royalty obligations and mandatory pre-production approval from NHK Enterprises.</p>
+
+    <div class="subsection">
+      <div class="subsection-title">License Contacts</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Role</th><th>Name</th><th>Contact</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-blue">NHK Approval</span></td>
+              <td>Shiraya Tanaka</td>
+              <td><code>tanaka-shi@nhk-ep.co.jp</code></td>
+              <td>Primary NHK contact; all design submissions go here</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-yellow">Agent</span></td>
+              <td>Russell Binder</td>
+              <td><code>Russell@strikerent.com</code></td>
+              <td>Striker Entertainment; licensing agent representation</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Royalty Structure</div>
+      <div class="grid-3">
+        <div class="stat-box">
+          <span class="stat-val">8%</span>
+          <span class="stat-lbl">DTC (Direct-to-Consumer) royalty rate</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">13%</span>
+          <span class="stat-lbl">Wholesale royalty rate</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">2%</span>
+          <span class="stat-lbl">Marketing fee on net wholesale</span>
+        </div>
+      </div>
+      <div class="info-box warning" style="margin-top:16px">
+        <ul>
+          <li>MG (Minimum Guarantee): <strong>$35,000</strong> per 12-month term</li>
+          <li>Royalty basis: Net sales (after returns, discounts)</li>
+          <li>Reporting frequency: <span class="tbd">[ TBD: monthly or quarterly ]</span></li>
+          <li>Payment terms: <span class="tbd">[ TBD: confirm with Russell ]</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Approval Requirements</div>
+      <div class="info-box">
+        <ul>
+          <li>ALL designs featuring Domo-kun IP require NHK pre-approval before ANY production</li>
+          <li>Mockup + colorway + material spec submitted via approval workflow</li>
+          <li>NHK review SLA: <span class="tbd">[ TBD: estimated 10-15 business days ]</span></li>
+          <li>Approved designs receive approval reference number for recordkeeping</li>
+          <li>No substitutions or modifications post-approval without re-submission</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Digital Collectible Tie-In</div>
+      <div class="info-box accent">
+        <div class="card-title">📌 Physical ↔ Digital Twin Concept</div>
+        <p style="margin-top:8px">Physical enamel pins in the <strong>Domo Cafe Crew pin series</strong> each map to a digital collectible twin. Physical purchase unlocks digital version.</p>
+        <ul>
+          <li>Physical: NHK-licensed enamel pins (collector series)</li>
+          <li>Digital: NFT or digital collectible counterpart <span class="tbd">[ TBD: platform selection ]</span></li>
+          <li>Claim mechanism: <span class="tbd">[ TBD: QR code, receipt scan, or app ]</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: WORKFLOW -->
+  <section class="section" id="workflow">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Workflow</h2>
+    </div>
+    <p>End-to-end merchandise workflow from concept to reporting. Licensed items include an NHK approval gate not present in house merch.</p>
+
+    <div class="subsection">
+      <div class="subsection-title">Full Workflow</div>
+      <div class="workflow" style="flex-direction:column;gap:8px">
+        <div class="workflow-step">
+          <div class="workflow-node highlight">CONCEPT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">DESIGN</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">NHK APPROVAL <small style="font-size:9px">(licensed only)</small></div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">SAMPLING</div>
+        </div>
+        <div class="workflow-step" style="margin-top:8px">
+          <div class="workflow-node highlight">PRODUCTION</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">QC</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">INVENTORY RECEIPT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">LISTING</div>
+        </div>
+        <div class="workflow-step" style="margin-top:8px">
+          <div class="workflow-node highlight">SALES</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">FULFILLMENT</div>
+          <div class="workflow-arrow">→</div>
+          <div class="workflow-node highlight">ROYALTY REPORTING</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Stage Definitions</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Owner</th><th>System Action</th><th>Licensed Only?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Concept</strong></td><td>Designer / GM</td><td>Create product brief in portal</td><td>No</td></tr>
+            <tr><td><strong>Design</strong></td><td>Designer</td><td>Upload mockup files, set variants</td><td>No</td></tr>
+            <tr><td><strong>NHK Approval</strong></td><td>Ops / Jarvis</td><td>Submit to NHK workflow; track status</td><td>✅ Yes</td></tr>
+            <tr><td><strong>Sampling</strong></td><td>Ops</td><td>Order samples from vendor; log receipt</td><td>No</td></tr>
+            <tr><td><strong>Production</strong></td><td>Ops</td><td>Issue PO to vendor; track lead time</td><td>No</td></tr>
+            <tr><td><strong>QC</strong></td><td>Ops</td><td>Log QC pass/fail; approve for inventory</td><td>No</td></tr>
+            <tr><td><strong>Inventory Receipt</strong></td><td>Ops / System</td><td>Scan/log units received; update stock</td><td>No</td></tr>
+            <tr><td><strong>Listing</strong></td><td>Ops</td><td>Publish to POS + storefront</td><td>No</td></tr>
+            <tr><td><strong>Sales</strong></td><td>System</td><td>Sync from Toast + Shopify</td><td>No</td></tr>
+            <tr><td><strong>Fulfillment</strong></td><td>Ops</td><td>Process orders; update tracking</td><td>No</td></tr>
+            <tr><td><strong>Royalty Reporting</strong></td><td>Jarvis / System</td><td>Auto-calculate; generate NHK statement</td><td>✅ Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: PORTAL FEATURES -->
+  <section class="section" id="portal-features">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Portal Features</h2>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Product Catalog</div>
+      <div class="card">
+        <ul>
+          <li>Multi-variant product management (size, color, material, SKU)</li>
+          <li>Product type flags: <code>house</code> / <code>licensed</code> / <code>internal</code></li>
+          <li>Variant matrix builder (auto-generate SKUs)</li>
+          <li>Product image gallery (mockup + production photos)</li>
+          <li>Linked approval records (for licensed items)</li>
+          <li>Cost + retail price fields with margin calculator</li>
+          <li>Barcode / QR code generation per SKU</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Vendor Management</div>
+      <div class="card">
+        <ul>
+          <li>Vendor profiles (L2P + future vendors)</li>
+          <li>Product ↔ vendor mapping</li>
+          <li>PO generation and tracking</li>
+          <li>Lead time tracking per vendor</li>
+          <li>Vendor performance history</li>
+          <li>Contact directory per vendor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Design Approval Workflow (NHK)</div>
+      <div class="card">
+        <ul>
+          <li>Upload mockup + spec sheets per product</li>
+          <li>Submission tracker (submitted / under review / approved / rejected)</li>
+          <li>NHK approval reference number field</li>
+          <li>Revision history per submission</li>
+          <li>Email notification on status change</li>
+          <li>Rejection reason capture + design revision request</li>
+          <li>Approval expiry tracking <span class="tbd">[ TBD: NHK approval validity window ]</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Inventory Tracker</div>
+      <div class="card">
+        <ul>
+          <li>Real-time stock levels per SKU per location</li>
+          <li>Par levels with automated reorder alerts</li>
+          <li>Inventory receipt log (date, quantity, PO reference)</li>
+          <li>Shrinkage / adjustment tracking</li>
+          <li>Low-stock dashboard widget</li>
+          <li>Multi-location support (cafe floor, stockroom, online) <span class="tbd">[ TBD ]</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Sales Dashboard</div>
+      <div class="card">
+        <ul>
+          <li>Units sold by channel (DTC in-store, DTC online, wholesale)</li>
+          <li>Revenue by product / category / channel</li>
+          <li>Royalties owed (auto-calculated) by period</li>
+          <li>Best sellers + slow movers</li>
+          <li>Date range filtering (daily / weekly / monthly / custom)</li>
+          <li>Export to CSV / PDF</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Royalty Calculator</div>
+      <div class="card">
+        <ul>
+          <li>Auto-applies 8% (DTC) or 13% (wholesale) on net sales</li>
+          <li>2% marketing fee auto-applied on net wholesale</li>
+          <li>MG tracker: shows YTD royalties vs. $35,000 MG</li>
+          <li>Monthly NHK statement generator (PDF)</li>
+          <li>Overage / underage flagging</li>
+          <li>Audit trail for all calculations</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Order Management</div>
+      <div class="card">
+        <ul>
+          <li>In-store orders via Toast POS (synced)</li>
+          <li>Online orders via Shopify or custom storefront (synced)</li>
+          <li>Wholesale order entry + tracking</li>
+          <li>Fulfillment status per order</li>
+          <li>Returns + exchanges processing</li>
+          <li>Order history searchable by SKU, customer, date</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: INTEGRATIONS -->
+  <section class="section" id="integrations">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Integrations</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>System</th><th>Type</th><th>Purpose</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Toast POS</strong></td>
+            <td>Bidirectional</td>
+            <td>Sync merch sales, inventory updates, SKU listings</td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>L2P</strong></td>
+            <td>Vendor API</td>
+            <td>PO submission, production status, inventory receipt</td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Shopify</strong></td>
+            <td>Bidirectional</td>
+            <td>Online storefront sync (products, inventory, orders)</td>
+            <td><span class="pill pill-yellow">Evaluating</span></td>
+          </tr>
+          <tr>
+            <td><strong>NHK Approval Flow</strong></td>
+            <td>Email / Portal</td>
+            <td>Design submission and approval tracking</td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+          <tr>
+            <td><strong>Royalty Tracker</strong></td>
+            <td>Internal</td>
+            <td>Auto-calculate and report NHK royalties</td>
+            <td><span class="pill pill-blue">Build</span></td>
+          </tr>
+          <tr>
+            <td><strong>Custom Storefront</strong></td>
+            <td>Optional</td>
+            <td>Alternative to Shopify for online sales</td>
+            <td><span class="pill pill-orange">[ TBD ]</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box warning">
+      <strong>⚠️ Integration Decision Pending:</strong> Shopify vs. custom storefront needs to be resolved before Phase 1 build begins. <span class="tbd">[ TBD: Izzy to decide ]</span>
+    </div>
+  </section>
+
+  <!-- SECTION 7: ROLES -->
+  <section class="section" id="roles">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Roles &amp; Permissions</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Product Catalog</th><th>NHK Approval</th><th>Inventory</th><th>Sales / Reports</th><th>Royalty</th><th>Vendor Mgmt</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="pill pill-red">GM</span></td>
+            <td>Full access</td>
+            <td>View + submit</td>
+            <td>Full access</td>
+            <td>Full access</td>
+            <td>View + approve</td>
+            <td>Full access</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-blue">Ops Manager</span></td>
+            <td>Edit (no delete)</td>
+            <td>Submit + track</td>
+            <td>Full access</td>
+            <td>View + export</td>
+            <td>View</td>
+            <td>Edit</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-green">Designer</span></td>
+            <td>View + upload designs</td>
+            <td>Submit designs</td>
+            <td>View only</td>
+            <td>No access</td>
+            <td>No access</td>
+            <td>No access</td>
+          </tr>
+          <tr>
+            <td><span class="pill pill-yellow">Jarvis (AI)</span></td>
+            <td>Read + auto-update</td>
+            <td>Track + notify</td>
+            <td>Read + alert</td>
+            <td>Generate reports</td>
+            <td>Auto-calculate</td>
+            <td>Read only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 8: MVP -->
+  <section class="section" id="mvp">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">MVP Scope — Phase 1</h2>
+    </div>
+
+    <div class="info-box accent">
+      <p><strong>Phase 1 target:</strong> A working portal that handles the core catalog-to-compliance loop. Get the NHK workflow digital and get royalty math out of spreadsheets.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Must-Have (Phase 1)</div>
+      <div class="card">
+        <ul>
+          <li>✅ Product catalog with SKU management and variant support</li>
+          <li>✅ Inventory tracking (stock levels, par, reorder alerts)</li>
+          <li>✅ Design approval workflow for NHK-licensed items</li>
+          <li>✅ Basic sales reporting (units, revenue by channel)</li>
+          <li>✅ Royalty calculation (auto 8% DTC / 13% wholesale)</li>
+          <li>✅ Role-based access (GM, Ops, Designer)</li>
+          <li>✅ Toast POS sync (read sales)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsection-title">Explicitly Deferred</div>
+      <div class="card">
+        <ul>
+          <li>❌ Shopify bidirectional sync (online orders)</li>
+          <li>❌ Digital collectible twin integration</li>
+          <li>❌ Wholesale order portal (manual entry only in Phase 1)</li>
+          <li>❌ Multi-location inventory</li>
+          <li>❌ Automated NHK email submission (manual export in Phase 1)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="meta-row">
+        <div class="meta-item">🗓 Target Launch: <span class="tbd editable">[ TBD ]</span></div>
+        <div class="meta-item">👥 Team: <span class="tbd editable">[ TBD ]</span></div>
+        <div class="meta-item">💰 Budget: <span class="tbd editable">[ TBD ]</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9: ROADMAP -->
+  <section class="section" id="roadmap">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Roadmap</h2>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 1</span>
+        <span class="phase-title">Foundation</span>
+        <span class="pill pill-yellow">MVP</span>
+        <span class="tbd">[ TBD: timeline ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Product catalog + SKU management</li>
+          <li>Inventory tracking with par levels</li>
+          <li>NHK design approval workflow</li>
+          <li>Basic sales reporting</li>
+          <li>Royalty auto-calculator</li>
+          <li>Toast POS read integration</li>
+          <li>Role-based access control</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 2</span>
+        <span class="phase-title">Commerce Integration</span>
+        <span class="pill pill-blue">Planned</span>
+        <span class="tbd">[ TBD: timeline ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Shopify / storefront full bidirectional sync</li>
+          <li>Online order management</li>
+          <li>Wholesale order portal</li>
+          <li>Automated NHK statement generation + email</li>
+          <li>Advanced inventory (multi-location)</li>
+          <li>Vendor portal (L2P self-service)</li>
+          <li>PO automation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 3</span>
+        <span class="phase-title">Intelligence Layer</span>
+        <span class="pill pill-green">Future</span>
+        <span class="tbd">[ TBD: timeline ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Digital collectible twin integration (pin series)</li>
+          <li>Demand forecasting (Jarvis AI)</li>
+          <li>Automated reorder (L2P API)</li>
+          <li>Customer segmentation by merch purchase</li>
+          <li>Loyalty / Chomps tie-in (merch rewards)</li>
+          <li>Influencer gifting tracking</li>
+          <li>Real-time royalty dashboard (NHK-accessible)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10: OPEN QUESTIONS -->
+  <section class="section" id="open-questions">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2 class="section-title">Open Questions</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Question</th><th>Owner</th><th>Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>Q1</code></td>
+            <td>Shopify vs. custom storefront for online merch sales?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q2</code></td>
+            <td>NHK design approval SLA — what is the expected turnaround time?</td>
+            <td class="editable">Russell / Shiraya</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q3</code></td>
+            <td>NHK approval validity window — do approved designs expire?</td>
+            <td class="editable">Russell</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q4</code></td>
+            <td>Royalty reporting frequency — monthly or quarterly?</td>
+            <td class="editable">Russell</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q5</code></td>
+            <td>L2P API availability — can we integrate or is it manual?</td>
+            <td class="editable">Ops</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q6</code></td>
+            <td>Digital collectible platform — which blockchain/platform for pin twins?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-green">LOW</span></td>
+          </tr>
+          <tr>
+            <td><code>Q7</code></td>
+            <td>Target SKU count at Phase 1 launch?</td>
+            <td class="editable">GM</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q8</code></td>
+            <td>Phase 1 build timeline and team assignment?</td>
+            <td class="editable">Izzy</td>
+            <td><span class="pill pill-red">HIGH</span></td>
+          </tr>
+          <tr>
+            <td><code>Q9</code></td>
+            <td>L2P minimum order quantities and lead times for apparel?</td>
+            <td class="editable">Ops</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+          <tr>
+            <td><code>Q10</code></td>
+            <td>Payment terms with NHK — wire, ACH, or other?</td>
+            <td class="editable">Russell</td>
+            <td><span class="pill pill-yellow">MED</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- EDIT MODE BAR -->
+<div class="edit-mode-bar" id="editBar">
+  ✏️ Edit Mode Active
+  <button class="edit-bar-btn save" onclick="saveEdits()">💾 Save</button>
+  <button class="edit-bar-btn restore" onclick="restoreEdits()">↩️ Restore</button>
+  <button class="edit-bar-btn exit" onclick="exitEditMode()">✕ Exit</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER / SPS MARK -->
+<div class="footer">⚙ SPS</div>
+
+<script>
+// ─── THEME ───────────────────────────────────────────
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('merch-prd-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('merch-prd-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+  }
+})();
+
+// ─── TOC ACTIVE ──────────────────────────────────────
+const sections = document.querySelectorAll('.section');
+const tocLinks = document.querySelectorAll('.toc-link');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ─── EDIT AUTH ───────────────────────────────────────
+const _EDIT_HASH = '08d2ccb2e858548c639f7fa890c5ccbf5d62be0be17183d8aabe5b406d288d42';
+async function _hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function requireEditAuth(onSuccess) {
+  if (sessionStorage.getItem('deck-edit-auth') === '1') { onSuccess(); return; }
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  ov.innerHTML = `<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;">
+    <div style="font-size:32px;margin-bottom:16px;">🔒</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:6px;">Edit Access Required</div>
+    <div style="font-size:12px;color:#A0A098;margin-bottom:24px;">Contact Jarvis to receive the edit password.</div>
+    <input id="_editPwInput" type="password" placeholder="Enter password" style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F0EDE8;font-size:14px;outline:none;font-family:monospace;margin-bottom:10px;" />
+    <div id="_editPwErr" style="color:#ef4444;font-size:12px;min-height:16px;margin-bottom:10px;"></div>
+    <button id="_editPwBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Unlock</button>
+    <button id="_editPwCancel" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#A0A098;font-size:13px;cursor:pointer;">Cancel</button>
+  </div>`;
+  document.body.appendChild(ov);
+  const inp = document.getElementById('_editPwInput');
+  inp.focus();
+  const attempt = async () => {
+    const hash = await _hashStr(inp.value);
+    if (hash === _EDIT_HASH) { sessionStorage.setItem('deck-edit-auth','1'); ov.remove(); onSuccess(); }
+    else { document.getElementById('_editPwErr').textContent='Incorrect password. Contact Jarvis.'; inp.value=''; inp.focus(); }
+  };
+  document.getElementById('_editPwBtn').onclick = attempt;
+  document.getElementById('_editPwCancel').onclick = () => ov.remove();
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') attempt(); });
+}
+
+// ─── EDIT MODE ───────────────────────────────────────
+let editMode = false;
+const LS_KEY = 'merch-prd-edits';
+
+function toggleEditMode() {
+  if (!editMode) {
+    requireEditAuth(() => enterEditMode());
+  } else {
+    exitEditMode();
+  }
+}
+
+function enterEditMode() {
+  editMode = true;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+  });
+  document.getElementById('editBar').classList.add('visible');
+  document.getElementById('editToggleBtn').classList.add('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Editing';
+  showToast('✅ Edit mode unlocked');
+}
+
+function exitEditMode() {
+  editMode = false;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.removeAttribute('contenteditable');
+  });
+  document.getElementById('editBar').classList.remove('visible');
+  document.getElementById('editToggleBtn').classList.remove('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Edit';
+  showToast('Edit mode closed');
+}
+
+function saveEdits() {
+  const data = {};
+  document.querySelectorAll('.editable').forEach((el, i) => {
+    data[i] = el.innerHTML;
+  });
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  showToast('💾 Changes saved');
+}
+
+function restoreEdits() {
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+}
+
+// Load saved edits on page load
+(function() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      document.querySelectorAll('.editable').forEach((el, i) => {
+        if (data[i] !== undefined) el.innerHTML = data[i];
+      });
+    } catch(e) {}
+  }
+})();
+
+// ─── TOAST ───────────────────────────────────────────
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Service Animal Training Module</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#1A0800;color:#FDF8F4;min-height:100vh;line-height:1.6}
+
+/* HEADER */
+.top-bar{background:#2C1A0E;border-bottom:2px solid #8B4513;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top-bar-brand{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:#8B4513}
+.top-bar-brand span{color:#CC2222}
+.top-bar-title{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#9E7A60}
+.progress-wrap{width:200px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(to right,#8B4513,#CC2222);border-radius:3px;transition:width .4s ease;width:0%}
+
+/* LAYOUT */
+.container{max-width:780px;margin:0 auto;padding:40px 24px 80px}
+
+/* SLIDES */
+.slide{display:none;animation:fadeIn .3s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* SLIDE HEADER */
+.slide-eyebrow{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#CC2222;margin-bottom:10px}
+.slide-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:20px}
+.slide-title span{color:#CC2222}
+.slide-body{font-size:15px;color:#D4A574;line-height:1.8;margin-bottom:20px}
+.slide-num{font-family:'Outfit',sans-serif;font-size:10px;color:#9E7A60;letter-spacing:2px;margin-bottom:8px}
+
+/* COVER SLIDE */
+.cover-slide{text-align:center;padding:40px 0 20px}
+.cover-slide .big-title{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;line-height:1.05;margin-bottom:16px}
+.cover-slide .big-title span{color:#CC2222}
+.cover-slide .cover-sub{font-size:16px;color:#9E7A60;max-width:480px;margin:0 auto 32px;line-height:1.7}
+.cover-meta{display:flex;justify-content:center;gap:24px;margin-bottom:32px}
+.cover-chip{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#9E7A60;border:1px solid rgba(158,122,96,0.3);border-radius:20px;padding:5px 14px}
+
+/* CALLOUT BOXES */
+.box{border-radius:8px;padding:18px 20px;margin:18px 0}
+.box-red{background:rgba(204,34,34,0.1);border-left:3px solid #CC2222}
+.box-brown{background:rgba(139,69,19,0.12);border-left:3px solid #8B4513}
+.box-green{background:rgba(34,197,94,0.08);border-left:3px solid #22c55e}
+.box-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.box-red .box-label{color:#CC2222}
+.box-brown .box-label{color:#D4A574}
+.box-green .box-label{color:#22c55e}
+.box p{font-size:14px;color:#D4A574;line-height:1.7}
+
+/* LIST */
+ul.check-list{list-style:none;margin:12px 0}
+ul.check-list li{padding:8px 0 8px 28px;position:relative;font-size:14.5px;color:#D4A574;border-bottom:1px solid rgba(212,165,116,0.1)}
+ul.check-list li:last-child{border-bottom:none}
+ul.check-list li::before{content:"✓";position:absolute;left:0;color:#22c55e;font-weight:700;font-size:14px}
+ul.x-list{list-style:none;margin:12px 0}
+ul.x-list li{padding:8px 0 8px 28px;position:relative;font-size:14.5px;color:#D4A574;border-bottom:1px solid rgba(212,165,116,0.1)}
+ul.x-list li:last-child{border-bottom:none}
+ul.x-list li::before{content:"✗";position:absolute;left:0;color:#CC2222;font-weight:700;font-size:14px}
+ul.dot-list{list-style:none;margin:12px 0}
+ul.dot-list li{padding:7px 0 7px 20px;position:relative;font-size:14.5px;color:#D4A574;border-bottom:1px solid rgba(212,165,116,0.1)}
+ul.dot-list li:last-child{border-bottom:none}
+ul.dot-list li::before{content:"•";position:absolute;left:0;color:#8B4513}
+
+/* TWO-QUESTION CARDS */
+.q-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.q-card{background:#2C1A0E;border:1px solid rgba(139,69,19,0.3);border-radius:10px;padding:24px;text-align:center}
+.q-num{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:#CC2222;margin-bottom:8px}
+.q-text{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#FDF8F4;line-height:1.4}
+
+/* SCENARIO / ROLE-PLAY */
+.scenario-box{background:#2C1A0E;border:1px solid rgba(139,69,19,0.3);border-radius:12px;padding:28px;margin:20px 0}
+.scenario-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#9E7A60;margin-bottom:16px}
+.dialogue{margin:12px 0}
+.dialogue-speaker{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.guest-speaker{color:#D4A574}
+.staff-speaker{color:#CC2222}
+.dialogue-line{background:rgba(255,255,255,0.04);border-radius:6px;padding:12px 16px;font-size:14.5px;font-style:italic;color:#FDF8F4}
+.staff .dialogue-line{background:rgba(204,34,34,0.08);border-left:2px solid #CC2222}
+
+/* QUIZ */
+.quiz-q{margin-bottom:28px}
+.quiz-q-text{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:#FDF8F4;margin-bottom:14px;line-height:1.4}
+.quiz-options{display:flex;flex-direction:column;gap:8px}
+.quiz-option{background:#2C1A0E;border:1px solid rgba(139,69,19,0.3);border-radius:8px;padding:12px 16px;font-size:14px;color:#D4A574;cursor:pointer;transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif}
+.quiz-option:hover{border-color:#8B4513;color:#FDF8F4}
+.quiz-option.correct{background:rgba(34,197,94,0.1);border-color:#22c55e;color:#22c55e}
+.quiz-option.wrong{background:rgba(204,34,34,0.1);border-color:#CC2222;color:#CC2222}
+.quiz-option.disabled{cursor:default;pointer-events:none}
+.quiz-feedback{font-size:13px;margin-top:10px;padding:10px 14px;border-radius:6px;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.ok{background:rgba(34,197,94,0.1);color:#22c55e}
+.quiz-feedback.no{background:rgba(204,34,34,0.1);color:#CC2222}
+
+/* SCORE / CERT */
+.cert-box{text-align:center;background:#2C1A0E;border:2px solid #8B4513;border-radius:16px;padding:48px 40px;margin:20px 0}
+.cert-icon{font-size:56px;margin-bottom:16px}
+.cert-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:#FDF8F4;margin-bottom:8px}
+.cert-sub{font-size:15px;color:#9E7A60;margin-bottom:24px}
+.score-display{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;color:#CC2222;margin:16px 0}
+.cert-name-wrap{margin:24px 0}
+.cert-name-wrap label{display:block;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#9E7A60;margin-bottom:8px}
+.cert-name-wrap input{background:#1A0800;border:1px solid #8B4513;border-radius:6px;padding:10px 16px;font-size:15px;color:#FDF8F4;width:100%;max-width:320px;font-family:'DM Sans',sans-serif}
+.cert-name-wrap input:focus{outline:none;border-color:#CC2222}
+
+/* NAVIGATION */
+.nav-bar{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid rgba(139,69,19,0.2)}
+.btn{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;padding:12px 28px;border-radius:6px;cursor:pointer;border:none;transition:all .2s;letter-spacing:0.5px}
+.btn-primary{background:#CC2222;color:#fff}
+.btn-primary:hover{background:#aa1a1a}
+.btn-secondary{background:transparent;color:#9E7A60;border:1px solid rgba(139,69,19,0.3)}
+.btn-secondary:hover{border-color:#8B4513;color:#D4A574}
+.btn:disabled{opacity:0.4;cursor:default}
+.nav-dots{display:flex;gap:6px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background .2s}
+.nav-dot.active{background:#CC2222}
+.nav-dot.done{background:#8B4513}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-bar-brand">Domo <span>Cafe</span></div>
+  <div class="top-bar-title">Service Animal Training</div>
+  <div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SLIDE 0: COVER -->
+<div class="slide active" id="slide-0">
+  <div class="cover-slide">
+    <div class="slide-eyebrow">Staff Training Module</div>
+    <div class="big-title">Service Animal<br><span>Policy</span></div>
+    <div class="cover-sub">Everything you need to know to welcome guests with service animals lawfully, respectfully, and confidently.</div>
+    <div class="cover-meta">
+      <div class="cover-chip">20–30 Minutes</div>
+      <div class="cover-chip">ADA Compliant</div>
+      <div class="cover-chip">California Law</div>
+      <div class="cover-chip">Required Training</div>
+    </div>
+    <div class="box box-brown">
+      <div class="box-label">Why This Matters</div>
+      <p>Domo Cafe is committed to equal access for all guests. Mishandling a service animal situation can result in serious legal consequences for the café under the Americans with Disabilities Act. This module will give you everything you need to handle any situation correctly.</p>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <div></div>
+    <div class="nav-dots" id="navDots"></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Start Training →</button>
+  </div>
+</div>
+
+<!-- SLIDE 1: WHAT IS A SERVICE ANIMAL -->
+<div class="slide" id="slide-1">
+  <div class="slide-num">01 of 09</div>
+  <div class="slide-eyebrow">The Basics</div>
+  <div class="slide-title">What Is a <span>Service Animal?</span></div>
+  <div class="slide-body">Under the ADA, a service animal is a <strong>dog</strong> (or, in limited cases, a miniature horse) that has been individually trained to perform a specific task for a person with a disability. The task must be directly related to the person's disability.</div>
+  <div class="box box-brown">
+    <div class="box-label">Examples of Qualifying Tasks</div>
+    <p>Guiding a person who is blind · Alerting to seizures before they occur · Detecting low blood sugar · Alerting a person who is deaf · Providing balance assistance · Retrieving dropped items · Interrupting PTSD episodes · Reminding a person to take medication</p>
+  </div>
+  <div class="box box-red">
+    <div class="box-label">❌ These Do NOT Qualify as Service Animals</div>
+    <p><strong>Emotional Support Animals (ESAs) · Comfort animals · Therapy animals · Companion pets</strong><br><br>The key distinction: the animal must be trained to perform a specific task. Simply providing comfort or emotional support does not qualify under the ADA.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div class="nav-dots" id="navDots1"></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 2: THE TWO QUESTIONS -->
+<div class="slide" id="slide-2">
+  <div class="slide-num">02 of 09</div>
+  <div class="slide-eyebrow">The Most Important Rule</div>
+  <div class="slide-title">The Only <span>Two Questions</span> You May Ask</div>
+  <div class="slide-body">If it is not immediately obvious that an animal is a service animal, you may ask <strong>only</strong> these two questions. No others. Memorize them.</div>
+  <div class="q-cards">
+    <div class="q-card">
+      <div class="q-num">1</div>
+      <div class="q-text">"Is the animal required because of a disability?"</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">2</div>
+      <div class="q-text">"What work or task has the animal been trained to perform?"</div>
+    </div>
+  </div>
+  <div class="box box-brown">
+    <div class="box-label">After You Receive an Answer</div>
+    <p>Once a guest answers these questions — the conversation ends. You do not need to investigate further, ask follow-up questions, or verify the answer in any way. Accept what they tell you and move on.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 3: WHAT NOT TO ASK -->
+<div class="slide" id="slide-3">
+  <div class="slide-num">03 of 09</div>
+  <div class="slide-eyebrow">Prohibited Questions</div>
+  <div class="slide-title">What You Are <span>Never</span> Allowed to Ask</div>
+  <div class="slide-body">These questions are prohibited under the ADA. Asking them can expose Domo Cafe to legal liability. There are no exceptions.</div>
+  <ul class="x-list">
+    <li>"What is your disability?"</li>
+    <li>"Can you show documentation or certification?"</li>
+    <li>"Does the dog have an ID card?"</li>
+    <li>"Can the dog demonstrate its task?"</li>
+    <li>"Why do you need the dog?"</li>
+    <li>"Is that a real service animal?"</li>
+  </ul>
+  <div class="box box-brown">
+    <div class="box-label">Vests, Certifications &amp; Documentation</div>
+    <p>Service animals are <strong>not required</strong> to wear a vest, carry ID, or have certification papers. Owners may train their own service animals. <strong>No paperwork may be required.</strong> If a guest chooses to share documentation — that is their choice, but you may never request it.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 4: WHERE ALLOWED -->
+<div class="slide" id="slide-4">
+  <div class="slide-num">04 of 09</div>
+  <div class="slide-eyebrow">Access Rights</div>
+  <div class="slide-title">Where Service Animals <span>Must Be Allowed</span></div>
+  <div class="slide-body">Service animals must be permitted anywhere guests are normally permitted — without exception.</div>
+  <ul class="check-list">
+    <li>All dining areas — indoor and outdoor</li>
+    <li>Waiting areas and ordering lines</li>
+    <li>Outdoor patios open to guests</li>
+    <li>Any area a guest without an animal would be permitted</li>
+  </ul>
+  <div class="box box-red">
+    <div class="box-label">⚠️ Critical Rules</div>
+    <p><strong>Do not seat guests with service animals in a separate or isolated area.</strong> Do not treat them differently from any other guest. Do not ask them to sit outside or away from other customers. This constitutes discrimination under the ADA.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 5: REMOVAL -->
+<div class="slide" id="slide-5">
+  <div class="slide-num">05 of 09</div>
+  <div class="slide-eyebrow">Rare Situations</div>
+  <div class="slide-title">When a Service Animal <span>May Be Removed</span></div>
+  <div class="slide-body">A service animal may only be asked to leave under two specific conditions. These must be actual, observed behaviors — not assumptions.</div>
+  <div class="box box-red">
+    <div class="box-label">Condition 1 — Animal Out of Control</div>
+    <p>Excessive continuous barking · Aggressive behavior toward guests or staff · Jumping on customers · Running freely without handler control</p>
+  </div>
+  <div class="box box-red">
+    <div class="box-label">Condition 2 — Animal Not Housebroken</div>
+    <p>Urinating indoors · Defecating indoors</p>
+  </div>
+  <div class="box box-green">
+    <div class="box-label">✓ Required Action on Removal</div>
+    <p>If a service animal must be removed, <strong>the guest must still be offered service.</strong> Tell them they are welcome to secure the animal outside and return. You cannot refuse service to the guest.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 6: ROLE-PLAY SCENARIOS -->
+<div class="slide" id="slide-6">
+  <div class="slide-num">06 of 09</div>
+  <div class="slide-eyebrow">Practice Scenarios</div>
+  <div class="slide-title">How to <span>Respond</span> in the Real World</div>
+  <div class="slide-body">Study these scenarios. These are the situations you are most likely to encounter.</div>
+
+  <div class="scenario-box">
+    <div class="scenario-label">✅ Scenario A — Legitimate Service Dog</div>
+    <div class="dialogue">
+      <div class="dialogue-speaker guest-speaker">Guest</div>
+      <div class="dialogue-line">"Yes, my dog alerts me before I have a seizure."</div>
+    </div>
+    <div class="dialogue staff">
+      <div class="dialogue-speaker staff-speaker">You (Correct Response)</div>
+      <div class="dialogue-line">"Thank you. Please let us know if there's anything you need."</div>
+    </div>
+    <div style="margin-top:12px;font-size:12.5px;color:#9E7A60;">The guest identified a task. That's all you need. Seat them normally and move on.</div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scenario-label">⚠️ Scenario B — Emotional Support Animal</div>
+    <div class="dialogue">
+      <div class="dialogue-speaker guest-speaker">Guest</div>
+      <div class="dialogue-line">"This dog helps me feel calm and less anxious."</div>
+    </div>
+    <div class="dialogue staff">
+      <div class="dialogue-speaker staff-speaker">You (Follow-Up Question)</div>
+      <div class="dialogue-line">"What specific task has the dog been trained to perform?"</div>
+    </div>
+    <div class="dialogue">
+      <div class="dialogue-speaker guest-speaker">Guest</div>
+      <div class="dialogue-line">"It just... makes me feel better. It doesn't do anything specific."</div>
+    </div>
+    <div class="dialogue staff">
+      <div class="dialogue-speaker staff-speaker">You (If No Task Identified)</div>
+      <div class="dialogue-line">"I understand, and I'm sorry for the inconvenience. Under ADA guidelines, we can only admit animals that are trained to perform a specific task. Emotional support animals aren't covered by the same access rules. You're welcome to dine with us — we'd just need the dog to stay outside."</div>
+    </div>
+    <div style="margin-top:12px;font-size:12.5px;color:#9E7A60;">Always be kind and respectful. Never accusatory. Offer to still serve the guest.</div>
+  </div>
+
+  <div class="scenario-box">
+    <div class="scenario-label">🔴 Scenario C — Disruptive Animal</div>
+    <div style="margin-bottom:12px;font-size:13.5px;color:#D4A574;">A service animal is barking continuously and lunging toward other guests.</div>
+    <div class="dialogue staff">
+      <div class="dialogue-speaker staff-speaker">You</div>
+      <div class="dialogue-line">"I'm sorry to interrupt. Because the animal is not able to be settled right now, we do need to ask that it be taken outside. You are absolutely welcome to continue dining with us — we'd be happy to hold your table."</div>
+    </div>
+    <div style="margin-top:12px;font-size:12.5px;color:#9E7A60;">Remain calm and professional. Get a manager if needed. Always offer continued service to the guest.</div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 7: MANAGER REFERENCE -->
+<div class="slide" id="slide-7">
+  <div class="slide-num">07 of 09</div>
+  <div class="slide-eyebrow">Quick Reference</div>
+  <div class="slide-title">Manager <span>Decision Guide</span></div>
+  <div class="box box-green">
+    <div class="box-label">✓ Allow Entry If</div>
+    <p>Guest states the animal is required because of a disability <strong>AND</strong> guest identifies a trained task the animal performs. That's it. Both conditions = allow.</p>
+  </div>
+  <div class="box box-red">
+    <div class="box-label">✗ Never Require</div>
+    <p>Certification · Documentation · Vest or identifying gear · ID card · Demonstration of the task</p>
+  </div>
+  <div class="box box-red">
+    <div class="box-label">✗ Remove Only If (Observed, Not Assumed)</div>
+    <p>Animal is out of control (barking, aggression, running free) <strong>OR</strong> animal is not housebroken (elimination indoors). Guest must still be offered service.</p>
+  </div>
+  <div class="box box-brown">
+    <div class="box-label">Food &amp; Care</div>
+    <p>Domo Cafe is not responsible for feeding, watering, walking, or supervising service animals. The handler is responsible. If a guest requests a plain food item for their animal and the café can reasonably provide it, treat it like any normal request.</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="nextSlide()">Take the Quiz →</button>
+  </div>
+</div>
+
+<!-- SLIDE 8: QUIZ -->
+<div class="slide" id="slide-8">
+  <div class="slide-num">08 of 09</div>
+  <div class="slide-eyebrow">Knowledge Check</div>
+  <div class="slide-title">Quick <span>Quiz</span></div>
+  <div class="slide-body" style="margin-bottom:28px;">Answer all 5 questions. You need 4/5 to pass. Select your answer and review the feedback before moving on.</div>
+
+  <div class="quiz-q" id="q1">
+    <div class="quiz-q-text">1. A guest enters with a dog. The dog has no vest. What do you do?</div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="answer(this,'q1','wrong')">Ask them to leave — dogs require a service vest to enter</button>
+      <button class="quiz-option" onclick="answer(this,'q1','correct')">Ask only: "Is the animal required because of a disability?" and "What task has it been trained to perform?"</button>
+      <button class="quiz-option" onclick="answer(this,'q1','wrong')">Ask to see the dog's certification or ID card</button>
+      <button class="quiz-option" onclick="answer(this,'q1','wrong')">Call the manager immediately</button>
+    </div>
+    <div class="quiz-feedback" id="q1-fb-ok">✓ Correct! Vests are not required. If it's not obvious the animal is a service animal, ask only the two permitted questions.</div>
+    <div class="quiz-feedback" id="q1-fb-no">✗ Incorrect. Service animals are not required to wear vests or carry documentation. Ask only the two permitted questions.</div>
+  </div>
+
+  <div class="quiz-q" id="q2">
+    <div class="quiz-q-text">2. A guest says: "My dog helps me feel calm and comfortable." What do you say next?</div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="answer(this,'q2','wrong')">That's a service animal — seat them immediately</button>
+      <button class="quiz-option" onclick="answer(this,'q2','wrong')">Ask to see documentation proving the dog is a service animal</button>
+      <button class="quiz-option" onclick="answer(this,'q2','correct')">"What specific task has the dog been trained to perform?"</button>
+      <button class="quiz-option" onclick="answer(this,'q2','wrong')">"What is your disability?"</button>
+    </div>
+    <div class="quiz-feedback" id="q2-fb-ok">✓ Correct! Emotional comfort alone doesn't qualify. Ask the second permitted question to determine if a specific task exists.</div>
+    <div class="quiz-feedback" id="q2-fb-no">✗ Incorrect. Emotional comfort alone doesn't qualify as a service animal task. The correct follow-up is to ask what specific task the animal has been trained to perform.</div>
+  </div>
+
+  <div class="quiz-q" id="q3">
+    <div class="quiz-q-text">3. A service animal is barking continuously and guests are complaining. What is the correct action?</div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="answer(this,'q3','wrong')">Do nothing — service animals have unlimited access rights</button>
+      <button class="quiz-option" onclick="answer(this,'q3','wrong')">Ask the guest to leave the restaurant immediately</button>
+      <button class="quiz-option" onclick="answer(this,'q3','correct')">Politely ask the handler to control or remove the animal, while still offering service to the guest</button>
+      <button class="quiz-option" onclick="answer(this,'q3','wrong')">Call animal control</button>
+    </div>
+    <div class="quiz-feedback" id="q3-fb-ok">✓ Correct! An out-of-control animal may be removed — but the guest must still be offered service.</div>
+    <div class="quiz-feedback" id="q3-fb-no">✗ Incorrect. A disruptive animal may be asked to leave, but the guest must still be offered service. Never remove the guest themselves.</div>
+  </div>
+
+  <div class="quiz-q" id="q4">
+    <div class="quiz-q-text">4. Which of the following is a legitimate reason to deny a service animal entry?</div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="answer(this,'q4','wrong')">The animal is not wearing a vest</button>
+      <button class="quiz-option" onclick="answer(this,'q4','wrong')">The owner cannot show documentation</button>
+      <button class="quiz-option" onclick="answer(this,'q4','wrong')">Another guest has a pet allergy</button>
+      <button class="quiz-option" onclick="answer(this,'q4','correct')">The animal urinated on the floor inside the restaurant</button>
+    </div>
+    <div class="quiz-feedback" id="q4-fb-ok">✓ Correct! An animal that is not housebroken may be removed. Lack of vest, documentation, or another guest's allergies are not valid reasons.</div>
+    <div class="quiz-feedback" id="q4-fb-no">✗ Incorrect. Only two things justify removal: the animal is out of control, or the animal is not housebroken. None of the other options are valid ADA reasons.</div>
+  </div>
+
+  <div class="quiz-q" id="q5">
+    <div class="quiz-q-text">5. After the guest answers your two questions, what should you do?</div>
+    <div class="quiz-options">
+      <button class="quiz-option" onclick="answer(this,'q5','wrong')">Continue asking questions to verify their answers</button>
+      <button class="quiz-option" onclick="answer(this,'q5','correct')">Accept the answer and seat them as you would any other guest</button>
+      <button class="quiz-option" onclick="answer(this,'q5','wrong')">Ask them to sit in a separate area away from other guests</button>
+      <button class="quiz-option" onclick="answer(this,'q5','wrong')">Ask to see the dog demonstrate its task</button>
+    </div>
+    <div class="quiz-feedback" id="q5-fb-ok">✓ Correct! Once you receive an acceptable answer, the conversation ends. Seat them normally.</div>
+    <div class="quiz-feedback" id="q5-fb-no">✗ Incorrect. Once a guest provides an acceptable answer, you accept it and treat them like any other guest. No follow-up questions, no isolation, no verification.</div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Back</button>
+    <div></div>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitQuiz()" disabled>Submit Quiz</button>
+  </div>
+</div>
+
+<!-- SLIDE 9: COMPLETION -->
+<div class="slide" id="slide-9">
+  <div class="slide-num">09 of 09</div>
+  <div class="slide-eyebrow">Module Complete</div>
+  <div class="cert-box">
+    <div class="cert-icon" id="certIcon">🎉</div>
+    <div class="cert-title" id="certTitle">Training Complete</div>
+    <div class="cert-sub" id="certSub">Domo Cafe — Service Animal Policy</div>
+    <div class="score-display" id="scoreDisplay">—</div>
+    <div id="certMsg" style="font-size:14px;color:#9E7A60;margin-bottom:20px;"></div>
+    <div class="cert-name-wrap">
+      <label>Enter your name for the record</label>
+      <input type="text" id="certName" placeholder="Your full name" />
+    </div>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="printCert()">🖨 Print Completion Record</button>
+  </div>
+  <div class="box box-brown" style="margin-top:24px;">
+    <div class="box-label">Domo Cafe Service Commitment</div>
+    <p style="font-style:italic;">"Domo Cafe welcomes guests accompanied by service animals. Our team is trained to provide respectful, lawful, and inclusive service to all guests while following ADA guidelines."</p>
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-secondary" onclick="prevSlide()">← Review</button>
+    <div></div>
+    <button class="btn btn-primary" onclick="restart()">Restart Module</button>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+let currentSlide = 0;
+const totalSlides = 10;
+const answers = {};
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('slide-' + n).classList.add('active');
+  currentSlide = n;
+  document.getElementById('progressBar').style.width = ((n / (totalSlides - 1)) * 100) + '%';
+  window.scrollTo(0, 0);
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  if (currentSlide > 0) showSlide(currentSlide - 1);
+}
+
+function answer(btn, qId, result) {
+  if (answers[qId] !== undefined) return;
+  answers[qId] = result === 'correct';
+  const opts = btn.parentElement.querySelectorAll('.quiz-option');
+  opts.forEach(o => { o.classList.add('disabled'); });
+  btn.classList.add(result === 'correct' ? 'correct' : 'wrong');
+  const fbOk = document.getElementById(qId + '-fb-ok');
+  const fbNo = document.getElementById(qId + '-fb-no');
+  if (result === 'correct') {
+    fbOk.classList.add('show', 'ok');
+  } else {
+    fbNo.classList.add('show', 'no');
+    // show correct answer
+    opts.forEach(o => {
+      if (o.getAttribute('onclick').includes("'correct'")) o.classList.add('correct');
+    });
+  }
+  checkAllAnswered();
+}
+
+function checkAllAnswered() {
+  const total = 5;
+  if (Object.keys(answers).length === total) {
+    document.getElementById('submitBtn').disabled = false;
+  }
+}
+
+function submitQuiz() {
+  const score = Object.values(answers).filter(Boolean).length;
+  const passed = score >= 4;
+  document.getElementById('scoreDisplay').textContent = score + '/5';
+  document.getElementById('certIcon').textContent = passed ? '✅' : '📋';
+  document.getElementById('certTitle').textContent = passed ? 'Training Passed!' : 'Review Required';
+  document.getElementById('certMsg').textContent = passed
+    ? 'You have successfully completed the Domo Cafe Service Animal Training Module.'
+    : 'You scored ' + score + '/5. Please review the material and retake the module.';
+  if (!passed) {
+    document.getElementById('scoreDisplay').style.color = '#CC2222';
+  }
+  showSlide(9);
+}
+
+function restart() {
+  Object.keys(answers).forEach(k => delete answers[k]);
+  document.querySelectorAll('.quiz-option').forEach(o => {
+    o.classList.remove('correct','wrong','disabled');
+  });
+  document.querySelectorAll('.quiz-feedback').forEach(f => {
+    f.classList.remove('show','ok','no');
+  });
+  document.getElementById('submitBtn').disabled = true;
+  showSlide(0);
+}
+
+function printCert() {
+  const name = document.getElementById('certName').value || 'Team Member';
+  const score = document.getElementById('scoreDisplay').textContent;
+  const date = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+  const w = window.open('','_blank');
+  w.document.write('<html><body style="font-family:Arial,sans-serif;padding:60px;text-align:center;"><h2 style="color:#8B4513;">Domo Cafe</h2><h1 style="color:#1A0800;margin:16px 0;">Service Animal Training</h1><h3 style="color:#CC2222;font-weight:400;margin-bottom:32px;">Completion Record</h3><p style="font-size:18px;margin-bottom:8px;">This certifies that</p><p style="font-size:24px;font-weight:700;margin:8px 0;">' + name + '</p><p style="font-size:16px;color:#555;margin-bottom:24px;">has completed the Domo Cafe Service Animal Policy Training Module</p><p style="font-size:20px;color:#8B4513;font-weight:700;">Score: ' + score + '</p><p style="color:#999;margin-top:32px;">Date: ' + date + '</p><p style="color:#999;font-size:12px;margin-top:8px;">GFC BP LLC · 8340 La Palma Ave, Buena Park, CA 90620 · domokuncafe.com</p></body></html>');
+  w.document.close();
+  w.print();
+}
+
+showSlide(0);
+</script>
+<footer style="text-align:center;padding:24px 16px 32px;font-size:11px;color:#9E7A60;font-family:'Outfit',sans-serif;letter-spacing:0.5px;border-top:1px solid rgba(139,69,19,0.2);margin-top:32px;">
+  Domo™ &amp; © NHK. All rights reserved. Licensed by Striker Entertainment. Unauthorized use of the Domo-kun character is strictly prohibited and may constitute trademark/copyright infringement.
+</footer>
+</body>
+</html>

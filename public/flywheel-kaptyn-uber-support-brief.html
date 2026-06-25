@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel × Kaptyn × Uber — Call Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0C0C0C;
+    color: #F0EDE8;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .header { background: #1a1a1a !important; }
+    .card { background: #f9f9f9 !important; border-color: #ddd !important; }
+    .step-num { background: #FF5E1A !important; }
+    .print-btn { display: none !important; }
+    .tag { border-color: #aaa !important; color: #444 !important; }
+    .distinction-banner { background: #fff3ee !important; border-color: #FF5E1A !important; }
+  }
+
+  .print-btn {
+    position: fixed;
+    top: 18px;
+    right: 22px;
+    background: rgba(255,94,26,0.15);
+    border: 1px solid #FF5E1A;
+    color: #FF5E1A;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    z-index: 100;
+    transition: background 0.2s;
+  }
+  .print-btn:hover { background: rgba(255,94,26,0.28); }
+
+  .header {
+    background: linear-gradient(135deg, #1C1C1E 0%, #111 100%);
+    border-bottom: 1px solid rgba(255,94,26,0.25);
+    padding: 40px 48px 32px;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    background: rgba(255,94,26,0.15);
+    border: 1px solid rgba(255,94,26,0.4);
+    color: #FF5E1A;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+
+  .pill.green {
+    background: rgba(52,199,89,0.12);
+    border-color: rgba(52,199,89,0.35);
+    color: #34C759;
+  }
+
+  .header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #F0EDE8;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .header h1 span { color: #FF5E1A; }
+  .header-sub { font-size: 15px; color: #A0A098; font-weight: 300; }
+
+  .body { padding: 40px 48px; max-width: 960px; }
+
+  .context-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .ctx-card {
+    background: #1C1C1E;
+    border: 1px solid rgba(240,237,232,0.08);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .ctx-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: #A0A098;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .ctx-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #F0EDE8;
+  }
+
+  .ctx-value.orange { color: #FF5E1A; }
+
+  .distinction-banner {
+    background: rgba(255,94,26,0.08);
+    border: 1px solid rgba(255,94,26,0.35);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .distinction-banner .icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+  .distinction-banner h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #FF5E1A;
+    margin-bottom: 5px;
+  }
+  .distinction-banner p { font-size: 13px; color: #A0A098; line-height: 1.6; font-weight: 300; }
+  .distinction-banner strong { color: #F0EDE8; font-weight: 600; }
+
+  .section { margin-bottom: 40px; }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #FF5E1A;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,94,26,0.2);
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .value-card {
+    background: #1C1C1E;
+    border: 1px solid rgba(240,237,232,0.08);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+
+  .value-card .icon { font-size: 22px; margin-bottom: 10px; }
+  .value-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F0EDE8;
+    margin-bottom: 6px;
+  }
+  .value-card p { font-size: 13px; color: #A0A098; line-height: 1.55; font-weight: 300; }
+
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+
+  .step {
+    background: #1C1C1E;
+    border: 1px solid rgba(240,237,232,0.08);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    background: #FF5E1A;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #F0EDE8;
+    margin-bottom: 4px;
+  }
+
+  .step-content p { font-size: 13px; color: #A0A098; line-height: 1.55; font-weight: 300; }
+
+  .step-content .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #FF5E1A;
+    border: 1px solid rgba(255,94,26,0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  .step-content .tag.green {
+    color: #34C759;
+    border-color: rgba(52,199,89,0.3);
+  }
+
+  .talking-points { display: flex; flex-direction: column; gap: 10px; }
+
+  .tp {
+    background: #1C1C1E;
+    border-left: 3px solid #FF5E1A;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+  }
+
+  .tp h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #F0EDE8;
+    margin-bottom: 4px;
+  }
+
+  .tp p { font-size: 13px; color: #A0A098; line-height: 1.55; font-weight: 300; }
+
+  .sla-box {
+    background: rgba(255,94,26,0.06);
+    border: 1px solid rgba(255,94,26,0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .sla-item .sla-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #A0A098;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .sla-item .sla-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FF5E1A;
+  }
+
+  .ask-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .ask-item {
+    background: #1C1C1E;
+    border: 1px solid rgba(240,237,232,0.08);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .ask-bullet { color: #FF5E1A; font-size: 18px; line-height: 1.3; flex-shrink: 0; }
+  .ask-item p { font-size: 13px; color: #A0A098; line-height: 1.55; font-weight: 300; }
+  .ask-item strong { color: #F0EDE8; font-weight: 600; }
+
+  .footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(240,237,232,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #A0A098; }
+  .footer-brand span { color: #FF5E1A; }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⬇ Print / PDF</button>
+
+<div class="header">
+  <div class="header-meta">
+    <span class="pill">Call Brief</span>
+    <span class="pill green">Flywheel Connect — No Hardware</span>
+  </div>
+  <h1>Flywheel × Kaptyn × <span>Uber</span></h1>
+  <div class="header-sub">Las Vegas Market · Uber 3P Integration · Managed Driver Support</div>
+</div>
+
+<div class="body">
+
+  <!-- Context -->
+  <div class="context-strip">
+    <div class="ctx-card">
+      <div class="ctx-label">Market</div>
+      <div class="ctx-value">Las Vegas, NV</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">Fleet Partner</div>
+      <div class="ctx-value">Kaptyn</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">Active Drivers Target</div>
+      <div class="ctx-value orange">700 → 2,000</div>
+    </div>
+  </div>
+
+  <!-- Key Distinction -->
+  <div class="distinction-banner">
+    <div class="icon">⚡</div>
+    <div>
+      <h3>Flywheel Connect — No Tablets. No Driver App. Pure Backend Integration.</h3>
+      <p>This is not the standard Flywheel model. With Flywheel Connect, <strong>Kaptyn's drivers stay 100% in Kaptyn's dispatch system.</strong> No Flywheel hardware. No Flywheel driver app. No change to driver workflow. Flywheel operates as an invisible backend layer — connecting Kaptyn's fleet to Uber's API, managing credentialing, and owning all support escalations behind the scenes. Kaptyn calls Flywheel. Flywheel talks to Uber.</p>
+    </div>
+  </div>
+
+  <!-- Value Props -->
+  <div class="section">
+    <div class="section-title">What Flywheel Delivers to Kaptyn</div>
+    <div class="value-grid">
+      <div class="value-card">
+        <div class="icon">🔧</div>
+        <h3>End-to-End Uber Support</h3>
+        <p>Flywheel handles all Uber 3P troubleshooting. Kaptyn operators never touch Uber Support directly. One call to Flywheel — we own it through to resolution.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🔗</div>
+        <h3>Direct Uber Access — Kaptyn Doesn't Have This</h3>
+        <p>Flywheel has an established escalation path to Uber's taxi support team and the Uber Supplier Portal. That access is part of what Kaptyn gets with Connect.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">📋</div>
+        <h3>Structured Backend Triage</h3>
+        <p>Systematic process — Flywheel Fleets record validation → Uber Supplier Portal → ban check → backend review → Uber escalation. No guesswork, no dropped issues.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🛡️</div>
+        <h3>Zero Driver Disruption</h3>
+        <p>Drivers stay in Kaptyn's system. When something breaks, they don't notice the fix happening — Flywheel resolves it at the integration layer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Process -->
+  <div class="section">
+    <div class="section-title">The Support Process — Backend Only, No Flywheel Hardware</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Issue Reported by Kaptyn</h4>
+          <p>Kaptyn operator flags a driver not receiving Uber offers through their dispatch system. They contact Flywheel — one call, one point of contact. No direct Uber interaction needed on Kaptyn's side.</p>
+          <span class="tag">Kaptyn → Flywheel</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Driver Record Validation — Flywheel Fleets</h4>
+          <p>Flywheel checks the Fleets portal — all driver info correct, license not expired, phone verified, Uber checkmarks active under Driver › Edit. Entirely backend. Driver doesn't touch anything.</p>
+          <span class="tag">Flywheel Backend</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Vehicle Record Validation — Flywheel Fleets</h4>
+          <p>Confirm make, model, color, license plate are accurate. Uber checkmarks active under Vehicle › Edit. Any mismatch blocks Uber offer eligibility at the integration layer.</p>
+          <span class="tag">Flywheel Backend</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Uber Supplier Portal Verification</h4>
+          <p>supplier.uber.com — correct market selected, driver status Active, vehicle status Active. This is Flywheel's view into Uber's system. Kaptyn doesn't have this portal access — Flywheel does.</p>
+          <span class="tag">Uber Supplier Portal · Flywheel Access Only</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Identify Issue Type + Ban Check</h4>
+          <p>Cross-reference Flywheel's internal ban list. If flagged: Flywheel communicates to Kaptyn, who relays to driver. Driver appeals directly to Uber. Flywheel monitors the appeal and manages re-onboarding if overturned.</p>
+          <span class="tag green">Resolution Path — Driver Appeal to Uber</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Flywheel Backend Review</h4>
+          <p>If not banned — Flywheel dev team reviews via internal Slack (market_lasvegas channel). Driver name, phone, cab number, issue description. Kaptyn gets a status update — not a ticket to manage themselves.</p>
+          <span class="tag">Flywheel Dev Team · Internal</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4>Uber External Escalation</h4>
+          <p>If backend is clean — Flywheel escalates directly to ubertaxisupport@uber.com. Flywheel owns the thread: market/area, driver name, phone, email, cab number, full issue description. Kaptyn is never in the Uber Support loop — that's Flywheel's lane.</p>
+          <span class="tag">Uber Direct · 24hr SLA</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <h4>Confirmed Live — Kaptyn Notified</h4>
+          <p>Flywheel confirms driver is live and receiving Uber offers through Kaptyn's dispatch. Clean close-out communicated to Kaptyn. Driver workflow never changed — it just works now.</p>
+          <span class="tag green">Confirmed Live · Zero Driver Disruption</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLA -->
+  <div class="section">
+    <div class="section-title">Service Levels</div>
+    <div class="sla-box">
+      <div class="sla-item">
+        <div class="sla-label">Standard SLA</div>
+        <div class="sla-val">24 Hours</div>
+      </div>
+      <div class="sla-item">
+        <div class="sla-label">Friday Escalations</div>
+        <div class="sla-val">Next Week</div>
+      </div>
+      <div class="sla-item">
+        <div class="sla-label">Uber Escalation Channel</div>
+        <div class="sla-val" style="font-size:13px; padding-top:4px;">ubertaxisupport@uber.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Talking Points -->
+  <div class="section">
+    <div class="section-title">Talking Points for the Call</div>
+    <div class="talking-points">
+      <div class="tp">
+        <h4>"Your drivers don't change a thing — and Uber offers just appear."</h4>
+        <p>No new tablet. No new app. No training. Kaptyn's drivers stay in Kaptyn's dispatch. Flywheel handles everything at the backend integration layer. This is the core differentiator of Flywheel Connect vs. the standard Flywheel model.</p>
+      </div>
+      <div class="tp">
+        <h4>"We manage the Uber relationship so Kaptyn never has to."</h4>
+        <p>One call to Flywheel — we own it. Driver record validation, Supplier Portal checks, ban reviews, backend investigation, Uber email escalation. Kaptyn's operators focus on running their fleet, not navigating Uber Support.</p>
+      </div>
+      <div class="tp">
+        <h4>"We have portal access Kaptyn doesn't have."</h4>
+        <p>Flywheel's access to the Uber Supplier Portal and direct Uber taxi support channel is infrastructure Kaptyn would have to build independently. With Connect, they get it on day one.</p>
+      </div>
+      <div class="tp">
+        <h4>"We have a proven process already running in active markets."</h4>
+        <p>This playbook runs today in San Diego and Florida. Las Vegas is a new channel on a tested system — not a pilot. Kaptyn gets operational maturity from the start.</p>
+      </div>
+      <div class="tp">
+        <h4>"From 700 to 2,000 drivers — support scales because the process is systematic."</h4>
+        <p>As the Las Vegas fleet grows, Flywheel's backend support scales with it. Driver issues don't become fleet-wide churn when there's a structured resolution path behind every one.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to Confirm -->
+  <div class="section">
+    <div class="section-title">What to Nail Down on This Call</div>
+    <div class="ask-list">
+      <div class="ask-item">
+        <div class="ask-bullet">→</div>
+        <p><strong>Does Kaptyn currently have any Uber support workflow?</strong> Understand their baseline — self-managed, broken, or completely absent — so Flywheel's value lands in context.</p>
+      </div>
+      <div class="ask-item">
+        <div class="ask-bullet">→</div>
+        <p><strong>Who on Kaptyn's side is the single point of contact for driver issues?</strong> Establish the operational handoff now — Flywheel needs one name, not a committee.</p>
+      </div>
+      <div class="ask-item">
+        <div class="ask-bullet">→</div>
+        <p><strong>Are there drivers stuck right now who can't get Uber offers?</strong> A live problem we can solve on the call is the best demo of the process. Identify any backlog immediately.</p>
+      </div>
+      <div class="ask-item">
+        <div class="ask-bullet">→</div>
+        <p><strong>Uber's role on the call — clarify the lane.</strong> Uber is the platform partner. Flywheel is the integration + support layer. Kaptyn is the fleet operator. Make sure all three parties leave the call knowing exactly where their responsibility starts and stops.</p>
+      </div>
+      <div class="ask-item">
+        <div class="ask-bullet">→</div>
+        <p><strong>market_lasvegas Slack channel — confirm Flywheel creates this as part of go-live.</strong> Operational readiness for backend escalations needs to be in place before the first driver is activated.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">FLYWHEEL CONNECT · <span>Las Vegas</span> · June 2026</div>
+    <div class="footer-brand" style="color:#555;">Confidential · Internal</div>
+  </div>
+
+</div>
+</body>
+</html>

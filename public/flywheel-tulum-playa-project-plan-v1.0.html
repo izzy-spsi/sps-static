@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel — Tulum & Playa Activation Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--red:#CC1A1A;--bg:#0C0C0C;--bg2:#161616;--bg3:#1e1e1e;--border:#2a2a2a;--text:#f0f0f0;--muted:#888;--card:#1a1a1a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+#gate{position:fixed;inset:0;background:#0C0C0C;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:20px}
+#gate h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;color:#f0f0f0}
+#gate p{color:#888;font-size:.9rem}
+#gate-form{display:flex;gap:10px;margin-top:8px}
+#gate-brand{font-family:'Space Grotesk',sans-serif;font-size:2rem;color:#CC1A1A;font-weight:700}
+#gate-input{padding:10px 18px;border-radius:6px;border:1px solid #333;background:#1a1a1a;color:#f0f0f0;font-size:1rem;width:220px;outline:none}
+#gate-input:focus{border-color:#CC1A1A}
+#gate-btn{padding:10px 24px;background:#CC1A1A;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer}
+#gate-btn:hover{background:#e01c1c}
+#gate-err{color:#CC1A1A;font-size:.85rem;display:none}
+#app{display:none;max-width:960px;margin:0 auto;padding:40px 24px 80px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;flex-wrap:wrap;gap:12px}
+.brand{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;color:var(--red);font-weight:700}
+.topbar-right{display:flex;gap:10px;align-items:center}
+.lang-btn{padding:6px 16px;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid var(--border);background:var(--bg2);color:var(--text);transition:all .2s}
+.lang-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+.print-btn{padding:6px 14px;border-radius:6px;font-size:.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid var(--border);background:var(--bg2);color:var(--text)}
+h1{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;line-height:1.1;margin-bottom:8px}
+h2{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin-bottom:20px}
+h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;margin-bottom:10px}
+.label{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.divider{width:48px;height:3px;background:var(--red);margin:16px 0 28px;border-radius:2px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px}
+.card-grid{display:grid;gap:16px;margin-bottom:24px}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-2{grid-template-columns:repeat(2,1fr)}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:2rem;color:var(--red)}
+.stat-label{font-size:.8rem;color:var(--muted);margin-top:4px}
+.section{margin-bottom:48px}
+.phase{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.phase-header{background:var(--bg2);padding:16px 20px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--border)}
+.phase-num{font-family:'JetBrains Mono',monospace;font-size:1.2rem;color:var(--red);font-weight:700;min-width:32px}
+.phase-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem}
+.phase-days{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-left:auto;background:rgba(204,26,26,.1);border:1px solid rgba(204,26,26,.25);padding:3px 10px;border-radius:4px;color:var(--red)}
+.phase-body{padding:20px}
+.action-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.action-list li{font-size:.88rem;color:var(--muted);padding:8px 12px;background:var(--bg3);border-radius:6px;border-left:3px solid var(--border)}
+.action-list li.key{border-left-color:var(--red);color:var(--text)}
+.cohort-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.06em;padding:2px 8px;border-radius:4px;margin-right:6px;vertical-align:middle}
+.tag-hotel{background:rgba(200,160,80,.12);color:#C8A050;border:1px solid rgba(200,160,80,.3)}
+.tag-local{background:rgba(100,180,100,.1);color:#60b060;border:1px solid rgba(100,180,100,.3)}
+.tag-playa{background:rgba(100,140,220,.1);color:#6090dd;border:1px solid rgba(100,140,220,.3)}
+.tag-all{background:rgba(204,26,26,.1);color:var(--red);border:1px solid rgba(204,26,26,.3)}
+.timeline{display:flex;gap:0;margin:24px 0;overflow-x:auto}
+.tl-item{flex:1;min-width:140px;border-top:3px solid var(--border);padding:12px 8px 0;position:relative}
+.tl-item.active{border-top-color:var(--red)}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--border);position:absolute;top:-6px;left:12px}
+.tl-item.active .tl-dot{background:var(--red)}
+.tl-days{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--red);margin-bottom:4px}
+.tl-name{font-size:.8rem;font-weight:500;margin-bottom:4px}
+.tl-detail{font-size:.75rem;color:var(--muted);line-height:1.4}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 12px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.owner-tag{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--red);background:rgba(204,26,26,.1);padding:2px 8px;border-radius:4px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.kpi-icon{font-size:1.6rem;min-width:36px}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;color:var(--red)}
+.kpi-label{font-size:.8rem;color:var(--muted);margin-top:2px}
+.success-block{background:linear-gradient(135deg,rgba(204,26,26,.1),transparent 60%);border:1px solid rgba(204,26,26,.3);border-radius:12px;padding:28px;text-align:center;margin-top:32px}
+[data-en],[data-es]{transition:opacity .2s}
+@media(max-width:640px){.cols-3{grid-template-columns:1fr}.cols-2{grid-template-columns:1fr}h1{font-size:1.8rem}}
+@media print{#gate{display:none!important}#app{display:block!important;padding:20px}body{background:#fff;color:#111}.card,.phase{border-color:#ddd}.phase-header{background:#f5f5f5}.card{background:#fff}.action-list li{background:#f5f5f5}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div id="gate-brand">FLYWHEEL</div>
+  <h2 id="g-title">Partner Access</h2>
+  <p id="g-sub">Enter your access code to continue</p>
+  <div id="gate-form">
+    <input type="password" id="gate-input" placeholder="Access code" autocomplete="off" onkeydown="if(event.key==='Enter')checkGate()">
+    <button id="gate-btn" onclick="checkGate()">Enter →</button>
+  </div>
+  <span id="gate-err">Incorrect code. Please try again.</span>
+  <p style="margin-top:24px;font-size:.75rem;color:#444">Flywheel Technologies · Plan de Activación · Confidential</p>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="brand">FLYWHEEL</div>
+    <div class="topbar-right">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+      <button class="print-btn" onclick="window.print()">⎙ Print</button>
+    </div>
+  </div>
+
+  <!-- COVER -->
+  <div class="section">
+    <div class="label" data-en="Activation Plan · 45 Days" data-es="Plan de Activación · 45 Días"></div>
+    <h1 style="margin-top:8px" data-en="Tulum & Playa del Carmen<br>Driver Activation Plan" data-es="Plan de Activación de Conductores<br>Tulum y Playa del Carmen"></h1>
+    <div class="divider"></div>
+    <p style="color:var(--muted);max-width:640px;font-size:.95rem;line-height:1.7" data-en="A 45-day roadmap to fully activate 300 professional taxi drivers across Tulum (hotel + local) and Playa del Carmen — connecting every driver to Uber demand through the Flywheel platform." data-es="Un plan de 45 días para activar completamente a 300 conductores de taxi profesional en Tulum (hotel + local) y Playa del Carmen, conectando a cada conductor con la demanda de Uber a través de la plataforma Flywheel."></p>
+    <div class="card-grid cols-3" style="margin-top:28px">
+      <div class="card" style="text-align:center">
+        <div class="stat-val">100</div>
+        <div class="stat-label"><span class="cohort-tag tag-hotel" data-en="Hotel" data-es="Hotel"></span><span data-en="Tulum Hotel Taxis" data-es="Taxis de Hotel — Tulum"></span></div>
+        <div style="font-size:.78rem;color:var(--red);margin-top:8px" data-en="Equipment installed ✓ Just activate" data-es="Equipo instalado ✓ Solo activar"></div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="stat-val">100</div>
+        <div class="stat-label"><span class="cohort-tag tag-local" data-en="Local" data-es="Local"></span><span data-en="Tulum Local Taxis" data-es="Taxis Locales — Tulum"></span></div>
+        <div style="font-size:.78rem;color:#60b060;margin-top:8px" data-en="New onboarding" data-es="Nuevo proceso de incorporación"></div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="stat-val">100</div>
+        <div class="stat-label"><span class="cohort-tag tag-playa" data-en="Playa" data-es="Playa"></span><span data-en="Playa del Carmen Local Taxis" data-es="Taxis Locales — Playa del Carmen"></span></div>
+        <div style="font-size:.78rem;color:#6090dd;margin-top:8px" data-en="New onboarding" data-es="Nuevo proceso de incorporación"></div>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--red);margin-top:8px">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.88rem">
+        <div><span style="color:var(--muted)" data-en="Execution Owner: " data-es="Responsable de Ejecución: "></span><strong>Pablo Echevarri</strong></div>
+        <div><span style="color:var(--muted)" data-en="Timeline: " data-es="Plazo: "></span><strong data-en="45 Days from launch" data-es="45 días desde el lanzamiento"></strong></div>
+        <div><span style="color:var(--muted)" data-en="Target: " data-es="Meta: "></span><strong data-en="300 active drivers on Flywheel + Uber" data-es="300 conductores activos en Flywheel + Uber"></strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE OVERVIEW -->
+  <div class="section">
+    <div class="label" data-en="45-Day Timeline Overview" data-es="Visión General — 45 Días"></div>
+    <div class="divider"></div>
+    <div class="timeline">
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-days" data-en="Days 1–7" data-es="Días 1–7"></div>
+        <div class="tl-name" data-en="Foundation" data-es="Fundamentos"></div>
+        <div class="tl-detail" data-en="Communication, accounts verified, WhatsApp support live" data-es="Comunicación, cuentas verificadas, soporte WhatsApp activo"></div>
+      </div>
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-days" data-en="Days 8–21" data-es="Días 8–21"></div>
+        <div class="tl-name" data-en="Hotel Taxi Activation" data-es="Activación Taxis de Hotel"></div>
+        <div class="tl-detail" data-en="100 hotel taxis — equipment on, drivers logging in daily" data-es="100 taxis de hotel — equipo encendido, conductores conectados"></div>
+      </div>
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-days" data-en="Days 15–35" data-es="Días 15–35"></div>
+        <div class="tl-name" data-en="Tulum Local Onboarding" data-es="Incorporación Tulum Local"></div>
+        <div class="tl-detail" data-en="100 local taxis trained, equipped, and active" data-es="100 taxis locales capacitados, equipados y activos"></div>
+      </div>
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-days" data-en="Days 25–45" data-es="Días 25–45"></div>
+        <div class="tl-name" data-en="Playa Onboarding" data-es="Incorporación Playa"></div>
+        <div class="tl-detail" data-en="100 Playa del Carmen taxis trained and active" data-es="100 taxis de Playa del Carmen capacitados y activos"></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-days" data-en="Day 45" data-es="Día 45"></div>
+        <div class="tl-name" data-en="Full Launch" data-es="Lanzamiento Completo"></div>
+        <div class="tl-detail" data-en="300 drivers active · Uber demand flowing to all" data-es="300 conductores activos · Demanda Uber fluyendo a todos"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="section">
+    <div class="label" data-en="Phase Breakdown" data-es="Desglose por Fase"></div>
+    <div class="divider"></div>
+
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-num">01</div>
+        <div>
+          <div class="phase-title" data-en="Foundation & Communication" data-es="Fundamentos y Comunicación"></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px"><span class="cohort-tag tag-all" data-en="All Cohorts" data-es="Todos los grupos"></span></div>
+        </div>
+        <div class="phase-days" data-en="Days 1–7" data-es="Días 1–7"></div>
+      </div>
+      <div class="phase-body">
+        <ul class="action-list">
+          <li class="key" data-en="📋 Deliver this project plan to union leadership and all 300 drivers" data-es="📋 Entregar este plan de proyecto a los líderes sindicales y los 300 conductores"></li>
+          <li class="key" data-en="✅ Verify all driver accounts — confirm logins, reset passwords where needed" data-es="✅ Verificar todas las cuentas de conductores — confirmar accesos, restablecer contraseñas"></li>
+          <li class="key" data-en="📱 Activate dedicated WhatsApp support line — Pablo Echevarri as point of contact" data-es="📱 Activar línea de soporte WhatsApp — Pablo Echevarri como punto de contacto"></li>
+          <li data-en="💳 Confirm all bank accounts are registered and verified for payment" data-es="💳 Confirmar que todas las cuentas bancarias están registradas y verificadas para pagos"></li>
+          <li data-en="🏆 Identify 5–10 Ambassador drivers (experienced users to support peers)" data-es="🏆 Identificar 5–10 conductores Embajadores (usuarios experimentados para apoyar a sus compañeros)"></li>
+          <li data-en="📅 Schedule union briefing meeting with leadership" data-es="📅 Programar reunión informativa con los líderes sindicales"></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-num">02</div>
+        <div>
+          <div class="phase-title" data-en="Hotel Taxi Reactivation — 'Vuelve a Conectar'" data-es="Reactivación Taxis de Hotel — 'Vuelve a Conectar'"></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px"><span class="cohort-tag tag-hotel" data-en="100 Hotel Taxis · Tulum" data-es="100 Taxis de Hotel · Tulum"></span></div>
+        </div>
+        <div class="phase-days" data-en="Days 8–21" data-es="Días 8–21"></div>
+      </div>
+      <div class="phase-body">
+        <div class="card" style="background:rgba(200,160,80,.06);border-color:rgba(200,160,80,.25);margin-bottom:16px;padding:14px 16px">
+          <p style="font-size:.85rem;line-height:1.6" data-en="These drivers already have Flywheel equipment installed and their vehicles wrapped. The only requirement: keep the system ON and stay logged in during their shift. If the system is off, no trips can arrive." data-es="Estos conductores ya tienen el equipo Flywheel instalado y sus vehículos rotulados. El único requisito: mantener el sistema ENCENDIDO y permanecer conectados durante su turno. Si el sistema está apagado, no pueden llegar servicios."></p>
+        </div>
+        <ul class="action-list">
+          <li class="key" data-en="🔴 Individual reactivation check — confirm every unit is powering on and logging in" data-es="🔴 Verificación individual de reactivación — confirmar que cada unidad enciende y se conecta"></li>
+          <li class="key" data-en="📲 Group training session: 'Keep the system ON = trips come to you'" data-es="📲 Sesión de capacitación grupal: 'Mantén el sistema ENCENDIDO = los viajes llegan a ti'"></li>
+          <li data-en="🎁 Launch 'Vuelve a Conectar' incentive — bonus trips for drivers who stay active 5+ days/week" data-es="🎁 Lanzar incentivo 'Vuelve a Conectar' — viajes bono para conductores que se mantengan activos 5+ días/semana"></li>
+          <li data-en="📊 Daily active driver tracking — Pablo Echevarri reviews each morning" data-es="📊 Seguimiento diario de conductores activos — Pablo Echevarri revisa cada mañana"></li>
+          <li data-en="🛠 On-site tech support for any equipment issues (tablet, printer, OBD2)" data-es="🛠 Soporte técnico en sitio para cualquier problema de equipo (tablet, impresora, OBD2)"></li>
+          <li data-en="🏅 Weekly recognition of most-active drivers shared in union WhatsApp group" data-es="🏅 Reconocimiento semanal a los conductores más activos, compartido en el grupo de WhatsApp del sindicato"></li>
+        </ul>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);font-style:italic" data-en="Goal by Day 21: 80+ of 100 hotel taxis logging in daily and receiving Uber trips." data-es="Meta al Día 21: 80+ de 100 taxis de hotel conectados diariamente y recibiendo viajes Uber."></div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-num">03</div>
+        <div>
+          <div class="phase-title" data-en="Tulum Local Taxi Onboarding" data-es="Incorporación de Taxis Locales — Tulum"></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px"><span class="cohort-tag tag-local" data-en="100 Local Taxis · Tulum" data-es="100 Taxis Locales · Tulum"></span></div>
+        </div>
+        <div class="phase-days" data-en="Days 15–35" data-es="Días 15–35"></div>
+      </div>
+      <div class="phase-body">
+        <ul class="action-list">
+          <li class="key" data-en="📦 Equipment delivery and installation in all 100 local taxis" data-es="📦 Entrega e instalación de equipos en los 100 taxis locales"></li>
+          <li class="key" data-en="📲 Driver training sessions — app setup, Uber trip flow, payment process" data-es="📲 Sesiones de capacitación para conductores — configuración de app, flujo de viajes Uber, proceso de pago"></li>
+          <li data-en="🔗 Account creation and Uber 3P registration for each driver" data-es="🔗 Creación de cuentas y registro en Uber 3P para cada conductor"></li>
+          <li data-en="🏆 Ambassador drivers lead peer-to-peer training sessions" data-es="🏆 Conductores Embajadores lideran sesiones de capacitación entre compañeros"></li>
+          <li data-en="📍 QR code deployment: hotels, restaurants, and commercial points across Tulum" data-es="📍 Despliegue de códigos QR: hoteles, restaurantes y puntos comerciales en Tulum"></li>
+          <li data-en="📊 Week-by-week activation tracking — target 25 new active drivers per week" data-es="📊 Seguimiento semanal de activación — meta: 25 nuevos conductores activos por semana"></li>
+        </ul>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);font-style:italic" data-en="Goal by Day 35: 90+ of 100 local Tulum taxis active on platform and receiving trips." data-es="Meta al Día 35: 90+ de 100 taxis locales de Tulum activos en la plataforma y recibiendo viajes."></div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase">
+      <div class="phase-header">
+        <div class="phase-num">04</div>
+        <div>
+          <div class="phase-title" data-en="Playa del Carmen Onboarding" data-es="Incorporación — Playa del Carmen"></div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:2px"><span class="cohort-tag tag-playa" data-en="100 Local Taxis · Playa del Carmen" data-es="100 Taxis Locales · Playa del Carmen"></span></div>
+        </div>
+        <div class="phase-days" data-en="Days 25–45" data-es="Días 25–45"></div>
+      </div>
+      <div class="phase-body">
+        <ul class="action-list">
+          <li class="key" data-en="📦 Equipment delivery and installation — 100 Playa del Carmen taxis" data-es="📦 Entrega e instalación de equipos — 100 taxis de Playa del Carmen"></li>
+          <li class="key" data-en="📲 Driver training sessions — same proven process from Tulum rollout" data-es="📲 Sesiones de capacitación — mismo proceso probado del despliegue en Tulum"></li>
+          <li data-en="🔗 Account creation and Uber 3P registration for each driver" data-es="🔗 Creación de cuentas y registro en Uber 3P para cada conductor"></li>
+          <li data-en="📍 QR code deployment across Playa del Carmen commercial zone" data-es="📍 Despliegue de códigos QR en la zona comercial de Playa del Carmen"></li>
+          <li data-en="🤝 Leverage Tulum ambassador drivers to support Playa onboarding" data-es="🤝 Aprovechar a los conductores Embajadores de Tulum para apoyar la incorporación en Playa"></li>
+          <li data-en="📊 Daily tracking — target 100% active by Day 45" data-es="📊 Seguimiento diario — meta: 100% activos al Día 45"></li>
+        </ul>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--muted);font-style:italic" data-en="Goal by Day 45: 90+ of 100 Playa del Carmen taxis active and receiving Uber trips." data-es="Meta al Día 45: 90+ de 100 taxis de Playa del Carmen activos y recibiendo viajes Uber."></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESPONSIBILITIES -->
+  <div class="section">
+    <div class="label" data-en="Responsibilities" data-es="Responsabilidades"></div>
+    <div class="divider"></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr>
+          <th data-en="Action" data-es="Acción"></th>
+          <th data-en="Owner" data-es="Responsable"></th>
+          <th data-en="Target" data-es="Meta"></th>
+        </tr></thead>
+        <tbody>
+          <tr><td data-en="On-ground execution & driver activation" data-es="Ejecución en campo y activación de conductores"></td><td><span class="owner-tag">Pablo Echevarri</span></td><td data-en="All 45 days" data-es="Los 45 días"></td></tr>
+          <tr><td data-en="Union communication & leadership alignment" data-es="Comunicación sindical y alineación con liderazgo"></td><td><span class="owner-tag">Pablo Echevarri</span></td><td data-en="Weekly" data-es="Semanal"></td></tr>
+          <tr><td data-en="Technical support & equipment issues" data-es="Soporte técnico y problemas de equipo"></td><td><span class="owner-tag">Flywheel Eng</span></td><td data-en="48hr response" data-es="Respuesta en 48 hrs"></td></tr>
+          <tr><td data-en="Driver incentive program management" data-es="Gestión del programa de incentivos para conductores"></td><td><span class="owner-tag">Pablo Echevarri</span></td><td data-en="Weekly review" data-es="Revisión semanal"></td></tr>
+          <tr><td data-en="Payment verification & issues" data-es="Verificación de pagos e incidencias"></td><td><span class="owner-tag">Flywheel Ops</span></td><td data-en="Immediate" data-es="Inmediato"></td></tr>
+          <tr><td data-en="Progress reporting to Izzy Aala" data-es="Reporte de avances a Izzy Aala"></td><td><span class="owner-tag">Pablo Echevarri</span></td><td data-en="Every 5 days" data-es="Cada 5 días"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SUCCESS METRICS -->
+  <div class="section">
+    <div class="label" data-en="Success Metrics — Day 45" data-es="Métricas de Éxito — Día 45"></div>
+    <div class="divider"></div>
+    <div class="card-grid cols-2">
+      <div class="kpi-card"><div class="kpi-icon">🚖</div><div><div class="kpi-val">270+</div><div class="kpi-label" data-en="of 300 drivers active on platform (90%)" data-es="de 300 conductores activos en la plataforma (90%)"></div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">📱</div><div><div class="kpi-val">Daily</div><div class="kpi-label" data-en="Active drivers logging in each shift" data-es="Conductores activos conectados en cada turno"></div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">🤝</div><div><div class="kpi-val">Uber Live</div><div class="kpi-label" data-en="All active drivers receiving Uber demand" data-es="Todos los conductores activos recibiendo demanda de Uber"></div></div></div>
+      <div class="kpi-card"><div class="kpi-icon">📊</div><div><div class="kpi-val">Weekly</div><div class="kpi-label" data-en="Progress reports delivered to union leadership" data-es="Informes de avance entregados a los líderes sindicales"></div></div></div>
+    </div>
+  </div>
+
+  <!-- CLOSE -->
+  <div class="success-block">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin-bottom:12px" data-en="300 drivers. 45 days. Uber demand in every taxi." data-es="300 conductores. 45 días. Demanda Uber en cada taxi."></div>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:20px" data-en="Your vehicles are wrapped. Your equipment is installed. Now we deliver the demand." data-es="Sus vehículos están rotulados. El equipo está instalado. Ahora entregamos la demanda."></p>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--red);margin-bottom:4px">Isabelo "Izzy" Aala · CEO</div>
+    <div style="font-size:.82rem;color:var(--muted)">izzy@flywheel.com</div>
+    <div style="margin-top:6px;font-size:.82rem;color:var(--muted)"><strong>Pablo Echevarri</strong> · Mexico Execution Lead · pablo.echevarri@cdc.pe</div>
+    <div style="margin-top:16px;font-size:.72rem;color:#444;font-family:'JetBrains Mono',monospace">Flywheel Technologies · Confidential</div>
+  </div>
+
+</div><!-- app -->
+
+<script>
+const PASS='flywheel2026';
+let lang='en';
+function checkGate(){
+  if(document.getElementById('gate-input').value===PASS){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='block';
+    setLang('en');
+  } else {
+    document.getElementById('gate-err').style.display='block';
+  }
+}
+function setLang(l){
+  lang=l;
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  document.getElementById('btn-es').classList.toggle('active',l==='es');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const v=el.getAttribute('data-'+l);
+    if(v!==null) el.innerHTML=v;
+  });
+}
+document.getElementById('gate-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkGate()});
+</script>
+</body>
+</html>

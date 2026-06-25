@@ -1,0 +1,11 @@
+{
+  "name": "sps-static",
+  "version": "1.0.0",
+  "description": "SPS Static File Server — decks, portals, proposals",
+  "scripts": {
+    "start": "serve public -p ${PORT:-3000} --no-clipboard"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}

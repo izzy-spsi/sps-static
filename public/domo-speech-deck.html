@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Speech Deck</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #0C0C0C;
+    color: #F0EDE8;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .deck { width:100vw; height:100vh; position:relative; }
+
+  .slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 60px 80px;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active { display: flex; }
+
+  /* Slide number */
+  .slide-num {
+    position: absolute;
+    bottom: 28px;
+    right: 48px;
+    font-size: 13pt;
+    color: rgba(240,237,232,0.25);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  /* Header */
+  .slide-label {
+    font-size: 11pt;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: #CC2222;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 38pt;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #F0EDE8;
+    margin-bottom: 36px;
+    border-bottom: 3px solid #8B4513;
+    padding-bottom: 20px;
+  }
+
+  /* Bullets */
+  .bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 75%;
+  }
+  .bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    font-size: 20pt;
+    line-height: 1.35;
+    color: #F0EDE8;
+    font-weight: 400;
+  }
+  .bullets li::before {
+    content: "→";
+    color: #CC2222;
+    font-weight: 800;
+    font-size: 18pt;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .bullets li strong {
+    color: #e8c07a;
+    font-weight: 700;
+  }
+  .bullets li em {
+    color: #aaa;
+    font-style: italic;
+  }
+
+  /* Cover slide */
+  .cover {
+    background: linear-gradient(135deg, #1a0a04 0%, #0C0C0C 60%);
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .cover-logo {
+    font-size: 13pt;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #CC2222;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .cover-title {
+    font-size: 56pt;
+    font-weight: 900;
+    line-height: 1.0;
+    color: #F0EDE8;
+    margin-bottom: 16px;
+  }
+  .cover-sub {
+    font-size: 18pt;
+    color: rgba(240,237,232,0.55);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  .cover-date {
+    position: absolute;
+    bottom: 48px;
+    left: 80px;
+    font-size: 11pt;
+    color: rgba(240,237,232,0.3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Thank you slide */
+  .thanks-name {
+    font-size: 26pt;
+    font-weight: 800;
+    color: #e8c07a;
+  }
+  .thanks-role {
+    font-size: 16pt;
+    color: rgba(240,237,232,0.55);
+    margin-top: 4px;
+    margin-bottom: 28px;
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background: rgba(12,12,12,0.9);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav button {
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #F0EDE8;
+    font-size: 18pt;
+    padding: 10px 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.15s;
+  }
+  .nav button:hover { background: #2c2c2c; }
+  .nav button:active { background: #8B4513; }
+  .nav .counter {
+    font-size: 13pt;
+    color: rgba(240,237,232,0.35);
+    font-weight: 600;
+    min-width: 80px;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  /* Progress bar */
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: #CC2222;
+    transition: width 0.3s ease;
+  }
+</style>
+</head>
+<body>
+
+<div style="position:fixed;top:16px;right:16px;z-index:500;display:flex;gap:8px;">
+  <button id="_editToggleBtn" onclick="toggleEdit()" data-on="0" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">✏ Edit</button>
+  <button onclick="saveEdits()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">💾 Save</button>
+  <button onclick="restoreEdits()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;letter-spacing:1px;font-family:monospace;">↺ Restore</button>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide cover active" id="s1">
+    <div class="cover-logo">Domo Cafe</div>
+    <div class="cover-title">Welcome,<br>Striker.</div>
+    <div class="cover-sub">Taste Testing Event — May 28, 2026</div>
+    <div class="cover-date">Izzy Aala · Domo Cafe · Buena Park, CA</div>
+    <div class="slide-num">01 / 08</div>
+  </div>
+
+  <!-- SLIDE 2: ABOUT ME -->
+  <div class="slide" id="s2">
+    <div class="slide-label">Opening</div>
+    <div class="slide-title">About Me</div>
+    <ul class="bullets">
+      <li>Entrepreneur, operator, father of three</li>
+      <li>Most of my career — hospitality — <em>didn't realize it until Gudetama</em></li>
+      <li>At Gudetama: most important job was to make people feel <strong>better than when they arrived</strong></li>
+      <li>Domo is the next chapter — <strong>bigger, bolder, more intentional</strong></li>
+    </ul>
+    <div class="slide-num">02 / 08</div>
+  </div>
+
+  <!-- SLIDE 3: ABOUT THE CAFE -->
+  <div class="slide" id="s3">
+    <div class="slide-label">The Vision</div>
+    <div class="slide-title">About the Cafe</div>
+    <ul class="bullets">
+      <li>More than a restaurant — <strong>a cultural destination</strong></li>
+      <li>Prime location: Knott's Berry Farm · Soak City · free parking</li>
+      <li>Fully immersive — every zone, every wall, every detail intentional</li>
+      <li>Murals in progress · signage arriving next week</li>
+      <li>Our job: <strong>tell Domo's story through food, hospitality, and heart</strong></li>
+    </ul>
+    <div class="slide-num">03 / 08</div>
+  </div>
+
+  <!-- SLIDE 4: THE TEAM -->
+  <div class="slide" id="s4">
+    <div class="slide-label">The People</div>
+    <div class="slide-title">About My Team</div>
+    <ul class="bullets">
+      <li>Training, preparing, grinding before a single customer walked in</li>
+      <li><strong>They are the culture</strong> — not me, them</li>
+      <li>Trained on not just <em>how</em> to serve — but <em>why</em></li>
+      <li>Standard: every guest feels <strong>welcomed, surprised, and cared for</strong></li>
+    </ul>
+    <div class="slide-num">04 / 08</div>
+  </div>
+
+  <!-- SLIDE 5: THE JOURNEY -->
+  <div class="slide" id="s5">
+    <div class="slide-label">The Story</div>
+    <div class="slide-title">The Journey</div>
+    <ul class="bullets">
+      <li>Late nights, hard decisions, setbacks, pivots</li>
+      <li>Every challenge made us <strong>sharper and more committed</strong></li>
+      <li>Days away from opening our doors to the world</li>
+      <li>What you experience today = <strong>everything we've poured into this place</strong></li>
+    </ul>
+    <div class="slide-num">05 / 08</div>
+  </div>
+
+  <!-- SLIDE 6: CULTURE & GOALS -->
+  <div class="slide" id="s6">
+    <div class="slide-label">What We Stand For</div>
+    <div class="slide-title">Culture & Goals</div>
+    <ul class="bullets">
+      <li>Built on three things: <strong>Excellence · Warmth · Authenticity</strong></li>
+      <li>No corners cut. No average. Hospitality is a human act.</li>
+      <li>Goal: <strong>best themed dining experience in Southern California</strong></li>
+      <li>Families return. Kids remember. Partners are proud.</li>
+      <li>This is just version one — <strong>patio · events · merch · much more coming</strong></li>
+    </ul>
+    <div class="slide-num">06 / 08</div>
+  </div>
+
+  <!-- SLIDE 7: THANK YOU -->
+  <div class="slide" id="s7">
+    <div class="slide-label">Gratitude</div>
+    <div class="slide-title">Thank You</div>
+    <ul class="bullets">
+      <li><strong>My entire staff</strong> — worked tirelessly to pull this off</li>
+      <li class="thanks-block">
+        <span>
+          <span class="thanks-name">Hailey</span><br>
+          <span style="font-size:17pt; color:rgba(240,237,232,0.7);">Didn't just inspire Domo Cafe — she <strong>insisted</strong> on it</span>
+        </span>
+      </li>
+      <li class="thanks-block">
+        <span>
+          <span class="thanks-name">Makoto</span><br>
+          <span style="font-size:17pt; color:rgba(240,237,232,0.7);">Currently in Japan — introduced us to Striker. <em>None of this happens without him.</em></span>
+        </span>
+      </li>
+    </ul>
+    <div class="slide-num">07 / 08</div>
+  </div>
+
+  <!-- SLIDE 8: TO STRIKER -->
+  <div class="slide" id="s8">
+    <div class="slide-label">Our Partners</div>
+    <div class="slide-title">To Striker &amp; NHK</div>
+    <ul class="bullets">
+      <li>Honored to have you here as our partners</li>
+      <li>NHK — a brand that has meant something to people <strong>for generations</strong></li>
+      <li>We don't take that lightly</li>
+      <li>Committed to <strong>honoring that legacy</strong> and making both orgs proud</li>
+      <li style="margin-top:12px; font-size:22pt; color:#e8c07a;"><strong>Now — let's eat. Let's talk. Let's build something great together.</strong></li>
+    </ul>
+    <div class="slide-num">08 / 08</div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button onclick="prev()">←</button>
+  <span class="counter" id="counter">1 / 8</span>
+  <button onclick="next()">→</button>
+</div>
+
+<script>
+  const total = 8;
+  let cur = 1;
+
+  function show(n) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    document.getElementById('counter').textContent = n + ' / ' + total;
+    document.getElementById('progress').style.width = (n / total * 100) + '%';
+    cur = n;
+  }
+
+  function next() { if (cur < total) show(cur + 1); }
+  function prev() { if (cur > 1) show(cur - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+</script>
+
+<script>
+// ─── DECK EDIT FEATURE ───────────────────────────────────────────────────────
+const _EDIT_HASH = '08d2ccb2e858548c639f7fa890c5ccbf5d62be0be17183d8aabe5b406d288d42';
+async function _hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function requireEditAuth(onSuccess) {
+  if (sessionStorage.getItem('deck-edit-auth')==='1') { onSuccess(); return; }
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  ov.innerHTML=`<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;"><div style="font-size:32px;margin-bottom:16px;">🔒</div><div style="font-family:sans-serif;font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:6px;">Edit Access Required</div><div style="font-size:12px;color:#A0A098;margin-bottom:24px;">Contact Jarvis to receive the edit password.</div><input id="_ePwI" type="password" placeholder="Enter password" style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F0EDE8;font-size:14px;outline:none;font-family:monospace;margin-bottom:10px;"/><div id="_ePwE" style="color:#ef4444;font-size:12px;min-height:16px;margin-bottom:10px;"></div><button id="_ePwB" style="width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Unlock</button><button id="_ePwC" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#A0A098;font-size:13px;cursor:pointer;">Cancel</button></div>`;
+  document.body.appendChild(ov);
+  const inp=document.getElementById('_ePwI');
+  inp.focus();
+  const go=async()=>{
+    const h=await _hashStr(inp.value);
+    if(h===_EDIT_HASH){sessionStorage.setItem('deck-edit-auth','1');ov.remove();onSuccess();}
+    else{document.getElementById('_ePwE').textContent='Incorrect password. Contact Jarvis.';inp.value='';inp.focus();}
+  };
+  document.getElementById('_ePwB').onclick=go;
+  document.getElementById('_ePwC').onclick=()=>ov.remove();
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+const _DECK_KEY = 'domo-speech-edits';
+let _origContent = {};
+function _captureOrig() {
+  document.querySelectorAll('.slide').forEach((el,i) => { _origContent[i] = el.innerHTML; });
+}
+function _loadSaved() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(_DECK_KEY) || '{}');
+    document.querySelectorAll('.slide').forEach((el,i) => { if(saved[i]) el.innerHTML = saved[i]; });
+  } catch(e){}
+}
+function saveEdits() {
+  const d = {};
+  document.querySelectorAll('.slide').forEach((el,i) => { d[i] = el.innerHTML; });
+  localStorage.setItem(_DECK_KEY, JSON.stringify(d));
+  _showEditToast('✓ Saved');
+}
+function restoreEdits() {
+  if (!confirm('Restore to original? All saved edits will be cleared.')) return;
+  localStorage.removeItem(_DECK_KEY);
+  document.querySelectorAll('.slide').forEach((el,i) => { if(_origContent[i]) el.innerHTML = _origContent[i]; });
+  const btn = document.getElementById('_editToggleBtn');
+  if (btn && btn.dataset.on==='1') _deactivateEdit();
+  _showEditToast('↺ Restored');
+}
+function _showEditInstructions(onConfirm) {
+  if (localStorage.getItem(_DECK_KEY+'-tip')) { onConfirm(); return; }
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.72);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  ov.innerHTML = `<div style="background:#1A1A18;border:1px solid rgba(201,160,82,0.3);border-radius:16px;padding:36px 40px;max-width:420px;width:90%;text-align:left;">
+    <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#C9A052;margin-bottom:16px;font-weight:700;">Edit Mode</div>
+    <div style="font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:20px;">How to edit this deck</div>
+    <div style="font-size:13px;color:#A0A098;line-height:1.9;">
+      <div style="margin-bottom:6px;">✏️ &nbsp;Click <strong style="color:#F0EDE8;">✏ Edit</strong> to make all slide text editable</div>
+      <div style="margin-bottom:6px;">🖊 &nbsp;Click any text on a slide and type to change it</div>
+      <div style="margin-bottom:6px;">↵ &nbsp;Press <strong style="color:#F0EDE8;">Enter</strong> or click away to confirm</div>
+      <div style="margin-bottom:6px;">💾 &nbsp;Click <strong style="color:#F0EDE8;">Save</strong> — persists across sessions</div>
+      <div style="margin-bottom:6px;">↺ &nbsp;Click <strong style="color:#F0EDE8;">Restore</strong> to reset to original</div>
+      <div>✓ &nbsp;Click <strong style="color:#F0EDE8;">✓ Done</strong> to exit edit mode</div>
+    </div>
+    <div style="margin-top:10px;"><label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#A0A098;cursor:pointer;"><input type="checkbox" id="_eTipChk" style="accent-color:#C9A052"> Don't show again</label></div>
+    <button id="_eTipOk" style="margin-top:24px;width:100%;padding:13px;background:linear-gradient(135deg,#C9A052,#e8c07a);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Got it — let's edit</button>
+  </div>`;
+  document.body.appendChild(ov);
+  document.getElementById('_eTipOk').onclick = () => {
+    if(document.getElementById('_eTipChk').checked) localStorage.setItem(_DECK_KEY+'-tip','1');
+    ov.remove(); onConfirm();
+  };
+}
+function _activateEdit() {
+  document.querySelectorAll('.slide').forEach(el => el.setAttribute('contenteditable','true'));
+  const btn = document.getElementById('_editToggleBtn');
+  if(btn){btn.textContent='✓ Done';btn.style.color='#C9A052';btn.style.borderColor='#C9A052';btn.dataset.on='1';}
+}
+function _deactivateEdit() {
+  document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  const btn = document.getElementById('_editToggleBtn');
+  if(btn){btn.textContent='✏ Edit';btn.style.color='';btn.style.borderColor='';btn.dataset.on='0';}
+}
+function toggleEdit() {
+  const btn = document.getElementById('_editToggleBtn');
+  if(!btn||btn.dataset.on!=='1') requireEditAuth(() => _showEditInstructions(_activateEdit));
+  else _deactivateEdit();
+}
+function _showEditToast(msg) {
+  let t = document.getElementById('_editToast');
+  if(!t){t=document.createElement('div');t.id='_editToast';t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(201,160,82,0.95);color:#0C0C0C;font-family:monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border-radius:20px;opacity:0;transition:opacity 0.25s,transform 0.25s;z-index:9999;pointer-events:none';document.body.appendChild(t);}
+  t.textContent=msg;
+  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';});
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},2000);
+}
+_captureOrig(); _loadSaved();
+</script>
+
+</body>
+</html>
+<!-- deploy trigger Thu May 28 13:44:24 PDT 2026 -->

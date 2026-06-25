@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Parcel — Interactive Pro Forma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #0C0C0C;
+  --surface: #141414;
+  --surface2: #1C1C1C;
+  --text: #F0EDE8;
+  --text-muted: #8A8680;
+  --primary: #0A2463;
+  --accent: #1B98E0;
+  --highlight: #00D4FF;
+  --border: rgba(27,152,224,0.18);
+  --input-bg: rgba(0,100,180,0.12);
+  --input-border: rgba(0,212,255,0.5);
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+}
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── PASSWORD SCREEN ── */
+#password-screen {
+  position:fixed; inset:0; background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+  z-index:9999; flex-direction:column; gap:24px;
+}
+.pw-box {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:48px 56px; text-align:center; max-width:440px; width:90%;
+}
+.pw-logo { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.8rem; color:var(--highlight); margin-bottom:8px; }
+.pw-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:28px; }
+.pw-input {
+  width:100%; padding:14px 18px; border-radius:10px;
+  border:1px solid var(--border); background:var(--input-bg);
+  color:var(--text); font-family:'JetBrains Mono',monospace; font-size:1rem;
+  outline:none; margin-bottom:14px; text-align:center; letter-spacing:0.1em;
+}
+.pw-input:focus { border-color:var(--highlight); }
+.pw-btn {
+  width:100%; padding:14px; border-radius:10px; border:none;
+  background:linear-gradient(90deg,#0A2463,#1B98E0);
+  color:#fff; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:1rem; cursor:pointer; letter-spacing:0.05em;
+  transition:opacity 0.2s;
+}
+.pw-btn:hover { opacity:0.85; }
+.pw-error { color:var(--red); font-size:0.85rem; margin-top:8px; min-height:20px; }
+
+/* ── MAIN APP ── */
+#app { display:none; }
+.header {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:16px 32px; display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.header-left { display:flex; align-items:center; gap:16px; }
+.header-logo { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.2rem; }
+.header-logo span { color:var(--highlight); }
+.badge { font-family:'JetBrains Mono',monospace; font-size:0.7rem; padding:4px 10px; border-radius:20px; background:rgba(0,212,255,0.1); color:var(--highlight); border:1px solid rgba(0,212,255,0.3); letter-spacing:0.08em; }
+.header-controls { display:flex; gap:10px; }
+.toggle-group { display:flex; gap:2px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:3px; }
+.tog-btn {
+  padding:7px 16px; border-radius:8px; border:none; background:transparent;
+  color:var(--text-muted); font-family:'JetBrains Mono',monospace; font-size:0.75rem;
+  cursor:pointer; transition:all 0.2s; letter-spacing:0.05em;
+}
+.tog-btn.active { background:var(--accent); color:#fff; }
+
+/* ── METRICS ROW ── */
+.metrics-bar {
+  padding:20px 32px; border-bottom:1px solid var(--border);
+  display:grid; grid-template-columns:repeat(6,1fr); gap:16px;
+  background:var(--surface);
+}
+.metric-card {
+  background:var(--bg); border:1px solid var(--border); border-radius:12px;
+  padding:14px 16px;
+}
+.metric-label { font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+.metric-val { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.4rem; color:var(--highlight); }
+.metric-sub { font-size:0.72rem; color:var(--text-muted); margin-top:3px; }
+.metric-val.green { color:var(--green); }
+.metric-val.red { color:var(--red); }
+.metric-val.yellow { color:var(--yellow); }
+
+/* ── MAIN LAYOUT ── */
+.main-content { padding:24px 32px; display:grid; grid-template-columns:320px 1fr; gap:24px; }
+.sidebar { display:flex; flex-direction:column; gap:16px; }
+.inputs-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  padding:20px;
+}
+.inputs-card h3 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.95rem; margin-bottom:16px; color:var(--accent); }
+.input-row { margin-bottom:12px; }
+.input-label { font-size:0.78rem; color:var(--text-muted); margin-bottom:5px; display:block; }
+.input-field {
+  width:100%; padding:9px 12px; border-radius:8px;
+  border:1px solid var(--input-border); background:var(--input-bg);
+  color:var(--highlight); font-family:'JetBrains Mono',monospace; font-size:0.9rem;
+  outline:none; transition:border-color 0.2s;
+}
+.input-field:focus { border-color:var(--highlight); box-shadow:0 0 0 2px rgba(0,212,255,0.1); }
+
+/* ── CHARTS AREA ── */
+.charts-area { display:flex; flex-direction:column; gap:16px; }
+.chart-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  padding:20px;
+}
+.chart-card h3 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.9rem; margin-bottom:16px; color:var(--text-muted); }
+canvas { width:100% !important; border-radius:8px; }
+
+/* ── TABLE AREA ── */
+.table-section { padding:0 32px 32px; }
+.table-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.table-header h2 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.3rem; }
+.breakeven-badge {
+  display:flex; align-items:center; gap:8px; padding:8px 16px;
+  background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3);
+  border-radius:20px; font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+  color:var(--green);
+}
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+thead tr th {
+  padding:10px 14px; text-align:right; font-family:'JetBrains Mono',monospace;
+  font-size:0.68rem; letter-spacing:0.06em; background:var(--surface2);
+  border:1px solid var(--border); color:var(--text-muted); white-space:nowrap;
+}
+thead tr th:first-child { text-align:left; position:sticky; left:0; background:var(--surface2); z-index:10; }
+tbody tr td {
+  padding:9px 14px; text-align:right; border:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace; font-size:0.78rem; white-space:nowrap;
+}
+tbody tr td:first-child { text-align:left; position:sticky; left:0; background:var(--surface); z-index:10; font-family:'DM Sans',sans-serif; font-size:0.82rem; }
+tbody tr:nth-child(even) td { background:var(--surface2); }
+tbody tr:nth-child(even) td:first-child { background:var(--surface2); }
+.row-revenue td { color:var(--highlight) !important; font-weight:600; }
+.row-ebitda td { }
+.row-ebitda .pos { color:var(--green); }
+.row-ebitda .neg { color:var(--red); }
+.row-header td { background:var(--surface2) !important; color:var(--accent) !important; font-family:'Space Grotesk',sans-serif !important; font-weight:700 !important; font-size:0.78rem !important; border-top:2px solid var(--accent) !important; }
+.row-total td { background:rgba(0,212,255,0.06) !important; font-weight:600; border-top:2px solid var(--border) !important; }
+.breakeven-col { background:rgba(34,197,94,0.08) !important; }
+
+/* Scenario selector */
+.scenario-selector {
+  display:flex; gap:0; border:1px solid var(--border); border-radius:10px;
+  overflow:hidden; margin-bottom:4px;
+}
+.sc-btn {
+  flex:1; padding:10px; border:none; background:transparent;
+  color:var(--text-muted); font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:0.8rem; cursor:pointer; transition:all 0.2s;
+}
+.sc-btn.active { background:linear-gradient(90deg,#0A2463,#1B98E0); color:#fff; }
+
+/* Divider */
+.divider { height:1px; background:var(--border); margin:4px 0; }
+
+label.input-label { cursor:default; }
+
+/* Scrollable monthly view */
+.monthly-notice {
+  font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--text-muted);
+  margin-bottom:10px; text-align:right;
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-logo">🌊 Blue Parcel</div>
+    <div class="pw-sub">Interactive Financial Pro Forma<br>Confidential — Authorized Access Only</div>
+    <input type="password" class="pw-input" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="pw-btn" onclick="checkPw()">UNLOCK PRO FORMA</button>
+    <div class="pw-error" id="pw-error"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">Blue <span>Parcel</span></div>
+      <div class="badge">CONFIDENTIAL</div>
+      <div class="badge" id="scenario-badge">DutchX Scenario</div>
+    </div>
+    <div class="header-controls">
+      <div class="toggle-group">
+        <button class="tog-btn active" id="btn-annual" onclick="setView('annual')">ANNUAL</button>
+        <button class="tog-btn" id="btn-monthly" onclick="setView('monthly')">MONTHLY</button>
+      </div>
+      <div class="toggle-group">
+        <button class="tog-btn active" id="btn-dutchx" onclick="setScenario('dutchx')">DUTCHX</button>
+        <button class="tog-btn" id="btn-indep" onclick="setScenario('indep')">INDEPENDENT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS ROW -->
+  <div class="metrics-bar" id="metrics-bar"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <!-- SIDEBAR INPUTS -->
+    <div class="sidebar">
+      <div class="inputs-card">
+        <h3>⚙ Key Assumptions</h3>
+        <div class="input-row">
+          <label class="input-label">Price per lb ($)</label>
+          <input class="input-field" type="number" id="inp-price" value="6" step="0.25" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Annual Price Increase (%)</label>
+          <input class="input-field" type="number" id="inp-price-inc" value="5" step="0.5" onchange="recalc()">
+        </div>
+        <div class="divider"></div>
+        <div class="input-row">
+          <label class="input-label">DutchX Start Volume (lbs/mo)</label>
+          <input class="input-field" type="number" id="inp-vol-dx" value="200000" step="10000" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">DutchX Monthly Growth (%)</label>
+          <input class="input-field" type="number" id="inp-growth-dx" value="5" step="0.5" onchange="recalc()">
+        </div>
+        <div class="divider"></div>
+        <div class="input-row">
+          <label class="input-label">Independent Start Volume (lbs/mo)</label>
+          <input class="input-field" type="number" id="inp-vol-ind" value="20000" step="5000" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Independent Monthly Growth (%)</label>
+          <input class="input-field" type="number" id="inp-growth-ind" value="15" step="0.5" onchange="recalc()">
+        </div>
+        <div class="divider"></div>
+        <div class="input-row">
+          <label class="input-label">Driver Hourly Wage ($)</label>
+          <input class="input-field" type="number" id="inp-wage" value="27" step="1" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Initial Vessel Count</label>
+          <input class="input-field" type="number" id="inp-vessels" value="2" step="1" min="1" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Fuel Cost/Day per Vessel ($)</label>
+          <input class="input-field" type="number" id="inp-fuel" value="1500" step="100" onchange="recalc()">
+        </div>
+      </div>
+
+      <div class="inputs-card">
+        <h3>📊 Valuation Inputs</h3>
+        <div class="input-row">
+          <label class="input-label">EBITDA Multiple (×)</label>
+          <input class="input-field" type="number" id="inp-mult" value="7" step="0.5" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">Tax Rate (%)</label>
+          <input class="input-field" type="number" id="inp-tax" value="36.35" step="0.5" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">WACC — DutchX (%)</label>
+          <input class="input-field" type="number" id="inp-wacc-dx" value="20" step="1" onchange="recalc()">
+        </div>
+        <div class="input-row">
+          <label class="input-label">WACC — Independent (%)</label>
+          <input class="input-field" type="number" id="inp-wacc-ind" value="30" step="1" onchange="recalc()">
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-area">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="chart-card">
+          <h3>Revenue Growth (Annual)</h3>
+          <canvas id="chartRevenue" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>EBITDA by Year</h3>
+          <canvas id="chartEbitda" height="180"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Cumulative Cash Flow (Monthly, 60 months)</h3>
+        <canvas id="chartCashflow" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2 id="table-title">P&L Summary — Annual (DutchX Scenario)</h2>
+      <div class="breakeven-badge" id="breakeven-badge">⬤ Break-even: Month —</div>
+    </div>
+    <div class="monthly-notice" id="monthly-notice" style="display:none;">Scroll right → to see all 60 months</div>
+    <div class="table-wrap">
+      <table id="proforma-table"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── PASSWORD ───
+function checkPw() {
+  const v = document.getElementById('pw-input').value;
+  if (v === 'izzy@2026') {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    recalc();
+  } else {
+    document.getElementById('pw-error').textContent = 'Incorrect password. Try again.';
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+// ─── STATE ───
+let scenario = 'dutchx';
+let viewMode = 'annual';
+let charts = {};
+
+function setScenario(s) {
+  scenario = s;
+  document.getElementById('btn-dutchx').classList.toggle('active', s === 'dutchx');
+  document.getElementById('btn-indep').classList.toggle('active', s === 'indep');
+  document.getElementById('scenario-badge').textContent = s === 'dutchx' ? 'DutchX Scenario' : 'Independent Scenario';
+  recalc();
+}
+
+function setView(v) {
+  viewMode = v;
+  document.getElementById('btn-annual').classList.toggle('active', v === 'annual');
+  document.getElementById('btn-monthly').classList.toggle('active', v === 'monthly');
+  document.getElementById('monthly-notice').style.display = v === 'monthly' ? 'block' : 'none';
+  recalc();
+}
+
+// ─── HELPERS ───
+function fmt(n, prefix='$') {
+  if (n === null || n === undefined) return '—';
+  const abs = Math.abs(n);
+  let s;
+  if (abs >= 1e9) s = prefix + (n/1e9).toFixed(2) + 'B';
+  else if (abs >= 1e6) s = prefix + (n/1e6).toFixed(2) + 'M';
+  else if (abs >= 1e3) s = prefix + (n/1e3).toFixed(0) + 'K';
+  else s = prefix + n.toFixed(0);
+  if (n < 0) s = '(' + s.replace(prefix, prefix) + ')';
+  return s;
+}
+function fmtN(n) {
+  if (!n && n !== 0) return '—';
+  return Math.round(n).toLocaleString();
+}
+function fmtPct(n) {
+  if (!n && n !== 0) return '—';
+  return (n*100).toFixed(1) + '%';
+}
+
+// ─── DRIVER SCALING ───
+function driverCount(lbs) {
+  if (lbs < 50000)  return Math.ceil(lbs / 400);
+  if (lbs < 100000) return Math.ceil(lbs / 600);
+  if (lbs < 200000) return Math.ceil(lbs / 800);
+  if (lbs < 400000) return Math.ceil(lbs / 1000);
+  if (lbs < 800000) return Math.ceil(lbs / 1200);
+  return Math.ceil(lbs / 1400);
+}
+
+// ─── VESSEL SCALING ───
+function vesselCount(lbs, baseVessels) {
+  // Practical capacity per vessel ~1.28M lbs/month (200 caps × 200 lbs × 32 trips × 30 days × ~33% utilization for mixed loads)
+  // Use a utilization model: add 1 vessel per 600K lbs/month above base
+  const base = Math.max(baseVessels, 2);
+  const extra = Math.floor(lbs / 600000);
+  return base + extra;
+}
+
+// ─── MONTHLY MODEL ───
+function buildMonthly(sc) {
+  const price0     = parseFloat(document.getElementById('inp-price').value) || 6;
+  const priceInc   = (parseFloat(document.getElementById('inp-price-inc').value) || 5) / 100;
+  const volStart   = sc === 'dutchx'
+    ? (parseFloat(document.getElementById('inp-vol-dx').value) || 200000)
+    : (parseFloat(document.getElementById('inp-vol-ind').value) || 20000);
+  const growthRate = sc === 'dutchx'
+    ? (parseFloat(document.getElementById('inp-growth-dx').value) || 5) / 100
+    : (parseFloat(document.getElementById('inp-growth-ind').value) || 15) / 100;
+  const wageHr     = parseFloat(document.getElementById('inp-wage').value) || 27;
+  const baseVessels= parseInt(document.getElementById('inp-vessels').value) || 2;
+  const fuelDay    = parseFloat(document.getElementById('inp-fuel').value) || 1500;
+  const taxRate    = (parseFloat(document.getElementById('inp-tax').value) || 36.35) / 100;
+
+  // Management base (monthly)
+  const mgmtBase = 103000; // CEO+CFO+CTO+BD+DutchX2+PierOps2
+  const mgmtGrowthAnn = 0.03;
+
+  // Fixed monthly
+  const pierRent = 10000;
+  const softwareMaint = 50000;
+  const profFees0 = 50000;
+  const profFeesGrowth = 0.10;
+
+  // Driver costs
+  const hoursMonth = 160;
+  const benefitsPct = 0.15;
+  const driverInitFee = 66; // Year 1 new drivers only
+
+  // Vessel driver: 8 per vessel at $10K/mo each
+  const vesselDriverCost = 10000;
+  const vesselDriversPerVessel = 8;
+
+  // Total assets for R&M calc
+  const capexTotal = sc === 'dutchx'
+    ? 21000000  // DutchX path total
+    : 23000000; // Independent
+
+  const months = [];
+  let prevDrivers = 0;
+  let cumCash = -capexTotal; // start from CapEx outflow
+
+  for (let m = 1; m <= 60; m++) {
+    const year = Math.ceil(m / 12);
+    const yearFrac = (m - 1) / 12;
+
+    // Volume
+    const lbs = volStart * Math.pow(1 + growthRate, m - 1);
+
+    // Price (annual step-up)
+    const pricePerLb = price0 * Math.pow(1 + priceInc, year - 1);
+
+    // Revenue
+    const revenue = lbs * pricePerLb;
+
+    // Drivers
+    const drivers = driverCount(lbs);
+    const newDrivers = Math.max(0, drivers - prevDrivers);
+    const driverWageMonth = wageHr * hoursMonth;
+    const driverBenefits = driverWageMonth * benefitsPct;
+    const driverTotalPerHead = driverWageMonth + driverBenefits;
+    let driverCost = drivers * driverTotalPerHead;
+    // Annual salary growth 3%/yr
+    driverCost *= Math.pow(1.03, year - 1);
+    // Initiation fees (Year 1 only, for new drivers)
+    const initFees = year === 1 ? newDrivers * driverInitFee : 0;
+
+    // Bike energy
+    const bikeEnergy = drivers * 0.72 * 22;
+
+    // Vessels
+    const vessels = vesselCount(lbs, baseVessels);
+    const fuelCost = vessels * fuelDay * 30;
+    const vesselDrivers = vessels * vesselDriversPerVessel;
+    let vesselDriverCosts = vesselDrivers * vesselDriverCost;
+    vesselDriverCosts *= Math.pow(1.03, year - 1);
+
+    // Management
+    let mgmt = mgmtBase * Math.pow(1 + mgmtGrowthAnn, year - 1);
+
+    // Professional fees
+    const profFees = profFees0 * Math.pow(1 + profFeesGrowth / 12, m - 1);
+
+    // Pier rent
+    const pier = pierRent;
+
+    // Software maintenance
+    const softw = softwareMaint;
+
+    // Storage supplies: 1% of revenue
+    const storageSupplies = revenue * 0.01;
+
+    // R&M / Insurance: 1% of total assets / 12 per month
+    const rmInsurance = (capexTotal * 0.01) / 12;
+
+    // Sub-total opex before misc
+    const opexPreMisc = driverCost + initFees + bikeEnergy + fuelCost + vesselDriverCosts + mgmt + profFees + pier + softw + storageSupplies + rmInsurance;
+
+    // Misc: 5%
+    const misc = opexPreMisc * 0.05;
+
+    // Total opex
+    const totalOpex = opexPreMisc + misc;
+
+    // EBITDA
+    const ebitda = revenue - totalOpex;
+
+    // D&A (simplified: 10-year straight line on CapEx)
+    const da = capexTotal / (10 * 12);
+
+    // EBIT
+    const ebit = ebitda - da;
+
+    // Tax (only on positive EBIT)
+    const tax = ebit > 0 ? ebit * taxRate : 0;
+
+    // Net Income
+    const netIncome = ebit - tax;
+
+    // Operating cash flow (Net Income + D&A)
+    const ocf = netIncome + da;
+
+    // Cumulative cash
+    cumCash += ocf;
+
+    prevDrivers = drivers;
+
+    months.push({
+      m, year, lbs, pricePerLb, revenue,
+      driverCost, initFees, bikeEnergy, fuelCost, vesselDriverCosts,
+      mgmt, profFees, pier, softw, storageSupplies, rmInsurance, misc,
+      totalOpex, ebitda, da, ebit, tax, netIncome, ocf, cumCash,
+      drivers, vessels
+    });
+  }
+  return months;
+}
+
+// ─── ANNUAL AGGREGATION ───
+function aggregateAnnual(months) {
+  const years = [];
+  for (let y = 1; y <= 5; y++) {
+    const yMonths = months.filter(m => m.year === y);
+    const agg = {
+      year: y,
+      lbs: yMonths[yMonths.length - 1].lbs, // exit month volume
+      lbsTotal: yMonths.reduce((s,m) => s + m.lbs, 0),
+      revenue: yMonths.reduce((s,m) => s + m.revenue, 0),
+      driverCost: yMonths.reduce((s,m) => s + m.driverCost, 0),
+      initFees: yMonths.reduce((s,m) => s + m.initFees, 0),
+      bikeEnergy: yMonths.reduce((s,m) => s + m.bikeEnergy, 0),
+      fuelCost: yMonths.reduce((s,m) => s + m.fuelCost, 0),
+      vesselDriverCosts: yMonths.reduce((s,m) => s + m.vesselDriverCosts, 0),
+      mgmt: yMonths.reduce((s,m) => s + m.mgmt, 0),
+      profFees: yMonths.reduce((s,m) => s + m.profFees, 0),
+      pier: yMonths.reduce((s,m) => s + m.pier, 0),
+      softw: yMonths.reduce((s,m) => s + m.softw, 0),
+      storageSupplies: yMonths.reduce((s,m) => s + m.storageSupplies, 0),
+      rmInsurance: yMonths.reduce((s,m) => s + m.rmInsurance, 0),
+      misc: yMonths.reduce((s,m) => s + m.misc, 0),
+      totalOpex: yMonths.reduce((s,m) => s + m.totalOpex, 0),
+      ebitda: yMonths.reduce((s,m) => s + m.ebitda, 0),
+      da: yMonths.reduce((s,m) => s + m.da, 0),
+      ebit: yMonths.reduce((s,m) => s + m.ebit, 0),
+      tax: yMonths.reduce((s,m) => s + m.tax, 0),
+      netIncome: yMonths.reduce((s,m) => s + m.netIncome, 0),
+      ocf: yMonths.reduce((s,m) => s + m.ocf, 0),
+      cumCash: yMonths[yMonths.length - 1].cumCash,
+      drivers: yMonths[yMonths.length - 1].drivers,
+      vessels: yMonths[yMonths.length - 1].vessels,
+    };
+    years.push(agg);
+  }
+  return years;
+}
+
+// ─── BREAK-EVEN ───
+function findBreakeven(months) {
+  let cumulativeEBITDA = 0;
+  for (const m of months) {
+    cumulativeEBITDA += m.ebitda;
+    if (cumulativeEBITDA > 0) return m.m;
+  }
+  return null;
+}
+
+function findCashBreakeven(months) {
+  for (const m of months) {
+    if (m.cumCash > 0) return m.m;
+  }
+  return null;
+}
+
+// ─── RECALC ───
+function recalc() {
+  const months = buildMonthly(scenario);
+  const years = aggregateAnnual(months);
+  const beMonth = findBreakeven(months);
+  const cashBeMonth = findCashBreakeven(months);
+
+  updateMetrics(months, years, beMonth);
+  updateCharts(months, years);
+  updateTable(months, years, beMonth);
+  updateBadge(beMonth, cashBeMonth);
+}
+
+// ─── METRICS ───
+function updateMetrics(months, years, beMonth) {
+  const mult = parseFloat(document.getElementById('inp-mult').value) || 7;
+  const lastYear = years[4];
+  const beYearMonth = beMonth ? `Mo ${beMonth}` : 'N/A';
+  const y5val = lastYear.ebitda > 0 ? lastYear.ebitda * mult : null;
+
+  const items = [
+    { label: 'Yr 5 Revenue', val: fmt(lastYear.revenue), sub: 'Annual', cls: '' },
+    { label: 'Yr 5 EBITDA', val: fmt(lastYear.ebitda), sub: 'Annual', cls: lastYear.ebitda >= 0 ? 'green' : 'red' },
+    { label: 'Yr 5 Net Income', val: fmt(lastYear.netIncome), sub: 'After tax', cls: lastYear.netIncome >= 0 ? 'green' : 'red' },
+    { label: 'Cash Position Yr5', val: fmt(lastYear.cumCash), sub: 'Cumulative', cls: lastYear.cumCash >= 0 ? 'green' : 'red' },
+    { label: 'Drivers Yr 5', val: fmtN(lastYear.drivers), sub: 'Union W2', cls: '' },
+    { label: 'Implied Val Yr5', val: y5val ? fmt(y5val) : 'N/A', sub: `${mult}× EBITDA`, cls: 'yellow' },
+  ];
+
+  const bar = document.getElementById('metrics-bar');
+  bar.innerHTML = items.map(i => `
+    <div class="metric-card">
+      <div class="metric-label">${i.label}</div>
+      <div class="metric-val ${i.cls}">${i.val}</div>
+      <div class="metric-sub">${i.sub}</div>
+    </div>
+  `).join('');
+}
+
+// ─── CHARTS (vanilla canvas) ───
+function drawBarChart(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 600;
+  const H = parseInt(canvas.getAttribute('height')) || 200;
+  canvas.width = W * 2;
+  canvas.height = H * 2;
+  ctx.scale(2, 2);
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { top: 20, right: 20, bottom: 36, left: 60 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // All values
+  const allVals = datasets.flatMap(d => d.data);
+  const minVal = Math.min(0, ...allVals);
+  const maxVal = Math.max(0, ...allVals);
+  const range = maxVal - minVal || 1;
+  const scale = plotH / (range * 1.1);
+  const zero = pad.top + plotH - (-minVal * scale * 1.1 / 1 + 0);
+  // More accurate:
+  const zeroY = pad.top + plotH * (1 - (-minVal) / (range * 1.1 || 1));
+
+  const barGroup = plotW / labels.length;
+  const barW = Math.min((barGroup / datasets.length) * 0.7, 40);
+  const groupPad = (barGroup - barW * datasets.length) / 2;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(240,237,232,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.top + (plotH / 5) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(pad.left + plotW, y);
+    ctx.stroke();
+  }
+
+  // Zero line
+  ctx.strokeStyle = 'rgba(240,237,232,0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, zeroY);
+  ctx.lineTo(pad.left + plotW, zeroY);
+  ctx.stroke();
+
+  // Bars
+  datasets.forEach((ds, di) => {
+    ds.data.forEach((val, i) => {
+      const x = pad.left + barGroup * i + groupPad + barW * di;
+      const barH2 = Math.abs(val) / (range * 1.1) * plotH;
+      const y = val >= 0 ? zeroY - barH2 : zeroY;
+
+      const grad = ctx.createLinearGradient(0, y, 0, y + barH2);
+      grad.addColorStop(0, ds.colorStart || '#1B98E0');
+      grad.addColorStop(1, ds.colorEnd || '#0A2463');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(x, y, barW, barH2, 2) : ctx.rect(x, y, barW, barH2);
+      ctx.fill();
+    });
+  });
+
+  // X labels
+  ctx.fillStyle = 'rgba(240,237,232,0.5)';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  labels.forEach((lbl, i) => {
+    ctx.fillText(lbl, pad.left + barGroup * i + barGroup / 2, H - 8);
+  });
+
+  // Y axis labels
+  ctx.textAlign = 'right';
+  ctx.font = '9px JetBrains Mono, monospace';
+  for (let i = 0; i <= 4; i++) {
+    const val = minVal + (range * 1.1) * (i / 4);
+    const y = zeroY - (val / (range * 1.1)) * plotH;
+    const label = Math.abs(val) >= 1e6 ? (val/1e6).toFixed(1)+'M' : Math.abs(val) >= 1e3 ? (val/1e3).toFixed(0)+'K' : val.toFixed(0);
+    ctx.fillStyle = 'rgba(240,237,232,0.35)';
+    ctx.fillText('$'+label, pad.left - 4, y + 3);
+  }
+
+  // Legend
+  if (datasets.length > 1) {
+    datasets.forEach((ds, di) => {
+      ctx.fillStyle = ds.colorStart;
+      ctx.fillRect(pad.left + plotW - 120 + di * 60, pad.top, 10, 8);
+      ctx.fillStyle = 'rgba(240,237,232,0.5)';
+      ctx.font = '9px DM Sans, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(ds.label || '', pad.left + plotW - 108 + di * 60, pad.top + 8);
+    });
+  }
+}
+
+function drawLineChart(canvasId, labels, datasets, opts={}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 800;
+  const H = parseInt(canvas.getAttribute('height')) || 160;
+  canvas.width = W * 2;
+  canvas.height = H * 2;
+  ctx.scale(2, 2);
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { top: 16, right: 24, bottom: 32, left: 64 };
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  const allVals = datasets.flatMap(d => d.data);
+  const minVal = Math.min(0, ...allVals) * 1.1;
+  const maxVal = Math.max(0, ...allVals) * 1.1;
+  const range = maxVal - minVal || 1;
+  const zeroY = pad.top + plotH * (maxVal / range);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(240,237,232,0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + (plotH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + plotW, y); ctx.stroke();
+  }
+
+  // Zero line
+  ctx.strokeStyle = 'rgba(240,237,232,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(pad.left + plotW, zeroY); ctx.stroke();
+
+  // Fill zero crossover
+  datasets.forEach(ds => {
+    if (!ds.fill) return;
+    const pts = ds.data.map((v, i) => ({
+      x: pad.left + (i / (ds.data.length - 1)) * plotW,
+      y: pad.top + ((maxVal - v) / range) * plotH
+    }));
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, zeroY);
+    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(pts[pts.length-1].x, zeroY);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotH);
+    grad.addColorStop(0, ds.fillColorTop || 'rgba(0,212,255,0.2)');
+    grad.addColorStop(0.5, 'rgba(0,212,255,0.05)');
+    grad.addColorStop(1, 'rgba(239,68,68,0.1)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+  });
+
+  // Lines
+  datasets.forEach(ds => {
+    const pts = ds.data.map((v, i) => ({
+      x: pad.left + (i / Math.max(ds.data.length - 1, 1)) * plotW,
+      y: pad.top + ((maxVal - v) / range) * plotH
+    }));
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) {
+      const cp1x = (pts[i-1].x + pts[i].x) / 2;
+      ctx.bezierCurveTo(cp1x, pts[i-1].y, cp1x, pts[i].y, pts[i].x, pts[i].y);
+    }
+    ctx.strokeStyle = ds.color || '#00D4FF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Dots at key points
+    if (ds.data.length <= 12) {
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = ds.color || '#00D4FF';
+        ctx.fill();
+      });
+    }
+  });
+
+  // X labels (show subset)
+  ctx.fillStyle = 'rgba(240,237,232,0.45)';
+  ctx.font = '9px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  const maxLabels = 15;
+  const step = Math.ceil(labels.length / maxLabels);
+  labels.forEach((lbl, i) => {
+    if (i % step === 0 || i === labels.length - 1) {
+      const x = pad.left + (i / Math.max(labels.length - 1, 1)) * plotW;
+      ctx.fillText(lbl, x, H - 6);
+    }
+  });
+
+  // Y labels
+  ctx.textAlign = 'right';
+  ctx.font = '9px JetBrains Mono, monospace';
+  for (let i = 0; i <= 4; i++) {
+    const val = minVal + range * (i / 4);
+    const y = pad.top + plotH * (1 - i / 4);
+    const label = Math.abs(val) >= 1e9 ? (val/1e9).toFixed(1)+'B' : Math.abs(val) >= 1e6 ? (val/1e6).toFixed(1)+'M' : Math.abs(val) >= 1e3 ? (val/1e3).toFixed(0)+'K' : val.toFixed(0);
+    ctx.fillStyle = 'rgba(240,237,232,0.3)';
+    ctx.fillText('$'+label, pad.left - 4, y + 3);
+  }
+
+  // Legend
+  if (datasets.length > 1) {
+    let lx = pad.left + plotW - 50 * datasets.length;
+    datasets.forEach((ds, di) => {
+      ctx.strokeStyle = ds.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(lx + 60*di, pad.top + 3); ctx.lineTo(lx + 60*di + 14, pad.top + 3); ctx.stroke();
+      ctx.fillStyle = 'rgba(240,237,232,0.55)';
+      ctx.font = '9px DM Sans, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(ds.label || '', lx + 60*di + 16, pad.top + 6);
+    });
+  }
+}
+
+function updateCharts(months, years) {
+  const yLabels = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+  const revData = years.map(y => y.revenue);
+  const ebitdaData = years.map(y => y.ebitda);
+
+  // Revenue chart
+  drawBarChart('chartRevenue', yLabels, [{
+    data: revData, colorStart: '#1B98E0', colorEnd: '#0A2463', label: 'Revenue'
+  }]);
+
+  // EBITDA chart
+  drawBarChart('chartEbitda', yLabels, [{
+    data: ebitdaData,
+    colorStart: '#22c55e', colorEnd: '#166534', label: 'EBITDA (pos)',
+    // Will be overridden per bar below - this just sets default
+  }], { signed: true });
+  // Redraw EBITDA with dual colors
+  const canvas = document.getElementById('chartEbitda');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width/2, H = canvas.height/2;
+    const pad = { top: 20, right: 20, bottom: 36, left: 60 };
+    const plotW = W - pad.left - pad.right;
+    const plotH = H - pad.top - pad.bottom;
+    const minVal = Math.min(0, ...ebitdaData);
+    const maxVal = Math.max(0, ...ebitdaData);
+    const range = (maxVal - minVal) * 1.15 || 1;
+    const zeroY = pad.top + plotH * (maxVal * 1.075 / range);
+    const barGroup = plotW / 5;
+    const barW = barGroup * 0.55;
+
+    ctx.scale(1, 1); // Already scaled
+    ebitdaData.forEach((val, i) => {
+      const x = pad.left + barGroup * i + (barGroup - barW) / 2;
+      const barH2 = Math.abs(val) / range * plotH;
+      const y = val >= 0 ? zeroY - barH2 : zeroY;
+      const grad = ctx.createLinearGradient(0, y, 0, y + barH2);
+      if (val >= 0) {
+        grad.addColorStop(0, '#22c55e');
+        grad.addColorStop(1, '#166534');
+      } else {
+        grad.addColorStop(0, '#ef4444');
+        grad.addColorStop(1, '#7f1d1d');
+      }
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x*2, y*2, barW*2, barH2*2, 3);
+      else ctx.rect(x*2, y*2, barW*2, barH2*2);
+      ctx.fill();
+    });
+  }
+
+  // Cash flow line chart
+  const mLabels = months.map(m => m.m % 6 === 0 || m.m === 1 ? `M${m.m}` : '');
+  const cashData = months.map(m => m.cumCash);
+  drawLineChart('chartCashflow', mLabels, [{
+    data: cashData, color: '#00D4FF', label: 'Cum. Cash Flow', fill: true, fillColorTop: 'rgba(0,212,255,0.15)'
+  }]);
+}
+
+// ─── TABLE ───
+function updateTable(months, years, beMonth) {
+  const title = `P&L Summary — ${viewMode === 'annual' ? 'Annual (5 Years)' : 'Monthly (60 Months)'} | ${scenario === 'dutchx' ? 'DutchX Scenario' : 'Independent Scenario'}`;
+  document.getElementById('table-title').textContent = title;
+
+  const data = viewMode === 'annual' ? years : months;
+  const cols = data.length;
+
+  const headers = viewMode === 'annual'
+    ? data.map(d => `Year ${d.year}`)
+    : data.map(d => `M${String(d.m).padStart(2,'0')}`);
+
+  const getBeClass = (idx) => {
+    if (viewMode === 'monthly') {
+      const m = data[idx].m;
+      return m === beMonth ? 'breakeven-col' : '';
+    }
+    return '';
+  };
+
+  const rows = [
+    { label: '── VOLUME ──', type: 'header' },
+    { label: 'Volume (lbs/mo, exit)', vals: d => fmtN(d.lbs) },
+    { label: '# Bike Drivers', vals: d => fmtN(d.drivers) },
+    { label: '# Vessels', vals: d => fmtN(d.vessels) },
+    { label: '── REVENUE ──', type: 'header' },
+    { label: 'Revenue', vals: d => fmt(d.revenue), type: 'revenue' },
+    { label: '── OPERATING COSTS ──', type: 'header' },
+    { label: 'Bike Driver Labor (W2)', vals: d => fmt(d.driverCost), indent: true },
+    { label: 'Driver Initiation Fees', vals: d => fmt(d.initFees), indent: true },
+    { label: 'Bike Energy', vals: d => fmt(d.bikeEnergy), indent: true },
+    { label: 'Vessel Fuel', vals: d => fmt(d.fuelCost), indent: true },
+    { label: 'Vessel Drivers (W2)', vals: d => fmt(d.vesselDriverCosts), indent: true },
+    { label: 'Management Salaries', vals: d => fmt(d.mgmt), indent: true },
+    { label: 'Professional Fees', vals: d => fmt(d.profFees), indent: true },
+    { label: 'Pier Rent', vals: d => fmt(d.pier), indent: true },
+    { label: 'Software Maintenance', vals: d => fmt(d.softw), indent: true },
+    { label: 'Storage Supplies (1%)', vals: d => fmt(d.storageSupplies), indent: true },
+    { label: 'R&M / Insurance (1%)', vals: d => fmt(d.rmInsurance), indent: true },
+    { label: 'Misc (5% of OpEx)', vals: d => fmt(d.misc), indent: true },
+    { label: 'Total Operating Costs', vals: d => fmt(d.totalOpex), type: 'total' },
+    { label: '── P&L ──', type: 'header' },
+    { label: 'EBITDA', vals: d => fmt(d.ebitda), type: 'ebitda' },
+    { label: 'Depreciation & Amort.', vals: d => fmt(d.da), indent: true },
+    { label: 'EBIT', vals: d => fmt(d.ebit) },
+    { label: 'Tax', vals: d => fmt(d.tax), indent: true },
+    { label: 'Net Income', vals: d => fmt(d.netIncome), type: 'total' },
+    { label: '── CASH FLOW ──', type: 'header' },
+    { label: 'Operating Cash Flow', vals: d => fmt(d.ocf) },
+    { label: 'Cumulative Cash Position', vals: d => fmt(d.cumCash), type: 'cash' },
+  ];
+
+  let html = '<thead><tr><th>Line Item</th>';
+  headers.forEach((h, i) => {
+    html += `<th class="${getBeClass(i)}">${h}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  rows.forEach(row => {
+    if (row.type === 'header') {
+      html += `<tr class="row-header"><td>${row.label}</td>${headers.map((_,i) => `<td class="${getBeClass(i)}"></td>`).join('')}</tr>`;
+      return;
+    }
+    const rowClass = row.type === 'revenue' ? 'row-revenue' : row.type === 'ebitda' ? 'row-ebitda' : row.type === 'total' ? 'row-total' : '';
+    html += `<tr class="${rowClass}"><td>${row.indent ? '  ' : ''}${row.label}</td>`;
+    data.forEach((d, i) => {
+      let val = row.vals(d);
+      let cellClass = getBeClass(i);
+      if (row.type === 'ebitda') {
+        const raw = d.ebitda;
+        cellClass += raw >= 0 ? ' pos' : ' neg';
+      }
+      if (row.type === 'cash') {
+        const raw = d.cumCash;
+        cellClass += raw >= 0 ? ' pos' : ' neg';
+      }
+      html += `<td class="${cellClass}">${val}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  document.getElementById('proforma-table').innerHTML = html;
+}
+
+function updateBadge(beMonth, cashBeMonth) {
+  const badge = document.getElementById('breakeven-badge');
+  if (beMonth) {
+    const beYear = Math.ceil(beMonth / 12);
+    badge.innerHTML = `⬤ EBITDA Break-even: Month ${beMonth} (Year ${beYear})`;
+    badge.style.background = 'rgba(34,197,94,0.1)';
+    badge.style.borderColor = 'rgba(34,197,94,0.3)';
+    badge.style.color = 'var(--green)';
+  } else {
+    badge.innerHTML = '⬤ Break-even: Beyond 60 months';
+    badge.style.background = 'rgba(239,68,68,0.1)';
+    badge.style.borderColor = 'rgba(239,68,68,0.3)';
+    badge.style.color = 'var(--red)';
+  }
+}
+
+// Redraw charts on resize
+window.addEventListener('resize', () => { if (document.getElementById('app').style.display !== 'none') recalc(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Domo Cafe — Grand Opening Menu · Print Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brown: #8B4513;
+  --red: #CC2222;
+  --gold: #C9952A;
+  --txt: #1A0E05;
+  --muted: #6B5040;
+  --bdr: rgba(139,69,19,0.35);
+  --accent: rgba(139,69,19,0.12);
+}
+
+html { background: #e8e8e8; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: transparent;
+  color: var(--txt);
+  width: 8.5in;
+  margin: 0 auto;
+}
+
+/* ── PAGE ── */
+.page {
+  width: 8.5in;
+  min-height: 11in;
+  background: transparent;
+  position: relative;
+  padding: 0.5in 0.6in 0.45in;
+  page-break-after: always;
+  display: flex;
+  flex-direction: column;
+}
+.page:last-child { page-break-after: auto; }
+
+/* Screen preview: white sheet */
+@media screen {
+  .page {
+    background: white;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    margin-bottom: 2rem;
+  }
+  html { padding: 2rem 0; }
+}
+
+/* ── BORDER FRAME ── */
+.frame {
+  position: absolute;
+  inset: 0.3in;
+  border: 1.5px solid var(--brown);
+  pointer-events: none;
+  z-index: 0;
+}
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 0.5px solid rgba(139,69,19,0.2);
+}
+/* Corner ornaments */
+.frame::before {
+  content: '✦';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  color: var(--gold);
+  font-size: 14px;
+  padding: 0 6px;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-bottom: 0.2in;
+  margin-bottom: 0.18in;
+  border-bottom: 1.5px solid var(--brown);
+}
+.header-location {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7.5pt;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.1in;
+}
+.header-logo {
+  height: 156px;
+  object-fit: contain;
+  margin-bottom: 0.08in;
+}
+.header-tagline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7pt;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.05in;
+}
+.header-divider {
+  margin: 0.1in auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 9pt;
+}
+.header-divider::before,
+.header-divider::after {
+  content: '';
+  flex: 1;
+  max-width: 1.5in;
+  height: 0.5px;
+  background: var(--brown);
+  opacity: 0.4;
+}
+
+/* ── TWO-COLUMN LAYOUT ── */
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3in;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+.columns::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 0.5px;
+  background: var(--bdr);
+  transform: translateX(-50%);
+}
+.col {}
+
+/* ── SECTION HEADING ── */
+.section-head {
+  text-align: center;
+  margin-bottom: 0.1in;
+  margin-top: 0.13in;
+}
+.section-head:first-child { margin-top: 0; }
+.section-head h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7pt;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brown);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.section-head h2::before,
+.section-head h2::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--bdr);
+}
+
+/* ── MENU ITEM ── */
+.item {
+  margin-bottom: 0.09in;
+}
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+}
+.item-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: var(--txt);
+  line-height: 1.3;
+}
+.item-dots {
+  flex: 1;
+  border-bottom: 1px dotted rgba(139,69,19,0.25);
+  margin-bottom: 3px;
+}
+.item-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: var(--red);
+  white-space: nowrap;
+}
+.item-desc {
+  font-size: 7.5pt;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+  font-style: italic;
+  padding-right: 0.1in;
+}
+
+/* ── SIDES / SAUCES GRID ── */
+.small-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.1in;
+}
+.small-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+  border-bottom: 0.5px solid rgba(139,69,19,0.1);
+}
+.small-name {
+  font-size: 8pt;
+  color: var(--txt);
+  font-weight: 400;
+}
+.small-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 7.5pt;
+  color: var(--red);
+  font-weight: 600;
+}
+.free { color: var(--brown); }
+
+/* ── FOOTER ── */
+.page-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-top: 0.15in;
+  padding-top: 0.1in;
+  border-top: 0.5px solid var(--bdr);
+}
+.footer-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 6.5pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.footer-ornament {
+  color: var(--gold);
+  font-size: 8pt;
+  margin: 0 6px;
+}
+
+/* ── DESSERT PAGE ── */
+.dessert-layout {
+  position: relative;
+  z-index: 1;
+  max-width: 5in;
+  margin: 0 auto;
+  flex: 1;
+}
+.dessert-intro {
+  text-align: center;
+  font-size: 8pt;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 0.2in;
+  line-height: 1.6;
+}
+.dessert-item {
+  margin-bottom: 0.18in;
+  padding-bottom: 0.15in;
+  border-bottom: 0.5px solid var(--bdr);
+}
+.dessert-item:last-child { border-bottom: none; }
+.dessert-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.dessert-item-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--txt);
+}
+.dessert-item-price {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--red);
+}
+.dessert-item-desc {
+  font-size: 8.5pt;
+  color: var(--muted);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── PRINT ── */
+@media print {
+  html { background: transparent; padding: 0; }
+  body { margin: 0; width: 100%; }
+  .page {
+    background: transparent !important;
+    width: 8.5in;
+    min-height: 11in;
+    box-shadow: none;
+    margin: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════
+     PAGE 1 — FOOD & DRINKS
+═══════════════════════════ -->
+<div class="page">
+  <div class="frame"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-location">Buena Park, California</div>
+    <img class="header-logo" src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+    <div class="header-tagline">Grand Opening · June 13, 2026</div>
+    <div class="header-divider">✦</div>
+  </div>
+
+  <!-- TWO COLUMNS -->
+  <div class="columns">
+
+    <!-- LEFT COLUMN -->
+    <div class="col">
+
+      <!-- SIGNATURE PLATES -->
+      <div class="section-head"><h2>⭐ Signature Plates</h2></div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo Moco</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$19</span>
+        </div>
+        <div class="item-desc">A juicy beef patty served over steamed rice, topped with rich house gravy and a sunny-side-up egg.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Golden Katsu Curry</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$18</span>
+        </div>
+        <div class="item-desc">Steamed jasmine rice, signature Japanese curry, sliced carrots, chicken katsu, Domo sticker on the egg.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Umami Cream Pasta</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$18.50</span>
+        </div>
+        <div class="item-desc">Campanelle pasta with earthy mushrooms, shallots, umami cream sauce, parmesan and fresh chives.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Crispy Chicken Loaded Fries</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$17</span>
+        </div>
+        <div class="item-desc">Crispy chicken chunks in sweet Korean chili over furikake waffle fries, yum-yum sauce drizzle, scallions, sesame seeds.</div>
+      </div>
+
+      <!-- HANDHELDS -->
+      <div class="section-head"><h2>Handhelds</h2></div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo Boss Burger</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$17</span>
+        </div>
+        <div class="item-desc">Toasted brioche bun, pickled burger sauce, tomato, lettuce, Angus beef patty, American cheese. Furikake waffle fries.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Kimchi Katsu Sandwich</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$18.50</span>
+        </div>
+        <div class="item-desc">Toasted brioche bun, yum-yum sauce, crispy chicken katsu in sweet Korean chili, yuzu coleslaw, kimchi, scallions, sesame. Furikake waffle fries.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo's Street Dog</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$16.50</span>
+        </div>
+        <div class="item-desc">Toasted hot dog bun, beef sausage, teriyaki sauce, Kewpie mayo, scallions, shredded seaweed, bonito flakes. Furikake fries.</div>
+      </div>
+
+      <!-- DOMO JR -->
+      <div class="section-head"><h2>🧒 Domo Jr</h2></div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Chicken Nuggets</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$12.50</span>
+        </div>
+        <div class="item-desc">Golden crispy chicken nuggets, waffle fries, fresh fruit, and ketchup.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Junior Cheeseburger</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$12.50</span>
+        </div>
+        <div class="item-desc">Mini beef patty, melted American cheese on a toasted bun, waffle fries, fresh fruit, and ketchup.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo's Hot Dog</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$12.50</span>
+        </div>
+        <div class="item-desc">Toasted hot dog bun, beef sausage, served with waffle fries, fresh fruit, and ketchup.</div>
+      </div>
+
+    </div><!-- /left col -->
+
+    <!-- RIGHT COLUMN -->
+    <div class="col">
+
+      <!-- DRINKS -->
+      <div class="section-head"><h2>🥤 Drinks</h2></div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Strawberry Lime Refresher</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$8</span>
+        </div>
+        <div class="item-desc">Strawberry soda, strawberry syrup, fresh lemon juice, diced strawberries, mint leaves.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Pineapple/Watermelon Refresher</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$8</span>
+        </div>
+        <div class="item-desc">Pineapple soda, watermelon syrup, fresh diced watermelon, lemon juice.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Strawberry Matcha</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$8.50</span>
+        </div>
+        <div class="item-desc">Premium matcha blended with fresh strawberry.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Cinnamon Roll Matcha</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$8.50</span>
+        </div>
+        <div class="item-desc">Warm cinnamon and spice notes layered with premium matcha.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Mango Lemonade</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$7</span>
+        </div>
+        <div class="item-desc">Sweet mango and freshly squeezed lemonade, served with mango jelly over ice.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo's Iced Cookie Coffee</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$7</span>
+        </div>
+        <div class="item-desc">Rich iced coffee blended with sweetened condensed milk.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Milo Dinosaur</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$7</span>
+        </div>
+        <div class="item-desc">Rich chocolate malt blended with smooth milk, served ice-cold.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Domo Palmer</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$6.50</span>
+        </div>
+        <div class="item-desc">Tropical passionfruit tea and fresh housemade lemonade.</div>
+      </div>
+
+      <div class="item">
+        <div class="item-row">
+          <span class="item-name">Lemonade</span>
+          <span class="item-dots"></span>
+          <span class="item-price">$6</span>
+        </div>
+        <div class="item-desc">Freshly squeezed lemonade, ice-cold, perfectly sweet and refreshing.</div>
+      </div>
+
+      <!-- SIDES -->
+      <div class="section-head"><h2>Sides</h2></div>
+      <div class="small-grid">
+        <div class="small-item"><span class="small-name">Patty</span><span class="small-price">$4.50</span></div>
+        <div class="small-item"><span class="small-name">Mac Salad</span><span class="small-price">$4.00</span></div>
+        <div class="small-item"><span class="small-name">Chicken Katsu</span><span class="small-price">$6.00</span></div>
+        <div class="small-item"><span class="small-name">Waffle Fries</span><span class="small-price">$4.00</span></div>
+        <div class="small-item"><span class="small-name">Egg</span><span class="small-price">$2.00</span></div>
+        <div class="small-item"><span class="small-name">Rice</span><span class="small-price">$4.00</span></div>
+        <div class="small-item"><span class="small-name">Cheese</span><span class="small-price">$1.50</span></div>
+        <div class="small-item"><span class="small-name">Seasonal Fruit</span><span class="small-price">$5.00</span></div>
+      </div>
+
+      <!-- SAUCES -->
+      <div class="section-head" style="margin-top:0.1in;"><h2>Sauces — $0.50</h2></div>
+      <div class="small-grid">
+        <div class="small-item"><span class="small-name">Teriyaki</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Yum-Yum</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Tonkatsu Mayo</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Burger Sauce</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Sweet Spicy Mayo</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Gochujang</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Ranch</span><span class="small-price">$0.50</span></div>
+        <div class="small-item"><span class="small-name">Soy Sauce</span><span class="small-price free">FREE</span></div>
+        <div class="small-item"><span class="small-name">Sriracha</span><span class="small-price free">FREE</span></div>
+      </div>
+
+    </div><!-- /right col -->
+  </div><!-- /columns -->
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="footer-text">
+      Domo Cafe
+      <span class="footer-ornament">· ✦ ·</span>
+      Buena Park, CA
+      <span class="footer-ornament">· ✦ ·</span>
+      Grand Opening June 13, 2026
+      <span class="footer-ornament">· ✦ ·</span>
+      domokuncafe.com
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════
+     PAGE 2 — DESSERTS
+═══════════════════════════ -->
+<div class="page">
+  <div class="frame"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-location">Buena Park, California</div>
+    <img class="header-logo" src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+    <div class="header-tagline">Grand Opening · June 13, 2026</div>
+    <div class="header-divider">✦</div>
+  </div>
+
+  <!-- DESSERTS -->
+  <div class="dessert-layout">
+
+    <div class="section-head" style="margin-bottom:0.15in;">
+      <h2 style="font-size:9pt;letter-spacing:0.25em;">🍮 Sweets</h2>
+    </div>
+
+    <div class="dessert-intro">
+      Sweet bites to finish your visit, made fresh in-house.
+    </div>
+
+    <div class="dessert-item">
+      <div class="dessert-item-row">
+        <span class="dessert-item-name">Domo Dream Cup</span>
+        <span class="dessert-item-price">$8</span>
+      </div>
+      <div class="dessert-item-desc">Creamy house-made flan layered with strawberry compote, topped with your choice of cookies &amp; cream, strawberry, or ube whipped cream.</div>
+    </div>
+
+    <div class="dessert-item">
+      <div class="dessert-item-row">
+        <span class="dessert-item-name">Domo-Yaki</span>
+        <span class="dessert-item-price">$6</span>
+      </div>
+      <div class="dessert-item-desc">Golden Japanese-style pastries with your choice of melted ham &amp; cheese or rich chocolate filling.</div>
+    </div>
+
+    <div class="dessert-item">
+      <div class="dessert-item-row">
+        <span class="dessert-item-name">Domo's Lava Bites</span>
+        <span class="dessert-item-price">$6</span>
+      </div>
+      <div class="dessert-item-desc">Four fluffy pancake bites dusted with powdered sugar, served with fresh strawberries and whipped cream. Choose two chocolate and two maple, or four of one flavor.</div>
+    </div>
+
+  </div>
+
+  <!-- CHEF DOMO -->  
+  <div style="text-align:center; margin-top:0.2in; position:relative; z-index:1;">
+    <img src="https://geopulse-ai-production.up.railway.app/chef-domo-menu.jpg"
+         alt="Chef Domo"
+         style="height:2.2in; object-fit:contain; opacity:0.92;"/>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="footer-text">
+      Domo Cafe
+      <span class="footer-ornament">· ✦ ·</span>
+      Buena Park, CA
+      <span class="footer-ornament">· ✦ ·</span>
+      Grand Opening June 13, 2026
+      <span class="footer-ornament">· ✦ ·</span>
+      domokuncafe.com
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

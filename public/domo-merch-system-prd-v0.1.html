@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Domo Cafe — Merchandising System PRD v0.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --dark: #1A0800;
+    --dark2: #2C1A0E;
+    --dark3: #3D2415;
+    --warm-white: #FDF8F4;
+    --cream: #F5EDD8;
+    --tan: #D4A574;
+    --muted: #9E7A60;
+    --border: rgba(212,165,116,0.18);
+    --card: rgba(44,26,14,0.85);
+    --green: #2ECC71;
+    --orange: #E67E22;
+    --blue: #3498DB;
+    --sidebar: 260px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--warm-white); display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed; top: 0; left: 0; width: var(--sidebar); height: 100vh;
+    background: rgba(15,4,0,0.97); border-right: 1px solid var(--border);
+    overflow-y: auto; z-index: 100; padding: 2rem 0;
+    display: flex; flex-direction: column;
+  }
+  .sidebar-header { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+  .sidebar-logo { height: 36px; object-fit: contain; margin-bottom: 0.75rem; }
+  .sidebar-doc-title {
+    font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--red);
+  }
+  .sidebar-version {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted);
+    margin-top: 0.25rem;
+  }
+  .nav-section {
+    padding: 0.5rem 1.5rem 0.25rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+    margin-top: 0.5rem;
+  }
+  .nav-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 1.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 400;
+    color: var(--muted); text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--tan); background: rgba(212,165,116,0.05);
+    border-left-color: var(--tan);
+  }
+  .nav-link .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--muted);
+    min-width: 1.2rem;
+  }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar); flex: 1; padding: 4rem 3rem 6rem; max-width: 860px; }
+
+  /* DOC HEADER */
+  .doc-header { margin-bottom: 4rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  .doc-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--red); border: 1px solid var(--red);
+    border-radius: 2rem; padding: 0.3rem 0.85rem; margin-bottom: 1.25rem;
+  }
+  .doc-title {
+    font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem,4vw,3rem);
+    font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
+    color: var(--warm-white); margin-bottom: 0.75rem;
+  }
+  .doc-subtitle { font-size: 1.05rem; font-weight: 300; color: var(--tan); margin-bottom: 2rem; }
+  .doc-meta {
+    display: flex; flex-wrap: wrap; gap: 2rem;
+  }
+  .meta-item { }
+  .meta-label {
+    font-family: 'Outfit', sans-serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .meta-value {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--tan);
+  }
+
+  /* SECTIONS */
+  .section { margin-bottom: 4rem; }
+  .section-anchor { display: block; height: 80px; margin-top: -80px; visibility: hidden; }
+  .section-label {
+    font-family: 'Outfit', sans-serif; font-size: 0.62rem; font-weight: 600;
+    letter-spacing: 0.3em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700;
+    letter-spacing: -0.01em; color: var(--warm-white); margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+  }
+  .section-body { font-size: 0.95rem; font-weight: 300; color: var(--tan); line-height: 1.8; }
+  .section-body p { margin-bottom: 1rem; }
+  .section-body strong { color: var(--warm-white); font-weight: 500; }
+
+  /* MODULES */
+  .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+  .module-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .module-card:hover { border-color: var(--tan); }
+  .module-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .module-name {
+    font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--warm-white); margin-bottom: 0.4rem;
+  }
+  .module-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .module-phase {
+    display: inline-block; margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.2rem 0.65rem; border-radius: 2rem;
+  }
+  .phase-1 { background: rgba(46,204,113,0.12); color: #2ECC71; border: 1px solid rgba(46,204,113,0.3); }
+  .phase-2 { background: rgba(52,152,219,0.12); color: #3498DB; border: 1px solid rgba(52,152,219,0.3); }
+  .phase-3 { background: rgba(230,126,34,0.12); color: #E67E22; border: 1px solid rgba(230,126,34,0.3); }
+  .phase-4 { background: rgba(212,165,116,0.12); color: var(--tan); border: 1px solid var(--border); }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.85rem; }
+  .data-table th {
+    font-family: 'Outfit', sans-serif; font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--border); padding: 0.6rem 0.75rem; text-align: left;
+  }
+  .data-table td {
+    padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(212,165,116,0.08);
+    color: var(--tan); font-weight: 300; vertical-align: top;
+  }
+  .data-table td strong { color: var(--warm-white); font-weight: 500; }
+  .data-table tr:hover td { background: rgba(212,165,116,0.04); }
+  .sku { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+  .price { font-family: 'JetBrains Mono', monospace; color: var(--red); }
+  .margin-pill {
+    display: inline-block; padding: 0.15rem 0.5rem; border-radius: 2rem; font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(46,204,113,0.1); color: #2ECC71; border: 1px solid rgba(46,204,113,0.2);
+  }
+
+  /* PHASE TIMELINE */
+  .timeline { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem; }
+  .timeline-item {
+    display: grid; grid-template-columns: 180px 1fr; gap: 1.5rem;
+    align-items: start; padding: 1.25rem 1.5rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem;
+  }
+  .timeline-left {}
+  .timeline-phase {
+    font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem;
+  }
+  .timeline-dates {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted);
+  }
+  .timeline-title {
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 600;
+    color: var(--warm-white); margin-bottom: 0.5rem;
+  }
+  .timeline-items { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+  .timeline-items li {
+    font-size: 0.82rem; color: var(--tan); font-weight: 300;
+    padding-left: 1rem; position: relative;
+  }
+  .timeline-items li::before { content: '→'; position: absolute; left: 0; color: var(--muted); font-size: 0.7rem; }
+
+  /* FIELD SPEC */
+  .field-group { margin-bottom: 2rem; }
+  .field-group-title {
+    font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--tan);
+    margin-bottom: 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+  }
+  .field-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-item {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    font-size: 0.85rem; font-weight: 300; color: var(--tan);
+  }
+  .field-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--warm-white);
+    min-width: 160px;
+  }
+  .field-type {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--red);
+    min-width: 70px;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(204,34,34,0.08); border: 1px solid rgba(204,34,34,0.25);
+    border-left: 3px solid var(--red); border-radius: 0.5rem;
+    padding: 1rem 1.25rem; margin: 1.5rem 0;
+    font-size: 0.88rem; color: var(--tan); line-height: 1.7;
+  }
+  .callout strong { color: var(--warm-white); }
+  .callout-info {
+    background: rgba(52,152,219,0.08); border-color: rgba(52,152,219,0.3);
+    border-left-color: #3498DB;
+  }
+  .callout-success {
+    background: rgba(46,204,113,0.08); border-color: rgba(46,204,113,0.3);
+    border-left-color: #2ECC71;
+  }
+
+  /* TECH STACK */
+  .stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
+  .stack-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 0.5rem;
+    padding: 1rem; text-align: center;
+  }
+  .stack-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .stack-name {
+    font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 700;
+    color: var(--warm-white); margin-bottom: 0.2rem;
+  }
+  .stack-role { font-size: 0.72rem; color: var(--muted); }
+
+  /* USER STORIES */
+  .story-list { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0; }
+  .story {
+    background: var(--card); border: 1px solid var(--border); border-radius: 0.5rem;
+    padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--tan); font-weight: 300;
+    line-height: 1.6;
+  }
+  .story strong { color: var(--warm-white); font-weight: 500; }
+  .story .priority {
+    float: right; margin-top: -0.1rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    padding: 0.15rem 0.5rem; border-radius: 2rem;
+  }
+  .p1 { background: rgba(204,34,34,0.15); color: var(--red); border: 1px solid rgba(204,34,34,0.3); }
+  .p2 { background: rgba(230,126,34,0.15); color: #E67E22; border: 1px solid rgba(230,126,34,0.3); }
+  .p3 { background: rgba(52,152,219,0.15); color: #3498DB; border: 1px solid rgba(52,152,219,0.3); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 2rem 1.25rem; }
+    .module-grid, .stack-grid { grid-template-columns: 1fr; }
+    .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <img class="sidebar-logo" src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" alt="Domo Cafe"/>
+    <div class="sidebar-doc-title">Merch System PRD</div>
+    <div class="sidebar-version">v0.1 · June 12, 2026</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a class="nav-link" href="#overview"><span class="num">01</span> Overview</a>
+  <a class="nav-link" href="#problem"><span class="num">02</span> Problem Statement</a>
+  <a class="nav-link" href="#goals"><span class="num">03</span> Goals & Success Metrics</a>
+
+  <div class="nav-section">Product</div>
+  <a class="nav-link" href="#modules"><span class="num">04</span> System Modules</a>
+  <a class="nav-link" href="#user-stories"><span class="num">05</span> User Stories</a>
+  <a class="nav-link" href="#data-model"><span class="num">06</span> Data Model</a>
+
+  <div class="nav-section">Inventory</div>
+  <a class="nav-link" href="#sku-catalog"><span class="num">07</span> SKU Catalog (v1)</a>
+  <a class="nav-link" href="#first-order"><span class="num">08</span> First Order</a>
+
+  <div class="nav-section">Build</div>
+  <a class="nav-link" href="#roadmap"><span class="num">09</span> Roadmap</a>
+  <a class="nav-link" href="#tech"><span class="num">10</span> Tech Stack</a>
+  <a class="nav-link" href="#constraints"><span class="num">11</span> Constraints</a>
+  <a class="nav-link" href="#open-questions"><span class="num">12</span> Open Questions</a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- DOC HEADER -->
+  <div class="doc-header">
+    <div class="doc-badge">📋 PRD · v0.1 · Draft</div>
+    <h1 class="doc-title">Domo Cafe<br/>Merchandising System</h1>
+    <p class="doc-subtitle">Product Requirements Document — Inventory, Sales, Display, Reorder & NHK Royalty Tracking</p>
+    <div class="doc-meta">
+      <div class="meta-item"><div class="meta-label">Version</div><div class="meta-value">v0.1</div></div>
+      <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">Draft</div></div>
+      <div class="meta-item"><div class="meta-label">Created</div><div class="meta-value">June 12, 2026</div></div>
+      <div class="meta-item"><div class="meta-label">Owner</div><div class="meta-value">Izzy Aala / SPS</div></div>
+      <div class="meta-item"><div class="meta-label">Scope</div><div class="meta-value">Domo Cafe · Buena Park</div></div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <span class="section-anchor" id="overview"></span>
+    <div class="section-label">01 · Overview</div>
+    <div class="section-title">What We're Building</div>
+    <div class="section-body">
+      <p>The Domo Cafe Merchandising System is an internal operations tool that gives the Domo Cafe team full visibility and control over its merchandise business — from the moment inventory arrives at the loading dock to the moment a guest takes a Domo plush home.</p>
+      <p>The system tracks <strong>inventory levels, sales performance, display placement, reorder triggers, and NHK royalty obligations</strong> — all in one place, purpose-built for a high-volume themed cafe retail environment.</p>
+      <p>The first order is already in: <strong>4,788 units across 11 SKUs</strong> from License 2 Play. We need a system operational by opening day — June 13, 2026.</p>
+    </div>
+    <div class="callout callout-success">
+      <strong>First Order Received:</strong> Order #231502-32715 · License 2 Play · 4,788 units · 11 SKUs · Shipped June 2, 2026. This order seeds the system's initial inventory state.
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="section">
+    <span class="section-anchor" id="problem"></span>
+    <div class="section-label">02 · Problem Statement</div>
+    <div class="section-title">Why We Need This</div>
+    <div class="section-body">
+      <p>Without a dedicated system, the merch operation faces several real risks at launch:</p>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Risk</th><th>Impact</th><th>Without System</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Stockout on bestsellers</strong></td><td>Lost revenue, guest disappointment</td><td>No reorder alert until shelf is empty</td></tr>
+        <tr><td><strong>Dead stock on slow movers</strong></td><td>Cash tied up, floor space wasted</td><td>No sell-through visibility</td></tr>
+        <tr><td><strong>NHK royalty errors</strong></td><td>License compliance risk</td><td>Manual calculation, easy to miscalculate</td></tr>
+        <tr><td><strong>Receiving errors</strong></td><td>Missing units, vendor disputes</td><td>No PO-to-received reconciliation</td></tr>
+        <tr><td><strong>Staff restock confusion</strong></td><td>Floor gaps, CDU emptied</td><td>No planogram or restock schedule</td></tr>
+        <tr><td><strong>No merch P&L</strong></td><td>Can't optimize the program</td><td>Revenue buried in POS totals</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GOALS -->
+  <div class="section">
+    <span class="section-anchor" id="goals"></span>
+    <div class="section-label">03 · Goals & Success Metrics</div>
+    <div class="section-title">What Good Looks Like</div>
+    <div class="section-body"><p>The system succeeds when:</p></div>
+    <table class="data-table">
+      <thead><tr><th>Goal</th><th>Success Metric</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Zero blind stockouts</strong></td><td>Reorder alerts fire before stock hits 0</td><td>100% of SKUs covered</td></tr>
+        <tr><td><strong>Accurate NHK reporting</strong></td><td>Monthly royalty calc matches manual audit</td><td>&lt; 1% variance</td></tr>
+        <tr><td><strong>Merch revenue visibility</strong></td><td>Daily merch revenue reportable by SKU</td><td>Available Day 1</td></tr>
+        <tr><td><strong>Receiving accuracy</strong></td><td>PO vs received reconciliation logged</td><td>Every order logged</td></tr>
+        <tr><td><strong>Restock coverage</strong></td><td>Floor never empty during open hours</td><td>Restock schedule followed daily</td></tr>
+        <tr><td><strong>Attachment rate tracking</strong></td><td>Merch $ per guest cover tracked weekly</td><td>Target $9.75/cover</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODULES -->
+  <div class="section">
+    <span class="section-anchor" id="modules"></span>
+    <div class="section-label">04 · System Modules</div>
+    <div class="section-title">Six Core Modules</div>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-icon">📋</div>
+        <div class="module-name">SKU Catalog</div>
+        <div class="module-desc">Master list of all merchandise. Every item: SKU, name, category, vendor, COGS, retail price, NHK royalty tier, case pack size, CDU or shelf unit.</div>
+        <span class="module-phase phase-1">Phase 1</span>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">📦</div>
+        <div class="module-name">Inventory Tracker</div>
+        <div class="module-desc">On-hand count per SKU. Floor vs stockroom. Receiving log with PO reconciliation. Reorder thresholds. Low stock alerts.</div>
+        <span class="module-phase phase-1">Phase 1</span>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🧾</div>
+        <div class="module-name">Sales Log</div>
+        <div class="module-desc">Units sold per SKU per day. Revenue by category. Sell-through rate. Best sellers vs slow movers. Merch revenue per guest cover.</div>
+        <span class="module-phase phase-2">Phase 2</span>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🗺️</div>
+        <div class="module-name">Display Planner</div>
+        <div class="module-desc">Planogram: where each SKU lives — shelf, CDU, counter. Restock schedule per location. Visual floor map of the merch area.</div>
+        <span class="module-phase phase-3">Phase 3</span>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🔄</div>
+        <div class="module-name">Reorder Engine</div>
+        <div class="module-desc">When stock hits threshold → auto-generate PO draft. Vendor directory with lead times and minimums. Order history and packing slip archive.</div>
+        <span class="module-phase phase-3">Phase 3</span>
+      </div>
+      <div class="module-card">
+        <div class="module-icon">🎌</div>
+        <div class="module-name">NHK Royalty Calculator</div>
+        <div class="module-desc">Auto-split sales into tiers: 8% house merch / 0% licensed. Monthly royalty totals. Running MG tracker vs $35K floor. Reporting-ready export.</div>
+        <span class="module-phase phase-2">Phase 2</span>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1.5rem;">
+      <strong>Analytics Dashboard</strong> (Phase 4): Best sellers ranked by units + margin · Blind box vs plush vs house merch revenue split · Weekly merch report · MG tracker · Merch attachment rate trends.
+    </div>
+  </div>
+
+  <!-- USER STORIES -->
+  <div class="section">
+    <span class="section-anchor" id="user-stories"></span>
+    <div class="section-label">05 · User Stories</div>
+    <div class="section-title">Who Uses This & How</div>
+    <div class="story-list">
+      <div class="story"><span class="priority p1">P1</span>As a <strong>manager</strong>, I want to see current stock levels for every SKU so I know what to restock before opening.</div>
+      <div class="story"><span class="priority p1">P1</span>As a <strong>manager</strong>, I want an alert when any SKU drops below reorder threshold so I can place a PO before we run out.</div>
+      <div class="story"><span class="priority p1">P1</span>As a <strong>receiver</strong>, I want to log incoming shipments against POs so we can confirm carton counts and flag discrepancies.</div>
+      <div class="story"><span class="priority p1">P1</span>As a <strong>manager</strong>, I want to record daily merch sales by SKU so I can track what's selling and what isn't.</div>
+      <div class="story"><span class="priority p2">P2</span>As a <strong>manager</strong>, I want to see monthly NHK royalty totals auto-calculated so I can stay compliant without manual math.</div>
+      <div class="story"><span class="priority p2">P2</span>As a <strong>staff member</strong>, I want to know exactly which display unit each SKU belongs in so restocking is fast and consistent.</div>
+      <div class="story"><span class="priority p2">P2</span>As <strong>Izzy</strong>, I want to see merch revenue by category (plush vs blind box vs house) so I can optimize the product mix.</div>
+      <div class="story"><span class="priority p3">P3</span>As <strong>Izzy</strong>, I want weekly merch reports emailed or messaged to me automatically so I stay informed without logging in.</div>
+      <div class="story"><span class="priority p3">P3</span>As <strong>Izzy</strong>, I want a running MG tracker so I know how close we are to the NHK minimum guarantee floor.</div>
+      <div class="story"><span class="priority p3">P3</span>As a <strong>manager</strong>, I want to generate a PO draft from the reorder engine so I can send to L2P quickly.</div>
+    </div>
+  </div>
+
+  <!-- DATA MODEL -->
+  <div class="section">
+    <span class="section-anchor" id="data-model"></span>
+    <div class="section-label">06 · Data Model</div>
+    <div class="section-title">Core Data Fields</div>
+
+    <div class="field-group">
+      <div class="field-group-title">SKU / Product</div>
+      <div class="field-list">
+        <div class="field-item"><span class="field-name">sku_id</span><span class="field-type">STRING</span>Vendor SKU (e.g. 21011-L2P)</div>
+        <div class="field-item"><span class="field-name">name</span><span class="field-type">STRING</span>Display name</div>
+        <div class="field-item"><span class="field-name">category</span><span class="field-type">ENUM</span>plush · clip_on · blind_box · house_merch</div>
+        <div class="field-item"><span class="field-name">vendor</span><span class="field-type">STRING</span>License 2 Play · House</div>
+        <div class="field-item"><span class="field-name">cogs</span><span class="field-type">DECIMAL</span>Cost of goods per unit</div>
+        <div class="field-item"><span class="field-name">retail_price</span><span class="field-type">DECIMAL</span>Selling price per unit</div>
+        <div class="field-item"><span class="field-name">nhk_royalty_tier</span><span class="field-type">ENUM</span>licensed_0pct · house_8pct · house_wholesale_13pct</div>
+        <div class="field-item"><span class="field-name">case_pack_qty</span><span class="field-type">INT</span>Units per carton (12 or 24)</div>
+        <div class="field-item"><span class="field-name">display_type</span><span class="field-type">ENUM</span>CDU · shelf · counter · wall</div>
+        <div class="field-item"><span class="field-name">reorder_threshold</span><span class="field-type">INT</span>Alert when on-hand drops below this</div>
+        <div class="field-item"><span class="field-name">active</span><span class="field-type">BOOL</span>Currently selling</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-group-title">Inventory</div>
+      <div class="field-list">
+        <div class="field-item"><span class="field-name">sku_id</span><span class="field-type">FK</span>Reference to SKU</div>
+        <div class="field-item"><span class="field-name">qty_on_hand</span><span class="field-type">INT</span>Total in building</div>
+        <div class="field-item"><span class="field-name">qty_on_floor</span><span class="field-type">INT</span>In display / on shelf</div>
+        <div class="field-item"><span class="field-name">qty_stockroom</span><span class="field-type">INT</span>In back-of-house storage</div>
+        <div class="field-item"><span class="field-name">last_counted</span><span class="field-type">DATETIME</span>Last physical count</div>
+        <div class="field-item"><span class="field-name">last_restocked</span><span class="field-type">DATETIME</span>Last floor restock</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-group-title">Receiving / PO Log</div>
+      <div class="field-list">
+        <div class="field-item"><span class="field-name">po_number</span><span class="field-type">STRING</span>Vendor order # (e.g. 231502-32715)</div>
+        <div class="field-item"><span class="field-name">vendor</span><span class="field-type">STRING</span>License 2 Play etc.</div>
+        <div class="field-item"><span class="field-name">order_date</span><span class="field-type">DATE</span></div>
+        <div class="field-item"><span class="field-name">received_date</span><span class="field-type">DATE</span></div>
+        <div class="field-item"><span class="field-name">line_items</span><span class="field-type">JSON</span>SKU + qty ordered + qty received</div>
+        <div class="field-item"><span class="field-name">discrepancy_notes</span><span class="field-type">TEXT</span>Any shortage or damage noted</div>
+        <div class="field-item"><span class="field-name">packing_slip_url</span><span class="field-type">STRING</span>PDF link (Drive or S3)</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field-group-title">Sales Log</div>
+      <div class="field-list">
+        <div class="field-item"><span class="field-name">date</span><span class="field-type">DATE</span></div>
+        <div class="field-item"><span class="field-name">sku_id</span><span class="field-type">FK</span></div>
+        <div class="field-item"><span class="field-name">qty_sold</span><span class="field-type">INT</span></div>
+        <div class="field-item"><span class="field-name">revenue</span><span class="field-type">DECIMAL</span>qty × retail_price</div>
+        <div class="field-item"><span class="field-name">cogs_total</span><span class="field-type">DECIMAL</span>qty × cogs</div>
+        <div class="field-item"><span class="field-name">royalty_owed</span><span class="field-type">DECIMAL</span>Auto-calculated from nhk_royalty_tier</div>
+        <div class="field-item"><span class="field-name">entered_by</span><span class="field-type">STRING</span>Staff member</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKU CATALOG -->
+  <div class="section">
+    <span class="section-anchor" id="sku-catalog"></span>
+    <div class="section-label">07 · SKU Catalog v1</div>
+    <div class="section-title">All Active SKUs at Launch</div>
+    <div class="section-body"><p><strong>Licensed Merch</strong> — License 2 Play (0% NHK royalty)</p></div>
+    <table class="data-table">
+      <thead><tr><th>SKU</th><th>Item</th><th>COGS</th><th>Retail</th><th>Margin</th><th>Case</th></tr></thead>
+      <tbody>
+        <tr><td class="sku">21011-L2P</td><td><strong>6.5" Standard Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21012-L2P</td><td><strong>6.5" Nerd Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21013-L2P</td><td><strong>6.5" Flowerpot Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21014-L2P</td><td><strong>6.5" Headphones Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21015-L2P</td><td><strong>6.5" Ramen Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21016-L2P</td><td><strong>6.5" Boba Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21017-HT</td><td><strong>6.5" Backpack Plush</strong></td><td class="price">$7.50</td><td class="price">$20</td><td><span class="margin-pill">63%</span></td><td>12</td></tr>
+        <tr><td class="sku">21022-L2P</td><td><strong>3" Mystery Plastic Clip-On (CDU)</strong></td><td class="price">$3.50</td><td class="price">$10</td><td><span class="margin-pill">65%</span></td><td>24</td></tr>
+        <tr><td class="sku">21023-L2P</td><td><strong>4" Collectible Clip Blind Bag (CDU)</strong></td><td class="price">$4.50</td><td class="price">$10</td><td><span class="margin-pill">55%</span></td><td>24</td></tr>
+        <tr><td class="sku">21025-L2P</td><td><strong>3.5" Squishy Blind Bag (CDU)</strong></td><td class="price">$4.50</td><td class="price">$10</td><td><span class="margin-pill">55%</span></td><td>24</td></tr>
+        <tr><td class="sku">21071-L2P</td><td><strong>3" Flocked Clip-On (CDU)</strong></td><td class="price">$4.00</td><td class="price">$10</td><td><span class="margin-pill">60%</span></td><td>24</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-body" style="margin-top:2rem;"><p><strong>House Merch</strong> — Internal (8% NHK royalty on revenue)</p></div>
+    <table class="data-table">
+      <thead><tr><th>Item</th><th>COGS</th><th>Retail</th><th>Margin</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>T-Shirt White (seated Domo)</strong></td><td class="price">$8</td><td class="price">$30</td><td><span class="margin-pill">65%</span></td><td>100% cotton, DTG</td></tr>
+        <tr><td><strong>T-Shirt Black (Chef Domo)</strong></td><td class="price">$8</td><td class="price">$30</td><td><span class="margin-pill">65%</span></td><td>100% cotton, DTG</td></tr>
+        <tr><td><strong>T-Shirt White (pink halo)</strong></td><td class="price">$8</td><td class="price">$30</td><td><span class="margin-pill">65%</span></td><td>100% cotton, DTG</td></tr>
+        <tr><td><strong>Tote Bag (crossbody, Chef Domo)</strong></td><td class="price">$8</td><td class="price">$35</td><td><span class="margin-pill">69%</span></td><td>⚠️ 5-week lead time</td></tr>
+        <tr><td><strong>Chef Hat</strong></td><td class="price">$15</td><td class="price">$35</td><td><span class="margin-pill">49%</span></td><td>250 units ordered</td></tr>
+        <tr><td><strong>Air Freshener (coconut)</strong></td><td class="price">$1</td><td class="price">$6</td><td><span class="margin-pill">75%</span></td><td>High-margin impulse item</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>⚠️ NHK Royalty Rates:</strong> House merch DTC = 8% of net sales · House merch wholesale = 13% · Licensed merch (L2P) = 0% (paid upstream) · F&B = 3% with $35,000/yr minimum guarantee floor.
+    </div>
+  </div>
+
+  <!-- FIRST ORDER -->
+  <div class="section">
+    <span class="section-anchor" id="first-order"></span>
+    <div class="section-label">08 · First Order</div>
+    <div class="section-title">Opening Inventory Snapshot</div>
+    <div class="section-body"><p>Order #231502-32715 from License 2 Play. Shipped June 2, 2026 via Ground. This is the seeding inventory for the system.</p></div>
+    <table class="data-table">
+      <thead><tr><th>SKU</th><th>Item</th><th>Units</th><th>Cartons</th><th>Retail Value</th></tr></thead>
+      <tbody>
+        <tr><td class="sku">21011-L2P</td><td><strong>6.5" Standard Plush</strong></td><td>480</td><td>40</td><td class="price">$9,600</td></tr>
+        <tr><td class="sku">21012-L2P</td><td><strong>6.5" Nerd Plush</strong></td><td>480</td><td>40</td><td class="price">$9,600</td></tr>
+        <tr><td class="sku">21013-L2P</td><td><strong>6.5" Flowerpot Plush</strong></td><td>480</td><td>40</td><td class="price">$9,600</td></tr>
+        <tr><td class="sku">21014-L2P</td><td><strong>6.5" Headphones Plush</strong></td><td>480</td><td>40</td><td class="price">$9,600</td></tr>
+        <tr><td class="sku">21015-L2P</td><td><strong>6.5" Ramen Plush</strong></td><td>108</td><td>9</td><td class="price">$2,160</td></tr>
+        <tr><td class="sku">21016-L2P</td><td><strong>6.5" Boba Plush</strong></td><td>480</td><td>40</td><td class="price">$9,600</td></tr>
+        <tr><td class="sku">21017-HT</td><td><strong>6.5" Backpack Plush</strong></td><td>360</td><td>30</td><td class="price">$7,200</td></tr>
+        <tr><td class="sku">21022-L2P</td><td><strong>3" Mystery Clip-On (CDU)</strong></td><td>240</td><td>10</td><td class="price">$2,400</td></tr>
+        <tr><td class="sku">21023-L2P</td><td><strong>4" Collectible Clip Blind Bag</strong></td><td>480</td><td>20</td><td class="price">$4,800</td></tr>
+        <tr><td class="sku">21025-L2P</td><td><strong>3.5" Squishy Blind Bag</strong></td><td>480</td><td>20</td><td class="price">$4,800</td></tr>
+        <tr><td class="sku">21071-L2P</td><td><strong>3" Flocked Clip-On (CDU)</strong></td><td>720</td><td>30</td><td class="price">$7,200</td></tr>
+        <tr style="border-top: 2px solid var(--border);">
+          <td colspan="2"><strong>TOTAL</strong></td>
+          <td><strong>4,788</strong></td>
+          <td><strong>319</strong></td>
+          <td class="price"><strong>$76,560</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-info">
+      <strong>Note:</strong> Ramen Plush (21015) received only 108 units vs 480 for most other plush styles. Confirm with L2P if this was intentional or a partial shipment.
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section">
+    <span class="section-anchor" id="roadmap"></span>
+    <div class="section-label">09 · Roadmap</div>
+    <div class="section-title">Build Phases</div>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-phase" style="color:#2ECC71;">Phase 1</div>
+          <div class="timeline-dates">June 13–15, 2026</div>
+        </div>
+        <div>
+          <div class="timeline-title">Emergency Launch — Day 1 Ops</div>
+          <ul class="timeline-items">
+            <li>Load all 11 L2P SKUs + house merch into SKU catalog</li>
+            <li>Log first order (#231502-32715) as opening inventory</li>
+            <li>Set retail prices + reorder thresholds per SKU</li>
+            <li>Build daily sales tally interface for staff</li>
+            <li>Deploy basic inventory dashboard (password-gated)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-phase" style="color:#3498DB;">Phase 2</div>
+          <div class="timeline-dates">June 16–23, 2026</div>
+        </div>
+        <div>
+          <div class="timeline-title">Core Portal</div>
+          <ul class="timeline-items">
+            <li>Full inventory tracker (on-hand / floor / stockroom split)</li>
+            <li>Sales log with per-SKU daily entry + running totals</li>
+            <li>NHK royalty auto-calculator (8% / 0% split)</li>
+            <li>Low stock alerts + reorder threshold flags</li>
+            <li>Sell-through rate by SKU</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-phase" style="color:#E67E22;">Phase 3</div>
+          <div class="timeline-dates">June 24 – July 4, 2026</div>
+        </div>
+        <div>
+          <div class="timeline-title">Display & Reorder</div>
+          <ul class="timeline-items">
+            <li>Planogram module — map SKUs to floor locations</li>
+            <li>Daily restock checklist auto-generated from floor qty</li>
+            <li>PO generator — draft reorder to L2P on threshold trigger</li>
+            <li>Vendor directory (L2P contact, lead times, minimums)</li>
+            <li>Packing slip archive (upload + link to receiving log)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-phase" style="color:var(--tan);">Phase 4</div>
+          <div class="timeline-dates">July 5+</div>
+        </div>
+        <div>
+          <div class="timeline-title">Analytics & Reporting</div>
+          <ul class="timeline-items">
+            <li>Best sellers dashboard — ranked by units + margin</li>
+            <li>Merch revenue per guest cover (tie into covers data)</li>
+            <li>Blind box vs plush vs house merch revenue split</li>
+            <li>Weekly merch report via Telegram or email</li>
+            <li>MG tracker — running tally vs NHK $35K floor</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <span class="section-anchor" id="tech"></span>
+    <div class="section-label">10 · Tech Stack</div>
+    <div class="section-title">How We Build It</div>
+    <div class="stack-grid">
+      <div class="stack-item"><div class="stack-icon">🖥️</div><div class="stack-name">HTML/CSS/JS</div><div class="stack-role">Frontend portal, password-gated, Domo branded</div></div>
+      <div class="stack-item"><div class="stack-icon">🛤️</div><div class="stack-name">Railway</div><div class="stack-role">Hosting & deployment, auto-deploy on push</div></div>
+      <div class="stack-item"><div class="stack-icon">🗄️</div><div class="stack-name">PostgreSQL</div><div class="stack-role">SKU catalog, inventory, sales log, POs</div></div>
+      <div class="stack-item"><div class="stack-icon">⚡</div><div class="stack-name">Node.js API</div><div class="stack-role">Backend, Jarvis API key auth, CRUD endpoints</div></div>
+      <div class="stack-item"><div class="stack-icon">📊</div><div class="stack-name">Google Sheets</div><div class="stack-role">Phase 1 fallback / export target for accountant</div></div>
+      <div class="stack-item"><div class="stack-icon">📁</div><div class="stack-name">Google Drive</div><div class="stack-role">Packing slip PDF archive (izzy@domokuncafe.com)</div></div>
+    </div>
+    <div class="callout callout-info">
+      <strong>Jarvis API Standard applies:</strong> All builds include <code>GET /api/jarvis/status</code>, auth via <code>x-api-key</code> header, and CRUD endpoints for core data. JARVIS_API_KEY set in Railway env vars at deploy.
+    </div>
+  </div>
+
+  <!-- CONSTRAINTS -->
+  <div class="section">
+    <span class="section-anchor" id="constraints"></span>
+    <div class="section-label">11 · Constraints</div>
+    <div class="section-title">Known Limitations</div>
+    <table class="data-table">
+      <thead><tr><th>Constraint</th><th>Details</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>No POS integration (Phase 1)</strong></td><td>Toast POS not yet connected — sales must be entered manually</td><td>Daily staff entry form; automate in Phase 3+</td></tr>
+        <tr><td><strong>NHK royalty complexity</strong></td><td>Multiple tiers; house merch uses net sales not gross</td><td>Clearly define net sales basis in calculator</td></tr>
+        <tr><td><strong>Ramen Plush shortage</strong></td><td>108 units vs 480 for other styles — possible partial shipment</td><td>Confirm with L2P before system go-live</td></tr>
+        <tr><td><strong>Blind box randomness</strong></td><td>Blind bags sell as assortments — can't track individual variants</td><td>Track by CDU SKU, not by variant</td></tr>
+        <tr><td><strong>House merch lead times</strong></td><td>Tote bag = 5-week lead time</td><td>Flag in reorder engine with lead time field</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- OPEN QUESTIONS -->
+  <div class="section">
+    <span class="section-anchor" id="open-questions"></span>
+    <div class="section-label">12 · Open Questions</div>
+    <div class="section-title">Decisions Needed</div>
+    <table class="data-table">
+      <thead><tr><th>#</th><th>Question</th><th>Owner</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="sku">Q1</td><td><strong>Ramen Plush — was 108 units intentional or partial shipment?</strong></td><td>Izzy / L2P</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q2</td><td><strong>What are the opening-day reorder thresholds per SKU?</strong> (e.g. reorder at 50 units? 20%?)</td><td>Izzy</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q3</td><td><strong>Where does merch live on the floor?</strong> Planogram needed before Display module can be built.</td><td>Izzy / Hailey</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q4</td><td><strong>Who enters daily sales?</strong> Manager only, or can any staff member log?</td><td>Izzy</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q5</td><td><strong>Will house merch prices for tees/totes be confirmed before opening?</strong> System uses $30/$35 — confirm before launch.</td><td>Izzy</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q6</td><td><strong>Toast POS integration timeline?</strong> When can we pull sales data automatically instead of manual entry?</td><td>Izzy / Toast</td><td>⏳ Open</td></tr>
+        <tr><td class="sku">Q7</td><td><strong>Are all 4,788 units physically received and counted?</strong> Packing slip shows 319 cartons — confirm receipt before loading into system.</td><td>Hailey / Staff</td><td>⏳ Open</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="margin-top:4rem; padding-top:2rem; border-top:1px solid var(--border); text-align:center;">
+    <img src="https://www.domokuncafe.com/domo-cafe-logo-transparent.png" style="height:36px;opacity:0.6;margin-bottom:1rem;" alt="Domo Cafe"/>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);">
+      Domo Cafe Merchandising System PRD · v0.1 · June 12, 2026 · Confidential · SPS / GFC BP LLC
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('.section-anchor');
+  const navLinks = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+    navLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paro Wellness Inc. — Investor Deck v1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       CSS VARIABLES & THEME
+    ============================================================ */
+    :root {
+      --espresso:   #2C2420;
+      --terracotta: #B85C38;
+      --honey:      #D4A574;
+      --driftwood:  #8A7A6C;
+      --linen:      #F7F3EE;
+      --cream:      #FBF9F6;
+
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans:  'Outfit', system-ui, sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg:        var(--espresso);
+      --bg2:       #3a2f2a;
+      --surface:   #3d302b;
+      --border:    rgba(212,165,116,0.15);
+      --text:      var(--linen);
+      --text-muted: var(--driftwood);
+      --accent:    var(--terracotta);
+      --accent2:   var(--honey);
+    }
+
+    [data-theme="light"] {
+      --bg:        var(--linen);
+      --bg2:       var(--cream);
+      --surface:   #ede7df;
+      --border:    rgba(44,36,32,0.12);
+      --text:      var(--espresso);
+      --text-muted: var(--driftwood);
+      --accent:    var(--terracotta);
+      --accent2:   #9a4e2e;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* ============================================================
+       PASSWORD GATE
+    ============================================================ */
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--espresso);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 32px;
+    }
+
+    #gate .gate-logo {
+      font-family: var(--font-serif);
+      font-size: 64px;
+      letter-spacing: 0.12em;
+      color: var(--linen);
+    }
+
+    #gate .gate-logo span { color: var(--terracotta); }
+
+    #gate .gate-tagline {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--driftwood);
+    }
+
+    #gate .gate-form {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 16px; width: 320px;
+    }
+
+    #gate input[type="password"] {
+      width: 100%;
+      padding: 14px 20px;
+      border: 1.5px solid rgba(212,165,116,0.3);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      color: var(--linen);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #gate input[type="password"]::placeholder { color: var(--driftwood); letter-spacing: 0.05em; }
+    #gate input[type="password"]:focus { border-color: var(--terracotta); }
+
+    #gate button {
+      width: 100%;
+      padding: 14px;
+      background: var(--terracotta);
+      color: var(--linen);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    #gate button:hover { background: #c96a44; }
+    #gate button:active { transform: scale(0.98); }
+
+    #gate .gate-error {
+      color: #e07050;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    #gate .gate-error.show { opacity: 1; }
+
+    #gate .gate-footer {
+      font-size: 11px;
+      color: rgba(138,122,108,0.5);
+      text-align: center;
+      margin-top: 16px;
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================================
+       DECK WRAPPER (hidden until unlocked)
+    ============================================================ */
+    #deck {
+      display: none;
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    #deck.unlocked { display: block; }
+
+    /* ============================================================
+       TOP TOOLBAR
+    ============================================================ */
+    #toolbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px;
+      background: rgba(var(--bg-rgb, 44, 36, 32), 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="dark"] #toolbar { background: rgba(44,36,32,0.92); }
+    [data-theme="light"] #toolbar { background: rgba(247,243,238,0.92); }
+
+    .toolbar-left {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .toolbar-center {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--text);
+      letter-spacing: 0.15em;
+    }
+
+    .toolbar-center span { color: var(--accent); }
+
+    .toolbar-right {
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .toolbar-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .toolbar-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .toolbar-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* ============================================================
+       SLIDES CONTAINER
+    ============================================================ */
+    #slides {
+      width: 100%; height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      padding: 88px 80px 72px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ============================================================
+       SLIDE NUMBER WATERMARK
+    ============================================================ */
+    .slide-watermark {
+      position: absolute;
+      bottom: 40px; right: 60px;
+      font-family: var(--font-serif);
+      font-size: 200px;
+      line-height: 1;
+      font-weight: 400;
+      color: var(--text);
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+
+    [data-theme="light"] .slide-watermark { opacity: 0.04; }
+
+    /* ============================================================
+       SPS S-MARK
+    ============================================================ */
+    .sps-mark {
+      position: fixed;
+      bottom: 20px; right: 24px;
+      z-index: 50;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .sps-mark:hover { opacity: 0.8; }
+
+    .sps-mark .s-icon {
+      width: 22px; height: 22px;
+      background: var(--terracotta);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      font-style: italic;
+    }
+
+    .sps-mark .s-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px;
+      padding: 16px 24px 20px;
+    }
+
+    .nav-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: rgba(0,0,0,0.2);
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(8px);
+    }
+
+    [data-theme="light"] .nav-btn { background: rgba(255,255,255,0.6); }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    #slide-counter {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    #slide-dots {
+      display: flex; gap: 5px; align-items: center;
+    }
+
+    .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--driftwood);
+      opacity: 0.4;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      opacity: 1;
+      transform: scale(1.4);
+    }
+
+    /* ============================================================
+       TYPOGRAPHY
+    ============================================================ */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .slide-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .slide-headline em { color: var(--accent); font-style: normal; }
+
+    .slide-subhead {
+      font-family: var(--font-sans);
+      font-size: clamp(14px, 1.4vw, 18px);
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 720px;
+    }
+
+    .tbd {
+      background: var(--terracotta);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+    }
+
+    /* ============================================================
+       CALLOUT BOX
+    ============================================================ */
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .callout-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .callout-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+    }
+
+    .callout-box .stat-num {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 2.5vw, 36px);
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .callout-box .stat-label {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ============================================================
+       TABLE STYLES
+    ============================================================ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-sans);
+      font-size: 13px;
+    }
+
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .data-table tr.highlight-row td {
+      background: rgba(184,92,56,0.1);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .data-table tr.highlight-row td:first-child {
+      color: var(--accent);
+    }
+
+    .check { color: #5cb85c; font-size: 16px; }
+    .cross { color: #d9534f; font-size: 16px; }
+
+    /* ============================================================
+       BAR CHART (CSS)
+    ============================================================ */
+    .bar-chart { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+
+    .bar-row {
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .bar-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      width: 240px;
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 28px;
+      background: var(--surface);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      display: flex; align-items: center; padding-left: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      transition: width 1s ease;
+    }
+
+    .bar-fill.commodity { background: var(--driftwood); width: 5%; }
+    .bar-fill.premium   { background: var(--honey); width: 18%; }
+    .bar-fill.paro      { background: var(--terracotta); width: 100%; }
+
+    /* ============================================================
+       SPLIT LAYOUT
+    ============================================================ */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .split-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    /* ============================================================
+       PILLAR CARDS
+    ============================================================ */
+    .pillar-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pillar-card .pillar-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .pillar-card .pillar-title {
+      font-family: var(--font-serif);
+      font-size: clamp(18px, 1.8vw, 24px);
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .pillar-card .pillar-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       TIMELINE
+    ============================================================ */
+    .timeline {
+      display: flex;
+      gap: 0;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 22px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--terracotta), var(--honey));
+    }
+
+    .timeline-item {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center;
+      padding: 0 8px;
+      position: relative;
+    }
+
+    .timeline-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      margin-bottom: 16px;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .timeline-dot.future {
+      background: var(--bg);
+      border-color: var(--accent);
+    }
+
+    .timeline-phase {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .timeline-title {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .timeline-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ============================================================
+       COVER SLIDE SPECIFIC
+    ============================================================ */
+    #slide-1 {
+      background: var(--espresso) !important;
+      justify-content: center;
+    }
+
+    .cover-botanical {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 10% 90%, rgba(184,92,56,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 10%, rgba(212,165,116,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(138,122,108,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-botanical-svg {
+      position: absolute;
+      top: 0; right: 0;
+      width: 45%;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .cover-wordmark {
+      font-family: var(--font-serif);
+      font-size: clamp(80px, 10vw, 130px);
+      letter-spacing: 0.18em;
+      color: var(--linen);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .cover-wordmark .accent-letter {
+      color: var(--terracotta);
+    }
+
+    .cover-tagline {
+      font-family: var(--font-sans);
+      font-size: clamp(13px, 1.3vw, 16px);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--driftwood);
+      margin-bottom: 48px;
+    }
+
+    .cover-stats {
+      display: flex; gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .cover-stat {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+
+    .cover-stat .num {
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 30px);
+      color: var(--honey);
+    }
+
+    .cover-stat .lbl {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--driftwood);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .cover-stat-divider {
+      width: 1px;
+      background: rgba(138,122,108,0.25);
+      align-self: stretch;
+      margin: 4px 0;
+    }
+
+    .cover-footer {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(138,122,108,0.5);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .cover-eyebrow-top {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(212,165,116,0.4);
+      margin-bottom: 32px;
+    }
+
+    /* ============================================================
+       PULL QUOTE
+    ============================================================ */
+    .pull-quote {
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      background: rgba(184,92,56,0.07);
+      border-radius: 0 8px 8px 0;
+      margin-top: 20px;
+    }
+
+    .pull-quote p {
+      font-family: var(--font-serif);
+      font-size: clamp(14px, 1.4vw, 18px);
+      color: var(--text);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .pull-quote cite {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: normal;
+    }
+
+    /* ============================================================
+       USE OF FUNDS PIE (CSS)
+    ============================================================ */
+    .pie-wrapper {
+      display: flex; align-items: center; gap: 40px;
+    }
+
+    .pie-chart {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: conic-gradient(
+        var(--terracotta) 0deg 144deg,
+        var(--honey) 144deg 270deg,
+        var(--driftwood) 270deg 324deg,
+        #a89880 324deg 360deg
+      );
+      position: relative;
+    }
+
+    .pie-chart::after {
+      content: '';
+      position: absolute;
+      inset: 40px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    .pie-legend { display: flex; flex-direction: column; gap: 10px; }
+
+    .pie-item {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pie-dot {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .pie-item strong { color: var(--text); }
+
+    /* ============================================================
+       SCIENCE SLIDE
+    ============================================================ */
+    .science-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .science-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+
+    .science-stat .big {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 3vw, 44px);
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .science-stat .small {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       SLIDE CONTENT AREAS
+    ============================================================ */
+    .slide-content {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .slide-content::-webkit-scrollbar { width: 4px; }
+    .slide-content::-webkit-scrollbar-track { background: transparent; }
+    .slide-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ============================================================
+       CERTIFICATIONS
+    ============================================================ */
+    .cert-phase {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .cert-phase-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .cert-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+    .cert-list li {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--text);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+
+    .cert-list li::before {
+      content: '→';
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .cert-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       TEAM CARDS
+    ============================================================ */
+    .team-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+    }
+
+    .team-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terracotta), var(--honey));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .team-name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .team-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .team-bio {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .team-quote {
+      margin-top: 12px;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    /* ============================================================
+       COMPARISON CARD (SOLUTION SLIDE)
+    ============================================================ */
+    .compare-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+    }
+
+    .compare-card.paro-card {
+      border-color: var(--accent);
+      background: rgba(184,92,56,0.06);
+    }
+
+    .compare-card h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    .compare-card.paro-card h3 { color: var(--accent); }
+
+    .compare-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .compare-list li {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex; align-items: flex-start; gap: 10px;
+      line-height: 1.4;
+    }
+
+    .compare-list li .icon { flex-shrink: 0; margin-top: 1px; }
+    .compare-list li.bad .icon { color: #d9534f; }
+    .compare-list li.good .icon { color: #5cb85c; }
+
+    /* ============================================================
+       UNIT ECONOMICS BOX
+    ============================================================ */
+    .econ-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .econ-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .econ-row:last-child { border-bottom: none; }
+    .econ-row .key { color: var(--text-muted); font-family: var(--font-sans); }
+    .econ-row .val { color: var(--text); font-family: var(--font-mono); font-weight: 700; }
+    .econ-row.highlight .key { color: var(--accent); }
+    .econ-row.highlight .val { color: var(--accent); font-size: 15px; }
+
+    /* ============================================================
+       MILESTONE ROAD
+    ============================================================ */
+    .milestone-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+    .milestone-item {
+      display: flex; gap: 20px;
+      padding: 14px 0;
+      position: relative;
+    }
+
+    .milestone-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 19px; top: 42px; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .milestone-dot-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      flex-shrink: 0;
+    }
+
+    .milestone-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .milestone-dot.future {
+      background: transparent;
+      border: 2px solid var(--accent);
+    }
+
+    .milestone-text {}
+    .milestone-phase {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .milestone-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .milestone-detail {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       REVENUE PROJECTIONS
+    ============================================================ */
+    .projection-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .proj-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .proj-card.base {
+      border-color: var(--accent);
+      background: rgba(184,92,56,0.06);
+    }
+
+    .proj-card .scenario {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .proj-card .amount {
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .proj-card.base .amount { color: var(--accent); }
+
+    .proj-card .period {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       HERO MARKET MAP
+    ============================================================ */
+    .market-map {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .market-tier {
+      display: flex; align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 20px;
+    }
+
+    .market-tier:last-child { border-bottom: none; }
+
+    .market-tier-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    .market-tier-brands {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      flex: 1;
+    }
+
+    .brand-chip {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .brand-chip.paro {
+      background: rgba(184,92,56,0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .brand-chip.empty {
+      border-style: dashed;
+      color: var(--driftwood);
+      opacity: 0.5;
+    }
+
+    /* ============================================================
+       OPPORTUNITY SLIDE
+    ============================================================ */
+    .cta-block {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 32px 28px;
+      margin-top: 20px;
+    }
+
+    .cta-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 2vw, 28px);
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .contact-info {
+      display: flex; gap: 32px; flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .contact-item {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+
+    .contact-name {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .contact-role {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .contact-email {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    /* ============================================================
+       EDIT MODE
+    ============================================================ */
+    body.edit-mode [contenteditable="true"] {
+      outline: 1.5px dashed rgba(184,92,56,0.5);
+      outline-offset: 2px;
+      border-radius: 3px;
+      cursor: text;
+      min-width: 20px;
+      display: inline-block;
+    }
+
+    body.edit-mode [contenteditable="true"]:focus {
+      outline-color: var(--terracotta);
+      background: rgba(184,92,56,0.05);
+    }
+
+    /* ============================================================
+       PRINT MODE
+    ============================================================ */
+    @media print {
+      html { overflow: visible !important; }
+      body { background: var(--linen) !important; color: var(--espresso) !important; overflow: visible !important; }
+      #gate { display: none !important; }
+      #toolbar, #nav, .sps-mark { display: none !important; }
+      #slides { overflow: visible !important; height: auto !important; }
+      .slide {
+        position: relative !important;
+        opacity: 1 !important;
+        pointer-events: all !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+        background: var(--linen) !important;
+        padding: 64px 72px !important;
+        height: 100vh !important;
+        display: flex !important;
+      }
+      .slide-watermark { display: none; }
+    }
+
+    /* ============================================================
+       MISC UTILITIES
+    ============================================================ */
+    .mt-4  { margin-top: 4px; }
+    .mt-8  { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-20 { margin-top: 20px; }
+    .mt-24 { margin-top: 24px; }
+    .mt-32 { margin-top: 32px; }
+
+    .text-accent { color: var(--accent); }
+    .text-honey  { color: var(--honey); }
+    .text-muted  { color: var(--text-muted); }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .fw-600 { font-weight: 600; }
+    .small { font-size: 12px; }
+
+    /* ============================================================
+       SCROLLBAR FOR SLIDE CONTENT
+    ============================================================ */
+    .slides-inner {
+      width: 100%; height: 100%;
+    }
+
+    /* Pill tag */
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .pill-accent { background: rgba(184,92,56,0.15); color: var(--accent); border: 1px solid rgba(184,92,56,0.25); }
+    .pill-honey  { background: rgba(212,165,116,0.15); color: var(--honey); border: 1px solid rgba(212,165,116,0.25); }
+    .pill-muted  { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* SPS Badge */
+    .sps-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .sps-badge .s {
+      width: 20px; height: 20px;
+      background: var(--terracotta);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 12px;
+      color: white;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .sps-badge span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* Process steps */
+    .process-steps {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-top: 16px;
+    }
+
+    .process-step {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(184,92,56,0.15);
+      border: 1.5px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .step-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    /* Hormesis flow */
+    .flow {
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .flow-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .inline-stat {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     PASSWORD GATE
+============================================================ -->
+<div id="gate">
+  <div class="cover-botanical"></div>
+  <div class="gate-logo">P<span>A</span>RO</div>
+  <div class="gate-tagline">Investor Deck · Confidential</div>
+  <div class="gate-form">
+    <input type="password" id="gate-password" placeholder="Enter access code" autocomplete="off" />
+    <button onclick="checkPassword()">Access Deck</button>
+    <div class="gate-error" id="gate-error">Incorrect access code. Please try again.</div>
+  </div>
+  <div class="gate-footer">Paro Wellness Inc. · A Super Power Studios Portfolio Company</div>
+</div>
+
+<!-- ============================================================
+     DECK (hidden until unlocked)
+============================================================ -->
+<div id="deck">
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <div class="toolbar-left">
+      <span class="label">Confidential</span>
+    </div>
+    <div class="toolbar-center">P<span>A</span>RO <span style="opacity:0.4;font-size:12px;font-family:var(--font-mono);margin-left:8px;">Investor Deck v1.0</span></div>
+    <div class="toolbar-right">
+      <button class="toolbar-btn" id="btn-edit" onclick="toggleEditMode()" title="Edit mode">
+        <span>✏️</span> Edit
+      </button>
+      <button class="toolbar-btn" id="btn-save" onclick="saveDraft()" title="Save draft">
+        <span>💾</span> Save
+      </button>
+      <button class="toolbar-btn" id="btn-restore" onclick="restoreDraft()" title="Restore draft">
+        <span>📂</span> Restore
+      </button>
+      <button class="toolbar-btn" onclick="printDeck()" title="Print to PDF">
+        <span>🖨️</span> Print
+      </button>
+      <button class="toolbar-btn" id="btn-theme" onclick="toggleTheme()" title="Toggle light/dark">
+        <span id="theme-icon">☀️</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDES -->
+  <div id="slides">
+
+    <!-- ================================================
+         SLIDE 1: COVER
+    ================================================ -->
+    <div class="slide" id="slide-1" data-slide="1">
+      <div class="cover-botanical"></div>
+      <!-- Botanical SVG watermark -->
+      <svg class="cover-botanical-svg" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="200" cy="400" rx="180" ry="80" stroke="#D4A574" stroke-width="1"/>
+        <path d="M200 400 C150 300 80 250 120 150 C160 50 240 80 200 200" stroke="#D4A574" stroke-width="1.5" fill="none"/>
+        <path d="M200 400 C250 300 320 250 280 150 C240 50 160 80 200 200" stroke="#D4A574" stroke-width="1.5" fill="none"/>
+        <path d="M200 200 C170 160 140 140 160 100 C180 60 220 80 200 150" stroke="#B85C38" stroke-width="1" fill="none"/>
+        <path d="M200 200 C230 160 260 140 240 100 C220 60 180 80 200 150" stroke="#B85C38" stroke-width="1" fill="none"/>
+        <circle cx="200" cy="150" r="8" stroke="#D4A574" stroke-width="1.5" fill="none"/>
+        <circle cx="160" cy="100" r="5" stroke="#B85C38" stroke-width="1" fill="none"/>
+        <circle cx="240" cy="100" r="5" stroke="#B85C38" stroke-width="1" fill="none"/>
+        <path d="M200 400 L200 480" stroke="#D4A574" stroke-width="1"/>
+        <path d="M120 350 C80 360 60 380 80 400" stroke="#8A7A6C" stroke-width="1" fill="none"/>
+        <path d="M280 350 C320 360 340 380 320 400" stroke="#8A7A6C" stroke-width="1" fill="none"/>
+        <!-- leaves -->
+        <ellipse cx="130" cy="280" rx="35" ry="15" transform="rotate(-30 130 280)" stroke="#D4A574" stroke-width="1" fill="none"/>
+        <ellipse cx="270" cy="280" rx="35" ry="15" transform="rotate(30 270 280)" stroke="#D4A574" stroke-width="1" fill="none"/>
+        <ellipse cx="150" cy="180" rx="28" ry="12" transform="rotate(-20 150 180)" stroke="#B85C38" stroke-width="1" fill="none"/>
+        <ellipse cx="250" cy="180" rx="28" ry="12" transform="rotate(20 250 180)" stroke="#B85C38" stroke-width="1" fill="none"/>
+      </svg>
+
+      <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;height:100%;">
+        <div class="cover-eyebrow-top">Confidential Investment Presentation · June 2026</div>
+        <div class="cover-wordmark">P<span class="accent-letter">A</span>RO</div>
+        <div class="cover-tagline">Prepared by nature. Proven by science.</div>
+
+        <div class="cover-stats">
+          <div class="cover-stat">
+            <div class="num">$410M</div>
+            <div class="lbl">Market Size</div>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <div class="num">Phase 1</div>
+            <div class="lbl">Validated</div>
+          </div>
+          <div class="cover-stat-divider"></div>
+          <div class="cover-stat">
+            <div class="num">0</div>
+            <div class="lbl">Clinical Competitors</div>
+          </div>
+        </div>
+
+        <div class="cover-footer">
+          Paro Wellness Inc. · A Super Power Studios Portfolio Company
+        </div>
+      </div>
+
+      <div class="slide-watermark">01</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 2: THE PROBLEM
+    ================================================ -->
+    <div class="slide" id="slide-2" data-slide="2">
+      <div class="slide-content">
+        <div class="eyebrow">The Problem</div>
+        <h1 class="slide-headline">A $410M market built on <em>claims with no proof.</em></h1>
+
+        <div class="callout-grid" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="callout-box">
+            <div class="stat-num">$410M</div>
+            <div class="stat-label">Wellness shot market (US, 2025)</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-num">7.6%</div>
+            <div class="stat-label">Annual growth rate — category expanding</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Brands with human clinical validation</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Commodity ingredients across all competitors</div>
+          </div>
+        </div>
+
+        <div class="slide-subhead mt-20">
+          The top competitors — Suja ($327M revenue), So Good So You ($100M+), Sol-Ti, and Kor Shots — all make immunity and inflammation claims with <strong>zero clinical validation</strong>. Every brand is undifferentiated. Every product is interchangeable. The entire category has commoditized while growing.
+        </div>
+
+        <div class="pull-quote mt-20">
+          <p>"They're just marketing and making generic, non-defensible claims."</p>
+          <cite>— Justin Lai, Founder, Paro Wellness</cite>
+        </div>
+      </div>
+      <div class="slide-watermark">02</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 3: THE SOLUTION
+    ================================================ -->
+    <div class="slide" id="slide-3" data-slide="3">
+      <div class="slide-content">
+        <div class="eyebrow">The Solution</div>
+        <h1 class="slide-headline">Paro: The <em>clinical tier</em> that didn't exist.</h1>
+
+        <div class="split mt-20">
+          <div class="compare-card">
+            <h3 style="color:var(--text-muted);">The Category Today</h3>
+            <ul class="compare-list">
+              <li class="bad"><span class="icon">✗</span> Commodity ginger, turmeric, lemon</li>
+              <li class="bad"><span class="icon">✗</span> Unproven immunity/inflammation claims</li>
+              <li class="bad"><span class="icon">✗</span> 5–15mg unstandardized phenolics</li>
+              <li class="bad"><span class="icon">✗</span> No clinical data, no patents</li>
+              <li class="bad"><span class="icon">✗</span> Race to the bottom on price</li>
+              <li class="bad"><span class="icon">✗</span> Retail-founded, marketing-driven</li>
+            </ul>
+          </div>
+
+          <div class="compare-card paro-card">
+            <h3>Paro</h3>
+            <ul class="compare-list">
+              <li class="good"><span class="icon">✓</span> Evithé patented hormesis-derived extract</li>
+              <li class="good"><span class="icon">✓</span> Phase 1 RCT — 50 participants, 7 biomarkers</li>
+              <li class="good"><span class="icon">✓</span> 100mg standardized active phenolics</li>
+              <li class="good"><span class="icon">✓</span> 3 patents + North America exclusivity</li>
+              <li class="good"><span class="icon">✓</span> Premium pricing, defensible moat</li>
+              <li class="good"><span class="icon">✓</span> Science-founded from day one</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-24" style="text-align:center;">
+          <div style="font-family:var(--font-serif);font-size:clamp(16px,1.6vw,20px);color:var(--text-muted);font-style:italic;margin-bottom:16px;">"Science always comes first."</div>
+          <div class="split-3">
+            <div style="text-align:center;">
+              <div class="pill pill-accent" style="margin-bottom:8px;">01</div>
+              <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);">Clinically Validated</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="pill pill-accent" style="margin-bottom:8px;">02</div>
+              <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);">Defensibly Different</div>
+            </div>
+            <div style="text-align:center;">
+              <div class="pill pill-accent" style="margin-bottom:8px;">03</div>
+              <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);">Premium Positioned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">03</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 4: THE SCIENCE
+    ================================================ -->
+    <div class="slide" id="slide-4" data-slide="4">
+      <div class="slide-content">
+        <div class="eyebrow">The Science</div>
+        <h1 class="slide-headline">The only ginger extract in the world with <em>Phase 1 human data.</em></h1>
+
+        <div class="flow">
+          <div class="flow-item">🌱 Ginger Plant</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item">⚡ Hormetic Stress<br><span style="font-size:11px;color:var(--text-muted);">controlled stress stimulus</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item">🧬 Defense Compound Release<br><span style="font-size:11px;color:var(--text-muted);">gingerols, shogaols, paradols</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item">⚗️ Proprietary Extraction<br><span style="font-size:11px;color:var(--text-muted);">standardized to 20%</span></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-item" style="border-color:var(--accent);color:var(--accent);">🏥 Phase 1 Clinical Trial<br><span style="font-size:11px;color:var(--text-muted);">50 participants</span></div>
+        </div>
+
+        <div class="science-stats">
+          <div class="science-stat">
+            <div class="big">50</div>
+            <div class="small">Trial Participants</div>
+          </div>
+          <div class="science-stat">
+            <div class="big">7</div>
+            <div class="small">Validated Biomarkers</div>
+          </div>
+          <div class="science-stat">
+            <div class="big">0</div>
+            <div class="small">Adverse Events</div>
+          </div>
+          <div class="science-stat">
+            <div class="big">3</div>
+            <div class="small">Patents Filed</div>
+          </div>
+        </div>
+
+        <div class="split mt-16">
+          <div>
+            <div class="label text-accent mb-8" style="margin-bottom:8px;">Biomarkers Validated</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">
+              Inflammatory markers implicated in <strong style="color:var(--text);">arthritis</strong>, <strong style="color:var(--text);">sepsis</strong>, and <strong style="color:var(--text);">chronic inflammation</strong>. Seven biomarkers across the inflammatory cascade — not a single proxy metric. Actual immune response validation in human subjects.
+            </div>
+          </div>
+          <div>
+            <div class="label text-accent" style="margin-bottom:8px;">Clinical Credit</div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+              <div style="font-family:var(--font-serif);font-size:16px;color:var(--text);margin-bottom:6px;">Evithé Biotechnology</div>
+              <div style="font-size:12px;color:var(--text-muted);">Auckland, New Zealand · Independent biotech</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Founder: Cynthia Hunefeld · Director: John Clough</div>
+              <div class="pill pill-accent mt-8" style="margin-top:10px;">Exclusive North America License → Paro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">04</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 5: THE INGREDIENT MOAT
+    ================================================ -->
+    <div class="slide" id="slide-5" data-slide="5">
+      <div class="slide-content">
+        <div class="eyebrow">The Ingredient Moat</div>
+        <h1 class="slide-headline">A moat <em>competitors can't replicate</em> in years.</h1>
+
+        <div class="slide-subhead" style="margin-bottom:20px;">
+          Paro is to Evithé what PreserVision is to the NIH — the consumer commercialization arm of breakthrough clinical research.
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Branded Ingredient</th>
+              <th>Source → Brand</th>
+              <th>Clinical Data</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Meriva®</strong></td>
+              <td>Indena → Thorne, Pure Encapsulations</td>
+              <td>29+ RCTs</td>
+              <td>Curcumin phytosome gold standard</td>
+            </tr>
+            <tr>
+              <td><strong>KSM-66®</strong></td>
+              <td>Ixoreal → AG1, Beam, 100s of brands</td>
+              <td>24+ RCTs</td>
+              <td>Ashwagandha category leader</td>
+            </tr>
+            <tr>
+              <td><strong>PreserVision®</strong></td>
+              <td>NIH (AREDS2) → Bausch + Lomb</td>
+              <td>Multi-center RCT</td>
+              <td><strong>$200M+ annual revenue</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Tru Niagen®</strong></td>
+              <td>ChromaDex → DTC brand + licensing</td>
+              <td>Multiple RCTs</td>
+              <td>NR category leader, $100M+</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>Evithé Extract</strong></td>
+              <td>Evithé → <strong>Paro (NA exclusive)</strong></td>
+              <td>Phase 1 RCT complete ✓</td>
+              <td>🏗️ Building now · Only clinical ginger</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout-grid" style="grid-template-columns: repeat(4, 1fr);margin-top:20px;">
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Territory</div>
+            <div style="font-size:14px;color:var(--text);">North America<br><small style="color:var(--text-muted);">US + Canada + Mexico</small></div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Royalty</div>
+            <div style="font-size:22px;font-family:var(--font-serif);color:var(--text);">7%</div>
+            <div style="font-size:12px;color:var(--text-muted);">of net revenue</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Rights</div>
+            <div style="font-size:14px;color:var(--text);">Clinical data rights<br><small style="color:var(--text-muted);">advertise Phase 1 results</small></div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Supply</div>
+            <div style="font-size:14px;color:var(--text);">Guaranteed extract<br><small style="color:var(--text-muted);">defined price + specs</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">05</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 6: DOSE DIFFERENTIAL
+    ================================================ -->
+    <div class="slide" id="slide-6" data-slide="6">
+      <div class="slide-content">
+        <div class="eyebrow">The Dose Differential</div>
+        <h1 class="slide-headline"><em>30–50×</em> more bioavailable active phenolics.</h1>
+
+        <div class="slide-subhead" style="margin-bottom:32px;">
+          Clinical literature confirms 100mg is the minimum therapeutic dose for meaningful anti-inflammatory effect. Every competitor falls below this threshold — most by 7–20×.
+        </div>
+
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">
+              <strong style="color:var(--text-muted);">Commodity Ginger Shot</strong><br>
+              <span style="font-size:10px;">(Suja, SGSY, Kor — unstandardized)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill commodity">5–15mg</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);width:60px;text-align:right;">~10mg</div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-label">
+              <strong style="color:var(--text-muted);">Premium Branded Capsule</strong><br>
+              <span style="font-size:10px;">(lower liquid bioavailability)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill premium">25–50mg</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);width:60px;text-align:right;">~35mg</div>
+          </div>
+
+          <div class="bar-row">
+            <div class="bar-label">
+              <strong style="color:var(--accent);">Paro Daily Shot</strong><br>
+              <span style="font-size:10px;color:var(--accent);">Evithé extract, standardized 20%</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill paro">100mg active phenolics</div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);width:60px;text-align:right;font-weight:700;">100mg</div>
+          </div>
+        </div>
+
+        <div class="mt-24" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div style="background:rgba(184,92,56,0.08);border:1px solid rgba(184,92,56,0.25);border-radius:10px;padding:20px;">
+            <div class="label text-accent" style="margin-bottom:8px;">Clinical Literature</div>
+            <div style="font-family:var(--font-serif);font-size:15px;color:var(--text);">"100mg = minimum therapeutic dose confirmed by clinical literature for meaningful anti-inflammatory effect"</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;">
+            <div class="label text-accent" style="margin-bottom:8px;">Bioavailability Factor</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+              Liquid delivery provides <strong style="color:var(--text);">4–6× superior bioavailability</strong> vs. capsule formats. Paro's liquid shot delivers the highest therapeutic payload in the category — by a factor of 30–50×.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">06</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 7: THE PRODUCT
+    ================================================ -->
+    <div class="slide" id="slide-7" data-slide="7">
+      <div class="slide-content">
+        <div class="eyebrow">The Product</div>
+        <h1 class="slide-headline">Two formats. One clinical extract. <em>Infinite ritual.</em></h1>
+
+        <div class="split-3 mt-16">
+          <div class="pillar-card">
+            <div class="pillar-num">SKU 01</div>
+            <div class="pillar-title">Paro Daily Shot</div>
+            <div class="pillar-body">
+              2oz amber glass vial · 12/month supply<br><br>
+              <span style="color:var(--accent);font-family:var(--font-mono);font-weight:700;">$79.99/mo</span> subscription · $89.99 one-time<br><br>
+              "The brand-defining morning ritual"
+            </div>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-num">SKU 02</div>
+            <div class="pillar-title">Paro Daily Capsules</div>
+            <div class="pillar-body">
+              60ct · 2/day · 30-day supply<br><br>
+              <span style="color:var(--accent);font-family:var(--font-mono);font-weight:700;">$49.99/mo</span> subscription · $59.99 one-time<br><br>
+              "Travel-ready. No compromise."
+            </div>
+          </div>
+          <div class="pillar-card" style="border-color:var(--accent);">
+            <div class="pillar-num" style="color:var(--honey);">SKU 03</div>
+            <div class="pillar-title">Daily Defense Bundle</div>
+            <div class="pillar-body">
+              Shot + Capsules combined<br><br>
+              <span style="color:var(--accent);font-family:var(--font-mono);font-weight:700;">$114.99/mo</span><br><br>
+              "Highest LTV, lowest churn."
+            </div>
+          </div>
+        </div>
+
+        <div class="split mt-20">
+          <div>
+            <div class="label text-accent" style="margin-bottom:10px;">8 Clean Ingredients</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span class="pill pill-accent">Evithé Ginger Extract 500mg</span>
+              <span class="pill pill-muted">Bilberry Extract 1,000mg</span>
+              <span class="pill pill-muted">Turmeric Extract 300mg</span>
+              <span class="pill pill-muted">Black Pepper 5mg</span>
+              <span class="pill pill-muted">Organic Apple Juice</span>
+              <span class="pill pill-muted">Organic Lemon Juice</span>
+              <span class="pill pill-muted">Raw Honey</span>
+              <span class="pill pill-muted">Filtered Water</span>
+            </div>
+          </div>
+          <div>
+            <div class="label text-accent" style="margin-bottom:10px;">Packaging + Roadmap</div>
+            <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">
+              <strong style="color:var(--text);">Amber glass vials</strong> — protect active compounds from UV degradation. No microplastics. Premium shelf signal.<br><br>
+              <strong style="color:var(--honey);">Phase 2 Roadmap:</strong> Morning Shot (nootropics + caffeine) · Night Shot (circadian support) · Concentrate format · Evening Recovery
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">07</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 8: MARKET OPPORTUNITY
+    ================================================ -->
+    <div class="slide" id="slide-8" data-slide="8">
+      <div class="slide-content">
+        <div class="eyebrow">Market Opportunity</div>
+        <h1 class="slide-headline">A $410M category with <em>no clinical leader. Yet.</em></h1>
+
+        <div class="callout-grid" style="grid-template-columns: repeat(3, 1fr);margin-bottom:20px;">
+          <div class="callout-box">
+            <div class="stat-num">$410M</div>
+            <div class="stat-label">US Wellness Shots Market (2025)</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-num">$1T+</div>
+            <div class="stat-label">Broader Functional Food + Beverage Market</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Brands with Human Clinical Trial Data</div>
+          </div>
+        </div>
+
+        <div class="market-map">
+          <div class="market-tier">
+            <div class="market-tier-label">Clinical Tier<br><span style="color:var(--accent);font-size:9px;">CURRENTLY EMPTY</span></div>
+            <div class="market-tier-brands">
+              <span class="brand-chip paro">🏗️ Paro — Q1 2027</span>
+              <span class="brand-chip empty">Open · No competitor</span>
+            </div>
+          </div>
+          <div class="market-tier">
+            <div class="market-tier-label">Premium Tier</div>
+            <div class="market-tier-brands">
+              <span class="brand-chip">Sol-Ti</span>
+              <span class="brand-chip">Kor Shots</span>
+              <span class="brand-chip">Alo Drink</span>
+            </div>
+          </div>
+          <div class="market-tier">
+            <div class="market-tier-label">Commodity Tier</div>
+            <div class="market-tier-brands">
+              <span class="brand-chip">Suja $327M</span>
+              <span class="brand-chip">So Good So You $100M+</span>
+              <span class="brand-chip">Vive Organic</span>
+              <span class="brand-chip">+ dozens more</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pull-quote mt-20">
+          <p>"We're not entering the category. We're defining its premium clinical tier — the position no one can retrofit after we hold it."</p>
+          <cite>— Paro positioning thesis</cite>
+        </div>
+      </div>
+      <div class="slide-watermark">08</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 9: COMPETITIVE LANDSCAPE
+    ================================================ -->
+    <div class="slide" id="slide-9" data-slide="9">
+      <div class="slide-content">
+        <div class="eyebrow">Competitive Landscape</div>
+        <h1 class="slide-headline">Every competitor is <em>retail-founded.</em> None are science-founded.</h1>
+
+        <table class="data-table mt-16">
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Est. Revenue</th>
+              <th>PE-Backed</th>
+              <th>Science / Clinical</th>
+              <th>Differentiator</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Suja Life</strong></td>
+              <td>$327M (+26% YoY)</td>
+              <td>✅ (IPO filed 2026)</td>
+              <td><span class="cross">✗</span> None</td>
+              <td>Market share + distribution</td>
+            </tr>
+            <tr>
+              <td><strong>So Good So You</strong></td>
+              <td>$100M+</td>
+              <td>✅ (Bansk Group)</td>
+              <td><span class="cross">✗</span> None</td>
+              <td>National distribution</td>
+            </tr>
+            <tr>
+              <td><strong>Vive Organic</strong></td>
+              <td>Part of Suja</td>
+              <td>✅ (Acquired by Suja)</td>
+              <td><span class="cross">✗</span> None</td>
+              <td>Rolled up — no moat</td>
+            </tr>
+            <tr>
+              <td><strong>Sol-Ti</strong></td>
+              <td>Regional</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span> UV filtration only</td>
+              <td>Unproven premium claim</td>
+            </tr>
+            <tr>
+              <td><strong>Kor Shots</strong></td>
+              <td>Small</td>
+              <td><span class="cross">✗</span></td>
+              <td><span class="cross">✗</span> None</td>
+              <td>None identifiable</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>Paro</strong></td>
+              <td>Launch Q1 2027</td>
+              <td>SPS Incubation</td>
+              <td><span class="check">✅</span> Phase 1 RCT · 7 biomarkers · 3 patents</td>
+              <td>Clinical moat — structural, not marketing</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pull-quote mt-20">
+          <p>"Paro's moat is structural — a clinical-science origin that no retail-founded competitor can retrofit. You cannot buy 10 years of clinical research in 18 months."</p>
+          <cite>— Competitive analysis · Paro AIR</cite>
+        </div>
+      </div>
+      <div class="slide-watermark">09</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 10: GO-TO-MARKET
+    ================================================ -->
+    <div class="slide" id="slide-10" data-slide="10">
+      <div class="slide-content">
+        <div class="eyebrow">Go-to-Market</div>
+        <h1 class="slide-headline">Four phases. <em>Each validates the next.</em></h1>
+
+        <div class="timeline mt-24" style="margin-bottom:8px;">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-phase">Phase 1 · M1–6</div>
+            <div class="timeline-title">DTC Foundation</div>
+            <div class="timeline-detail">Shopify subscription<br>Clinical positioning<br>First 1,000 subscribers</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-phase">Phase 2 · M4–8</div>
+            <div class="timeline-title">Erewhon Exclusive</div>
+            <div class="timeline-detail">Premium retail wedge<br>Velocity data<br>LA + NYC flagship</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot future"></div>
+            <div class="timeline-phase">Phase 3 · M8–18</div>
+            <div class="timeline-title">Channel Expansion</div>
+            <div class="timeline-detail">Whole Foods · Sprouts<br>Practitioner channel<br>NSF Sport opens athletes</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot future"></div>
+            <div class="timeline-phase">Phase 4 · Y2+</div>
+            <div class="timeline-title">Mass + Strategic</div>
+            <div class="timeline-detail">Mass distribution<br>Strategic acquirer talks<br>$10M+ run rate</div>
+          </div>
+        </div>
+
+        <div class="pull-quote mt-24">
+          <p>"DTC validates unit economics. Natural retail validates physical demand. Mass retail follows the data — it never leads it."</p>
+          <cite>— GTM thesis · Paro Wellness</cite>
+        </div>
+
+        <div class="callout-grid" style="grid-template-columns: repeat(4, 1fr);margin-top:20px;">
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">DTC Channel</div>
+            <div style="font-size:13px;color:var(--text-muted);">Shopify sub model<br>70–75% gross margin</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Erewhon</div>
+            <div style="font-size:13px;color:var(--text-muted);">No slotting fees<br>Curates by brand merit</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Whole Foods</div>
+            <div style="font-size:13px;color:var(--text-muted);">$5K–25K slotting<br>~$2/unit velocity min</div>
+          </div>
+          <div class="callout-box">
+            <div class="stat-label label text-accent" style="margin-bottom:6px;">Practitioner</div>
+            <div style="font-size:13px;color:var(--text-muted);">NSF Sport unlocks<br>functional medicine</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">10</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 11: REVENUE MODEL
+    ================================================ -->
+    <div class="slide" id="slide-11" data-slide="11">
+      <div class="slide-content">
+        <div class="eyebrow">Revenue Model</div>
+        <h1 class="slide-headline"><em>Subscription-first.</em> Premium unit economics.</h1>
+
+        <div class="split mt-16">
+          <div>
+            <div class="label text-accent" style="margin-bottom:12px;">Pricing</div>
+            <table class="data-table" style="font-size:12px;">
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>Subscription</th>
+                  <th>One-Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Daily Shot (12/mo)</td>
+                  <td><strong style="color:var(--accent);">$79.99/mo</strong></td>
+                  <td>$89.99</td>
+                </tr>
+                <tr>
+                  <td>Daily Capsules (60ct)</td>
+                  <td><strong style="color:var(--accent);">$49.99/mo</strong></td>
+                  <td>$59.99</td>
+                </tr>
+                <tr>
+                  <td>Daily Defense Bundle</td>
+                  <td><strong style="color:var(--accent);">$114.99/mo</strong></td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Annual Prepay (Shot)</td>
+                  <td><strong style="color:var(--honey);">$799/yr</strong></td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="label text-accent mt-20" style="margin-top:20px;margin-bottom:12px;">COGS Build (Per Shot · Launch)</div>
+            <table class="data-table" style="font-size:12px;">
+              <thead>
+                <tr><th>Cost Item</th><th>Per Shot</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Manufacturing (co-packer)</td><td>$1.20</td></tr>
+                <tr><td>Evithé extract royalty (~7%)</td><td>~$0.47</td></tr>
+                <tr><td>Amber glass + label</td><td>$0.25</td></tr>
+                <tr><td>Shipping to 3PL</td><td>$0.15</td></tr>
+                <tr><td>3PL fulfillment</td><td>$0.30</td></tr>
+                <tr class="highlight-row"><td><strong>Total COGS</strong></td><td><strong>~$2.37</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <div class="label text-accent" style="margin-bottom:12px;">Unit Economics</div>
+            <div class="econ-box">
+              <div class="econ-row">
+                <span class="key">Annual subscriber revenue (shot)</span>
+                <span class="val">$959</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">Target gross margin</span>
+                <span class="val">70–75%</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">Gross margin / subscriber / yr</span>
+                <span class="val">$600–720</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">Evithé royalty</span>
+                <span class="val">~7% of net</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">DTC CAC target</span>
+                <span class="val">$100–150</span>
+              </div>
+              <div class="econ-row highlight">
+                <span class="key">LTV : CAC Ratio</span>
+                <span class="val">~6:1 ✓</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">Monthly churn target</span>
+                <span class="val">6–8%</span>
+              </div>
+              <div class="econ-row">
+                <span class="key">Avg retention (base)</span>
+                <span class="val">10–12 months</span>
+              </div>
+            </div>
+
+            <div class="pull-quote mt-16">
+              <p>"Premium subscription economics fund the retail expansion — without burning cash on retail slotting prematurely."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">11</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 12: 18-MONTH ROADMAP
+    ================================================ -->
+    <div class="slide" id="slide-12" data-slide="12">
+      <div class="slide-content">
+        <div class="eyebrow">18-Month Roadmap</div>
+        <h1 class="slide-headline"><em>Measurable milestones.</em> Gated. Verifiable.</h1>
+
+        <div class="split mt-16">
+          <div>
+            <ul class="milestone-list">
+              <li class="milestone-item">
+                <div class="milestone-dot-wrap"><div class="milestone-dot"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Pre-Launch</div>
+                  <div class="milestone-title">Foundation</div>
+                  <div class="milestone-detail">NDI Clearance · License Signed · GMP co-packer locked</div>
+                </div>
+              </li>
+              <li class="milestone-item">
+                <div class="milestone-dot-wrap"><div class="milestone-dot"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Month 1–6</div>
+                  <div class="milestone-title">DTC Foundation</div>
+                  <div class="milestone-detail">1,000 subscribers · $48K MRR · CAC &lt; $150</div>
+                </div>
+              </li>
+              <li class="milestone-item">
+                <div class="milestone-dot-wrap"><div class="milestone-dot"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Month 4–8</div>
+                  <div class="milestone-title">Erewhon Exclusive</div>
+                  <div class="milestone-detail">Velocity data · Premium brand signal · LA / NYC</div>
+                </div>
+              </li>
+              <li class="milestone-item">
+                <div class="milestone-dot-wrap"><div class="milestone-dot future"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Month 8–12</div>
+                  <div class="milestone-title">Natural Retail Expansion</div>
+                  <div class="milestone-detail">Whole Foods + Sprouts · NSF Content Certified</div>
+                </div>
+              </li>
+              <li class="milestone-item">
+                <div class="milestone-dot-wrap"><div class="milestone-dot future"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Month 12–18</div>
+                  <div class="milestone-title">Scale</div>
+                  <div class="milestone-detail">$5M+ run rate · 9–12K subscribers · NSF Sport</div>
+                </div>
+              </li>
+              <li class="milestone-item" style="padding-bottom:0;">
+                <div class="milestone-dot-wrap"><div class="milestone-dot future"></div></div>
+                <div class="milestone-text">
+                  <div class="milestone-phase">Year 2+</div>
+                  <div class="milestone-title">Mass Distribution</div>
+                  <div class="milestone-detail">National retail · Strategic acquirer conversations</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <div class="label text-accent" style="margin-bottom:12px;">Month-18 Revenue Scenarios</div>
+            <div class="projection-cards">
+              <div class="proj-card">
+                <div class="scenario">Conservative</div>
+                <div class="amount">$3M</div>
+                <div class="period">ARR @ M18</div>
+              </div>
+              <div class="proj-card base">
+                <div class="scenario">Base Case</div>
+                <div class="amount">$7M</div>
+                <div class="period">ARR @ M18</div>
+              </div>
+              <div class="proj-card">
+                <div class="scenario">Aggressive</div>
+                <div class="amount">$11M</div>
+                <div class="period">ARR @ M18</div>
+              </div>
+            </div>
+
+            <div class="label text-accent mt-20" style="margin-top:24px;margin-bottom:12px;">MRR Build (Base Case)</div>
+            <table class="data-table" style="font-size:11px;">
+              <thead>
+                <tr><th>Month</th><th>Subscribers</th><th>Total MRR</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>M3</td><td>200</td><td>$18,000</td></tr>
+                <tr><td>M6</td><td>500</td><td>$48,000</td></tr>
+                <tr><td>M9</td><td>1,200</td><td>$118,000</td></tr>
+                <tr><td>M12</td><td>3,000</td><td>$295,000</td></tr>
+                <tr class="highlight-row"><td>M18</td><td>10,000</td><td>$985,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">12</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 13: CERTIFICATIONS
+    ================================================ -->
+    <div class="slide" id="slide-13" data-slide="13">
+      <div class="slide-content">
+        <div class="eyebrow">Certifications & Regulatory</div>
+        <h1 class="slide-headline">Trust signals, <em>built in phases.</em></h1>
+
+        <div class="slide-subhead" style="margin-bottom:24px;">
+          Clinical rigor over lifestyle branding. No B Corp, no Non-GMO Project, no USDA Organic — those don't signal what Paro stands for.
+        </div>
+
+        <div class="split-3 mt-16">
+          <div class="cert-phase">
+            <div class="cert-phase-title">Phase 1 · Pre-Launch</div>
+            <ul class="cert-list">
+              <li>FDA NDI Notification<br><span class="cert-note">~$5–15K · legal prerequisite to sell · -4 to -2 months</span></li>
+              <li>GMP (21 CFR Part 111)<br><span class="cert-note">co-packer responsibility · mandatory baseline</span></li>
+              <li>NSF Content Certified<br><span class="cert-note">~$3–10K · credibility + athlete signal at launch</span></li>
+            </ul>
+          </div>
+          <div class="cert-phase">
+            <div class="cert-phase-title">Phase 2 · Month 6–12</div>
+            <ul class="cert-list">
+              <li>NSF Certified for Sport<br><span class="cert-note">~$5–15K · opens athlete + practitioner channels</span></li>
+              <li>Informed Sport<br><span class="cert-note">UK/EU athletes + international DTC</span></li>
+              <li>ConsumerLab (optional)<br><span class="cert-note">third-party potency verification</span></li>
+            </ul>
+          </div>
+          <div class="cert-phase">
+            <div class="cert-phase-title">Phase 3 · Year 2+</div>
+            <ul class="cert-list">
+              <li>USP Verified<br><span class="cert-note">~$10–30K · mass retail trust signal</span></li>
+              <li>Phase 2 Clinical Partnership<br><span class="cert-note">co-fund with Evithé · Paro real-world data</span></li>
+              <li>Practitioner database listing<br><span class="cert-note">MDs, functional medicine, sports medicine</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;background:rgba(184,92,56,0.08);border:1px solid rgba(184,92,56,0.2);border-radius:10px;padding:20px;">
+          <div class="label text-accent" style="margin-bottom:8px;">Strategic Skip List</div>
+          <div style="font-size:13px;color:var(--text-muted);">
+            <span style="text-decoration:line-through;">USDA Organic</span> · <span style="text-decoration:line-through;">Non-GMO Project Verified</span> · <span style="text-decoration:line-through;">B Corp Certification</span><br>
+            <span style="color:var(--text);margin-top:6px;display:block;">"These signals compete in a different lane — lifestyle, ethics, sustainability. Paro competes in the clinical efficacy lane. They don't cross."</span>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">13</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 14: TEAM
+    ================================================ -->
+    <div class="slide" id="slide-14" data-slide="14">
+      <div class="slide-content">
+        <div class="eyebrow">The Team</div>
+        <h1 class="slide-headline"><em>Science-founded.</em> Operator-backed.</h1>
+
+        <div class="split-3 mt-20">
+          <div class="team-card">
+            <div class="team-avatar">JL</div>
+            <div class="team-name">Justin Lai</div>
+            <div class="team-title">Founder & CEO</div>
+            <div class="team-bio">
+              Pharmaceutical scientist background (Johnson & Johnson). Deep formulation science expertise. Identified the Evithé clinical data gap and built Paro as its consumer vehicle.
+            </div>
+            <div class="team-quote">"Science always comes first."</div>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar" style="background:linear-gradient(135deg, #8A7A6C, #D4A574);">IA</div>
+            <div class="team-name">Izzy Aala</div>
+            <div class="team-title">SPS Incubator · Super Power Studios</div>
+            <div class="team-bio">
+              CPG network + operator infrastructure. Investor narrative, build systems, and brand architecture. Super Power Studios incubation from ideation through Series A readiness.
+            </div>
+            <div class="team-quote">izzy@spsi.ai</div>
+          </div>
+
+          <div class="team-card">
+            <div class="team-avatar" style="background:linear-gradient(135deg, #2C2420, #8A7A6C);">JC</div>
+            <div class="team-name">John Clough</div>
+            <div class="team-title">Advisor · Evithé Director</div>
+            <div class="team-bio">
+              Hong Kong-based. Director and investor at Evithé Biotechnology NZ. The strategic bridge between clinical IP and consumer brand. Recusal protocol in place for license negotiations.
+            </div>
+            <div class="team-quote">john@kotahi.com</div>
+          </div>
+        </div>
+
+        <div class="mt-24" style="display:flex;align-items:center;gap:20px;justify-content:center;">
+          <div class="sps-badge">
+            <div class="s">S</div>
+            <span>A Super Power Studios Portfolio Company</span>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">SPS Incubation · Stage 1→2 · June 2026</div>
+        </div>
+      </div>
+      <div class="slide-watermark">14</div>
+    </div>
+
+    <!-- ================================================
+         SLIDE 15: THE OPPORTUNITY
+    ================================================ -->
+    <div class="slide" id="slide-15" data-slide="15">
+      <div class="slide-content">
+        <div class="eyebrow">The Opportunity</div>
+        <h1 class="slide-headline">Be part of building <em>the clinical tier.</em></h1>
+
+        <div class="split mt-16">
+          <div>
+            <div class="cta-block">
+              <div class="label text-accent" style="margin-bottom:12px;">Investment Round</div>
+              <div style="font-family:var(--font-serif);font-size:28px;color:var(--text);margin-bottom:8px;">
+                <span class="tbd">TBD — SAFE Round</span>
+              </div>
+              <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Target: $1.3M–$2.0M seed raise</div>
+
+              <div class="label text-accent" style="margin-bottom:12px;">Use of Funds</div>
+              <div class="pie-wrapper">
+                <div class="pie-chart"></div>
+                <div class="pie-legend">
+                  <div class="pie-item">
+                    <div class="pie-dot" style="background:var(--terracotta);"></div>
+                    <span><strong>40%</strong> Manufacturing + Inventory</span>
+                  </div>
+                  <div class="pie-item">
+                    <div class="pie-dot" style="background:var(--honey);"></div>
+                    <span><strong>35%</strong> Marketing / CAC</span>
+                  </div>
+                  <div class="pie-item">
+                    <div class="pie-dot" style="background:var(--driftwood);"></div>
+                    <span><strong>15%</strong> Regulatory / Certifications</span>
+                  </div>
+                  <div class="pie-item">
+                    <div class="pie-dot" style="background:#a89880;"></div>
+                    <span><strong>10%</strong> Operations</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;">
+              <div class="label text-accent" style="margin-bottom:12px;">Why Now</div>
+              <div style="font-size:13px;color:var(--text-muted);line-height:1.7;">
+                <strong style="color:var(--text);">The category is at an inflection point.</strong> PE is consolidating commodity brands — Suja filed for IPO, Bansk acquired So Good So You. The window for a science-founded disruptor is now, before the consolidation closes and the clinical tier fills.
+              </div>
+            </div>
+
+            <div style="background:rgba(184,92,56,0.08);border:1px solid rgba(184,92,56,0.25);border-radius:12px;padding:24px;">
+              <div class="label text-accent" style="margin-bottom:12px;">Contact</div>
+              <div class="contact-info" style="flex-direction:column;gap:16px;">
+                <div class="contact-item">
+                  <div class="contact-name">Justin Lai</div>
+                  <div class="contact-role">Founder & CEO · Paro Wellness Inc.</div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-name">Izzy Aala</div>
+                  <div class="contact-role">Incubator · Super Power Studios</div>
+                  <div class="contact-email">izzy@spsi.ai</div>
+                </div>
+              </div>
+              <div style="margin-top:16px;font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:0.08em;">
+                → Request the full data room.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-watermark">15</div>
+    </div>
+
+  </div><!-- /slides -->
+
+  <!-- SPS S-MARK -->
+  <div class="sps-mark">
+    <div class="s-icon">S</div>
+    <div class="s-label">SPS</div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div id="nav">
+    <button class="nav-btn" id="btn-prev" onclick="prevSlide()" title="Previous (←)">←</button>
+    <div id="slide-dots"></div>
+    <div id="slide-counter">01 / 15</div>
+    <button class="nav-btn" id="btn-next" onclick="nextSlide()" title="Next (→)">→</button>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+  // ---- STATE ----
+  let currentSlide = 1;
+  const TOTAL_SLIDES = 15;
+  const STORAGE_PREFIX = 'paro_deck_draft_';
+  let editMode = false;
+
+  // ---- PASSWORD GATE ----
+  document.getElementById('gate-password').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  function checkPassword() {
+    const val = document.getElementById('gate-password').value;
+    if (val === 'Paro@2026') {
+      document.getElementById('gate').style.transition = 'opacity 0.5s';
+      document.getElementById('gate').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('gate').style.display = 'none';
+        const deck = document.getElementById('deck');
+        deck.classList.add('unlocked');
+        goToSlide(1);
+        buildDots();
+      }, 500);
+    } else {
+      const err = document.getElementById('gate-error');
+      err.classList.add('show');
+      document.getElementById('gate-password').value = '';
+      document.getElementById('gate-password').focus();
+      setTimeout(() => err.classList.remove('show'), 3000);
+    }
+  }
+
+  // ---- SLIDE NAVIGATION ----
+  function goToSlide(n) {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('slide-' + n);
+    if (target) {
+      target.classList.add('active');
+      currentSlide = n;
+      updateCounter();
+      updateDots();
+      updateNavButtons();
+    }
+  }
+
+  function nextSlide() {
+    if (currentSlide < TOTAL_SLIDES) goToSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    if (currentSlide > 1) goToSlide(currentSlide - 1);
+  }
+
+  function updateCounter() {
+    const pad = n => String(n).padStart(2, '0');
+    document.getElementById('slide-counter').textContent = pad(currentSlide) + ' / ' + pad(TOTAL_SLIDES);
+  }
+
+  function updateNavButtons() {
+    document.getElementById('btn-prev').disabled = currentSlide <= 1;
+    document.getElementById('btn-next').disabled = currentSlide >= TOTAL_SLIDES;
+  }
+
+  function buildDots() {
+    const container = document.getElementById('slide-dots');
+    container.innerHTML = '';
+    for (let i = 1; i <= TOTAL_SLIDES; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === currentSlide ? ' active' : '');
+      dot.onclick = () => goToSlide(i);
+      dot.title = 'Slide ' + i;
+      container.appendChild(dot);
+    }
+  }
+
+  function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i + 1 === currentSlide);
+    });
+  }
+
+  // ---- KEYBOARD NAVIGATION ----
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('gate').style.display !== 'none' && !document.getElementById('deck').classList.contains('unlocked')) return;
+    if (e.target.contentEditable === 'true') return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); prevSlide(); }
+    if (e.key === 'Home') { e.preventDefault(); goToSlide(1); }
+    if (e.key === 'End')  { e.preventDefault(); goToSlide(TOTAL_SLIDES); }
+  });
+
+  // ---- THEME TOGGLE ----
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('theme-icon').textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('paro_deck_theme', isDark ? 'light' : 'dark');
+  }
+
+  // Restore saved theme
+  const savedTheme = localStorage.getItem('paro_deck_theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('theme-icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  }
+
+  // ---- EDIT MODE ----
+  function toggleEditMode() {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-mode', editMode);
+    const btn = document.getElementById('btn-edit');
+    btn.classList.toggle('active', editMode);
+    btn.innerHTML = editMode ? '<span>✏️</span> Editing' : '<span>✏️</span> Edit';
+
+    if (editMode) {
+      enableEditMode();
+    } else {
+      disableEditMode();
+    }
+  }
+
+  function enableEditMode() {
+    const selectors = [
+      '.slide-headline', '.slide-subhead', '.eyebrow',
+      '.stat-num', '.stat-label', '.callout-box',
+      '.pillar-title', '.pillar-body',
+      '.team-name', '.team-title', '.team-bio', '.team-quote',
+      '.timeline-title', '.timeline-detail', '.timeline-phase',
+      '.milestone-title', '.milestone-detail',
+      '.cover-wordmark', '.cover-tagline',
+      '.pull-quote p', '.pull-quote cite',
+      'td', 'th',
+      '.econ-row .key', '.econ-row .val',
+      '.contact-name', '.contact-role', '.contact-email',
+      '.cert-phase-title',
+      '.flow-item',
+    ];
+    selectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        el.contentEditable = 'true';
+        el.spellcheck = false;
+      });
+    });
+  }
+
+  function disableEditMode() {
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.contentEditable = 'false';
+    });
+  }
+
+  // ---- SAVE / RESTORE DRAFTS ----
+  function saveDraft() {
+    const slides = document.getElementById('slides');
+    localStorage.setItem(STORAGE_PREFIX + 'html', slides.innerHTML);
+    localStorage.setItem(STORAGE_PREFIX + 'ts', new Date().toISOString());
+    showToast('Draft saved ✓');
+  }
+
+  function restoreDraft() {
+    const saved = localStorage.getItem(STORAGE_PREFIX + 'html');
+    const ts = localStorage.getItem(STORAGE_PREFIX + 'ts');
+    if (saved) {
+      if (confirm('Restore draft from ' + (ts ? new Date(ts).toLocaleString() : 'unknown time') + '?')) {
+        document.getElementById('slides').innerHTML = saved;
+        buildDots();
+        goToSlide(currentSlide);
+        showToast('Draft restored ✓');
+      }
+    } else {
+      showToast('No saved draft found.');
+    }
+  }
+
+  function showToast(msg) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.style.cssText = `
+        position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+        background:var(--espresso);color:var(--linen);
+        font-family:var(--font-mono);font-size:12px;letter-spacing:0.08em;
+        padding:10px 20px;border-radius:8px;border:1px solid var(--border);
+        z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+  }
+
+  // ---- PRINT TO PDF ----
+  function printDeck() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', 'light');
+    // Show all slides for print
+    document.querySelectorAll('.slide').forEach(s => {
+      s.style.opacity = '1';
+      s.style.position = 'relative';
+      s.style.display = 'flex';
+    });
+    window.print();
+    // Restore
+    setTimeout(() => {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      document.querySelectorAll('.slide').forEach((s, i) => {
+        s.style.opacity = '';
+        s.style.position = '';
+        s.style.display = '';
+      });
+      goToSlide(currentSlide);
+    }, 500);
+  }
+
+  // ---- INIT ----
+  // Auto-open if session was previously unlocked (optional - commented out for security)
+  // const wasUnlocked = sessionStorage.getItem('paro_deck_unlocked');
+  // if (wasUnlocked) { ... }
+
+</script>
+
+</body>
+</html>

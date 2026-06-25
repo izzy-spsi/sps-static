@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Founding Fan Experience — Domo Cafe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brown: #6B3A1F;
+      --red: #CC2222;
+      --cream: #FDF8F3;
+      --warm-white: #FFFCF8;
+      --text-dark: #1A0E08;
+      --text-mid: #5C3D2A;
+      --text-muted: #9C7B68;
+      --border: rgba(107,58,31,0.15);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HERO */
+    .hero {
+      background: var(--brown);
+      color: white;
+      text-align: center;
+      padding: 56px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(204,34,34,0.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-fallback {
+      width: 88px;
+      height: 88px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.9);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 span {
+      color: #F5C5A3;
+    }
+
+    .hero p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* STAT BAR */
+    .stat-bar {
+      background: var(--red);
+      color: white;
+      text-align: center;
+      padding: 14px 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    /* BODY */
+    .content {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      width: 100%;
+    }
+
+    .section-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .how-it-works {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 40px;
+    }
+
+    .how-it-works h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 20px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: var(--brown);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .step-text strong {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .step-text span {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* FORM */
+    .form-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 24px;
+    }
+
+    .form-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 6px;
+    }
+
+    .form-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 420px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-mid);
+    }
+
+    .field label .opt {
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text-dark);
+      background: var(--warm-white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      appearance: none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--brown);
+      box-shadow: 0 0 0 3px rgba(107,58,31,0.1);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 96px;
+      line-height: 1.6;
+    }
+
+    .field select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B3A1F' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--brown);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.02em;
+    }
+
+    .submit-btn:hover { background: #5A3018; }
+    .submit-btn:active { transform: scale(0.99); }
+
+    .form-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    /* SUCCESS */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .success .emoji { font-size: 56px; margin-bottom: 16px; }
+
+    .success h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--brown);
+      margin-bottom: 10px;
+    }
+
+    .success p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    footer strong { color: var(--brown); }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="logo-fallback">🦷</div>
+    <div class="badge">Domo Cafe — Founding Fan Experience</div>
+    <h1>You showed up for us.<br><span>Now we show up for you.</span></h1>
+    <p>Over 1,000 fans came out for a 48-seat cafe. That's something we'll carry with us forever. This is our thank you.</p>
+  </div>
+
+  <div class="stat-bar">
+    🎟️ Intimate. Invite-only. Selected by lottery. — Register before the window closes.
+  </div>
+
+  <div class="content">
+
+    <div class="how-it-works">
+      <p class="section-label">How it works</p>
+      <h2>An exclusive night for Founding Fans</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Register during the window</strong>
+            <span>No rushing, no alarm clocks. Everyone who registers has an equal shot.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Lottery draw</strong>
+            <span>We select guests randomly from all registrants when the window closes.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>You get a QR code</strong>
+            <span>Winners are notified by text 24 hours before the event with a unique QR code.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>Show up and enjoy</strong>
+            <span>Small group. Full attention. The Domo experience we want you to have.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card" id="form-card">
+      <p class="section-label">Register now</p>
+      <h2>Were you at the Grand Opening?</h2>
+      <p>Tell us a little about yourself. Registration takes 60 seconds.</p>
+
+      <form id="reg-form" action="https://formspree.io/f/REPLACE_WITH_FORMSPREE_ID" method="POST">
+        <div class="form-row">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="First" required />
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Last" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="(555) 000-0000" required />
+        </div>
+
+        <div class="field">
+          <label>Email <span class="opt">(optional)</span></label>
+          <input type="email" name="email" placeholder="your@email.com" />
+        </div>
+
+        <div class="field">
+          <label>Instagram Handle <span class="opt">(optional)</span></label>
+          <input type="text" name="instagram" placeholder="@yourusername" />
+        </div>
+
+        <div class="field">
+          <label>How long did you wait at the Grand Opening?</label>
+          <select name="wait_time" required>
+            <option value="" disabled selected>Select one</option>
+            <option value="less-than-1hr">Less than 1 hour</option>
+            <option value="1-2hrs">1–2 hours</option>
+            <option value="2-3hrs">2–3 hours</option>
+            <option value="3plus">3+ hours (you're a legend)</option>
+            <option value="camped">I camped overnight 🏕️</option>
+            <option value="couldnt-make-it">I couldn't make it but I want to come</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Tell us your Grand Opening story <span class="opt">(optional but we love these)</span></label>
+          <textarea name="story" placeholder="Where did you come from? What was your experience like? We want to hear it."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Register for the Lottery →</button>
+        <p class="form-note">By registering, you agree to receive one SMS notification if you're selected. No spam. Ever.</p>
+      </form>
+
+      <div class="success" id="success-msg">
+        <div class="emoji">🦷</div>
+        <h2>You're registered.</h2>
+        <p>We'll reach out by text if you're selected. Keep your phone close — winners are notified 24 hours before the event.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <strong>Domo Cafe</strong> — Torrance, CA<br>
+    Questions? DM us on Instagram <strong>@domokuncafe</strong>
+  </footer>
+
+  <script>
+    const form = document.getElementById('reg-form');
+    const success = document.getElementById('success-msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('.submit-btn');
+      btn.textContent = 'Submitting…';
+      btn.disabled = true;
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          success.style.display = 'block';
+        } else {
+          btn.textContent = 'Something went wrong — try again';
+          btn.disabled = false;
+        }
+      } catch {
+        btn.textContent = 'Something went wrong — try again';
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>

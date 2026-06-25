@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CardONE Proposal — CabConnect, Inc.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #1B2A4A;
+      background: #f4f6fa;
+      line-height: 1.6;
+    }
+
+    /* ── Page Wrapper ── */
+    .page {
+      max-width: 860px;
+      margin: 32px auto;
+      background: #ffffff;
+      box-shadow: 0 4px 32px rgba(27,42,74,0.12);
+    }
+
+    /* ── Header / Cover ── */
+    .cover {
+      background: #1B2A4A;
+      color: #ffffff;
+      padding: 48px 52px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 320px; height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(201,160,82,0.12) 100%);
+      pointer-events: none;
+    }
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 36px;
+    }
+    .wordmark {
+      font-family: 'Merriweather', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+    }
+    .wordmark span {
+      color: #C9A052;
+    }
+    .cover-meta {
+      text-align: right;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+    }
+    .cover-meta strong {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .product-badge {
+      display: inline-block;
+      background: #C9A052;
+      color: #1B2A4A;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+    .cover h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #ffffff;
+      max-width: 580px;
+      margin-bottom: 10px;
+    }
+    .cover h1 .highlight {
+      color: #C9A052;
+    }
+    .cover-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.72);
+      margin-top: 8px;
+    }
+    .cover-divider {
+      border: none;
+      border-top: 1px solid rgba(201,160,82,0.4);
+      margin: 28px 0 0;
+    }
+
+    /* ── Body Content ── */
+    .content {
+      padding: 0 52px 52px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-top: 44px;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .section-number {
+      width: 28px; height: 28px;
+      background: #1B2A4A;
+      color: #C9A052;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-family: 'Merriweather', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #1B2A4A;
+      letter-spacing: 0.2px;
+    }
+    .section-rule {
+      border: none;
+      border-top: 2px solid #C9A052;
+      width: 40px;
+      margin: 0 0 16px 38px;
+    }
+
+    p { margin-bottom: 12px; font-size: 14.5px; color: #2d3f5c; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── How It Works — Steps ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 4px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #e8ecf3;
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 36px; height: 36px;
+      background: #C9A052;
+      color: #1B2A4A;
+      border-radius: 50%;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1B2A4A;
+      margin-bottom: 3px;
+    }
+    .step-content p {
+      font-size: 13.5px;
+      color: #4a5a7a;
+      margin: 0;
+    }
+
+    /* ── Features Grid ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .feature-card {
+      background: #f7f9fd;
+      border: 1px solid #dde3ef;
+      border-left: 3px solid #1B2A4A;
+      padding: 14px 16px;
+      border-radius: 0 4px 4px 0;
+    }
+    .feature-card h4 {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1B2A4A;
+      margin-bottom: 4px;
+    }
+    .feature-card p {
+      font-size: 13px;
+      color: #4a5a7a;
+      margin: 0;
+    }
+    .feature-card.optional {
+      border-left-color: #C9A052;
+    }
+    .optional-tag {
+      display: inline-block;
+      background: #C9A052;
+      color: #1B2A4A;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 1px 7px;
+      border-radius: 2px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Pricing Table ── */
+    .pricing-section {
+      margin-top: 4px;
+    }
+    .pricing-block {
+      margin-bottom: 24px;
+    }
+    .pricing-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #1B2A4A;
+      background: #eef1f8;
+      padding: 8px 14px;
+      border-left: 3px solid #1B2A4A;
+      margin-bottom: 0;
+    }
+    .pricing-block-title.addon {
+      border-left-color: #C9A052;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead th {
+      background: #1B2A4A;
+      color: #ffffff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    thead th:last-child { text-align: right; }
+    tbody tr { border-bottom: 1px solid #e4e9f2; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td {
+      padding: 11px 14px;
+      color: #2d3f5c;
+      font-size: 13.5px;
+    }
+    tbody td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: #1B2A4A;
+    }
+    tbody tr:nth-child(even) { background: #f9fafd; }
+
+    .pricing-note {
+      font-size: 12.5px;
+      color: #6b7a96;
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ── Why CardONE ── */
+    .benefits-list {
+      list-style: none;
+      margin-top: 4px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .benefits-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #2d3f5c;
+      padding: 12px 14px;
+      background: #f7f9fd;
+      border: 1px solid #dde3ef;
+      border-radius: 4px;
+    }
+    .benefits-list li::before {
+      content: '✓';
+      color: #C9A052;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Next Steps ── */
+    .next-steps {
+      list-style: none;
+      margin-top: 4px;
+    }
+    .next-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 18px;
+      background: #f7f9fd;
+      border: 1px solid #dde3ef;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #2d3f5c;
+    }
+    .next-steps li:last-child { margin-bottom: 0; }
+    .step-arrow {
+      color: #C9A052;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+      line-height: 1.3;
+    }
+    .next-steps li strong {
+      display: block;
+      color: #1B2A4A;
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+
+    /* ── Signature Block ── */
+    .signature-block {
+      margin-top: 44px;
+      padding: 24px 28px;
+      border: 1px solid #dde3ef;
+      border-top: 3px solid #1B2A4A;
+      background: #f7f9fd;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .sig-field label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #6b7a96;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .sig-line {
+      border-bottom: 1px solid #1B2A4A;
+      height: 36px;
+      margin-bottom: 4px;
+    }
+    .sig-field small {
+      font-size: 11px;
+      color: #9aa3b5;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: #1B2A4A;
+      color: rgba(255,255,255,0.65);
+      padding: 22px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      gap: 16px;
+    }
+    .footer .footer-brand {
+      font-family: 'Merriweather', serif;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .footer .footer-brand span { color: #C9A052; }
+    .footer .footer-contact { text-align: right; line-height: 1.8; }
+    .footer .footer-contact a { color: #C9A052; text-decoration: none; }
+    .footer .footer-product {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── Print Styles ── */
+    @media print {
+      body { background: #ffffff; }
+      .page { box-shadow: none; margin: 0; max-width: 100%; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-number { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .step-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .product-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .pricing-block-title { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      a { color: inherit !important; text-decoration: none; }
+      .section { page-break-inside: avoid; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 680px) {
+      .cover, .content { padding-left: 24px; padding-right: 24px; }
+      .cover h1 { font-size: 22px; }
+      .features-grid, .benefits-list { grid-template-columns: 1fr; }
+      .cover-top { flex-direction: column; gap: 14px; }
+      .cover-meta { text-align: left; }
+      .signature-block { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; text-align: center; }
+      .footer .footer-contact { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── COVER ── -->
+  <header class="cover">
+    <div class="cover-top">
+      <div class="wordmark">Cab<span>Connect</span></div>
+      <div class="cover-meta">
+        <strong>Prepared for:</strong> [MUNICIPALITY NAME]<br>
+        <strong>Attention:</strong> [CONTACT NAME]<br>
+        <strong>Date:</strong> [DATE]<br>
+        <strong>Document:</strong> Proposal v1.0
+      </div>
+    </div>
+    <div class="product-badge">CardONE — Paratransit Ride Credit Program</div>
+    <h1>A Modern Ride Credit Solution<br>for <span class="highlight">[MUNICIPALITY NAME]</span></h1>
+    <p class="cover-subtitle">Presented by CabConnect, Inc. &nbsp;·&nbsp; Confidential &amp; Proprietary</p>
+    <hr class="cover-divider" />
+  </header>
+
+  <!-- ── BODY ── -->
+  <main class="content">
+
+    <!-- 1. Overview -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Program Overview</h2>
+      </div>
+      <hr class="section-rule" />
+      <p>
+        <strong>CardONE</strong> is CabConnect's debit card–based paratransit ride credit system, purpose-built for
+        municipal transit agencies and paratransit programs. It replaces paper coupons, vouchers, and manual
+        reimbursement workflows with a streamlined, auditable digital payment rail.
+      </p>
+      <p>
+        With CardONE, your agency issues pre-loaded debit cards to eligible riders. Cards are redeemed at
+        the point of service — no paper changing hands, no manual reconciliation at month-end. Every trip
+        is logged in real time, giving program administrators full visibility into utilization, spend, and
+        rider activity from a single dashboard.
+      </p>
+      <p>
+        CardONE is designed to integrate with any licensed taxi or rideshare provider, making it the most
+        flexible ride credit tool available for paratransit programs of any size.
+      </p>
+    </section>
+
+    <!-- 2. How It Works -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">2</div>
+        <h2 class="section-title">How It Works</h2>
+      </div>
+      <hr class="section-rule" />
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Rider Enrolls</h4>
+            <p>Eligible riders apply through your agency's enrollment process. Optional: use the CardONE Online Intake Portal for fully digital, paperless enrollment with e-signature support.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Card Issued</h4>
+            <p>CabConnect produces and ships branded or co-branded debit cards (minimum 500-card production run). Cards are loaded with the municipality-defined credit balance before mailing.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Rider Books a Ride</h4>
+            <p>Riders contact their preferred participating taxi or rideshare provider and present their CardONE card as the payment method. Optional: riders can view trip history and manage their account via the Rider Self-Service Portal.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Driver Charges the Card</h4>
+            <p>The provider processes the fare directly against the rider's CardONE balance at the point of service — no vouchers, no cash, no manual paperwork. The transaction is recorded in real time.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Municipality Reviews &amp; Reimburses</h4>
+            <p>Your program administrator accesses the CardONE dashboard to review all trip activity, export reports, and manage reimbursement. Full audit trail available at any time.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Features -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Program Features</h2>
+      </div>
+      <hr class="section-rule" />
+      <div class="features-grid">
+        <div class="feature-card">
+          <h4>Real-Time Card Balance</h4>
+          <p>Card balances update instantly at point of sale. Administrators and riders always see accurate, up-to-date credit availability.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Trip Reporting &amp; Audit Trail</h4>
+          <p>Every transaction is logged with date, time, provider, and fare amount. Export reports in CSV or PDF for grant compliance and internal audits.</p>
+        </div>
+        <div class="feature-card">
+          <h4>500-Card Minimum Production Run</h4>
+          <p>Cards are produced and shipped in batches. The minimum order is 500 cards, giving programs flexibility to right-size initial inventory.</p>
+        </div>
+        <div class="feature-card">
+          <h4>Provider Agnostic</h4>
+          <p>Works with any licensed taxi or rideshare provider. No exclusive contracts — your riders use who they trust.</p>
+        </div>
+        <div class="feature-card optional">
+          <h4>Online Intake / Sign-Up Portal <span class="optional-tag">Add-On</span></h4>
+          <p>Fully digital enrollment flow with e-signature. Eliminates paper applications and reduces processing time. $25/mo.</p>
+        </div>
+        <div class="feature-card optional">
+          <h4>Rider Self-Service Portal <span class="optional-tag">Add-On</span></h4>
+          <p>Riders log in to view ride history, check balances, and manage their account. Reduces inbound calls to your office. $25/mo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Pricing -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Pricing</h2>
+      </div>
+      <hr class="section-rule" />
+      <div class="pricing-section">
+
+        <div class="pricing-block">
+          <div class="pricing-block-title">Base Program — Required</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:55%">Item</th>
+                <th>Description</th>
+                <th>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Platform Fee</td>
+                <td>System access, dashboard, reporting, support</td>
+                <td>$100.00 / mo</td>
+              </tr>
+              <tr>
+                <td>Transaction Fee</td>
+                <td>Per approved card transaction (all providers)</td>
+                <td>$0.35 / trans</td>
+              </tr>
+              <tr>
+                <td>Card Production</td>
+                <td>Personalized debit card, per unit</td>
+                <td>$1.25 / card</td>
+              </tr>
+              <tr>
+                <td>Minimum Card Order</td>
+                <td>Minimum production run per order</td>
+                <td>500 cards</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pricing-block">
+          <div class="pricing-block-title addon">Optional Add-Ons</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:55%">Add-On</th>
+                <th>Description</th>
+                <th>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Online Intake / Sign-Up Portal</td>
+                <td>Digital enrollment with e-signature</td>
+                <td>$25.00 / mo</td>
+              </tr>
+              <tr>
+                <td>Rider Self-Service Portal</td>
+                <td>Ride history, balance view, account management</td>
+                <td>$25.00 / mo</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pricing-note">* Add-ons are available individually or bundled. Bundle both portals for $50/mo total. Pricing does not include card load funds, which are managed entirely by the municipality.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. Why CardONE -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Why CardONE</h2>
+      </div>
+      <hr class="section-rule" />
+      <ul class="benefits-list">
+        <li>Eliminates paper coupons, vouchers, and manual reconciliation — saving staff hours every month</li>
+        <li>Real-time transaction visibility means your program team is never waiting for end-of-month reports</li>
+        <li>Works with any taxi or rideshare provider — no forced vendor lock-in for your riders</li>
+        <li>Reduces administrative burden with automated reporting and a clean audit trail for grant compliance</li>
+        <li>Scalable to programs of any size — from 500 to 50,000 riders with no platform architecture changes</li>
+        <li>Optional portals reduce inbound phone volume and improve rider satisfaction and self-sufficiency</li>
+      </ul>
+    </section>
+
+    <!-- 6. Next Steps -->
+    <section class="section">
+      <div class="section-label">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Next Steps</h2>
+      </div>
+      <hr class="section-rule" />
+      <ul class="next-steps">
+        <li>
+          <span class="step-arrow">→</span>
+          <div>
+            <strong>Schedule a Demo</strong>
+            Contact CabConnect to arrange a live walkthrough of the CardONE platform dashboard,
+            enrollment flow, and reporting tools. We tailor demos to your program's specific structure.
+          </div>
+        </li>
+        <li>
+          <span class="step-arrow">→</span>
+          <div>
+            <strong>Complete the Intake Questionnaire</strong>
+            We'll send a brief intake form to capture your program size, current coupon/voucher volume,
+            preferred providers, and any integration needs. This ensures your CardONE setup is
+            configured correctly from day one.
+          </div>
+        </li>
+        <li>
+          <span class="step-arrow">→</span>
+          <div>
+            <strong>Sign Service Agreement</strong>
+            Once the program scope is confirmed, CabConnect will provide a service agreement for
+            review and signature. Card production begins upon execution, with a standard lead time
+            of 3–4 weeks for the initial production run.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Signature Block -->
+    <div class="signature-block">
+      <div class="sig-field">
+        <label>Authorized Signature — [MUNICIPALITY NAME]</label>
+        <div class="sig-line"></div>
+        <small>Name / Title / Date</small>
+      </div>
+      <div class="sig-field">
+        <label>Accepted By — CabConnect, Inc.</label>
+        <div class="sig-line"></div>
+        <small>Name / Title / Date</small>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div>
+      <div class="footer-brand">Cab<span>Connect</span>, Inc.</div>
+      <div class="footer-product">CardONE Platform</div>
+    </div>
+    <div class="footer-contact">
+      <a href="mailto:iaala@cabconnect.com">iaala@cabconnect.com</a><br>
+      Confidential &amp; Proprietary &nbsp;·&nbsp; © 2026 CabConnect, Inc.
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

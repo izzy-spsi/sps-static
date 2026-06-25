@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EZLiving — Investor Storyboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0C1B2A;
+      --bg2: #142236;
+      --bg3: #1C2E42;
+      --text: #F0EDE8;
+      --muted: #8A9BB0;
+      --accent: #C9A052;
+      --accent2: #E8C07A;
+      --border: rgba(240,237,232,0.08);
+      --card: rgba(255,255,255,0.04);
+      --navy: #0C1B2A;
+    }
+    [data-theme="light"] {
+      --bg: #F7F4EF;
+      --bg2: #EEEAE2;
+      --bg3: #E4DFD5;
+      --text: #1A1A2E;
+      --muted: #6B7A8D;
+      --accent: #B8891E;
+      --accent2: #C9A052;
+      --border: rgba(26,26,46,0.10);
+      --card: rgba(0,0,0,0.04);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; z-index: 100;
+      background: linear-gradient(to bottom, rgba(12,27,42,0.95) 0%, transparent 100%);
+    }
+    [data-theme="light"] .nav { background: linear-gradient(to bottom, rgba(247,244,239,0.95) 0%, transparent 100%); }
+    .nav-brand { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.5px; color: var(--accent); }
+    .nav-controls { display: flex; gap: 12px; align-items: center; }
+    .btn-sm {
+      font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600;
+      padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); cursor: pointer; transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* SLIDES */
+    .slides-container { width: 100%; height: 100vh; overflow: hidden; }
+    .slide {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 80px 64px 100px;
+      opacity: 0; transform: translateX(60px); transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none; overflow-y: auto;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-60px); }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: center; gap: 24px;
+      padding: 20px 32px; z-index: 100;
+      background: linear-gradient(to top, rgba(12,27,42,0.95) 0%, transparent 100%);
+    }
+    [data-theme="light"] .bottom-nav { background: linear-gradient(to top, rgba(247,244,239,0.95) 0%, transparent 100%); }
+    .nav-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; transition: all 0.2s;
+    }
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);
+      min-width: 60px; text-align: center;
+    }
+
+    /* SLIDE NUMBER */
+    .slide-num {
+      position: absolute; bottom: 28px; right: 40px;
+      font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 400;
+      color: var(--border); line-height: 1; pointer-events: none;
+    }
+
+    /* SPS MARK */
+    .sps-mark {
+      position: fixed; bottom: 24px; right: 40px;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 11px;
+      color: var(--muted); letter-spacing: 1px; opacity: 0.5;
+      z-index: 50;
+    }
+
+    /* TYPOGRAPHY */
+    .label {
+      font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: clamp(40px, 6vw, 72px); line-height: 1.05; letter-spacing: -2px;
+      color: var(--text);
+    }
+    h2 {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: clamp(28px, 4vw, 48px); line-height: 1.1; letter-spacing: -1.5px;
+      color: var(--text);
+    }
+    h3 {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: clamp(18px, 2.5vw, 26px); line-height: 1.2; letter-spacing: -0.5px;
+    }
+    p { font-size: 16px; line-height: 1.7; color: var(--muted); font-weight: 300; }
+    .large { font-size: clamp(18px, 2vw, 22px); }
+    .accent { color: var(--accent); }
+    .white { color: var(--text); }
+
+    /* LAYOUT HELPERS */
+    .content-center { text-align: center; max-width: 800px; margin: 0 auto; }
+    .content-left { max-width: 900px; width: 100%; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; width: 100%; max-width: 1100px; align-items: center; }
+    .split-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; width: 100%; max-width: 1100px; }
+
+    /* CARDS */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px 32px;
+    }
+    .card-accent { border-color: rgba(201,160,82,0.3); background: rgba(201,160,82,0.06); }
+    .card-sm { padding: 20px 24px; border-radius: 10px; }
+
+    /* PILL TAGS */
+    .tag {
+      display: inline-block; font-family: 'Outfit', sans-serif; font-size: 11px;
+      font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px;
+      border: 1px solid rgba(201,160,82,0.4); color: var(--accent);
+      background: rgba(201,160,82,0.08);
+    }
+
+    /* ICON CIRCLE */
+    .icon-circle {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(201,160,82,0.1); border: 1px solid rgba(201,160,82,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 16px; flex-shrink: 0;
+    }
+    .icon-circle-sm {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(201,160,82,0.1); border: 1px solid rgba(201,160,82,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    /* TIMELINE */
+    .timeline { display: flex; align-items: flex-start; gap: 0; width: 100%; }
+    .timeline-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .timeline-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--accent); margin-bottom: 12px; position: relative; z-index: 2;
+    }
+    .timeline-line {
+      height: 2px; background: linear-gradient(to right, var(--accent), rgba(201,160,82,0.2));
+      flex: 1; margin-top: 7px; align-self: flex-start;
+    }
+    .timeline-connector { display: flex; align-items: flex-start; width: 100%; margin-bottom: 0; }
+
+    /* DIVIDER */
+    .divider { width: 48px; height: 2px; background: var(--accent); margin: 24px 0; }
+    .divider-center { margin: 24px auto; }
+
+    /* NUMBER STAT */
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: clamp(32px, 5vw, 56px); letter-spacing: -2px; color: var(--accent);
+      line-height: 1;
+    }
+
+    /* CHECKLIST */
+    .check-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+    .check-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 9px; flex-shrink: 0; }
+
+    /* SLIDE 1 — COVER */
+    .slide-cover {
+      background: radial-gradient(ellipse at 30% 40%, rgba(201,160,82,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(20,50,90,0.6) 0%, transparent 50%),
+                  var(--bg);
+    }
+    .cover-eyebrow {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+      letter-spacing: 2px; margin-bottom: 24px; text-align: center;
+    }
+    .cover-subtitle { font-size: 20px; color: var(--muted); font-weight: 300; margin-top: 20px; max-width: 560px; text-align: center; }
+    .cover-tagline {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 400;
+      font-size: clamp(16px, 2vw, 20px); color: var(--accent); margin-top: 48px;
+      letter-spacing: 1px;
+    }
+    .cover-meta { display: flex; gap: 32px; margin-top: 64px; justify-content: center; }
+    .cover-meta-item { text-align: center; }
+    .cover-meta-item .label { margin-bottom: 4px; }
+    .cover-meta-item span { font-family: 'Space Grotesk', sans-serif; font-size: 14px; color: var(--text); }
+
+    /* PROPERTY CARDS */
+    .property-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .property-header {
+      background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+      padding: 32px; border-bottom: 1px solid var(--border);
+    }
+    .property-body { padding: 24px 28px; flex: 1; display: flex; flex-direction: column; }
+    .property-tag { display: inline-block; }
+
+    /* ROADMAP */
+    .roadmap-row { display: flex; gap: 24px; width: 100%; margin-bottom: 0; }
+    .roadmap-year {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+      color: var(--accent); width: 52px; flex-shrink: 0; padding-top: 4px;
+    }
+    .roadmap-bar {
+      flex: 1; background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 20px;
+    }
+
+    /* PHOTO SLIDE */
+    .slide-dark {
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,160,82,0.06) 0%, transparent 60%), var(--bg);
+    }
+
+    /* PRINT */
+    @media print {
+      body { overflow: visible; background: #F7F4EF; color: #1A1A2E; }
+      .slides-container { overflow: visible; height: auto; }
+      .slide { position: relative; opacity: 1; transform: none; height: 100vh; page-break-after: always; pointer-events: all; }
+      .nav, .bottom-nav, .sps-mark { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">EZLiving</div>
+  <div class="nav-controls">
+    <button class="btn-sm" onclick="toggleTheme()">☀ / ☾</button>
+    <button class="btn-sm" onclick="printDeck()">⬇ PDF</button>
+  </div>
+</nav>
+
+<!-- SLIDES -->
+<div class="slides-container" id="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover active" id="slide-1">
+    <div class="content-center">
+      <div class="cover-eyebrow">INVESTOR STORYBOARD · 2026</div>
+      <h1>The Operating System<br>for <span class="accent">Residential Life</span></h1>
+      <p class="cover-subtitle">EZLiving is pioneering a new category of homeownership — where real estate, services, mobility, and lifestyle intelligence converge into a single seamless platform.</p>
+      <div class="cover-tagline">Living-as-a-Service&nbsp;&nbsp;·&nbsp;&nbsp;LaaS</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><div class="label">Location</div><span>Brooklyn, New York</span></div>
+        <div class="cover-meta-item"><div class="label">Properties</div><span>3 Active Developments</span></div>
+        <div class="cover-meta-item"><div class="label">Operations</div><span>2027 Target</span></div>
+        <div class="cover-meta-item"><div class="label">Founder</div><span>Tim Ziss</span></div>
+      </div>
+    </div>
+    <div class="slide-num">01</div>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <div class="slide" id="slide-2">
+    <div class="content-left">
+      <div class="label">The Problem</div>
+      <h2>Homeownership is<br><span class="accent">unnecessarily broken.</span></h2>
+      <div class="divider"></div>
+      <div class="split" style="margin-top: 40px; align-items: flex-start;">
+        <div>
+          <p class="large white" style="margin-bottom: 24px;">The average home buyer coordinates 12+ separate vendors, accounts, and transactions — before they sleep in their new home for the first time.</p>
+          <p>Mortgage. Movers. Furniture. WiFi setup. Utilities. Landscapers. Pool service. Dry cleaning. Every single service is a separate account, a separate bill, a separate call.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="card card-sm" style="display: flex; gap: 14px; align-items: flex-start;">
+            <div class="icon-circle-sm">🏦</div>
+            <div><div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Mortgage</div><p style="font-size: 14px;">Separate lender, separate process, separate timeline</p></div>
+          </div>
+          <div class="card card-sm" style="display: flex; gap: 14px; align-items: flex-start;">
+            <div class="icon-circle-sm">🛋️</div>
+            <div><div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Furnishings</div><p style="font-size: 14px;">Months of shopping, delivery windows, assembly</p></div>
+          </div>
+          <div class="card card-sm" style="display: flex; gap: 14px; align-items: flex-start;">
+            <div class="icon-circle-sm">⚡</div>
+            <div><div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Utilities & Services</div><p style="font-size: 14px;">20+ accounts to manage, every single month</p></div>
+          </div>
+          <div class="card card-sm" style="display: flex; gap: 14px; align-items: flex-start;">
+            <div class="icon-circle-sm">🚗</div>
+            <div><div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Mobility</div><p style="font-size: 14px;">No integrated transportation, especially for elderly</p></div>
+          </div>
+          <div class="card card-sm" style="display: flex; gap: 14px; align-items: flex-start;">
+            <div class="icon-circle-sm">🤝</div>
+            <div><div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Community & Care</div><p style="font-size: 14px;">Isolated living — especially acute for elderly residents</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">02</div>
+  </div>
+
+  <!-- SLIDE 3: THE SOLUTION -->
+  <div class="slide" id="slide-3">
+    <div class="content-center">
+      <div class="label">The Solution</div>
+      <h2>One platform.<br>One payment.<br><span class="accent">One home.</span></h2>
+      <div class="divider divider-center"></div>
+      <p class="large" style="max-width: 640px; margin: 0 auto 48px;">EZLiving replaces every vendor, account, and coordination with a single integrated platform. Close on Friday. Sleep there Friday night.</p>
+      <div class="card card-accent" style="max-width: 720px; margin: 0 auto; padding: 36px 48px;">
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Living-as-a-Service</div>
+        <p style="font-size: 18px; color: var(--text); font-weight: 400;">Real estate + furnishings + utilities + mobility + services — financed together, managed together, lived together.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 28px; max-width: 480px; margin-left: auto; margin-right: auto;">
+          <span class="tag" style="text-align:center;">Zero setup friction</span>
+          <span class="tag" style="text-align:center;">One monthly payment</span>
+          <span class="tag" style="text-align:center;">Move-in ready day one</span>
+          <span class="tag" style="text-align:center;">All services embedded</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">03</div>
+  </div>
+
+  <!-- SLIDE 4: PURCHASE EXPERIENCE -->
+  <div class="slide" id="slide-4">
+    <div class="content-left">
+      <div class="label">The Purchase Experience</div>
+      <h2>From search to <span class="accent">sleeping in your bed</span><br>in a single process.</h2>
+      <div class="divider"></div>
+      <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 0;">
+        <div style="display: flex; align-items: stretch; gap: 0; margin-bottom: 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; margin-right: 24px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #0C1B2A; font-size: 14px;">1</div>
+            <div style="width: 2px; flex: 1; background: linear-gradient(to bottom, var(--accent), var(--border)); min-height: 40px;"></div>
+          </div>
+          <div class="card" style="margin-bottom: 16px; flex: 1;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 6px;">Choose Your Unit</div>
+            <p>Browse units on the EZLiving platform. Select Option A, B, or C — interior packages curated by Italian designers. Every detail pre-selected, from paint to plates.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: stretch; gap: 0; margin-bottom: 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; margin-right: 24px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #0C1B2A; font-size: 14px;">2</div>
+            <div style="width: 2px; flex: 1; background: linear-gradient(to bottom, var(--accent), var(--border)); min-height: 40px;"></div>
+          </div>
+          <div class="card" style="margin-bottom: 16px; flex: 1;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 6px;">Integrated Financing</div>
+            <p>One loan covers the unit, furnishings, and interior design package. All amortized over 30 years. No second trip to the furniture store. No additional capital required at close.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: stretch; gap: 0; margin-bottom: 0;">
+          <div style="display: flex; flex-direction: column; align-items: center; margin-right: 24px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #0C1B2A; font-size: 14px;">3</div>
+          </div>
+          <div class="card card-accent" style="margin-bottom: 16px; flex: 1;">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 6px; color: var(--accent);">Close on Friday. Sleep there Friday night.</div>
+            <p>The home smells great, the bed is made, the Wi-Fi is on. Every service is already connected under your EZLiving account. You don't have to call anyone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">04</div>
+  </div>
+
+  <!-- SLIDE 5: THE PLATFORM -->
+  <div class="slide" id="slide-5">
+    <div class="content-center">
+      <div class="label">The Platform</div>
+      <h2>The <span class="accent">EZLiving App</span><br>is your home's operating system.</h2>
+      <div class="divider divider-center"></div>
+      <p style="margin-bottom: 48px;">Every service, every account, every daily convenience — accessed from one interface. One login. Zero friction.</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; margin: 0 auto;">
+        <div class="card" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">🚗</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Autonomous Mobility</div>
+          <p style="font-size: 14px;">Reserve a vehicle downstairs. Zipcar-model, evolving to fully autonomous.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">🍔</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Delivery Integration</div>
+          <p style="font-size: 14px;">DoorDash, Uber Eats, Instacart — all through one EZLiving account.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">👔</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Dry Cleaning & Laundry</div>
+          <p style="font-size: 14px;">Schedule pickup and delivery without leaving the building or making a call.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">📦</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Package Management</div>
+          <p style="font-size: 14px;">All deliveries handled, stored, and returned by the platform.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">⚡</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Utilities & Wi-Fi</div>
+          <p style="font-size: 14px;">One account covers electricity, internet, and building services.</p>
+        </div>
+        <div class="card card-accent" style="text-align: center;">
+          <div class="icon-circle" style="margin: 0 auto 12px;">☁️</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px; color: var(--accent);">Cloud Closet</div>
+          <p style="font-size: 14px;">AI-powered physical asset management. Your belongings, digitized.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">05</div>
+  </div>
+
+  <!-- SLIDE 6: CLOUD CLOSET -->
+  <div class="slide slide-dark" id="slide-6">
+    <div class="split" style="max-width: 1100px;">
+      <div>
+        <div class="label">Platform Feature</div>
+        <h2><span class="accent">Cloud Closet</span></h2>
+        <p style="font-size: 20px; color: var(--text); font-weight: 400; margin: 16px 0;">"The Operating System for Your Physical Life."</p>
+        <div class="divider"></div>
+        <p style="margin-bottom: 24px;">Cloud Closet transforms physical storage from a passive box to an active, intelligent asset management platform. Every possession is tagged, categorized, and retrievable by natural language.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="check-item"><div class="check-dot"></div><p>AI object identification + smart tagging via computer vision</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Digital twin of every possession — searchable, insurable, resellable</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Seasonal concierge — decorations retrieved, installed, stored back</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Declutter mode + marketplace: list to Facebook, sell within network</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Autonomous pickup + Blue Highway logistics integration</p></div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="card card-accent" style="padding: 24px 28px;">
+          <div class="label" style="margin-bottom: 8px;">Ask Cloud Closet</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text); line-height: 1.8;">
+            "Red ski jacket"<br>
+            "Things Dad gave me"<br>
+            "Christmas lights"<br>
+            "Camping gear"<br>
+            "Items stored March 2024"
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 28px;">
+          <div class="label" style="margin-bottom: 12px;">Revenue Layers</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="font-size: 14px;">Monthly per-box storage fee</span>
+              <span class="tag" style="font-size: 10px;">Recurring</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="font-size: 14px;">Clothing cleaning + storage</span>
+              <span class="tag" style="font-size: 10px;">Premium</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border);">
+              <span style="font-size: 14px;">Seasonal concierge service</span>
+              <span class="tag" style="font-size: 10px;">High Margin</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+              <span style="font-size: 14px;">Marketplace transaction %</span>
+              <span class="tag" style="font-size: 10px;">Flywheel</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">06</div>
+  </div>
+
+  <!-- SLIDE 7: THE PROPERTIES -->
+  <div class="slide" id="slide-7">
+    <div class="content-left">
+      <div class="label">Brooklyn Portfolio</div>
+      <h2>Three properties.<br><span class="accent">One platform.</span> One launch.</h2>
+      <div class="divider"></div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 20px; margin-top: 36px;">
+        <!-- 9201 -->
+        <div class="property-card">
+          <div class="property-header">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div class="tag">Pilot Property</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);">P-01</div>
+            </div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent);">9201</div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; color: var(--text); margin-top: 4px;">Brooklyn, New York</div>
+          </div>
+          <div class="property-body">
+            <p style="font-size: 14px; margin-bottom: 16px;">Flagship EZLiving pilot property. Full platform integration. Investor deck live.</p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Status</span><span class="accent" style="font-weight: 600;">Development</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Operations</span><span>2027</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0;"><span style="color: var(--muted);">Platform</span><span>Full LaaS</span></div>
+            </div>
+            <a href="https://geopulse-ai-production.up.railway.app/9201-investor-deck-v0.2.html" target="_blank" style="display: block; margin-top: auto; padding-top: 16px; text-align: center; padding: 10px; border: 1px solid var(--accent); border-radius: 8px; color: var(--accent); text-decoration: none; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1px;">VIEW INVESTOR DECK →</a>
+          </div>
+        </div>
+        <!-- Property 2 -->
+        <div class="property-card">
+          <div class="property-header">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div class="tag">Pipeline</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);">P-02</div>
+            </div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--text);">Property 02</div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; color: var(--muted); margin-top: 4px;">Bay Ridge, Brooklyn</div>
+          </div>
+          <div class="property-body">
+            <p style="font-size: 14px; margin-bottom: 16px;">Second development targeting premium mid-market buyers. Different consumer profile to 9201.</p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Status</span><span style="color: var(--accent); font-weight: 600;">In Progress</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Operations</span><span>2027–2028</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0;"><span style="color: var(--muted);">Platform</span><span>Full LaaS</span></div>
+            </div>
+            <div style="margin-top: auto; padding-top: 16px; text-align: center; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--muted);">OPENING 2027</div>
+          </div>
+        </div>
+        <!-- Property 3 -->
+        <div class="property-card">
+          <div class="property-header">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div class="tag">Pipeline</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);">P-03</div>
+            </div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--text);">Property 03</div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; color: var(--muted); margin-top: 4px;">Brooklyn, New York</div>
+          </div>
+          <div class="property-body">
+            <p style="font-size: 14px; margin-bottom: 16px;">Third asset completing the Brooklyn portfolio and proving platform scalability across property types.</p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Status</span><span style="color: var(--accent); font-weight: 600;">Planning</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border);"><span style="color: var(--muted);">Operations</span><span>2028</span></div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0;"><span style="color: var(--muted);">Platform</span><span>Full LaaS</span></div>
+            </div>
+            <div style="margin-top: auto; padding-top: 16px; text-align: center; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--muted);">OPENING 2028</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">07</div>
+  </div>
+
+  <!-- SLIDE 8: TARGET RESIDENT -->
+  <div class="slide" id="slide-8">
+    <div class="content-left">
+      <div class="label">Target Market</div>
+      <h2>Three distinct buyers.<br><span class="accent">One platform</span> serves them all.</h2>
+      <div class="divider"></div>
+      <div class="split-3" style="margin-top: 40px;">
+        <div class="card" style="padding: 32px 28px; display: flex; flex-direction: column;">
+          <div class="icon-circle">🏙️</div>
+          <h3 style="margin-bottom: 12px;">The Urban Upgrader</h3>
+          <p style="font-size: 14px; margin-bottom: 16px; flex: 1;">Mid-market NYC buyer — $600K–$1.2M purchase range. Wants premium living without the management burden. Values time over DIY.</p>
+          <div class="tag" style="align-self: flex-start;">Primary</div>
+        </div>
+        <div class="card card-accent" style="padding: 32px 28px; display: flex; flex-direction: column;">
+          <div class="icon-circle">👴</div>
+          <h3 style="margin-bottom: 12px;">The Empty Nester</h3>
+          <p style="font-size: 14px; margin-bottom: 16px; flex: 1;">Bay Ridge homeowners with $2M–$3M houses. Ready to downsize into a fully serviced building. Needs companionship and care infrastructure.</p>
+          <div class="tag" style="align-self: flex-start;">High Value</div>
+        </div>
+        <div class="card" style="padding: 32px 28px; display: flex; flex-direction: column;">
+          <div class="icon-circle">🌍</div>
+          <h3 style="margin-bottom: 12px;">The Platform Partner</h3>
+          <p style="font-size: 14px; margin-bottom: 16px; flex: 1;">Other developers who want to adopt the EZLiving platform for their own buildings. No platform required — they license ours.</p>
+          <div class="tag" style="align-self: flex-start;">Scale</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 20px; padding: 20px 28px; display: flex; align-items: center; gap: 24px;">
+        <div class="icon-circle-sm">💡</div>
+        <p><strong style="color: var(--text);">Key insight:</strong> A Bay Ridge homeowner selling a $2.5M single-family home enters EZLiving with significant equity — becoming a premium buyer, a high-LTV resident, and an advocate simultaneously.</p>
+      </div>
+    </div>
+    <div class="slide-num">08</div>
+  </div>
+
+  <!-- SLIDE 9: THE EXCHANGE -->
+  <div class="slide" id="slide-9">
+    <div class="split" style="max-width: 1100px;">
+      <div>
+        <div class="label">Platform Layer 3</div>
+        <h2>The <span class="accent">EZLiving Exchange</span></h2>
+        <div class="divider"></div>
+        <p class="large white" style="margin-bottom: 20px;">"Just like trading stock — there's a clearing house. You don't need brokers, you don't need anything."</p>
+        <p style="margin-bottom: 32px;">As the EZLiving network grows across buildings and cities, residents gain access to a property exchange platform — direct unit swaps without brokers, agents, or closing friction.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="check-item"><div class="check-dot"></div><p>Trade your Brooklyn unit for a Miami EZLiving property — no broker</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Clearing house infrastructure manages settlement and title transfer</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Pilot: 2 buildings. Scale: unlimited as network grows</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Creates massive switching cost — residents stay in the ecosystem</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="card card-accent" style="padding: 36px 32px; margin-bottom: 20px;">
+          <div class="stat-number" style="margin-bottom: 8px;">$0</div>
+          <div style="font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--muted); text-transform: uppercase;">Broker fees on exchange</div>
+          <p style="font-size: 14px; margin-top: 12px;">The clearing house replaces the broker. EZLiving captures the spread as a platform transaction fee.</p>
+        </div>
+        <div class="card" style="padding: 28px 32px;">
+          <div class="label" style="margin-bottom: 12px;">Network Effect</div>
+          <p style="font-size: 14px;">Every new building that joins the platform increases the value of every existing resident's membership. Classic two-sided marketplace flywheel.</p>
+          <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <span class="tag">New York</span>
+            <span class="tag">Miami</span>
+            <span class="tag">Florida</span>
+            <span class="tag">+ Expanding</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">09</div>
+  </div>
+
+  <!-- SLIDE 10: TECHNOLOGY PARTNERS -->
+  <div class="slide" id="slide-10">
+    <div class="content-center">
+      <div class="label">Technology Ecosystem</div>
+      <h2>Built on a <span class="accent">best-in-class</span><br>technology stack.</h2>
+      <div class="divider divider-center"></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 980px; margin: 32px auto 0;">
+        <div class="card" style="display: flex; gap: 16px; align-items: flex-start; padding: 24px 28px; flex: 0 0 calc(50% - 10px); min-width: 280px;">
+          <div class="icon-circle-sm">🌍</div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">GeoPulse AI</div>
+            <p style="font-size: 14px;">Neighborhood intelligence for every EZLiving property — development pipeline, lifestyle scores, walkability, schools.</p>
+          </div>
+        </div>
+        <div class="card" style="display: flex; gap: 16px; align-items: flex-start; padding: 24px 28px; flex: 0 0 calc(50% - 10px); min-width: 280px;">
+          <div class="icon-circle-sm">📹</div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Airloom × Nexar</div>
+            <p style="font-size: 14px;">AI camera systems for building automation, safety monitoring, and operational intelligence throughout EZLiving properties.</p>
+          </div>
+        </div>
+        <div class="card" style="display: flex; gap: 16px; align-items: flex-start; padding: 24px 28px; flex: 0 0 calc(50% - 10px); min-width: 280px;">
+          <div class="icon-circle-sm">🚤</div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">Blue Highway</div>
+            <p style="font-size: 14px;">Hydrofoil vessel network for premium resident mobility. NYC to Hamptons, Manhattan to Connecticut — zero airport queues.</p>
+          </div>
+        </div>
+        <div class="card" style="display: flex; gap: 16px; align-items: flex-start; padding: 24px 28px; flex: 0 0 calc(50% - 10px); min-width: 280px;">
+          <div class="icon-circle-sm">🤖</div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px;">AI Coaching Platform</div>
+            <p style="font-size: 14px;">AI-driven training and coaching for building staff and service personnel — scaled hospitality excellence embedded in operations.</p>
+          </div>
+        </div>
+        <div class="card card-accent" style="display: flex; gap: 16px; align-items: flex-start; padding: 24px 28px; flex: 0 0 calc(50% - 10px); min-width: 280px;">
+          <div class="icon-circle-sm">🤝</div>
+          <div>
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 4px; color: var(--accent);">Robotics Companionship — Pilot</div>
+            <p style="font-size: 14px;">AI-powered companions for elderly residents. Targeting Tesla robotics. Pilot launching alongside 9201 operations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">10</div>
+  </div>
+
+  <!-- SLIDE 11: BUSINESS MODEL -->
+  <div class="slide" id="slide-11">
+    <div class="content-left">
+      <div class="label">Business Model</div>
+      <h2>Six revenue streams.<br><span class="accent">One integrated</span> platform.</h2>
+      <div class="divider"></div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px;">
+        <div class="card" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">1</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Unit Sales + Financing Margin</div>
+            <p style="font-size: 13px;">Condo purchase + integrated furnishings financing over 30 years</p>
+          </div>
+        </div>
+        <div class="card" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">2</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Monthly LaaS Fee</div>
+            <p style="font-size: 13px;">Bundled services, utilities, mobility, and platform access per resident</p>
+          </div>
+        </div>
+        <div class="card" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">3</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Cloud Closet Subscription</div>
+            <p style="font-size: 13px;">Storage, concierge, retrieval, marketplace transaction fees</p>
+          </div>
+        </div>
+        <div class="card" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">4</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Service Integration Revenue</div>
+            <p style="font-size: 13px;">Rev-share from DoorDash, Uber Eats, Instacart, and mobility partners</p>
+          </div>
+        </div>
+        <div class="card" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">5</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Exchange Transaction Fees</div>
+            <p style="font-size: 13px;">Clearing house fee on every property swap in the network</p>
+          </div>
+        </div>
+        <div class="card card-accent" style="padding: 22px 26px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: var(--accent); min-width: 36px;">6</div>
+          <div>
+            <div style="font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; color: var(--accent);">Platform Licensing</div>
+            <p style="font-size: 13px;">Other developers license EZLiving OS for their own buildings — the true scale multiplier</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">11</div>
+  </div>
+
+  <!-- SLIDE 12: ROADMAP -->
+  <div class="slide" id="slide-12">
+    <div class="content-left">
+      <div class="label">Roadmap</div>
+      <h2>From pilot to <span class="accent">platform.</span></h2>
+      <div class="divider"></div>
+      <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 40px; max-width: 900px;">
+        <div class="roadmap-row">
+          <div class="roadmap-year">2026</div>
+          <div class="roadmap-bar">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Foundation</div>
+            <p style="font-size: 14px;">EZLiving platform build · Cloud Closet development · GeoPulse integration · Brand launch · Waitlist + pre-sale deposits · 9201 construction underway</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="roadmap-year">2027</div>
+          <div class="roadmap-bar" style="border-color: rgba(201,160,82,0.3);">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px; color: var(--accent);">Operations Begin</div>
+            <p style="font-size: 14px;">9201 opens · First LaaS residents · Cloud Closet live · Robotics companion pilot · Property 02 construction begins · Blue Highway mobility integration</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="roadmap-year">2028</div>
+          <div class="roadmap-bar">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Platform Scale</div>
+            <p style="font-size: 14px;">Property 02 + 03 operations · Exchange platform launch · Platform licensing to external developers · Miami expansion evaluation</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="roadmap-year">2029</div>
+          <div class="roadmap-bar">
+            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; margin-bottom: 6px;">Network Effect</div>
+            <p style="font-size: 14px;">Multi-city presence · Blue Highway 80-seater vessel launch ($6M, 2029) · Full robotics companionship rollout · National platform licensing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">12</div>
+  </div>
+
+  <!-- SLIDE 13: FOUNDER -->
+  <div class="slide slide-dark" id="slide-13">
+    <div class="split" style="max-width: 1000px;">
+      <div>
+        <div class="label">The Founder</div>
+        <h2><span class="accent">Tim Ziss</span></h2>
+        <div class="divider"></div>
+        <p class="large white" style="margin-bottom: 20px;">"I want to take the annoyance out of wanting a home."</p>
+        <p style="margin-bottom: 28px;">Tim Ziss is a Brooklyn-based real estate developer with a rare combination of operator instincts and forward-looking vision. He doesn't just build buildings — he builds systems.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="check-item"><div class="check-dot"></div><p>Deep expertise in distressed asset acquisition and value-add development across NYC</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>3 active Brooklyn developments as proof-of-concept for the EZLiving model</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Hands-on operator — personally drives branding, platform vision, and tech partnerships</p></div>
+          <div class="check-item"><div class="check-dot"></div><p>Philanthropic track record: built homes for orphanages, family-led charitable work across Latin America</p></div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="card card-accent" style="padding: 28px 32px;">
+          <div class="label" style="margin-bottom: 12px;">The Vision</div>
+          <p style="font-size: 15px; color: var(--text); font-style: italic; line-height: 1.8;">"I don't want to do these as one-offs. I want to develop a platform and launch them on the platform — so we can test it ourselves, then go to the market and say: Joe Blow is building a building in Florida. He has no platform. He signs up with ours."</p>
+        </div>
+        <div class="card" style="padding: 24px 32px;">
+          <div class="label" style="margin-bottom: 12px;">What People Don't Know</div>
+          <p style="font-size: 14px;">Tim's motivations run deeper than real estate. A Spanish-speaking preacher who built homes for orphans with his daughter, a father of three, and a builder who sees technology as a way to solve human problems — not just generate returns.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">13</div>
+  </div>
+
+  <!-- SLIDE 14: CTA -->
+  <div class="slide" id="slide-14" style="background: radial-gradient(ellipse at 50% 30%, rgba(201,160,82,0.12) 0%, transparent 60%), var(--bg);">
+    <div class="content-center">
+      <div class="label">Join EZLiving</div>
+      <h1 style="font-size: clamp(28px, 4.5vw, 56px);">The future of<br>residential life<br>starts in <span class="accent">Brooklyn.</span></h1>
+      <div class="divider divider-center"></div>
+      <p class="large" style="max-width: 580px; margin: 0 auto 24px;">We're not selling condos. We're not renting units. We are building a homeowner's community — and we're inviting you to be part of it.</p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px;">
+        <div class="card card-accent" style="padding: 20px 28px; text-align: center; min-width: 180px; max-width: 220px;">
+          <div class="label" style="margin-bottom: 8px;">Buyers</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px; color: var(--accent);">Join the Waitlist</div>
+          <p style="font-size: 13px; margin-top: 6px;">Secure your place in the community.</p>
+        </div>
+        <div class="card" style="padding: 20px 28px; text-align: center; min-width: 180px; max-width: 220px;">
+          <div class="label" style="margin-bottom: 8px;">Investors</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px;">Invest in the Platform</div>
+          <p style="font-size: 13px; margin-top: 6px;">Back the residential OS that scales.</p>
+        </div>
+        <div class="card" style="padding: 20px 28px; text-align: center; min-width: 180px; max-width: 220px;">
+          <div class="label" style="margin-bottom: 8px;">Developers</div>
+          <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px;">License the OS</div>
+          <p style="font-size: 13px; margin-top: 6px;">Bring EZLiving to your building.</p>
+        </div>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);">EZLiving · Brooklyn, New York · 2026</div>
+    </div>
+    <div class="slide-num">14</div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn" onclick="prevSlide()">←</button>
+  <div class="slide-counter" id="counter">01 / 14</div>
+  <button class="nav-btn" onclick="nextSlide()">→</button>
+</div>
+
+<div class="sps-mark">SPS ⚙</div>
+
+<script>
+  let current = 1;
+  const total = 14;
+
+  function goTo(n) {
+    const prev = document.getElementById('slide-' + current);
+    if (prev) { prev.classList.remove('active'); prev.classList.add('exit'); setTimeout(() => prev.classList.remove('exit'), 500); }
+    current = Math.max(1, Math.min(total, n));
+    const next = document.getElementById('slide-' + current);
+    if (next) next.classList.add('active');
+    document.getElementById('counter').textContent = String(current).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  }
+
+  function nextSlide() { goTo(current + 1); }
+  function prevSlide() { goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+  });
+
+  function toggleTheme() {
+    document.documentElement.setAttribute('data-theme',
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  function printDeck() {
+    document.documentElement.setAttribute('data-theme', 'light');
+    window.print();
+  }
+</script>
+</body>
+</html>
