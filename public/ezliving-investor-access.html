@@ -853,15 +853,24 @@ function submitSignature() {
     user_agent: navigator.userAgent
   };
 
-  // POST to webhook endpoint
-  fetch('/api/ezliving-access', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(r => r.ok ? r.json() : Promise.reject())
-  .catch(() => null) // fail silently — show confirmation either way
-  .finally(() => {
+  // POST to Formspree endpoint (set EZLIVING_FORMSPREE_ID env or replace below)
+  const formspreeId = 'YOUR_FORMSPREE_ID'; // replace with actual Formspree endpoint
+  const endpoint = formspreeId !== 'YOUR_FORMSPREE_ID'
+    ? `https://formspree.io/f/${formspreeId}`
+    : null;
+
+  const send = endpoint
+    ? fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `🔑 EZLiving Access Request — ${payload.name} [${payload.ref}]`,
+          ...payload
+        })
+      }).catch(() => null)
+    : Promise.resolve(null);
+
+  send.finally(() => {
     // Show confirmation
     document.getElementById('confirmEmail').textContent = state.email;
     document.getElementById('confirmSig').textContent = name;
