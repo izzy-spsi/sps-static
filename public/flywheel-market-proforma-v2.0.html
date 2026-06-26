@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel — Market Proforma v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#070E1B; --surface:#0D1829; --card:#121F33; --row:#0F1A2C; --row-alt:#111D2F; --row-hover:#162338;
+  --border:rgba(255,255,255,0.06); --border-red:rgba(204,26,26,0.3);
+  --red:#CC1A1A; --red-dim:rgba(204,26,26,0.12);
+  --text:#EDE9E3; --muted:#5A7A92; --dim:#3A5568;
+  --green:#22C55E; --blue:#3B82F6; --amber:#F59E0B; --purple:#A855F7;
+}
+.light{
+  --bg:#F0EDE8; --surface:#FFF; --card:#FAFAF8; --row:#FFF; --row-alt:#F7F5F2; --row-hover:#EEF0F5;
+  --border:rgba(0,0,0,0.08); --border-red:rgba(180,16,28,0.2);
+  --text:#111118; --muted:#5A6070; --dim:#9A9AA4;
+  --red:#B41018; --red-dim:rgba(180,16,28,0.08);
+}
+
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;transition:background .3s,color .3s}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:2px solid var(--red);padding:0 28px;height:60px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.4)}
+.logo{height:26px;opacity:.95}
+.topbar-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+.topbar-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.topbar-spacer{flex:1}
+.scen-group{display:flex;gap:3px;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:7px;padding:3px}
+.light .scen-group{background:rgba(0,0,0,0.05)}
+.scen-btn{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:4px 11px;border-radius:5px;border:none;cursor:pointer;color:var(--muted);background:transparent;transition:all .18s}
+.scen-btn.active.cons{background:#1E3A2F;color:#22C55E}
+.scen-btn.active.base{background:#1A2A4A;color:#3B82F6}
+.scen-btn.active.aggr{background:#2A1A1A;color:#CC1A1A}
+.light .scen-btn.active.cons{background:#D1FAE5;color:#15803D}
+.light .scen-btn.active.base{background:#DBEAFE;color:#1D4ED8}
+.light .scen-btn.active.aggr{background:#FEE2E2;color:#B91C1C}
+.ui-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .18s}
+.ui-btn:hover{border-color:var(--red);color:var(--text)}
+
+/* ── KPI BAR ── */
+.kpi-bar{display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.kpi{flex:1;padding:14px 20px;background:var(--surface);display:flex;flex-direction:column;gap:3px}
+.kpi-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpi-value{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
+.kpi-value.red{color:var(--red)} .kpi-value.green{color:var(--green)} .kpi-value.blue{color:var(--blue)}
+.kpi-sub{font-size:10px;color:var(--dim)}
+
+/* ── RATES PANEL ── */
+.rates-panel{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px}
+.rates-toggle{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px;user-select:none;margin-bottom:0}
+.rates-toggle:hover{color:var(--text)}
+.rates-body{display:none;margin-top:14px}
+.rates-body.open{display:block}
+.rates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.rate-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.rate-card-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.rate-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)}
+.rate-row:last-child{border-bottom:none}
+.rate-label{font-size:11px;color:var(--muted)}
+.rate-input{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);background:transparent;border:none;text-align:right;width:70px;padding:2px 4px;border-radius:3px;cursor:text}
+.rate-input:focus{outline:none;background:var(--red-dim);color:var(--text)}
+.rate-computed{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)}
+
+/* ── MIX PANEL ── */
+.mix-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.mix-label{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;width:80px}
+.mix-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text)}
+.mix-item input[type=range]{width:80px;accent-color:var(--red)}
+.mix-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);width:30px;text-align:right}
+.mix-total{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;margin-left:8px}
+.mix-total.ok{background:rgba(34,197,94,0.15);color:var(--green)}
+.mix-total.err{background:rgba(204,26,26,0.15);color:var(--red)}
+
+/* ── MAIN TABLE ── */
+.main{padding:20px 28px 80px}
+.tbl-header{display:grid;grid-template-columns:24px 200px 110px 80px 80px 90px 90px 90px 90px 28px;gap:0;padding:7px 14px;position:sticky;top:60px;z-index:90;background:var(--surface);border:1px solid var(--border);border-radius:8px 8px 0 0;margin-bottom:1px}
+.thc{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:3px 6px}
+.thc.r{text-align:right}
+
+.region-block{margin-bottom:2px}
+.region-hdr{display:flex;align-items:center;gap:10px;padding:9px 14px;background:linear-gradient(90deg,var(--red-dim) 0%,transparent 60%);border:1px solid var(--border-red);border-radius:6px;cursor:pointer;margin-bottom:1px;user-select:none}
+.region-flag{font-size:16px}
+.region-name{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.region-total{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red)}
+.chevron{font-size:10px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.region-block.collapsed .chevron{transform:rotate(-90deg)}
+.region-block.collapsed .region-body{display:none}
+
+.sub-block{margin:1px 0}
+.sub-hdr{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 26px;background:var(--card);border:1px solid var(--border);border-radius:4px;cursor:pointer;user-select:none}
+.sub-name{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sub-total{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.sub-block.collapsed .chevron{transform:rotate(-90deg)}
+.sub-block.collapsed .sub-body{display:none}
+
+.mkt-wrap{margin:1px 0}
+.mkt-row{display:grid;grid-template-columns:24px 200px 110px 80px 80px 90px 90px 90px 90px 28px;gap:0;align-items:center;padding:7px 14px 7px 38px;background:var(--row);border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:background .15s}
+.mkt-row:hover{background:var(--row-hover)}
+.mkt-row.expanded{border-color:var(--border-red);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot-active{background:var(--green);box-shadow:0 0 6px var(--green)}
+.dot-pipeline{background:var(--amber)}
+.dot-future{background:var(--dim)}
+.mkt-name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--text);padding:0 6px}
+.mkt-type{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);padding:0 6px}
+.mkt-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:right;padding:0 6px}
+.mkt-rev{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);text-align:right;padding:0 6px}
+.mkt-rev.hi{color:var(--green);font-weight:500}
+.expand-icon{font-size:10px;color:var(--dim);text-align:center;transition:transform .2s}
+.mkt-row.expanded .expand-icon{transform:rotate(180deg)}
+
+/* Detail panel */
+.mkt-detail{background:var(--card);border:1px solid var(--border-red);border-top:none;border-radius:0 0 6px 6px;padding:14px 14px 14px 52px;display:none}
+.mkt-detail.open{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.detail-card{background:var(--row);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+.dc-title{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+.dc-title.vol{color:#60A5FA} .dc-title.rev{color:#4ADE80} .dc-title.mix{color:#C084FC} .dc-title.drv{color:#FBB65A}
+.dc-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
+.dc-row:last-child{border-bottom:none}
+.dc-key{color:var(--muted)}
+.dc-val{font-family:'JetBrains Mono',monospace;color:var(--text)}
+.dc-val.hi{color:var(--green)}
+
+/* Totals */
+.grand-row{display:grid;grid-template-columns:24px 200px 110px 80px 80px 90px 90px 90px 90px 28px;gap:0;align-items:center;padding:10px 14px;background:linear-gradient(90deg,var(--red-dim) 0%,transparent 70%);border:1px solid var(--border-red);border-radius:6px;margin-top:14px}
+.grand-label{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--text);padding:0 6px;grid-column:1/5}
+.grand-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--red);text-align:right;padding:0 6px}
+
+.gmv-toggle.active-view{border-color:var(--blue)!important;color:#60A5FA!important;background:rgba(59,130,246,0.1)!important}
+@media print{@page{size:landscape;margin:10mm}body{background:#fff!important;color:#000!important}.topbar,.rates-panel,.ui-btn{display:none!important}.mkt-detail{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img class="logo" id="logo" src="" alt="Flywheel">
+  <div><div class="topbar-title">Market Proforma</div><div class="topbar-sub">Flywheel Technologies · Sales Pipeline · Driver-Based Unit Economics</div></div>
+  <div class="topbar-spacer"></div>
+  <div class="scen-group">
+    <button class="scen-btn cons" onclick="setScenario('cons')">Conservative</button>
+    <button class="scen-btn base active base" onclick="setScenario('base')">Base</button>
+    <button class="scen-btn aggr" onclick="setScenario('aggr')">Aggressive</button>
+  </div>
+  <button class="ui-btn gmv-toggle active-view" id="viewBtn" onclick="toggleView()">📊 GMV</button>
+  <button class="ui-btn" onclick="toggleRates()">⚙️ Rates</button>
+  <button class="ui-btn" onclick="toggleMode()">☀️ Light</button>
+  <button class="ui-btn" onclick="window.print()">⬇️ PDF</button>
+</div>
+
+<!-- KPI BAR -->
+<div class="kpi-bar">
+  <div class="kpi"><div class="kpi-label">Markets</div><div class="kpi-value" id="kMarkets">—</div><div class="kpi-sub" id="kActive">—</div></div>
+  <div class="kpi"><div class="kpi-label">Total Vehicles</div><div class="kpi-value blue" id="kVeh">—</div><div class="kpi-sub" id="kDrivers">—</div></div>
+  <div class="kpi"><div class="kpi-label">Blended Rev/Trip</div><div class="kpi-value red" id="kBlended">—</div><div class="kpi-sub">at default mix</div></div>
+  <div class="kpi"><div class="kpi-label">GMV 2026</div><div class="kpi-value blue" id="kg26">—</div><div class="kpi-sub" id="k26sub">— net rev</div></div>
+  <div class="kpi"><div class="kpi-label">GMV 2027</div><div class="kpi-value blue" id="kg27">—</div><div class="kpi-sub" id="k27sub">— net rev</div></div>
+  <div class="kpi"><div class="kpi-label">GMV 2028</div><div class="kpi-value blue" id="kg28">—</div><div class="kpi-sub" id="k28sub">— net rev</div></div>
+  <div class="kpi"><div class="kpi-label">GMV 2029</div><div class="kpi-value green" id="kg29">—</div><div class="kpi-sub" id="k29sub">— net rev</div></div>
+</div>
+
+<!-- RATES PANEL -->
+<div class="rates-panel">
+  <div class="rates-toggle" onclick="toggleRates()">
+    <span>▶</span> <span id="ratesToggleLabel">Global Rate Configuration</span>
+    <span style="margin-left:8px;font-size:9px;opacity:.5">(click to expand)</span>
+  </div>
+  <div class="rates-body" id="ratesBody">
+    <div class="rates-grid">
+      <!-- CC -->
+      <div class="rate-card">
+        <div class="rate-card-title">💳 Credit Card</div>
+        <div class="rate-row"><span class="rate-label">Service fee (to rider)</span><input class="rate-input" id="rCCGross" value="4.5" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Processing cost (MVR)</span><input class="rate-input" id="rCCCost" value="2.4" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Net to Flywheel</span><span class="rate-computed" id="rCCNet">2.1%</span></div>
+      </div>
+      <!-- eHail -->
+      <div class="rate-card">
+        <div class="rate-card-title">📱 eHail</div>
+        <div class="rate-row"><span class="rate-label">Service fee (all-in)</span><input class="rate-input" id="rEhail" value="19.1" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Payment type</span><span class="rate-computed">Card on file</span></div>
+        <div class="rate-row"><span class="rate-label">Processing included</span><span class="rate-computed">Yes ✅</span></div>
+      </div>
+      <!-- Uber -->
+      <div class="rate-card">
+        <div class="rate-card-title">🚗 Uber</div>
+        <div class="rate-row"><span class="rate-label">Take rate (from Uber)</span><input class="rate-input" id="rUber" value="2.5" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Avg rider payment</span>$<input class="rate-input" id="rUberFare" value="12" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">Payment type</span><span class="rate-computed">Card on file</span></div>
+      </div>
+      <!-- Corporate -->
+      <div class="rate-card">
+        <div class="rate-card-title">🏢 Corporate Billing</div>
+        <div class="rate-row"><span class="rate-label">Admin fee (company)</span><input class="rate-input" id="rCorpAdmin" value="2.5" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Driver fee</span><input class="rate-input" id="rCorpDriver" value="10.0" onchange="recalc()">%</div>
+        <div class="rate-row"><span class="rate-label">Total per trip</span><span class="rate-computed" id="rCorpNet">12.5%</span></div>
+      </div>
+      <!-- Avg Fare -->
+      <div class="rate-card">
+        <div class="rate-card-title">💰 Avg Fare</div>
+        <div class="rate-row"><span class="rate-label">Mexico — Hotel Taxi</span>$<input class="rate-input" id="rFareMXH" value="50" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">Mexico — Local Taxi</span>$<input class="rate-input" id="rFareMXL" value="8" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">US Urban</span>$<input class="rate-input" id="rFareUS" value="25" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">US Suburban</span>$<input class="rate-input" id="rFareUSS" value="25" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">LatAm</span>$<input class="rate-input" id="rFareLA" value="10" onchange="recalc()"></div>
+      </div>
+      <!-- Volume -->
+      <div class="rate-card">
+        <div class="rate-card-title">🔄 Volume (Mexico)</div>
+        <div class="rate-row"><span class="rate-label">Shifts/vehicle (base)</span><input class="rate-input" id="rShiftsMX" value="1.3" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">Local trips/hr (100%)</span><input class="rate-input" id="rTphLocal" value="6" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">Hotel trips/hr (100%)</span><input class="rate-input" id="rTphHotel" value="2" onchange="recalc()"></div>
+        <div class="rate-row"><span class="rate-label">Shift hours</span><input class="rate-input" id="rShiftHrs" value="8" onchange="recalc()"></div>
+      </div>
+    </div>
+
+    <!-- Trip Mix -->
+    <div style="margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+      <div class="rate-card-title" style="margin-bottom:8px">📊 Default Trip Mix (adjustable per market)</div>
+      <div class="mix-row">
+        <span class="mix-label">Street Hail</span>
+        <span class="mix-item"><input type="range" min="0" max="100" id="mxStreet" value="30" oninput="syncMix()"><span class="mix-pct" id="pvStreet">30%</span></span>
+        <span class="mix-label">WebHail</span>
+        <span class="mix-item"><input type="range" min="0" max="100" id="mxWeb" value="10" oninput="syncMix()"><span class="mix-pct" id="pvWeb">10%</span></span>
+        <span class="mix-label">eHail</span>
+        <span class="mix-item"><input type="range" min="0" max="100" id="mxEhail" value="10" oninput="syncMix()"><span class="mix-pct" id="pvEhail">10%</span></span>
+        <span class="mix-label">Uber</span>
+        <span class="mix-item"><input type="range" min="0" max="100" id="mxUber" value="50" oninput="syncMix()"><span class="mix-pct" id="pvUber">50%</span></span>
+        <span class="mix-total ok" id="mixTotal">100% ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="main">
+  <div class="tbl-header">
+    <div class="thc"></div><div class="thc">Market</div><div class="thc">Type</div>
+    <div class="thc r">Vehicles</div><div class="thc r">Drivers/day</div>
+    <div class="thc r" id="th26">GMV 2026</div><div class="thc r" id="th27">GMV 2027</div><div class="thc r" id="th28">GMV 2028</div><div class="thc r" id="th29">GMV 2029</div>
+    <div class="thc"></div>
+  </div>
+  <div id="tableBody"></div>
+  <div class="grand-row" id="grandRow">
+    <div class="grand-label">Grand Total — All Markets</div>
+    <div class="grand-val" id="g26">—</div><div class="grand-val" id="g27">—</div>
+    <div class="grand-val" id="g28">—</div><div class="grand-val" id="g29">—</div>
+    <div></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// MARKET DATA
+// status: active | pipeline | future
+// type: local | hotel | urban | suburban
+// fareZone: MX | US | USS | LA
+// ═══════════════════════════════════════════
+const MARKETS = [
+  // US — West Coast
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'San Francisco',    status:'active',  type:'urban',    fz:'US', veh:500,  active:.85, mix:null},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'Las Vegas',        status:'active',  type:'urban',    fz:'US', veh:2900, active:.82, mix:null, fc:{dailyOffers:6667, ar:.04, perTrip:.30}},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'San Diego',        status:'active',  type:'urban',    fz:'US', veh:350,  active:.70, mix:null},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'Sacramento',       status:'active',  type:'suburban', fz:'USS',veh:120,  active:.61, mix:null},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'Reno',             status:'active',  type:'suburban', fz:'USS',veh:40,   active:.65, mix:null},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'Palm Springs',     status:'active',  type:'suburban', fz:'USS',veh:80,   active:.60, mix:null},
+  {r:'United States',s:'West Coast',flag:'🇺🇸',name:'Los Angeles',      status:'pipeline',type:'urban',    fz:'US', veh:1000, active:.0,  mix:null},
+  // US — Southern Belt
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Houston',       status:'active',  type:'urban',    fz:'US', veh:450,  active:.44, mix:null},
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Miami',         status:'active',  type:'urban',    fz:'US', veh:457,  active:.11, mix:null},
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Fort Lauderdale',status:'active', type:'urban',    fz:'US', veh:200,  active:.60, mix:null},
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Dallas',        status:'pipeline',type:'urban',    fz:'US', veh:500,  active:.0,  mix:null},
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Atlanta',       status:'pipeline',type:'urban',    fz:'US', veh:400,  active:.0,  mix:null},
+  {r:'United States',s:'Southern Belt',flag:'🇺🇸',name:'Phoenix',       status:'pipeline',type:'suburban', fz:'USS',veh:300,  active:.0,  mix:null},
+  // US — East Coast
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'Baltimore',        status:'active',  type:'urban',    fz:'US', veh:103,  active:.13, mix:null},
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'New York City',    status:'pipeline',type:'urban',    fz:'US', veh:2000, active:.0,  mix:null},
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'Washington D.C.',  status:'pipeline',type:'urban',    fz:'US', veh:800,  active:.0,  mix:null},
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'Philadelphia',     status:'pipeline',type:'urban',    fz:'US', veh:400,  active:.0,  mix:null},
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'Boston',           status:'pipeline',type:'urban',    fz:'US', veh:350,  active:.0,  mix:null},
+  {r:'United States',s:'East Coast',flag:'🇺🇸',name:'New Jersey',       status:'pipeline',type:'suburban', fz:'USS',veh:500,  active:.0,  mix:null},
+  // US — Midwest
+  {r:'United States',s:'Midwest',flag:'🇺🇸',name:'Chicago',             status:'future',  type:'urban',    fz:'US', veh:1500, active:.0,  mix:null},
+  {r:'United States',s:'Midwest',flag:'🇺🇸',name:'Minneapolis',         status:'future',  type:'suburban', fz:'USS',veh:300,  active:.0,  mix:null},
+  {r:'United States',s:'Midwest',flag:'🇺🇸',name:'Detroit',             status:'future',  type:'suburban', fz:'USS',veh:250,  active:.0,  mix:null},
+  // Mexico — Quintana Roo
+  {r:'Mexico',s:'Quintana Roo',flag:'🇲🇽',name:'Cancún',               status:'pipeline',type:'hotel',    fz:'MXH', veh:325,  active:.0,  mix:null},
+  {r:'Mexico',s:'Quintana Roo',flag:'🇲🇽',name:'Tulum',                status:'pipeline',type:'hotel',    fz:'MXH', veh:300,  active:.0,  mix:null},
+  {r:'Mexico',s:'Quintana Roo',flag:'🇲🇽',name:'Playa del Carmen',     status:'pipeline',type:'hotel',    fz:'MXH',veh:300,  active:.0,  mix:null},
+  // Mexico — Yucatán
+  {r:'Mexico',s:'Yucatán',flag:'🇲🇽',name:'Mérida',                    status:'pipeline',type:'local',    fz:'MXL', veh:500,  active:.0,  mix:null},
+  // Mexico — CDMX + Puebla
+  {r:'Mexico',s:'CDMX + Puebla',flag:'🇲🇽',name:'Mexico City',         status:'future',  type:'local',    fz:'MXL', veh:5000, active:.0,  mix:null},
+  {r:'Mexico',s:'CDMX + Puebla',flag:'🇲🇽',name:'Puebla',              status:'future',  type:'local',    fz:'MXL', veh:800,  active:.0,  mix:null},
+  // LatAm
+  {r:'Latin America',s:'South America',flag:'🌎',name:'Lima, Peru',     status:'future',  type:'local',    fz:'LA', veh:2000, active:.0,  mix:null},
+  {r:'Latin America',s:'South America',flag:'🌎',name:'Bogotá, Colombia',status:'future', type:'local',    fz:'LA', veh:1500, active:.0,  mix:null},
+  {r:'Latin America',s:'South America',flag:'🌎',name:'Buenos Aires',   status:'future',  type:'local',    fz:'LA', veh:1000, active:.0,  mix:null},
+  {r:'Latin America',s:'Central America',flag:'🌎',name:'El Salvador',  status:'future',  type:'local',    fz:'LA', veh:500,  active:.0,  mix:null},
+];
+
+// ═══════════════════════════════════════════
+// SCENARIO CONFIG
+// utilization drives trips per shift
+// ═══════════════════════════════════════════
+const SCEN = {
+  cons: {util:.45, shifts_mx:1.1, shifts_us:1.0, fcArMult:1.0,  label:'Conservative'},
+  base: {util:.65, shifts_mx:1.3, shifts_us:1.1, fcArMult:3.0,  label:'Base'},
+  aggr: {util:.80, shifts_mx:1.6, shifts_us:1.2, fcArMult:5.0,  label:'Aggressive'},
+};
+// FC AR multiplier: Conservative = current AR, Base = 3× improvement, Aggressive = 5× improvement
+// Activation ramp by status × year (0=2026,1=2027,2=2028,3=2029)
+const RAMP = {
+  active:   [1.0, 1.5, 2.2, 3.0],
+  pipeline: [0.1, 0.5, 1.2, 2.0],
+  future:   [0.0, 0.0, 0.4, 0.9],
+};
+
+let scenario = 'base';
+let isLight = false;
+let viewMode = 'gmv'; // 'gmv' | 'rev'
+
+function calcGMV(m, yearIdx){
+  const r = R();
+  const fare = r.fares[m.fz] || 25; // fallback to $25 if zone not found
+  const mix = getMix();
+  const uberFare = parseFloat(document.getElementById('rUberFare').value)||12;
+  const drivers = driversPerDay(m, yearIdx);
+  const util = SCEN[scenario].util;
+  const trips = tripsPerDriverPerDay(m, util);
+  const ym = RAMP[m.status][yearIdx];
+  // GMV: non-Uber trips use taxi fare, Uber trips use Uber fare
+  const blendedFare = fare*(mix.street+mix.web+mix.ehail) + uberFare*mix.uber;
+  // Add FC GMV if real offer data available
+  let fcGMV = 0;
+  if (m.fc && m.fc.dailyOffers) {
+    const ar = Math.min(m.fc.ar * SCEN[scenario].fcArMult, 0.85);
+    const avgFareMX = parseFloat(document.getElementById('rFareMXH')?.value)||50;
+    fcGMV = m.fc.dailyOffers * ar * avgFareMX * 365 * ym;
+  }
+  return drivers * trips * 365 * blendedFare + fcGMV;
+}
+
+function toggleView(){
+  viewMode = viewMode === 'gmv' ? 'rev' : 'gmv';
+  const btn = document.getElementById('viewBtn');
+  if(viewMode === 'gmv'){
+    btn.textContent = '📊 GMV';
+    btn.classList.add('active-view');
+  } else {
+    btn.textContent = '💰 Revenue';
+    btn.classList.remove('active-view');
+  }
+  render();
+}
+
+// ═══════════════════════════════════════════
+// GET RATE VALUES
+// ═══════════════════════════════════════════
+function R(){
+  const g = id=>parseFloat(document.getElementById(id).value)||0;
+  const ccGross = g('rCCGross'), ccCost = g('rCCCost');
+  const ccNet = ccGross - ccCost;
+  document.getElementById('rCCNet').textContent = ccNet.toFixed(2)+'%';
+  const corpAdmin = g('rCorpAdmin'), corpDriver = g('rCorpDriver');
+  document.getElementById('rCorpNet').textContent = (corpAdmin+corpDriver).toFixed(1)+'%';
+  return {
+    ccNet: ccNet/100,
+    ehail: g('rEhail')/100,
+    uber: g('rUber')/100,
+    corpAdmin: corpAdmin/100,
+    corpDriver: corpDriver/100,
+    fares: {MXH:g('rFareMXH'), MXL:g('rFareMXL'), US:g('rFareUS'), USS:g('rFareUSS'), LA:g('rFareLA')},
+    shifts: {MX:g('rShiftsMX')},
+    tphLocal: g('rTphLocal'),
+    tphHotel: g('rTphHotel'),
+    shiftHrs: g('rShiftHrs'),
+  };
+}
+
+function getMix(){
+  const g = id=>parseInt(document.getElementById(id).value)||0;
+  return {
+    street: g('mxStreet')/100,
+    web: g('mxWeb')/100,
+    ehail: g('mxEhail')/100,
+    uber: g('mxUber')/100,
+  };
+}
+
+function syncMix(){
+  const ids = ['mxStreet','mxWeb','mxEhail','mxUber'];
+  const pvs = ['pvStreet','pvWeb','pvEhail','pvUber'];
+  let tot = 0;
+  ids.forEach((id,i)=>{
+    const v = parseInt(document.getElementById(id).value)||0;
+    document.getElementById(pvs[i]).textContent = v+'%';
+    tot += v;
+  });
+  const el = document.getElementById('mixTotal');
+  el.textContent = tot+'% '+(tot===100?'✅':'⚠️');
+  el.className = 'mix-total '+(tot===100?'ok':'err');
+  recalc();
+}
+
+// ═══════════════════════════════════════════
+// REVENUE CALCULATION
+// ═══════════════════════════════════════════
+function blendedPerTrip(r, mix, fare){
+  // Street Hail: 40% cash ($0) + 60% CC (net ccNet%)
+  const street = fare * 0.60 * r.ccNet;
+  // WebHail: same as street
+  const web    = fare * 0.60 * r.ccNet;
+  // eHail: 19.1% all-in
+  const ehail  = fare * r.ehail;
+  // Uber: 2.5% of Uber's own fare (not taxi fare)
+  const uberFare = parseFloat(document.getElementById('rUberFare').value)||12;
+  const uber   = uberFare * r.uber;
+  return mix.street*street + mix.web*web + mix.ehail*ehail + mix.uber*uber;
+}
+
+function tripsPerDriverPerDay(m, util){
+  const r = R();
+  const tph = (m.type==='hotel') ? r.tphHotel : (m.type==='urban'||m.type==='local') ? r.tphLocal : r.tphLocal*0.85;
+  const shifts = (m.fz==='MXH'||m.fz==='MXL'||m.fz==='LA') ? SCEN[scenario].shifts_mx : SCEN[scenario].shifts_us;
+  return tph * util * r.shiftHrs * shifts;
+}
+
+function driversPerDay(m, yearIdx){
+  const sc = SCEN[scenario];
+  const ramp = RAMP[m.status][yearIdx];
+  let activation;
+  if (m.status === 'active') {
+    // Active markets: grow from current activation rate
+    activation = Math.min(m.active * (sc.util/0.65) * ramp, 1.0);
+  } else {
+    // Pipeline/future: ramp = fraction of contracted vehicles activated
+    activation = Math.min(ramp * sc.util/0.65, 1.0);
+  }
+  return Math.round(m.veh * activation);
+}
+
+function calcRev(m, yearIdx){
+  const r = R();
+  const mix = getMix();
+  const fare = r.fares[m.fz];
+  const drivers = driversPerDay(m, yearIdx);
+  const util = SCEN[scenario].util;
+  const trips = tripsPerDriverPerDay(m, util);
+  const bpt = blendedPerTrip(r, mix, fare, m.fz);
+  return drivers * trips * 365 * bpt;
+}
+
+// ═══════════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════════
+function fmt(n){
+  if(n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return '$'+(n/1e3).toFixed(0)+'K';
+  return '$'+n.toFixed(0);
+}
+function fmtN(n){
+  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(1)+'K';
+  return n.toString();
+}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function render(){
+  const r = R();
+  const mix = getMix();
+  const sc = SCEN[scenario];
+
+  // group data
+  const regionMap = {};
+  MARKETS.forEach((m,i)=>{
+    if(!regionMap[m.r]) regionMap[m.r]={};
+    if(!regionMap[m.r][m.s]) regionMap[m.r][m.s]=[];
+    regionMap[m.r][m.s].push({...m,_i:i});
+  });
+
+  const flags = {'United States':'🇺🇸','Mexico':'🇲🇽','Latin America':'🌎'};
+  let html='', grand=[0,0,0,0], grandGMV=[0,0,0,0];
+  let totMkts=0, totActive=0, totVeh=0;
+
+  Object.entries(regionMap).forEach(([region,subs])=>{
+    let rRev=[0,0,0,0], rGMV=[0,0,0,0], subHtml='';
+    Object.entries(subs).forEach(([sub,markets])=>{
+      let sRev=[0,0,0,0], sGMV=[0,0,0,0], mHtml='';
+      markets.forEach(m=>{
+        const revs=[0,1,2,3].map(y=>calcRev(m,y));
+        const gmvs=[0,1,2,3].map(y=>calcGMV(m,y));
+        sRev=sRev.map((v,i)=>v+revs[i]);
+        sGMV=sGMV.map((v,i)=>v+gmvs[i]);
+        totMkts++; totVeh+=m.veh;
+        if(m.status==='active') totActive++;
+        const d0=driversPerDay(m,0);
+        const dotC=m.status==='active'?'dot-active':m.status==='pipeline'?'dot-pipeline':'dot-future';
+        const ttype=m.type.charAt(0).toUpperCase()+m.type.slice(1);
+        mHtml+=`
+          <div class="mkt-wrap">
+            <div class="mkt-row" onclick="toggleDetail(${m._i})" id="row-${m._i}">
+              <div><span class="dot ${dotC}"></span></div>
+              <div class="mkt-name">${m.name}</div>
+              <div class="mkt-type">${ttype} · ${m.fz}</div>
+              <div class="mkt-num">${fmtN(m.veh)}</div>
+              <div class="mkt-num">${d0}</div>
+              <div class="mkt-rev${viewMode==='gmv'?gmvs[0]>500000?' hi':'':revs[0]>200000?' hi':''}">${fmt(viewMode==='gmv'?gmvs[0]:revs[0])}</div>
+              <div class="mkt-rev">${fmt(viewMode==='gmv'?gmvs[1]:revs[1])}</div>
+              <div class="mkt-rev">${fmt(viewMode==='gmv'?gmvs[2]:revs[2])}</div>
+              <div class="mkt-rev${viewMode==='gmv'?gmvs[3]>2000000?' hi':'':revs[3]>1000000?' hi':''}">${fmt(viewMode==='gmv'?gmvs[3]:revs[3])}</div>
+              <div class="expand-icon">▼</div>
+            </div>
+            <div class="mkt-detail" id="det-${m._i}">
+              ${renderDetail(m,revs,gmvs,r,sc)}
+            </div>
+          </div>`;
+      });
+      sRev.forEach((v,i)=>rRev[i]+=v);
+      sGMV.forEach((v,i)=>rGMV[i]+=v);
+      subHtml+=`
+        <div class="sub-block" id="sub-${region}-${sub}">
+          <div class="sub-hdr" onclick="toggleSub('${region}-${sub}')">
+            <span class="chevron">▼</span>
+            <span class="sub-name">${sub}</span>
+            <span class="sub-total">${fmt(viewMode==='gmv'?sGMV[0]:sRev[0])} → ${fmt(viewMode==='gmv'?sGMV[3]:sRev[3])}</span>
+          </div>
+          <div class="sub-body">${mHtml}</div>
+        </div>`;
+    });
+    rRev.forEach((v,i)=>grand[i]+=v);
+    rGMV.forEach((v,i)=>grandGMV[i]+=v);
+    html+=`
+      <div class="region-block" id="reg-${region}">
+        <div class="region-hdr" onclick="toggleReg('${region}')">
+          <span class="region-flag">${flags[region]||'🌐'}</span>
+          <span class="region-name">${region}</span>
+          <span class="region-total">${fmt(viewMode==='gmv'?rGMV[0]:rRev[0])} in 2026 → ${fmt(viewMode==='gmv'?rGMV[3]:rRev[3])} in 2029</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="region-body">${subHtml}</div>
+      </div>`;
+  });
+
+  document.getElementById('tableBody').innerHTML=html;
+  const dispV = viewMode==='gmv' ? grandGMV : grand;
+  document.getElementById('g26').textContent=fmt(dispV[0]);
+  document.getElementById('g27').textContent=fmt(dispV[1]);
+  document.getElementById('g28').textContent=fmt(dispV[2]);
+  document.getElementById('g29').textContent=fmt(dispV[3]);
+  // Update table headers
+  const yrLabels = viewMode==='gmv' ? ['GMV 2026','GMV 2027','GMV 2028','GMV 2029'] : ['Rev 2026','Rev 2027','Rev 2028','Rev 2029'];
+  ['th26','th27','th28','th29'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=yrLabels[i]; });
+
+  // KPIs
+  const kpiFare = r.fares['MXH'];
+  const kpiUberFare = parseFloat(document.getElementById('rUberFare').value)||12;
+  const mixNow = getMix();
+  const bpt = kpiFare*0.60*r.ccNet*mixNow.street + kpiFare*0.60*r.ccNet*mixNow.web + kpiFare*r.ehail*mixNow.ehail + kpiUberFare*r.uber*mixNow.uber;
+  document.getElementById('kMarkets').textContent=totMkts;
+  document.getElementById('kActive').textContent=totActive+' active · '+(totMkts-totActive)+' pipeline/future';
+  document.getElementById('kVeh').textContent=fmtN(totVeh);
+  document.getElementById('kDrivers').textContent='~'+fmtN(totVeh*sc.shifts_mx)+' driver-shifts/day (MX)';
+  document.getElementById('kBlended').textContent='$'+bpt.toFixed(2);
+  document.getElementById('kg26').textContent=fmt(grandGMV[0]);
+  document.getElementById('kg27').textContent=fmt(grandGMV[1]);
+  document.getElementById('kg28').textContent=fmt(grandGMV[2]);
+  document.getElementById('kg29').textContent=fmt(grandGMV[3]);
+  document.getElementById('k26sub').textContent=fmt(grand[0])+' net rev';
+  document.getElementById('k27sub').textContent=fmt(grand[1])+' net rev';
+  document.getElementById('k28sub').textContent=fmt(grand[2])+' net rev';
+  document.getElementById('k29sub').textContent=fmt(grand[3])+' net rev';
+}
+
+function renderDetail(m, revs, gmvs, r, sc){
+  const util = sc.util;
+  const trips = tripsPerDriverPerDay(m, util);
+  const fare = r.fares[m.fz];
+  const mix = getMix();
+  const detailUberFare = parseFloat(document.getElementById('rUberFare').value)||12;
+  const bpt = (fare*0.60*r.ccNet*mix.street)+(fare*0.60*r.ccNet*mix.web)+(fare*r.ehail*mix.ehail)+(detailUberFare*r.uber*mix.uber);
+  const d0 = driversPerDay(m,0), d3=driversPerDay(m,3);
+  const shifts = (m.fz==='MXH'||m.fz==='MXL'||m.fz==='LA')?sc.shifts_mx:sc.shifts_us;
+  return `<div class="detail-grid">
+    <div class="detail-card">
+      <div class="dc-title vol">📊 Volume</div>
+      <div class="dc-row"><span class="dc-key">Vehicles</span><span class="dc-val">${fmtN(m.veh)}</span></div>
+      <div class="dc-row"><span class="dc-key">Shifts/vehicle</span><span class="dc-val">${shifts.toFixed(1)}</span></div>
+      <div class="dc-row"><span class="dc-key">Utilization</span><span class="dc-val">${(util*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">Trips/driver/shift</span><span class="dc-val">${trips.toFixed(1)}</span></div>
+      <div class="dc-row"><span class="dc-key">Drivers/day 2026</span><span class="dc-val hi">${d0}</span></div>
+      <div class="dc-row"><span class="dc-key">Drivers/day 2029</span><span class="dc-val hi">${d3}</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-title rev">💰 Revenue</div>
+      <div class="dc-row"><span class="dc-key">Avg fare</span><span class="dc-val">$${fare}</span></div>
+      <div class="dc-row"><span class="dc-key">GMV/driver/day</span><span class="dc-val hi">$${(trips*fare).toFixed(2)}</span></div>
+      <div class="dc-row"><span class="dc-key">Rev/trip (blended)</span><span class="dc-val">$${bpt.toFixed(3)}</span></div>
+      <div class="dc-row"><span class="dc-key">Rev/driver/day</span><span class="dc-val">$${(trips*bpt).toFixed(2)}</span></div>
+      <div class="dc-row"><span class="dc-key">Take rate (blended)</span><span class="dc-val hi">${(bpt/fare*100).toFixed(1)}%</span></div>
+      <div class="dc-row"><span class="dc-key">GMV 2026</span><span class="dc-val">${fmt(gmvs[0])}</span></div>
+      <div class="dc-row"><span class="dc-key">GMV 2029</span><span class="dc-val hi">${fmt(gmvs[3])}</span></div>
+      <div class="dc-row"><span class="dc-key">Rev 2026</span><span class="dc-val">${fmt(revs[0])}</span></div>
+      <div class="dc-row"><span class="dc-key">Rev 2029</span><span class="dc-val hi">${fmt(revs[3])}</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-title mix">📱 Trip Mix</div>
+      <div class="dc-row"><span class="dc-key">Street Hail</span><span class="dc-val">${(mix.street*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">WebHail</span><span class="dc-val">${(mix.web*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">eHail</span><span class="dc-val">${(mix.ehail*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">Uber</span><span class="dc-val">${(mix.uber*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">Rev if all eHail</span><span class="dc-val hi">$${(fare*r.ehail).toFixed(2)}/trip</span></div>
+      <div class="dc-row"><span class="dc-key">Rev if all Uber</span><span class="dc-val">$${(detailUberFare*r.uber).toFixed(2)}/trip</span></div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-title drv">🚕 Market</div>
+      <div class="dc-row"><span class="dc-key">Status</span><span class="dc-val">${m.status}</span></div>
+      <div class="dc-row"><span class="dc-key">Type</span><span class="dc-val">${m.type}</span></div>
+      <div class="dc-row"><span class="dc-key">Fare zone</span><span class="dc-val">${m.fz}</span></div>
+      <div class="dc-row"><span class="dc-key">Scenario</span><span class="dc-val">${SCEN[scenario].label}</span></div>
+      ${m.fc && m.fc.dailyOffers ? `
+      <div class="dc-row"><span class="dc-key">FC Daily Offers</span><span class="dc-val">${m.fc.dailyOffers.toLocaleString()}</span></div>
+      <div class="dc-row"><span class="dc-key">FC Current AR</span><span class="dc-val">${(m.fc.ar*100).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">FC Proj AR (${SCEN[scenario].label})</span><span class="dc-val hi">${Math.min(m.fc.ar*SCEN[scenario].fcArMult*100,85).toFixed(0)}%</span></div>
+      <div class="dc-row"><span class="dc-key">FC Rate tier</span><span class="dc-val hi">${Math.min(m.fc.ar*SCEN[scenario].fcArMult,0.85)>=0.30 ? '4.0% 🔓 Bonus' : '2.5% baseline'}</span></div>
+      ` : ''}
+      <div class="dc-row"><span class="dc-key">Utilization shift</span><span class="dc-val">${(SCEN.cons.util*100).toFixed(0)}% → ${(SCEN.aggr.util*100).toFixed(0)}%</span></div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════
+function toggleDetail(i){
+  const row=document.getElementById('row-'+i), det=document.getElementById('det-'+i);
+  row.classList.toggle('expanded'); det.classList.toggle('open');
+}
+function toggleReg(id){ document.getElementById('reg-'+id).classList.toggle('collapsed'); }
+function toggleSub(id){ document.getElementById('sub-'+id).classList.toggle('collapsed'); }
+function setScenario(s){
+  scenario=s;
+  document.querySelectorAll('.scen-btn').forEach(b=>{
+    b.classList.toggle('active', b.classList.contains(s));
+  });
+  render();
+}
+function toggleRates(){
+  const b=document.getElementById('ratesBody');
+  b.classList.toggle('open');
+  document.getElementById('ratesToggleLabel').textContent = b.classList.contains('open') ? 'Hide Rate Configuration' : 'Global Rate Configuration';
+}
+function toggleMode(){
+  isLight=!isLight;
+  document.body.classList.toggle('light',isLight);
+  document.querySelectorAll('.ui-btn')[1].textContent=isLight?'🌙 Dark':'☀️ Light';
+}
+function recalc(){ render(); }
+
+// Logo
+(function(){
+  document.getElementById('logo').src='data:image/png;base64,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';
+})();
+
+render();
+</script>
+</body>
+</html>
