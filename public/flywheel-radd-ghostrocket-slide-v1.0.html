@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel × Uber × RADD × Ghost Rocket</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface2: #1E1E1E;
+    --border: rgba(255,255,255,0.08);
+    --fw-red: #E8002D;
+    --uber-black: #000000;
+    --radd-blue: #1B4FD8;
+    --ghost-purple: #7B2FBE;
+    --gold: #C9A052;
+    --text: #F0EDE8;
+    --muted: #A0A098;
+    --white: #FFFFFF;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SLIDE WRAPPER ── */
+  .slide {
+    width: 1280px;
+    min-height: 720px;
+    margin: 0 auto;
+    padding: 52px 64px 44px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Background texture */
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(232,0,45,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(123,47,190,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    position: relative;
+  }
+
+  .brands {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: 1px solid;
+  }
+
+  .brand-pill.flywheel {
+    background: rgba(232,0,45,0.1);
+    border-color: rgba(232,0,45,0.3);
+    color: #FF2D55;
+  }
+  .brand-pill.uber {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.15);
+    color: #FFFFFF;
+  }
+  .brand-pill.radd {
+    background: rgba(27,79,216,0.1);
+    border-color: rgba(27,79,216,0.3);
+    color: #5B8EFF;
+  }
+  .brand-pill.ghost {
+    background: rgba(123,47,190,0.1);
+    border-color: rgba(123,47,190,0.3);
+    color: #B57FFF;
+  }
+
+  .divider-x {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    opacity: 0.5;
+  }
+
+  .badge-safe {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold);
+    background: rgba(201,160,82,0.1);
+    border: 1px solid rgba(201,160,82,0.25);
+    padding: 6px 14px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .hero-left {}
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fw-red);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.06;
+    color: var(--white);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--fw-red);
+  }
+
+  .subtitle {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 36px;
+  }
+
+  /* Partnership diagram */
+  .partnership-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .partner-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .partner-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .partner-card.fw::before { background: var(--fw-red); }
+  .partner-card.uber::before { background: #FFFFFF; }
+  .partner-card.radd::before { background: #1B4FD8; }
+  .partner-card.ghost::before { background: #7B2FBE; }
+
+  .partner-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .partner-card.fw .partner-name { color: #FF2D55; }
+  .partner-card.uber .partner-name { color: #FFFFFF; }
+  .partner-card.radd .partner-name { color: #5B8EFF; }
+  .partner-card.ghost .partner-name { color: #B57FFF; }
+
+  .partner-role {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .partner-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* RIGHT COLUMN */
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Tour card */
+  .tour-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .tour-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .tour-stops {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tour-stop {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tour-stop:last-child { border-bottom: none; }
+
+  .stop-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fw-red);
+    white-space: nowrap;
+  }
+
+  .stop-city {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .stop-venue {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .stop-cap {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num span { color: var(--fw-red); }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── BOTTOM BAR ── */
+  .bottom-bar {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .value-prop {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .value-prop strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .cta-block {
+    text-align: right;
+  }
+  .cta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .cta-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--fw-red);
+  }
+
+  /* ── PRINT / FULL BLEED ── */
+  @media print {
+    body { background: #0A0A0A !important; }
+    .slide { page-break-inside: avoid; }
+  }
+
+  /* Center on screen for preview */
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .slide {
+    box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+    border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brands">
+      <div class="brand-pill flywheel">⚡ Flywheel</div>
+      <span class="divider-x">×</span>
+      <div class="brand-pill uber">Uber</div>
+      <span class="divider-x">×</span>
+      <div class="brand-pill radd">RADD</div>
+      <span class="divider-x">×</span>
+      <div class="brand-pill ghost">Ghost Rocket</div>
+    </div>
+    <div class="badge-safe">🛡 Getting Fans Home Safely</div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="eyebrow">Partnership Proposal · Summer – Fall 2026</div>
+      <h1>The Safe Ride<br>Is <em>Professional</em>.</h1>
+      <p class="subtitle">
+        RADD uses music to champion safe-ride culture. Ghost Rocket brings the independent artists.
+        Uber provides the platform. <strong style="color:#F0EDE8;">Flywheel delivers the licensed, professional drivers</strong> that make the promise real — at every venue, every city, every night.
+      </p>
+
+      <!-- 4-way partnership grid -->
+      <div class="partnership-grid">
+
+        <div class="partner-card fw">
+          <span class="partner-icon">⚡</span>
+          <div class="partner-name">Flywheel</div>
+          <div class="partner-role">Licensed professional driver network. The safe ride, delivered by credentialed operators.</div>
+        </div>
+
+        <div class="partner-card uber">
+          <span class="partner-icon">🚗</span>
+          <div class="partner-name">Uber</div>
+          <div class="partner-role">Consumer platform & app reach. Scale, convenience, and brand recognition.</div>
+        </div>
+
+        <div class="partner-card radd">
+          <span class="partner-icon">🎗</span>
+          <div class="partner-name">RADD</div>
+          <div class="partner-role">The mission. Safe-ride advocacy through music, artists, and live events.</div>
+        </div>
+
+        <div class="partner-card ghost">
+          <span class="partner-icon">🚀</span>
+          <div class="partner-name">Ghost Rocket</div>
+          <div class="partner-role">Independent artist development. 5-city showcase. The stage and the story.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-right">
+
+      <!-- Tour stops -->
+      <div class="tour-card">
+        <div class="tour-label">2026 Tour · 5 Events · 4 Cities · 2 Countries</div>
+        <div class="tour-stops">
+          <div class="tour-stop">
+            <div class="stop-date">JUL 30</div>
+            <div>
+              <div class="stop-city">Los Angeles, CA</div>
+              <div class="stop-venue">Avalon Hollywood · HIMA Awards + Afterparty</div>
+            </div>
+            <div class="stop-cap">700 cap</div>
+          </div>
+          <div class="tour-stop">
+            <div class="stop-date">AUG 12</div>
+            <div>
+              <div class="stop-city">Nashville, TN</div>
+              <div class="stop-venue">The Basement · Industry Showcase</div>
+            </div>
+            <div class="stop-cap">200 cap</div>
+          </div>
+          <div class="tour-stop">
+            <div class="stop-date">AUG 19</div>
+            <div>
+              <div class="stop-city">New York, NY</div>
+              <div class="stop-venue">DROM · Industry Showcase</div>
+            </div>
+            <div class="stop-cap">400 cap</div>
+          </div>
+          <div class="tour-stop">
+            <div class="stop-date">AUG 26</div>
+            <div>
+              <div class="stop-city">Toronto, ON</div>
+              <div class="stop-venue">The Rivoli · Industry Showcase</div>
+            </div>
+            <div class="stop-cap">250 cap</div>
+          </div>
+          <div class="tour-stop">
+            <div class="stop-date">SEPT</div>
+            <div>
+              <div class="stop-city">Nashville, TN</div>
+              <div class="stop-venue">Nashville Film Festival · Ghost Rocket Party</div>
+            </div>
+            <div class="stop-cap">TBD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num">50<span>M+</span></div>
+          <div class="stat-label">Total<br>Impressions</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">200<span>K</span></div>
+          <div class="stat-label">Unique<br>Audience</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">1<span>M+</span></div>
+          <div class="stat-label">Partner<br>Email Reach</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Live<br>Events</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="value-prop">
+      Flywheel is <strong>Uber's #1 professional taxi technology partner</strong> — operating licensed fleets across the US and Mexico. Together, Flywheel + Uber provide the complete safe-ride solution: <strong>the platform and the professionals</strong>.
+    </div>
+    <div class="cta-block">
+      <div class="cta-label">Exclusive Ride-Share Category</div>
+      <div class="cta-value">Flywheel + Uber · All 5 Events</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
