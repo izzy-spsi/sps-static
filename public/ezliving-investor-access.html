@@ -861,21 +861,11 @@ function submitSignature() {
   };
 
   // POST to Formspree endpoint (set EZLIVING_FORMSPREE_ID env or replace below)
-  const formspreeId = 'YOUR_FORMSPREE_ID'; // replace with actual Formspree endpoint
-  const endpoint = formspreeId !== 'YOUR_FORMSPREE_ID'
-    ? `https://formspree.io/f/${formspreeId}`
-    : null;
-
-  const send = endpoint
-    ? fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          _subject: `🔑 EZLiving Access Request — ${payload.name} [${payload.ref}]`,
-          ...payload
-        })
-      }).catch(() => null)
-    : Promise.resolve(null);
+  const send = fetch('https://flywheel-ops-production.up.railway.app/api/ezliving-access', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => null);
 
   send.finally(() => {
     // Show confirmation
