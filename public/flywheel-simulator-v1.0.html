@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flywheel Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#070E1B;--surf:#0D1829;--card:#111E30;--row:#0F1A2C;--bdr:rgba(255,255,255,0.07);--bdr-r:rgba(204,26,26,0.3);--red:#CC1A1A;--red-dim:rgba(204,26,26,0.1);--blue:#3B82F6;--green:#22C55E;--amber:#F59E0B;--purple:#A855F7;--teal:#14B8A6;--txt:#EDE9E3;--mut:#5A7A92;--dim:#1E3347}
+.light{--bg:#EDEAE5;--surf:#FFF;--card:#F8F5F1;--row:#FFF;--bdr:rgba(0,0,0,0.08);--bdr-r:rgba(180,16,28,0.2);--red:#B41018;--red-dim:rgba(180,16,28,0.08);--txt:#111118;--mut:#5A6070;--dim:#E0DCD8}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.topbar{height:54px;background:var(--surf);border-bottom:2px solid var(--red);display:flex;align-items:center;gap:14px;padding:0 24px;flex-shrink:0;z-index:100}
+.topbar img{height:24px}
+.topbar-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.tabs{display:flex;gap:2px;margin-left:20px}
+.tab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--mut);cursor:pointer;transition:all .15s}
+.tab.active{background:var(--red-dim);border-color:var(--bdr-r);color:var(--red);font-weight:500}
+.spacer{flex:1}
+.ui-btn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--mut);cursor:pointer}
+.ui-btn:hover{border-color:var(--red);color:var(--txt)}
+
+/* PAGE WRAPPER */
+.page{flex:1;overflow:hidden;display:none}
+.page.active{display:flex}
+
+/* ══ TAB 1: MARKET SIMULATOR ══ */
+#page-market{flex-direction:row}
+.sidebar{width:290px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--bdr);overflow-y:auto;padding:16px}
+.sb-section{margin-bottom:20px}
+.sb-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:10px;display:block}
+.sb-select{width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--txt);border-radius:6px;padding:8px 10px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;outline:none}
+.sb-select:focus{border-color:var(--red)}
+.sb-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:11px}
+.sb-row:last-child{border-bottom:none}
+.sb-key{color:var(--mut)}
+.sb-val{font-family:'JetBrains Mono',monospace;font-size:11px}
+.sb-val.hi{color:var(--green);font-weight:500}
+.range-wrap{margin:6px 0}
+.range-label{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-bottom:3px}
+.range-val{font-family:'JetBrains Mono',monospace;color:var(--txt)}
+input[type=range]{width:100%;accent-color:var(--red);cursor:pointer}
+input[type=number]{background:var(--card);border:1px solid var(--bdr);color:var(--txt);border-radius:4px;padding:4px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;width:70px;text-align:right;outline:none}
+input[type=number]:focus{border-color:var(--red)}
+input[type=number].full{width:100%}
+.radio-group{display:flex;gap:8px;margin-top:4px}
+.radio-item{display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer}
+.radio-item input{accent-color:var(--red)}
+.mix-total{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;margin-top:6px}
+.mix-ok{background:rgba(34,197,94,.15);color:var(--green)}
+.mix-err{background:rgba(204,26,26,.15);color:var(--red)}
+.tier-badge{display:inline-block;padding:3px 9px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;margin-top:6px}
+.tier-base{background:rgba(90,122,146,.15);color:var(--mut);border:1px solid var(--bdr)}
+.tier-bonus{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+#fc-section{display:none}
+
+/* RIGHT OUTPUT */
+.output{flex:1;overflow-y:auto;padding:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:12px 14px}
+.kpi-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--mut)}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin:4px 0;color:var(--txt)}
+.kpi-val.red{color:var(--red)} .kpi-val.green{color:var(--green)} .kpi-val.blue{color:var(--blue)}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px}
+th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:6px 10px;text-align:right;border-bottom:1px solid var(--bdr)}
+th:first-child{text-align:left}
+td{padding:7px 10px;border-bottom:1px solid var(--bdr);text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px}
+td:first-child{text-align:left;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--txt)}
+tr:last-child td{border-bottom:none;font-weight:700;color:var(--green)}
+tr:hover td{background:var(--row)}
+.annual-bar{display:flex;gap:12px;margin-bottom:16px}
+.annual-card{flex:1;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px 14px;text-align:center}
+.annual-num{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--txt)}
+.annual-lbl{font-size:10px;color:var(--mut);margin-top:3px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-box{background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:12px 14px}
+.chart-box-title{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+
+/* ══ TAB 2: NETWORK VIEW ══ */
+#page-network{flex-direction:column;overflow-y:auto;padding:20px}
+.scen-group{display:flex;gap:4px;margin-bottom:16px}
+.scen-btn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:5px;border:1px solid var(--bdr);background:transparent;color:var(--mut);cursor:pointer;transition:all .15s}
+.scen-btn.cons.active{background:#1E3A2F;color:var(--green);border-color:rgba(34,197,94,.3)}
+.scen-btn.base.active{background:#1A2A4A;color:var(--blue);border-color:rgba(59,130,246,.3)}
+.scen-btn.aggr.active{background:#2A1A1A;color:var(--red);border-color:var(--bdr-r)}
+.net-kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+.net-kpi .kpi .kpi-val{font-size:16px}
+.market-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.market-tbl th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);padding:6px 10px;border-bottom:1px solid var(--bdr);text-align:right}
+.market-tbl th:nth-child(2){text-align:left}
+.market-tbl td{padding:7px 10px;border-bottom:1px solid var(--bdr);text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer}
+.market-tbl td:nth-child(2){text-align:left;font-family:'DM Sans',sans-serif;font-weight:500}
+.market-tbl tr:hover td{background:var(--row)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%}
+.dot-a{background:var(--green);box-shadow:0 0 5px var(--green)}
+.dot-p{background:var(--amber)}
+.dot-f{background:var(--dim);border:1px solid var(--bdr)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <img id="logo" src="data:image/png;base64,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" alt="Flywheel">
+  <div class="topbar-title">Simulator</div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('market')">📍 Market Simulator</button>
+    <button class="tab" onclick="switchTab('network')">🌐 Network View</button>
+  </div>
+  <div class="spacer"></div>
+  <button class="ui-btn" onclick="toggleMode()">☀️ Light</button>
+</div>
+
+<!-- ══ TAB 1: MARKET SIMULATOR ══ -->
+<div id="page-market" class="page active">
+  <div class="sidebar">
+
+    <!-- Market Select -->
+    <div class="sb-section">
+      <span class="sb-label">Select Market</span>
+      <select class="sb-select" id="mktSelect" onchange="loadMarket()">
+        <optgroup label="🇺🇸 US — West Coast">
+          <option value="sf">🟢 San Francisco</option>
+          <option value="lv">🟢 Las Vegas</option>
+          <option value="sd">🟢 San Diego</option>
+          <option value="sac">🟢 Sacramento</option>
+          <option value="rno">🟢 Reno</option>
+          <option value="ps">🟢 Palm Springs</option>
+          <option value="la">🟡 Los Angeles</option>
+        </optgroup>
+        <optgroup label="🇺🇸 US — Southern Belt">
+          <option value="hou">🟢 Houston</option>
+          <option value="mia">🟢 Miami</option>
+          <option value="fll">🟢 Fort Lauderdale</option>
+          <option value="dal">🟡 Dallas</option>
+          <option value="atl">🟡 Atlanta</option>
+          <option value="phx">🟡 Phoenix</option>
+        </optgroup>
+        <optgroup label="🇺🇸 US — East Coast">
+          <option value="bal">🟢 Baltimore</option>
+          <option value="nyc">🟡 New York City</option>
+          <option value="dc">🟡 Washington D.C.</option>
+          <option value="phi">🟡 Philadelphia</option>
+          <option value="bos">🟡 Boston</option>
+          <option value="nj">🟡 New Jersey</option>
+        </optgroup>
+        <optgroup label="🇺🇸 US — Midwest">
+          <option value="chi">⚫ Chicago</option>
+          <option value="msp">⚫ Minneapolis</option>
+          <option value="det">⚫ Detroit</option>
+        </optgroup>
+        <optgroup label="🇲🇽 Mexico — Quintana Roo">
+          <option value="cun">🟡 Cancún</option>
+          <option value="tul">🟡 Tulum</option>
+          <option value="pdm">🟡 Playa del Carmen</option>
+        </optgroup>
+        <optgroup label="🇲🇽 Mexico — Yucatán">
+          <option value="mer">🟡 Mérida</option>
+        </optgroup>
+        <optgroup label="🇲🇽 Mexico — CDMX + Puebla">
+          <option value="cdmx">⚫ Mexico City</option>
+          <option value="pue">⚫ Puebla</option>
+        </optgroup>
+        <optgroup label="🌎 Latin America">
+          <option value="lim">⚫ Lima, Peru</option>
+          <option value="bog">⚫ Bogotá, Colombia</option>
+          <option value="bue">⚫ Buenos Aires</option>
+          <option value="slv">⚫ El Salvador</option>
+        </optgroup>
+      </select>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap" id="mkt-meta"></div>
+    </div>
+
+    <!-- Volume -->
+    <div class="sb-section">
+      <span class="sb-label">Volume</span>
+      <div class="range-wrap">
+        <div class="range-label"><span>Vehicles</span></div>
+        <input type="number" class="full" id="inVeh" value="500" min="1" oninput="calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Shifts/vehicle</span><span class="range-val" id="svShifts">1.1</span></div>
+        <input type="range" id="inShifts" min="1.0" max="2.0" step="0.1" value="1.1" oninput="syncSlider('inShifts','svShifts','x');calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Utilization</span><span class="range-val" id="svUtil">65%</span></div>
+        <input type="range" id="inUtil" min="45" max="80" step="1" value="65" oninput="syncSlider('inUtil','svUtil','%');calc()">
+        <div style="font-size:9px;color:var(--mut);margin-top:2px">45% = No Uber &nbsp;·&nbsp; 80% = With Uber</div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="range-label" style="margin-bottom:4px"><span>Market type</span></div>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="mtype" value="urban" checked onchange="calc()"> Local/Urban (6/hr)</label>
+          <label class="radio-item"><input type="radio" name="mtype" value="hotel" onchange="calc()"> Hotel (2/hr)</label>
+        </div>
+      </div>
+      <div style="margin-top:10px;background:var(--row);border-radius:6px;padding:8px 10px">
+        <div class="sb-row"><span class="sb-key">Active Drivers</span><span class="sb-val hi" id="outDrivers">—</span></div>
+        <div class="sb-row"><span class="sb-key">Trips/driver/shift</span><span class="sb-val" id="outTripsShift">—</span></div>
+      </div>
+    </div>
+
+    <!-- Trip Mix -->
+    <div class="sb-section">
+      <span class="sb-label">Trip Mix</span>
+      <div class="range-wrap">
+        <div class="range-label"><span>Street Hail</span><span class="range-val" id="svStreet">30%</span></div>
+        <input type="range" id="mxStreet" min="0" max="100" value="30" oninput="syncSlider('mxStreet','svStreet','%');calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>WebHail</span><span class="range-val" id="svWeb">10%</span></div>
+        <input type="range" id="mxWeb" min="0" max="100" value="10" oninput="syncSlider('mxWeb','svWeb','%');calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>eHail</span><span class="range-val" id="svEhail">10%</span></div>
+        <input type="range" id="mxEhail" min="0" max="100" value="10" oninput="syncSlider('mxEhail','svEhail','%');calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Uber</span><span class="range-val" id="svUber">50%</span></div>
+        <input type="range" id="mxUber" min="0" max="100" value="50" oninput="syncSlider('mxUber','svUber','%');calc()">
+      </div>
+      <span class="mix-total mix-ok" id="mixTotal">100% ✅</span>
+    </div>
+
+    <!-- Rates -->
+    <div class="sb-section">
+      <span class="sb-label">Revenue Rates</span>
+      <div class="sb-row"><span class="sb-key">CC gross</span><input type="number" id="rCCGross" value="4.5" step="0.1" oninput="calc()"><span style="font-size:10px;color:var(--mut)">%</span></div>
+      <div class="sb-row"><span class="sb-key">CC processing</span><input type="number" id="rCCCost" value="2.4" step="0.1" oninput="calc()"><span style="font-size:10px;color:var(--mut)">%</span></div>
+      <div class="sb-row"><span class="sb-key">CC net</span><span class="sb-val" id="rCCNet" style="color:var(--green)">2.1%</span></div>
+      <div class="sb-row"><span class="sb-key">eHail rate</span><input type="number" id="rEhail" value="19.1" step="0.1" oninput="calc()"><span style="font-size:10px;color:var(--mut)">%</span></div>
+      <div class="sb-row"><span class="sb-key">Uber rate</span><input type="number" id="rUber" value="2.5" step="0.1" oninput="calc()"><span style="font-size:10px;color:var(--mut)">%</span></div>
+      <div class="sb-row"><span class="sb-key">Avg fare</span>$<input type="number" id="rFare" value="25" step="1" oninput="calc()"></div>
+      <div style="font-size:9px;color:var(--mut);margin-top:4px">→ 4.0% if FC AR ≥ 30%</div>
+    </div>
+
+    <!-- Flywheel Connect -->
+    <div class="sb-section" id="fc-section">
+      <span class="sb-label">Flywheel Connect</span>
+      <div class="range-wrap">
+        <div class="range-label"><span>Daily Offers</span></div>
+        <input type="number" class="full" id="fcOffers" value="6667" oninput="calc()">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Acceptance Rate</span><span class="range-val" id="svAR">4%</span></div>
+        <input type="range" id="fcAR" min="0" max="80" step="1" value="4" oninput="syncSlider('fcAR','svAR','%');calc()">
+      </div>
+      <span class="tier-badge" id="tierBadge">2.5% baseline</span>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- OUTPUT -->
+  <div class="output">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Active Drivers</div><div class="kpi-val green" id="kDrivers">—</div></div>
+      <div class="kpi"><div class="kpi-label">Trips / Day</div><div class="kpi-val" id="kTrips">—</div></div>
+      <div class="kpi"><div class="kpi-label">GMV / Day</div><div class="kpi-val blue" id="kGMV">—</div></div>
+      <div class="kpi"><div class="kpi-label">Revenue / Day</div><div class="kpi-val red" id="kRev">—</div></div>
+    </div>
+
+    <div class="section-title">Revenue Breakdown</div>
+    <table id="revTable">
+      <thead><tr><th>Channel</th><th>Trips/Day</th><th>GMV/Day</th><th>Rev/Day</th><th>Rev/Year</th></tr></thead>
+      <tbody id="revBody"></tbody>
+    </table>
+
+    <div class="annual-bar">
+      <div class="annual-card"><div class="annual-num" id="annGMV">—</div><div class="annual-lbl">GMV / Year</div></div>
+      <div class="annual-card"><div class="annual-num" id="annRev">—</div><div class="annual-lbl">Revenue / Year</div></div>
+      <div class="annual-card"><div class="annual-num" id="annPerVeh">—</div><div class="annual-lbl">Rev / Vehicle / Year</div></div>
+      <div class="annual-card"><div class="annual-num" id="annPerDrv">—</div><div class="annual-lbl">Rev / Driver / Day</div></div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <div class="chart-box-title">Monthly Revenue Ramp</div>
+        <canvas id="rampChart" height="160"></canvas>
+      </div>
+      <div class="chart-box">
+        <div class="chart-box-title">Revenue by Channel</div>
+        <canvas id="donutChart" height="160"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB 2: NETWORK VIEW ══ -->
+<div id="page-network" class="page">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700">Network View — All 32 Markets</div>
+    <div class="scen-group">
+      <button class="scen-btn cons" onclick="setScen('cons')">Conservative</button>
+      <button class="scen-btn base active" onclick="setScen('base')">Base</button>
+      <button class="scen-btn aggr" onclick="setScen('aggr')">Aggressive</button>
+    </div>
+  </div>
+
+  <div class="net-kpi" id="netKpi"></div>
+
+  <div style="background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:14px;margin-bottom:16px">
+    <div class="section-title">Revenue & GMV 2026–2029</div>
+    <canvas id="netChart" height="200"></canvas>
+  </div>
+
+  <div style="background:var(--card);border:1px solid var(--bdr);border-radius:8px;overflow:hidden">
+    <table class="market-tbl" id="netTable">
+      <thead><tr>
+        <th style="text-align:center">St</th>
+        <th style="text-align:left">Market</th>
+        <th>Type</th>
+        <th>Vehicles</th>
+        <th>Drivers/Day</th>
+        <th>2026 Rev</th>
+        <th>2029 Rev</th>
+      </tr></thead>
+      <tbody id="netBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ══ DATA ══
+const MARKETS = [
+  {id:'sf',  name:'San Francisco',    sub:'West Coast',    status:'active',   type:'urban', fz:'US',  veh:500,  ar:.85, shifts:1.1, fc:null},
+  {id:'lv',  name:'Las Vegas',        sub:'West Coast',    status:'active',   type:'urban', fz:'US',  veh:2900, ar:.82, shifts:1.1, fc:{offers:6667,ar:.04}},
+  {id:'sd',  name:'San Diego',        sub:'West Coast',    status:'active',   type:'urban', fz:'US',  veh:350,  ar:.70, shifts:1.1, fc:null},
+  {id:'sac', name:'Sacramento',       sub:'West Coast',    status:'active',   type:'sub',   fz:'USS', veh:120,  ar:.61, shifts:1.1, fc:null},
+  {id:'rno', name:'Reno',             sub:'West Coast',    status:'active',   type:'sub',   fz:'USS', veh:40,   ar:.65, shifts:1.1, fc:null},
+  {id:'ps',  name:'Palm Springs',     sub:'West Coast',    status:'active',   type:'sub',   fz:'USS', veh:80,   ar:.60, shifts:1.1, fc:null},
+  {id:'la',  name:'Los Angeles',      sub:'West Coast',    status:'pipeline', type:'urban', fz:'US',  veh:1000, ar:0,   shifts:1.1, fc:null},
+  {id:'hou', name:'Houston',          sub:'Southern Belt', status:'active',   type:'urban', fz:'US',  veh:450,  ar:.44, shifts:1.1, fc:null},
+  {id:'mia', name:'Miami',            sub:'Southern Belt', status:'active',   type:'urban', fz:'US',  veh:457,  ar:.11, shifts:1.1, fc:null},
+  {id:'fll', name:'Fort Lauderdale',  sub:'Southern Belt', status:'active',   type:'urban', fz:'US',  veh:200,  ar:.60, shifts:1.1, fc:null},
+  {id:'dal', name:'Dallas',           sub:'Southern Belt', status:'pipeline', type:'urban', fz:'US',  veh:500,  ar:0,   shifts:1.1, fc:null},
+  {id:'atl', name:'Atlanta',          sub:'Southern Belt', status:'pipeline', type:'urban', fz:'US',  veh:400,  ar:0,   shifts:1.1, fc:null},
+  {id:'phx', name:'Phoenix',          sub:'Southern Belt', status:'pipeline', type:'sub',   fz:'USS', veh:300,  ar:0,   shifts:1.1, fc:null},
+  {id:'bal', name:'Baltimore',        sub:'East Coast',    status:'active',   type:'urban', fz:'US',  veh:103,  ar:.13, shifts:1.1, fc:null},
+  {id:'nyc', name:'New York City',    sub:'East Coast',    status:'pipeline', type:'urban', fz:'US',  veh:2000, ar:0,   shifts:1.1, fc:null},
+  {id:'dc',  name:'Washington D.C.',  sub:'East Coast',    status:'pipeline', type:'urban', fz:'US',  veh:800,  ar:0,   shifts:1.1, fc:null},
+  {id:'phi', name:'Philadelphia',     sub:'East Coast',    status:'pipeline', type:'urban', fz:'US',  veh:400,  ar:0,   shifts:1.1, fc:null},
+  {id:'bos', name:'Boston',           sub:'East Coast',    status:'pipeline', type:'urban', fz:'US',  veh:350,  ar:0,   shifts:1.1, fc:null},
+  {id:'nj',  name:'New Jersey',       sub:'East Coast',    status:'pipeline', type:'sub',   fz:'USS', veh:500,  ar:0,   shifts:1.1, fc:null},
+  {id:'chi', name:'Chicago',          sub:'Midwest',       status:'future',   type:'urban', fz:'US',  veh:1500, ar:0,   shifts:1.1, fc:null},
+  {id:'msp', name:'Minneapolis',      sub:'Midwest',       status:'future',   type:'sub',   fz:'USS', veh:300,  ar:0,   shifts:1.1, fc:null},
+  {id:'det', name:'Detroit',          sub:'Midwest',       status:'future',   type:'sub',   fz:'USS', veh:250,  ar:0,   shifts:1.1, fc:null},
+  {id:'cun', name:'Cancún',           sub:'Quintana Roo',  status:'pipeline', type:'hotel', fz:'MXH', veh:325,  ar:0,   shifts:1.3, fc:{offers:0,ar:0}},
+  {id:'tul', name:'Tulum',            sub:'Quintana Roo',  status:'pipeline', type:'hotel', fz:'MXH', veh:300,  ar:0,   shifts:1.3, fc:null},
+  {id:'pdm', name:'Playa del Carmen', sub:'Quintana Roo',  status:'pipeline', type:'hotel', fz:'MXH', veh:300,  ar:0,   shifts:1.3, fc:null},
+  {id:'mer', name:'Mérida',           sub:'Yucatán',       status:'pipeline', type:'local', fz:'MXL', veh:500,  ar:0,   shifts:1.3, fc:null},
+  {id:'cdmx',name:'Mexico City',      sub:'CDMX+Puebla',   status:'future',   type:'local', fz:'MXL', veh:5000, ar:0,   shifts:1.3, fc:null},
+  {id:'pue', name:'Puebla',           sub:'CDMX+Puebla',   status:'future',   type:'local', fz:'MXL', veh:800,  ar:0,   shifts:1.3, fc:null},
+  {id:'lim', name:'Lima, Peru',       sub:'South America', status:'future',   type:'local', fz:'LA',  veh:2000, ar:0,   shifts:1.3, fc:null},
+  {id:'bog', name:'Bogotá, Colombia', sub:'South America', status:'future',   type:'local', fz:'LA',  veh:1500, ar:0,   shifts:1.3, fc:null},
+  {id:'bue', name:'Buenos Aires',     sub:'South America', status:'future',   type:'local', fz:'LA',  veh:1000, ar:0,   shifts:1.3, fc:null},
+  {id:'slv', name:'El Salvador',      sub:'Central America',status:'future',  type:'local', fz:'LA',  veh:500,  ar:0,   shifts:1.3, fc:null},
+];
+const FARES = {MXH:50,MXL:8,US:25,USS:25,LA:10};
+const UBER_FARE = 12;
+const RAMP = {active:[1.0,1.5,2.2,3.0],pipeline:[0.1,0.5,1.2,2.0],future:[0.0,0.0,0.4,0.9]};
+const SCEN_CFG = {
+  cons:{util:.45,shifts_mx:1.1,shifts_us:1.0,fcArMult:1},
+  base:{util:.65,shifts_mx:1.3,shifts_us:1.1,fcArMult:3},
+  aggr:{util:.80,shifts_mx:1.6,shifts_us:1.2,fcArMult:5}
+};
+let scen = 'base';
+let rampChart, donutChart, netChart;
+let curMkt = MARKETS[0];
+
+// ══ HELPERS ══
+const $ = id => document.getElementById(id);
+const fmtD = n => '$'+(n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':n.toFixed(0));
+const fmtN = n => n>=1e3?(n/1e3).toFixed(1)+'K':n.toString();
+
+function syncSlider(id,labelId,suffix){ $(labelId).textContent = $(id).value + suffix; }
+
+// ══ MARKET SIMULATOR ══
+function loadMarket(){
+  const id = $('mktSelect').value;
+  curMkt = MARKETS.find(m=>m.id===id);
+  const m = curMkt;
+  $('inVeh').value = m.veh;
+  $('inShifts').value = m.shifts; $('svShifts').textContent = m.shifts+'x';
+  // Set utilization based on status
+  const util = m.status==='active' ? Math.round(m.ar * 65) + 30 : 45;
+  const utilClamped = Math.min(80, Math.max(45, util));
+  $('inUtil').value = utilClamped; $('svUtil').textContent = utilClamped+'%';
+  // Market type
+  const t = m.type === 'hotel' ? 'hotel' : 'urban';
+  document.querySelectorAll('input[name=mtype]').forEach(r => r.checked = r.value === t);
+  // Fare
+  $('rFare').value = FARES[m.fz] || 25;
+  // FC
+  if(m.fc){
+    $('fc-section').style.display='block';
+    $('fcOffers').value = m.fc.offers || 0;
+    $('fcAR').value = Math.round(m.fc.ar*100); $('svAR').textContent = Math.round(m.fc.ar*100)+'%';
+  } else {
+    $('fc-section').style.display='none';
+  }
+  // Meta badges
+  const statusColor = m.status==='active'?'#22C55E':m.status==='pipeline'?'#F59E0B':'#5A7A92';
+  $('mkt-meta').innerHTML = `<span style="background:${statusColor}20;color:${statusColor};border:1px solid ${statusColor}40;border-radius:4px;padding:2px 8px;font-size:9px;font-family:JetBrains Mono">${m.status.toUpperCase()}</span><span style="background:var(--card);border:1px solid var(--bdr);border-radius:4px;padding:2px 8px;font-size:9px;font-family:JetBrains Mono">${m.type}</span><span style="background:var(--card);border:1px solid var(--bdr);border-radius:4px;padding:2px 8px;font-size:9px;font-family:JetBrains Mono">${m.fz}</span>`;
+  calc();
+}
+
+function calc(){
+  const veh = parseInt($('inVeh').value)||0;
+  const shifts = parseFloat($('inShifts').value)||1.1;
+  const util = parseInt($('inUtil').value)/100;
+  const mtype = document.querySelector('input[name=mtype]:checked')?.value||'urban';
+  const tph = mtype==='hotel'?2:6;
+  const tripsPerShift = tph * util * 8;
+  const drivers = Math.round(veh * shifts);
+  const tripsPerDay = drivers * tripsPerShift;
+
+  $('outDrivers').textContent = drivers.toLocaleString();
+  $('outTripsShift').textContent = tripsPerShift.toFixed(1);
+
+  // Trip mix
+  const sStreet = parseInt($('mxStreet').value)/100;
+  const sWeb    = parseInt($('mxWeb').value)/100;
+  const sEhail  = parseInt($('mxEhail').value)/100;
+  const sUber   = parseInt($('mxUber').value)/100;
+  const total   = Math.round((sStreet+sWeb+sEhail+sUber)*100);
+  const mixOk   = total===100;
+  $('mixTotal').textContent = total+'% '+(mixOk?'✅':'⚠️');
+  $('mixTotal').className = 'mix-total '+(mixOk?'mix-ok':'mix-err');
+
+  // Rates
+  const ccGross = parseFloat($('rCCGross').value)/100;
+  const ccCost  = parseFloat($('rCCCost').value)/100;
+  const ccNet   = ccGross - ccCost;
+  $('rCCNet').textContent = (ccNet*100).toFixed(2)+'%';
+  const ehailR  = parseFloat($('rEhail').value)/100;
+  const uberR   = parseFloat($('rUber').value)/100;
+  const fare    = parseFloat($('rFare').value)||25;
+
+  // Revenue per channel per trip
+  const revStreet = fare * 0.60 * ccNet;
+  const revWeb    = fare * 0.60 * ccNet;
+  const revEhail  = fare * ehailR;
+  const revUber   = UBER_FARE * uberR;
+
+  // Daily trips per channel
+  const tStreet = tripsPerDay * sStreet;
+  const tWeb    = tripsPerDay * sWeb;
+  const tEhail  = tripsPerDay * sEhail;
+  const tUber   = tripsPerDay * sUber;
+
+  // Daily revenue
+  const rStreetD = tStreet * revStreet;
+  const rWebD    = tWeb * revWeb;
+  const rEhailD  = tEhail * revEhail;
+  const rUberD   = tUber * revUber;
+
+  // FC
+  let rFCD=0, tFCD=0, gmvFCD=0;
+  if(curMkt.fc){
+    const fcAR = parseInt($('fcAR').value)/100;
+    const fcOffers = parseInt($('fcOffers').value)||0;
+    const fcRate = fcAR>=0.30 ? 0.04 : uberR;
+    tFCD = fcOffers * fcAR;
+    rFCD = tFCD * UBER_FARE * fcRate;
+    gmvFCD = tFCD * UBER_FARE;
+    const badge = $('tierBadge');
+    if(fcAR>=0.30){badge.textContent='🔓 4.0% Bonus';badge.className='tier-badge tier-bonus';}
+    else{badge.textContent='2.5% baseline';badge.className='tier-badge tier-base';}
+  }
+
+  // GMV
+  const gmvStreet = tStreet * fare;
+  const gmvWeb    = tWeb * fare;
+  const gmvEhail  = tEhail * fare;
+  const gmvUber   = tUber * UBER_FARE;
+
+  const totalTrips = tripsPerDay + tFCD;
+  const totalGMV   = gmvStreet + gmvWeb + gmvEhail + gmvUber + gmvFCD;
+  const totalRev   = rStreetD + rWebD + rEhailD + rUberD + rFCD;
+
+  // KPIs
+  $('kDrivers').textContent = drivers.toLocaleString();
+  $('kTrips').textContent   = Math.round(totalTrips).toLocaleString();
+  $('kGMV').textContent     = fmtD(totalGMV);
+  $('kRev').textContent     = fmtD(totalRev);
+
+  // Table
+  let rows = [
+    ['Street Hail', tStreet, gmvStreet, rStreetD],
+    ['WebHail',     tWeb,    gmvWeb,    rWebD],
+    ['eHail',       tEhail,  gmvEhail,  rEhailD],
+    ['Uber 3P',     tUber,   gmvUber,   rUberD],
+  ];
+  if(curMkt.fc) rows.push(['Flywheel Connect', tFCD, gmvFCD, rFCD]);
+  rows.push(['TOTAL', totalTrips, totalGMV, totalRev]);
+
+  $('revBody').innerHTML = rows.map((r,i)=>`<tr>
+    <td>${r[0]}</td>
+    <td>${Math.round(r[1]).toLocaleString()}</td>
+    <td>${fmtD(r[2])}</td>
+    <td>${fmtD(r[3])}</td>
+    <td>${fmtD(r[3]*365)}</td>
+  </tr>`).join('');
+
+  // Annual
+  $('annGMV').textContent    = fmtD(totalGMV*365);
+  $('annRev').textContent    = fmtD(totalRev*365);
+  $('annPerVeh').textContent = veh>0 ? fmtD(totalRev*365/veh) : '—';
+  $('annPerDrv').textContent = drivers>0 ? fmtD(totalRev/drivers) : '—';
+
+  // Charts
+  updateRampChart(totalRev);
+  updateDonutChart([rStreetD, rWebD, rEhailD, rUberD, rFCD]);
+}
+
+function updateRampChart(dailyRev){
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const ramp = Array.from({length:12},(_,i)=>dailyRev*30*(0.4+i*0.06));
+  if(rampChart){rampChart.data.datasets[0].data=ramp;rampChart.update();return;}
+  rampChart = new Chart($('rampChart'),{type:'line',data:{labels:months,datasets:[{
+    label:'Monthly Rev',data:ramp,borderColor:'#CC1A1A',backgroundColor:'rgba(204,26,26,0.1)',
+    fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#CC1A1A'
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' $'+Math.round(c.parsed.y).toLocaleString()}}},
+  scales:{x:{grid:{display:false},ticks:{color:'#5A7A92',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5A7A92',font:{size:9},callback:v=>fmtD(v)}}}}});
+}
+
+function updateDonutChart(vals){
+  const labels = ['Street Hail','WebHail','eHail','Uber 3P','FC'];
+  const colors = ['#3B82F6','#14B8A6','#A855F7','#CC1A1A','#F59E0B'];
+  const data = vals.map(v=>Math.max(0,v));
+  if(donutChart){donutChart.data.datasets[0].data=data;donutChart.update();return;}
+  donutChart = new Chart($('donutChart'),{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderColor:'transparent',borderWidth:0,hoverOffset:6}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#5A7A92',font:{size:9},boxWidth:10}}}}});
+}
+
+// ══ NETWORK VIEW ══
+function setScen(s){
+  scen=s;
+  document.querySelectorAll('.scen-btn').forEach(b=>b.classList.toggle('active',b.classList.contains(s)));
+  renderNetwork();
+}
+
+function marketRev(m, yearIdx){
+  const sc = SCEN_CFG[scen];
+  const ramp = RAMP[m.status][yearIdx];
+  const util = sc.util;
+  const shifts = (m.fz==='MXH'||m.fz==='MXL'||m.fz==='LA') ? sc.shifts_mx : sc.shifts_us;
+  const tph = m.type==='hotel'?2:6;
+  const tripsPerShift = tph * util * 8;
+  let act;
+  if(m.status==='active') act = Math.min(m.ar*(util/0.65)*ramp, 1.0);
+  else act = Math.min(ramp*(util/0.65), 1.0);
+  const drivers = Math.round(m.veh * act * shifts);
+  const fare = FARES[m.fz]||25;
+  const ccNet = 0.021, ehailR = 0.191, uberR = 0.025;
+  const tripsD = drivers * tripsPerShift;
+  const rev = tripsD * (0.30*fare*0.60*ccNet + 0.10*fare*0.60*ccNet + 0.10*fare*ehailR + 0.50*UBER_FARE*uberR);
+  let fcRev = 0;
+  if(m.fc && m.fc.offers){
+    const ar = Math.min(m.fc.ar * sc.fcArMult, 0.85);
+    fcRev = m.fc.offers * ar * UBER_FARE * (ar>=0.30?0.04:uberR) * ramp;
+  }
+  return rev + fcRev;
+}
+
+function marketDrivers(m){
+  const sc = SCEN_CFG[scen];
+  const shifts = (m.fz==='MXH'||m.fz==='MXL'||m.fz==='LA') ? sc.shifts_mx : sc.shifts_us;
+  let act;
+  if(m.status==='active') act = Math.min(m.ar*(sc.util/0.65), 1.0);
+  else act = Math.min(0.1*(sc.util/0.65), 0.8);
+  return Math.round(m.veh * act * shifts);
+}
+
+function renderNetwork(){
+  const rev26 = MARKETS.reduce((s,m)=>s+marketRev(m,0),0);
+  const rev29 = MARKETS.reduce((s,m)=>s+marketRev(m,3),0);
+  const totVeh = MARKETS.reduce((s,m)=>s+m.veh,0);
+  const totDrv = MARKETS.reduce((s,m)=>s+marketDrivers(m),0);
+  const blended = 0.44;
+
+  // KPI cards
+  $('netKpi').innerHTML = [
+    ['Total Vehicles',fmtN(totVeh),''],
+    ['Total Drivers/Day',fmtN(totDrv),'blue'],
+    ['Blended Rev/Trip','$0.44',''],
+    ['2026 GMV','$51M','blue'],
+    ['2026 Revenue',fmtD(rev26),'red'],
+    ['2029 Revenue',fmtD(rev29),'green'],
+  ].map(([l,v,c])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val ${c}">${v}</div></div>`).join('');
+
+  // Chart
+  if(netChart){netChart.destroy();}
+  netChart = new Chart($('netChart'),{type:'bar',data:{labels:['2026','2027','2028','2029'],datasets:[
+    {label:'GMV ($M)',data:[51,150,350,562],backgroundColor:'rgba(59,130,246,0.5)',borderColor:'#3B82F6',borderWidth:1,borderRadius:4,yAxisID:'gmv',order:2},
+    {label:'Revenue ($M)',data:[4.1,12,28,45],backgroundColor:'#CC1A1A',borderColor:'#e01c1c',borderWidth:1,borderRadius:4,yAxisID:'rev',order:1},
+    {label:'EBITDA ($M)',data:[1.1,4.2,14,25],type:'line',borderColor:'#22C55E',pointBackgroundColor:'#22C55E',borderWidth:2.5,tension:.4,yAxisID:'rev',order:0},
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},
+  plugins:{legend:{labels:{color:'#5A7A92',font:{size:10}}},tooltip:{backgroundColor:'#0D1829',borderColor:'rgba(204,26,26,0.4)',borderWidth:1,callbacks:{label:c=>' '+c.dataset.label+': $'+c.parsed.y+'M'}}},
+  scales:{gmv:{position:'right',grid:{display:false},ticks:{color:'#5A7A92',callback:v=>'$'+v+'M'}},rev:{position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5A7A92',callback:v=>'$'+v+'M'}},x:{grid:{display:false},ticks:{color:'#5A7A92'}}}}});
+
+  // Market table sorted by 2026 rev
+  const sorted = [...MARKETS].sort((a,b)=>marketRev(b,0)-marketRev(a,0));
+  const dotMap = {active:'dot-a',pipeline:'dot-p',future:'dot-f'};
+  $('netBody').innerHTML = sorted.map(m=>`<tr onclick="selectMkt('${m.id}')">
+    <td style="text-align:center"><span class="dot ${dotMap[m.status]}"></span></td>
+    <td>${m.name}</td>
+    <td>${m.type}</td>
+    <td>${m.veh.toLocaleString()}</td>
+    <td>${marketDrivers(m).toLocaleString()}</td>
+    <td>${fmtD(marketRev(m,0)*365)}</td>
+    <td>${fmtD(marketRev(m,3)*365)}</td>
+  </tr>`).join('');
+}
+
+function selectMkt(id){
+  $('mktSelect').value = id;
+  switchTab('market');
+  loadMarket();
+}
+
+// ══ NAVIGATION ══
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',(t==='market'&&i===0)||(t==='network'&&i===1)));
+  $('page-market').classList.toggle('active',t==='market');
+  $('page-network').classList.toggle('active',t==='network');
+  if(t==='network') renderNetwork();
+}
+
+let isLight = false;
+function toggleMode(){
+  isLight=!isLight;
+  document.body.classList.toggle('light',isLight);
+  document.querySelector('.topbar .ui-btn').textContent = isLight?'🌙 Dark':'☀️ Light';
+}
+
+// ══ INIT ══
+loadMarket();
+</script>
+</body>
+</html>
