@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel Technologies — Investor Deck v3.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+
+:root {
+  --red: #CC1A1A;
+  --bg: #0C0C0C;
+  --bg2: #161616;
+  --bg3: #1e1e1e;
+  --border: #2a2a2a;
+  --text: #f0f0f0;
+  --muted: #888;
+  --card: #1a1a1a;
+  --sidebar-w: 220px;
+  --accent: #CC1A1A;
+}
+.light-mode {
+  --bg: #f5f5f5;
+  --bg2: #ffffff;
+  --bg3: #efefef;
+  --border: #ddd;
+  --text: #111;
+  --muted: #666;
+  --card: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* === PASSWORD GATE === */
+#gate {
+  position: fixed; inset: 0; background: #0C0C0C;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; gap: 20px;
+}
+#gate img.gate-logo { height: 60px; margin-bottom: 10px; }
+#gate h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; color: #f0f0f0; }
+#gate p { color: #888; font-size: 0.9rem; }
+#gate-form { display: flex; gap: 10px; margin-top: 8px; }
+#gate-input {
+  padding: 10px 18px; border-radius: 6px; border: 1px solid #333;
+  background: #1a1a1a; color: #f0f0f0; font-size: 1rem; width: 220px;
+  outline: none;
+}
+#gate-input:focus { border-color: #CC1A1A; }
+#gate-btn {
+  padding: 10px 24px; background: #CC1A1A; color: #fff; border: none;
+  border-radius: 6px; font-size: 1rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+#gate-btn:hover { background: #e01c1c; }
+#gate-err { color: #CC1A1A; font-size: 0.85rem; display: none; }
+
+/* === LAYOUT === */
+#app { display: none; height: 100vh; }
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w);
+  background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; z-index: 100;
+  padding: 16px 0;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 8px 16px 16px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+}
+.sidebar-logo img { height: 32px; cursor: pointer; }
+.sidebar-item {
+  padding: 8px 16px; font-size: 0.78rem; cursor: pointer;
+  color: var(--muted); transition: all 0.15s;
+  line-height: 1.3; border-left: 3px solid transparent;
+}
+.sidebar-item:hover { color: var(--text); background: var(--bg3); }
+.sidebar-item.active {
+  color: var(--red); border-left-color: var(--red);
+  background: var(--bg3); font-weight: 500;
+}
+.sidebar-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  color: var(--muted); margin-right: 6px;
+}
+
+/* === MAIN CONTENT === */
+.main {
+  margin-left: var(--sidebar-w);
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.slides-container {
+  height: 100%;
+  position: relative;
+}
+.slide {
+  position: absolute; inset: 0;
+  padding: 48px 60px;
+  overflow-y: auto;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+  background: var(--bg);
+}
+.slide.active {
+  opacity: 1; pointer-events: auto;
+}
+
+/* === TOP BAR === */
+.topbar {
+  position: fixed; top: 16px; right: 16px;
+  display: flex; align-items: center; gap: 10px; z-index: 200;
+}
+.topbar button {
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 14px; border-radius: 6px;
+  font-size: 0.78rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.topbar button:hover { border-color: var(--red); color: var(--red); }
+
+/* === BOTTOM NAV === */
+.bottom-nav {
+  position: fixed; bottom: 20px; right: 20px;
+  display: flex; align-items: center; gap: 8px; z-index: 200;
+}
+.nav-btn {
+  width: 40px; height: 40px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text); font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.nav-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+.slide-counter {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  color: var(--muted); padding: 0 4px;
+}
+
+/* === SLIDE SLIDE NUMBERS === */
+.slide-num-bg {
+  position: fixed; bottom: 20px; left: calc(var(--sidebar-w) + 20px);
+  font-family: 'JetBrains Mono', monospace; font-size: 4rem;
+  color: var(--border); opacity: 0.5; pointer-events: none; z-index: 50;
+  font-weight: 700;
+}
+
+/* === TYPOGRAPHY === */
+h1 { font-family: 'Space Grotesk', sans-serif; font-size: 2.8rem; line-height: 1.1; }
+h2 { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 32px; }
+h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; margin-bottom: 12px; }
+.label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+}
+.red { color: var(--red); }
+.tbd { color: #CC1A1A; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+
+/* === CARDS === */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px 24px;
+}
+.card-grid {
+  display: grid; gap: 16px;
+}
+.card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* === DIVIDERS === */
+.divider { width: 48px; height: 3px; background: var(--red); margin-bottom: 24px; border-radius: 2px; }
+
+/* === STAT BLOCKS === */
+.stat-val {
+  font-family: 'Space Grotesk', sans-serif; font-size: 2rem; color: var(--red);
+}
+.stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+/* === TABLES === */
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+td {
+  padding: 10px 12px; border-bottom: 1px solid var(--border);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg3); }
+
+/* === SCREENSHOT FRAMES === */
+.ss-frame {
+  border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.ss-frame img { width: 100%; display: block; }
+
+/* === COVER SLIDE === */
+.cover-wrap {
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; min-height: 80vh; text-align: center; gap: 20px;
+}
+.cover-logo { height: 64px; margin-bottom: 8px; }
+.cover-headline { font-family: 'Space Grotesk', sans-serif; font-size: 3.2rem; line-height: 1.05; max-width: 800px; }
+.cover-sub { font-size: 1.1rem; color: var(--muted); max-width: 600px; line-height: 1.6; }
+.cover-raise {
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; color: var(--red);
+  background: rgba(204,26,26,0.1); border: 1px solid rgba(204,26,26,0.3);
+  padding: 10px 28px; border-radius: 8px;
+}
+.cover-meta {
+  display: flex; gap: 24px; margin-top: 8px;
+}
+.cover-meta-item {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  color: var(--muted); letter-spacing: 0.08em;
+}
+.red-line {
+  width: 100%; height: 3px; background: linear-gradient(90deg, var(--red) 0%, transparent 100%);
+  margin-bottom: 40px;
+}
+
+/* === PROBLEM LIST === */
+.problem-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.problem-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  color: var(--red); min-width: 24px; padding-top: 2px;
+}
+
+/* === SOLUTION TIER === */
+.tier-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px;
+  border-top: 3px solid var(--red);
+}
+.tier-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; margin-bottom: 8px; }
+
+/* === UBER TABLE HIGHLIGHT === */
+.highlight-row td { color: var(--red); font-weight: 500; }
+
+/* === CHART CONTAINER === */
+.chart-wrap { position: relative; height: 220px; }
+
+/* === TEAM CARD === */
+.team-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 24px; display: flex; gap: 16px; align-items: flex-start;
+}
+.team-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--red); display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-size: 1.4rem; color: #fff; flex-shrink: 0;
+}
+.team-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; }
+.team-title { color: var(--red); font-size: 0.8rem; margin: 4px 0 8px; }
+.team-bio { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+/* === USE OF PROCEEDS === */
+.proceed-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.proceed-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
+.proceed-bar { height: 100%; background: var(--red); border-radius: 3px; }
+.proceed-label { min-width: 200px; font-size: 0.85rem; }
+.proceed-pct { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--muted); min-width: 40px; text-align: right; }
+
+/* === CTA BLOCK === */
+.cta-block {
+  background: linear-gradient(135deg, rgba(204,26,26,0.12) 0%, transparent 60%);
+  border: 1px solid rgba(204,26,26,0.3); border-radius: 12px;
+  padding: 32px; text-align: center; margin-top: 32px;
+}
+.cta-block h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; }
+
+/* === PRINT === */
+@media print {
+  body { background: #fff !important; color: #111 !important; }
+  .sidebar, .topbar, .bottom-nav, .slide-num-bg { display: none !important; }
+  .main { margin-left: 0 !important; }
+  .slide { position: relative !important; opacity: 1 !important; pointer-events: auto !important; page-break-after: always; padding: 40px !important; }
+  #gate { display: none !important; }
+  #app { display: block !important; }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* responsive helpers */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.gap-8 { gap: 8px; }
+.gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+.gap-32 { gap: 32px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+
+
+/* v3 additions */
+.tl-wrap {
+  position: relative;
+  height: 260px;
+  margin: 28px 0 16px;
+}
+.tl-line {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--red) 5%, var(--red) 95%, transparent);
+  box-shadow: 0 0 12px rgba(204,26,26,0.6);
+  transform: translateY(-50%);
+}
+.tl-node {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tl-node.above { top: 0; align-items: flex-start; }
+.tl-node.below { bottom: 0; flex-direction: column-reverse; align-items: flex-start; }
+.tl-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--red);
+  border-radius: 6px;
+  padding: 7px 9px;
+  width: 116px;
+  font-size: 0.72rem;
+}
+.tl-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--red);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.tl-yr {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--red);
+}
+.tl-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 2px 0;
+}
+.tl-desc {
+  font-size: 0.65rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.tl-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(204,26,26,0.8);
+  flex-shrink: 0;
+  margin: 4px 0;
+}
+.tl-stem {
+  width: 1px; height: 20px;
+  background: rgba(204,26,26,0.4);
+}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.five-col { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.callout {
+  background: rgba(204,26,26,0.08);
+  border: 1px solid rgba(204,26,26,0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.callout.green {
+  background: rgba(34,197,94,0.08);
+  border-color: rgba(34,197,94,0.3);
+}
+.callout.amber {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.3);
+}
+.stat-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.milestone-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--red);
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(204,26,26,0.6);
+}
+.milestone-yr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--red);
+  min-width: 70px;
+}
+.proceed-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.proceed-label { min-width: 180px; font-size: 0.85rem; }
+.proceed-bar-wrap { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+.proceed-bar { height:100%; background:var(--red); border-radius:3px; }
+.proceed-pct { font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted); min-width:40px; text-align:right; }
+.badge-live { display:inline-block; background:rgba(34,197,94,0.15); color:#22C55E; border:1px solid rgba(34,197,94,0.3); border-radius:4px; padding:1px 7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem; }
+.badge-pipe { display:inline-block; background:rgba(245,158,11,0.12); color:#F59E0B; border:1px solid rgba(245,158,11,0.25); border-radius:4px; padding:1px 7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem; }
+.badge-soon { display:inline-block; background:rgba(59,130,246,0.12); color:#3B82F6; border:1px solid rgba(59,130,246,0.25); border-radius:4px; padding:1px 7px; font-family:'JetBrains Mono',monospace; font-size:0.68rem; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <img src="data:image/jpeg;base64,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" class="gate-logo" style="height:56px;width:auto;" alt="Flywheel">
+  <h2>Investor Access</h2>
+  <p>Flywheel Technologies · Confidential</p>
+  <div id="gate-form">
+    <input type="password" id="gate-input" placeholder="Access code" autofocus>
+    <button id="gate-btn" onclick="checkPass()">Enter →</button>
+  </div>
+  <div id="gate-err">Incorrect access code</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <img src="data:image/jpeg;base64,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" style="height:28px;width:auto;" onclick="goTo(0)" alt="Flywheel">
+    </div>
+    <div id="sidebar-items"></div>
+  </nav>
+
+  <div class="main">
+    <div class="topbar">
+      <button onclick="toggleMode()">☀ Light</button>
+      <button onclick="window.print()">⬇ PDF</button>
+    </div>
+
+    <div class="slides-container">
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="cover-wrap">
+    <img src="data:image/jpeg;base64,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" class="cover-logo" style="height:68px;width:auto;" alt="Flywheel">
+    <div class="red-line" style="width:60px;height:3px;background:var(--red);border-radius:2px;"></div>
+    <div class="cover-headline">The Future of<br>Professional Transportation</div>
+    <div class="cover-sub">Flywheel Technologies × Uber — Strategic Investment Opportunity</div>
+    <div class="cover-raise">$15M Series A &nbsp;·&nbsp; $265M Pre-Money Valuation</div>
+    <div class="cover-meta">
+      <span class="cover-meta-item">P0 Uber Partner</span>
+      <span class="cover-meta-item">·</span>
+      <span class="cover-meta-item">Est. 2002</span>
+      <span class="cover-meta-item">·</span>
+      <span class="cover-meta-item">San Francisco, CA</span>
+    </div>
+    <div style="margin-top:32px;font-size:0.75rem;color:var(--muted);">CONFIDENTIAL — For authorized recipients only &nbsp;·&nbsp; June 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 — COMPANY TIMELINE
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Company History</div>
+  <h2>A Journey Built on the Industry</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);font-size:0.85rem;margin-bottom:4px;">20+ years of transportation technology expertise — every major industry disruption, navigated first-hand.</p>
+
+  <div class="tl-wrap">
+    <div class="tl-line"></div>
+
+    <!-- ABOVE nodes: 2002, 2012-15, 2016-19, 2020, 2024-25 -->
+    <div class="tl-node above" style="left:6%">
+      <div class="tl-card">
+        <div class="tl-tag">Foundation</div>
+        <div class="tl-yr">2002</div>
+        <div class="tl-title">CabConnect Founded</div>
+        <div class="tl-desc">CC processing for taxis. Private label card. RAD partnership.</div>
+      </div>
+      <div class="tl-stem"></div>
+      <div class="tl-dot"></div>
+    </div>
+    <div class="tl-node above" style="left:28%">
+      <div class="tl-card">
+        <div class="tl-tag">Operations</div>
+        <div class="tl-yr">2012–15</div>
+        <div class="tl-title">National Paratransit</div>
+        <div class="tl-desc">CardONE expands to 18 cities: Chicago, SF, NYC, DC.</div>
+      </div>
+      <div class="tl-stem"></div>
+      <div class="tl-dot"></div>
+    </div>
+    <div class="tl-node above" style="left:50%">
+      <div class="tl-card">
+        <div class="tl-tag">Acquisition</div>
+        <div class="tl-yr">2016–19</div>
+        <div class="tl-title">Flywheel Technologies</div>
+        <div class="tl-desc">Acquired Flywheel assets. Relaunched as TaxiOS platform.</div>
+      </div>
+      <div class="tl-stem"></div>
+      <div class="tl-dot"></div>
+    </div>
+    <div class="tl-node above" style="left:72%">
+      <div class="tl-card">
+        <div class="tl-tag">Partnership</div>
+        <div class="tl-yr">2022</div>
+        <div class="tl-title">Uber Contract Signed</div>
+        <div class="tl-desc">April 5 2022. SF unanimous vote. $1.2M engineering integration.</div>
+      </div>
+      <div class="tl-stem"></div>
+      <div class="tl-dot"></div>
+    </div>
+    <div class="tl-node above" style="left:91%">
+      <div class="tl-card">
+        <div class="tl-tag">Scale</div>
+        <div class="tl-yr">2024–25</div>
+        <div class="tl-title">Domestic Rollout</div>
+        <div class="tl-desc">Reno, Palm Springs, SD, LV, Houston, Miami, FLL, Baltimore.</div>
+      </div>
+      <div class="tl-stem"></div>
+      <div class="tl-dot"></div>
+    </div>
+
+    <!-- BELOW nodes: 2004-11, 2012, 2020, 2021-22, 2025-26+ -->
+    <div class="tl-node below" style="left:17%">
+      <div class="tl-dot"></div>
+      <div class="tl-stem"></div>
+      <div class="tl-card">
+        <div class="tl-tag">Milestone</div>
+        <div class="tl-yr">2004–11</div>
+        <div class="tl-title">CabMaestro Built</div>
+        <div class="tl-desc">Fleet back office SaaS. 120+ fleets. US, Canada, MX, AU.</div>
+      </div>
+    </div>
+    <div class="tl-node below" style="left:39%">
+      <div class="tl-dot"></div>
+      <div class="tl-stem"></div>
+      <div class="tl-card">
+        <div class="tl-tag">Pivot</div>
+        <div class="tl-yr">2020</div>
+        <div class="tl-title">COVID Impact</div>
+        <div class="tl-desc">10K cars signed. Pandemic hit. Restructured. Pivoted to Uber.</div>
+      </div>
+    </div>
+    <div class="tl-node below" style="left:61%">
+      <div class="tl-dot"></div>
+      <div class="tl-stem"></div>
+      <div class="tl-card">
+        <div class="tl-tag">Launch</div>
+        <div class="tl-yr">2022–23</div>
+        <div class="tl-title">Uber Live — SF</div>
+        <div class="tl-desc">Nov 2022 launch. Apr 2023 hockey stick. Drivers $5–6K/week.</div>
+      </div>
+    </div>
+    <div class="tl-node below" style="left:83%">
+      <div class="tl-dot"></div>
+      <div class="tl-stem"></div>
+      <div class="tl-card">
+        <div class="tl-tag">Global</div>
+        <div class="tl-yr">2025–26+</div>
+        <div class="tl-title">Mexico Launch</div>
+        <div class="tl-desc">Cancún June 28 2026. Uber invited Flywheel. 6,000 cars secured.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding-top:12px;font-style:italic;color:var(--muted);font-size:0.82rem;line-height:1.6;">
+    "Taxis are dying. You will not see a taxi in San Francisco in a year from now if you don't change. Give me another solution. I'm asking for a pilot."
+    <br><span style="color:var(--red);">— Unanimous yes, SF Board of Supervisors, April 2022</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 3 — PLATFORM FOUNDATION
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">The Moat</div>
+  <h2>Established Platform — Built Over 20 Years</h2>
+  <div class="divider"></div>
+
+  <div class="two-col">
+    <div class="card" style="border-top:3px solid var(--red);">
+      <h3>CabMaestro</h3>
+      <div class="label" style="margin-bottom:12px;">Fleet Back Office · SaaS</div>
+      <div class="card-grid cols-2" style="margin-bottom:14px;">
+        <div><div class="stat-val">35,000+</div><div class="stat-label">Vehicles/Day</div></div>
+        <div><div class="stat-val">120+</div><div class="stat-label">Fleets</div></div>
+        <div><div class="stat-val">4</div><div class="stat-label">Countries</div></div>
+        <div><div class="stat-val">5</div><div class="stat-label">Team</div></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Fleet management + dispatch + payments back office. US, Canada, Mexico, Australia. Subscription SaaS — highly scalable, low overhead. <strong style="color:var(--text);">These 35K vehicles are the Uber activation funnel.</strong></p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <h3>CardONE</h3>
+      <div class="label" style="margin-bottom:12px;">Paratransit Platform · Since 2007</div>
+      <div class="card-grid cols-2" style="margin-bottom:14px;">
+        <div><div class="stat-val">1.5M</div><div class="stat-label">Rides/Year</div></div>
+        <div><div class="stat-val">18</div><div class="stat-label">Major Cities</div></div>
+        <div><div class="stat-val red">$0</div><div class="stat-label">Fraud (was $M+)</div></div>
+        <div><div class="stat-val">ADA</div><div class="stat-label">Gov. Funded</div></div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Paratransit payment platform serving riders with disabilities. Chicago, SF, NYC, Washington DC. Government-backed revenue stream. Expanding to every US city at $50/month.</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:20px;">
+    <strong>The Investor Story:</strong> CabMaestro's 35,000 vehicles = the Uber activation funnel. This isn't a startup asking for distribution — it's an established platform with a proven operator track record and a clear on-ramp into Uber's network.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 4 — EXECUTIVE SUMMARY
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Executive Summary</div>
+  <h2>The Opportunity at a Glance</h2>
+  <div class="divider"></div>
+
+  <div class="stat-grid-6">
+    <div class="card"><div class="stat-val">3,500+</div><div class="stat-label">Live on Uber (FA + FC)</div></div>
+    <div class="card"><div class="stat-val">$4.1M</div><div class="stat-label">Net Revenue TTM</div></div>
+    <div class="card"><div class="stat-val red">$1.13M</div><div class="stat-label">EBITDA — Profitable</div></div>
+    <div class="card"><div class="stat-val">35,000+</div><div class="stat-label">Platform Vehicles</div></div>
+    <div class="card"><div class="stat-val">8,500+</div><div class="stat-label">Signed for Uber 3P</div></div>
+    <div class="card"><div class="stat-val red">P0</div><div class="stat-label">Uber Partner Classification</div></div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <h3>The Foundation</h3>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">20+ years. CabMaestro (35K vehicles). CardONE (1.5M rides/yr). Proven at scale. Operating in US, Canada, Mexico, Australia. Already EBITDA positive.</p>
+    </div>
+    <div class="card">
+      <h3>The Partnership</h3>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">The only company to successfully integrate licensed taxis into UberX at scale. SF unanimous board vote. Contract signed April 5, 2022. P0 — Uber's #1 taxi technology partner globally.</p>
+    </div>
+    <div class="card">
+      <h3>The Opportunity</h3>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">$45M net revenue by 2029. $562M GMV. 30K+ drivers on Uber. Mexico launching June 28. LatAm pipeline. iCabbi: 100K vehicles globally.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 5 — THE UBER OPPORTUNITY
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">The Partnership</div>
+  <h2>Why Flywheel + Uber = Category Leader</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);margin-bottom:20px;">Professional drivers. Verified network. Uber demand. Perfect complement.</p>
+
+  <div class="three-col" style="margin-bottom:20px;">
+    <div class="card"><div class="stat-val red">P0</div><div class="stat-label">Uber Partner Classification — #1 globally</div></div>
+    <div class="card"><div class="stat-val">2.5→4.0%</div><div class="stat-label">Take rate (unlocks at AR ≥30%)</div></div>
+    <div class="card"><div class="stat-val">$0.30→$0.48</div><div class="stat-label">Per Uber trip (12× uplift at 30% AR)</div></div>
+  </div>
+
+  <div class="callout" style="margin-bottom:20px;">
+    "Uber's two most profitable divisions in 2025: <strong>Groceries</strong> and <strong>Taxis</strong>. Flywheel is their #1 taxi technology partner globally." — Uber Global Head Meeting, 2025
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Professional Driver Advantage</h3>
+      <table>
+        <thead><tr><th></th><th>UberX Driver</th><th>Flywheel Taxi Driver</th></tr></thead>
+        <tbody>
+          <tr><td>Vetting</td><td style="color:var(--muted)">Background check</td><td class="red">FBI fingerprint</td></tr>
+          <tr><td>Insurance</td><td style="color:var(--muted)">Personal + ride</td><td class="red">24hr commercial</td></tr>
+          <tr><td>Training</td><td style="color:var(--muted)">Video course</td><td class="red">City-certified</td></tr>
+          <tr><td>Network</td><td style="color:var(--muted)">Lone wolf</td><td class="red">Fleet community</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout amber">
+      <strong>AR Incentive Structure</strong><br><br>
+      Current LV AR: <strong style="color:var(--red)">4%</strong> → $80/day<br>
+      Target AR: <strong>30%</strong> → $960/day<br>
+      Rate tier upgrade: 2.5% → <strong style="color:#22C55E">4.0%</strong><br><br>
+      <strong>12× revenue uplift</strong> from same driver pool when AR crosses 30%.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 6 — PRODUCT SUITE
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">TaxiOS Platform</div>
+  <h2>The Full Spectrum — One Platform, Every Driver</h2>
+  <div class="divider"></div>
+
+  <div class="five-col" style="margin-bottom:20px;">
+    <div class="tier-card">
+      <div class="tier-title">Heavy Asset</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Tablet + Rider Screen + OBD2 + Camera + POS + Printer + Toplight</div>
+      <span class="badge-live">✅ Live</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-title">Standard</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Driver Tablet + Camera + POS device</div>
+      <span class="badge-live">✅ Live</span>
+    </div>
+    <div class="tier-card">
+      <div class="tier-title">Light Asset</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Driver phone · CC processing only</div>
+      <span class="badge-live">✅ Live</span>
+    </div>
+    <div class="tier-card" style="border-top-color:#3B82F6;">
+      <div class="tier-title">Direct-to-Driver</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">App only · Any licensed taxi driver · Fast scale</div>
+      <span class="badge-soon">🔵 2027</span>
+    </div>
+    <div class="tier-card" style="border-top-color:#A855F7;">
+      <div class="tier-title">Flywheel Connect</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">No asset · Dispatch integration · 2,000+ live (Kaptyn LV)</div>
+      <span class="badge-live">✅ Live</span>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">Platform Infrastructure</div>
+      <h3>CabMaestro</h3>
+      <div class="stat-val">35K</div>
+      <div class="stat-label">vehicles · Fleet SaaS · 4 countries</div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">Government Platform</div>
+      <h3>CardONE</h3>
+      <div class="stat-val">1.5M</div>
+      <div class="stat-label">rides/yr · Paratransit · 18 cities</div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">Uber Integration</div>
+      <h3>Flywheel × Uber</h3>
+      <div class="stat-val red">3,500+</div>
+      <div class="stat-label">live drivers · P0 partner</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 7 — MARKET OPPORTUNITY
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Market Opportunity</div>
+  <h2>$36B Market. 390,000 Taxis. We're Early.</h2>
+  <div class="divider"></div>
+
+  <div class="three-col" style="margin-bottom:20px;">
+    <div class="card"><div class="stat-val">390,000+</div><div class="stat-label">Addressable taxis globally</div></div>
+    <div class="card"><div class="stat-val red">$36B</div><div class="stat-label">Total Addressable Market</div></div>
+    <div class="card"><div class="stat-val">32</div><div class="stat-label">Targeted markets across 3 regions</div></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>🇺🇸 United States</h3>
+      <table>
+        <thead><tr><th>Region</th><th>Markets</th><th>Vehicles</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>West Coast</td><td>7</td><td>4,990</td><td><span class="badge-live">Active</span></td></tr>
+          <tr><td>Southern Belt</td><td>6</td><td>2,307</td><td><span class="badge-live">Active</span></td></tr>
+          <tr><td>East Coast</td><td>5</td><td>4,153</td><td><span class="badge-pipe">Pipeline</span></td></tr>
+          <tr><td>Midwest</td><td>3</td><td>2,050</td><td><span class="badge-soon">Future</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>🇲🇽 Mexico &amp; 🌎 LatAm</h3>
+      <table>
+        <thead><tr><th>Region</th><th>Vehicles</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Quintana Roo</td><td>925</td><td><span class="badge-live">Jun 28 ✅</span></td></tr>
+          <tr><td>Yucatán</td><td>500</td><td><span class="badge-pipe">Pipeline</span></td></tr>
+          <tr><td>CDMX + Puebla</td><td>5,800</td><td><span class="badge-soon">Future</span></td></tr>
+          <tr><td>LatAm (4 markets)</td><td>5,000</td><td><span class="badge-soon">Future</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout green" style="margin-top:12px;font-size:0.82rem;">
+        <strong>Mexico:</strong> Uber invited Flywheel to fix the reputation of Mexican taxis. June 28 2026 — Cancún launches. 6,000 cars secured in Quintana Roo + Yucatán.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 8 — SALES PIPELINE
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Sales Pipeline</div>
+  <h2>Contracts to Support Projections</h2>
+  <div class="divider"></div>
+
+  <div class="three-col" style="margin-bottom:16px;">
+    <div class="card"><div class="stat-val red">12</div><div class="stat-label">Active Markets</div></div>
+    <div class="card"><div class="stat-val">12</div><div class="stat-label">Pipeline Markets</div></div>
+    <div class="card"><div class="stat-val" style="color:var(--muted)">8</div><div class="stat-label">Future Markets</div></div>
+  </div>
+
+  <table style="margin-bottom:16px;">
+    <thead>
+      <tr><th>Market</th><th>Type</th><th>Contracted</th><th>Active</th><th>Status</th><th>Ann. Rev Est.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>San Francisco</td><td>FA Heavy</td><td>500</td><td>425</td><td><span class="badge-live">✅ Live</span></td><td class="red">$892K</td></tr>
+      <tr><td>Las Vegas (Kaptyn)</td><td>FC</td><td>2,500+</td><td>2,000+</td><td><span class="badge-live">✅ Live</span></td><td>$87K*</td></tr>
+      <tr><td>San Diego</td><td>FA Light</td><td>350</td><td>245</td><td><span class="badge-live">✅ Live</span></td><td>$381K</td></tr>
+      <tr><td>Houston</td><td>FA Heavy</td><td>450</td><td>198</td><td><span class="badge-live">✅ Live</span></td><td>$289K</td></tr>
+      <tr><td>Miami</td><td>FA Standard</td><td>457</td><td>50</td><td><span class="badge-pipe">🟡 Activating</span></td><td>$124K</td></tr>
+      <tr><td>Fort Lauderdale</td><td>FA Light</td><td>200</td><td>120</td><td><span class="badge-live">✅ Live</span></td><td>$250K</td></tr>
+      <tr><td>Baltimore</td><td>FA Heavy</td><td>103</td><td>13</td><td><span class="badge-live">✅ Live</span></td><td>$52K</td></tr>
+      <tr class="highlight-row"><td>Cancún</td><td>FA + FC</td><td>325</td><td>—</td><td><span class="badge-pipe">🟡 Jun 28</span></td><td>$1.2M proj</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="gap:12px;">
+    <div style="font-size:0.78rem;color:var(--muted);padding:8px 0;">*LV FC at current 4% AR. Target 30%+ AR = <strong style="color:var(--text);">$146K+/yr</strong>. Rate tier upgrade to 4.0% at 30% AR.</div>
+    <div class="callout" style="font-size:0.82rem;">
+      <strong>iCabbi Pipeline:</strong> 100,000 vehicles globally · 10,000 vehicle target · Q4 2026 integration start. One contract = entire dispatch network activated overnight.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 9 — UNIT ECONOMICS
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Unit Economics</div>
+  <h2>Revenue Per Driver — The Real Model</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);margin-bottom:16px;font-size:0.88rem;">Driver = unit of economics. Vehicle = capital asset. 1 vehicle × 1.3 shifts = active driver revenue.</p>
+
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:12px;">Revenue by Channel</h3>
+      <table>
+        <thead><tr><th>Channel</th><th>Mix</th><th>How Charged</th><th>Net/Trip</th></tr></thead>
+        <tbody>
+          <tr><td>Street Hail</td><td>30%</td><td>CC 4.5% − 2.4% processing</td><td>$0.15</td></tr>
+          <tr><td>WebHail</td><td>10%</td><td>CC 4.5% − 2.4% processing</td><td>$0.15</td></tr>
+          <tr><td>eHail</td><td>10%</td><td>19.1% of fare (all-in)</td><td class="red">$2.29</td></tr>
+          <tr><td>Uber 3P</td><td>50%</td><td>2.5% → 4.0% at AR≥30%</td><td>$0.30→$0.48</td></tr>
+          <tr class="highlight-row"><td><strong>Blended</strong></td><td>100%</td><td>—</td><td><strong>$0.44/trip</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="callout">
+        <strong>Volume Model:</strong><br>
+        1 vehicle × 1.3 shifts × 65% utilization × 6 trips/hr × 8hrs = <strong>40 trips/vehicle/day</strong><br><br>
+        With Uber demand: <strong class="red">80% utilization</strong> (+78% vs without Uber)
+      </div>
+      <div class="callout amber">
+        <strong>AR Unlock:</strong> LV at 4% AR = <strong>$80/day</strong> · Target 30% = <strong>$960/day</strong> (12× uplift). Rate tier also upgrades from 2.5% → 4.0%.
+      </div>
+      <div class="card">
+        <div class="label" style="margin-bottom:6px;">Avg Taxi Fares</div>
+        <div style="font-size:0.82rem;line-height:1.8;">
+          Mexico Hotel: <strong class="red">$50</strong> &nbsp;·&nbsp; Mexico Local: <strong>$8</strong><br>
+          US Urban/Suburban: <strong>$25</strong> &nbsp;·&nbsp; LatAm: <strong>$10</strong><br>
+          Uber avg rider payment: <strong>$12</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 10 — PROFORMA 2026–2029
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Financial Projections</div>
+  <h2>2026–2029 Proforma</h2>
+  <div class="divider"></div>
+
+  <div class="card-grid cols-4" style="margin-bottom:20px;">
+    <div class="card"><div class="stat-val">$4.1M</div><div class="stat-label">2026 Net Revenue</div></div>
+    <div class="card"><div class="stat-val">$12M</div><div class="stat-label">2027 Net Revenue</div></div>
+    <div class="card"><div class="stat-val">$28M</div><div class="stat-label">2028 Net Revenue</div></div>
+    <div class="card"><div class="stat-val red">$45M</div><div class="stat-label">2029 Net Revenue</div></div>
+  </div>
+
+  <div class="chart-wrap" style="height:200px;margin-bottom:20px;">
+    <canvas id="finChart"></canvas>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">Financial Exit</div>
+      <h3>$375M–$500M</h3>
+      <p style="font-size:0.82rem;color:var(--muted);">$25M EBITDA × 15–20× multiple. Comparable SaaS + marketplace exits.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">Strategic (Uber)</div>
+      <h3 class="red">$750M–$1B</h3>
+      <p style="font-size:0.82rem;color:var(--muted);">P0 partnership + global taxi platform. Acquisition accelerates Uber's taxi expansion.</p>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:6px;">P0 Status</div>
+      <h3>#1 Globally</h3>
+      <p style="font-size:0.82rem;color:var(--muted);">Flywheel is Uber's highest-classified taxi technology partner. Accelerating path to strategic acquisition.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 11 — TRACTION
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Traction</div>
+  <h2>Proof. Already Profitable.</h2>
+  <div class="divider"></div>
+
+  <div class="stat-grid-6" style="margin-bottom:20px;">
+    <div class="card"><div class="stat-val">$25.3M</div><div class="stat-label">Gross Revenue TTM</div></div>
+    <div class="card"><div class="stat-val">$4.14M</div><div class="stat-label">Net Revenue TTM</div></div>
+    <div class="card"><div class="stat-val red">$1.13M</div><div class="stat-label">EBITDA — Profitable</div></div>
+    <div class="card"><div class="stat-val">35,000+</div><div class="stat-label">Platform Vehicles</div></div>
+    <div class="card"><div class="stat-val">3,500+</div><div class="stat-label">Live on Uber</div></div>
+    <div class="card"><div class="stat-val red">P0</div><div class="stat-label">Uber Classification</div></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:12px;">Milestone Timeline</h3>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Apr 2022</div><div>Contract signed with Uber · $1.2M engineering investment</div></div>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Nov 2022</div><div>First Uber integration live — San Francisco</div></div>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Apr 2023</div><div>Hockey stick — drivers making $5–6K/week in SF</div></div>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">2024</div><div>Expanded to Reno, Palm Springs, San Diego, Las Vegas</div></div>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">2025</div><div>Houston, Miami, FLL, Baltimore · iCabbi partnership</div></div>
+      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Jun 2026</div><div>Flywheel Connect: 2,000+ drivers live via Kaptyn LV</div></div>
+      <div class="milestone" style="border-bottom:none;"><div class="milestone-dot"></div><div class="milestone-yr">Jun 28 2026</div><div><strong class="red">Cancún Mexico launch ✅</strong></div></div>
+    </div>
+    <div class="callout" style="height:fit-content;">
+      <strong>"Uber's two most profitable divisions in 2025: Groceries and Taxis."</strong><br><br>
+      — Uber Global Head Meeting, 2025<br><br>
+      Flywheel is the #1 partner in the most profitable category Uber operates.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 12 — TERM SHEET
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Existing Term Sheet</div>
+  <h2>Uber Mexico — Non-Binding TS</h2>
+  <div class="divider"></div>
+  <p style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Received June 16, 2026 from Shilpa Rathi, Global Program Head, Taxi/Auto/Moto Partnerships, Uber</p>
+
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:12px;">Phase 1 Markets</h3>
+      <table>
+        <thead><tr><th>Market</th><th>Vehicles</th><th>Launch</th></tr></thead>
+        <tbody>
+          <tr><td>Cancún</td><td>325</td><td><span class="badge-live">Jun 28 ✅</span></td></tr>
+          <tr><td>Tulum</td><td>1,200</td><td><span class="badge-pipe">Q3 2026</span></td></tr>
+          <tr><td>Playa del Carmen</td><td>300</td><td><span class="badge-pipe">Q3 2026</span></td></tr>
+          <tr class="highlight-row"><td><strong>Total Phase 1</strong></td><td><strong>1,825</strong></td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="margin-top:14px;font-size:0.82rem;">
+        <strong>Phase 2 Pipeline:</strong> CDMX · Guadalajara · Toluca<br>
+        <strong>Beyond Mexico:</strong> LatAm expansion in discussion
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card" style="border-top:3px solid var(--red);">
+        <h3>Fee Structure</h3>
+        <div style="font-size:0.88rem;line-height:2;">
+          Base fee: <strong>2.0%</strong><br>
+          With targets: <strong>2.5%</strong><br>
+          Performance bonus: <strong class="red">up to 4.0%</strong><br>
+          Settlement: <strong>Daily ✅</strong>
+        </div>
+      </div>
+      <div class="callout green" style="font-size:0.82rem;">
+        Flywheel is Uber's <strong>P0 partner</strong> — highest classification globally. This TS is the entry point; the full relationship spans US + Mexico + LatAm.
+      </div>
+      <div style="font-size:0.75rem;color:var(--muted);padding:8px 0;border-top:1px solid var(--border);">
+        ⚠️ Risk flags (open items): Base fee negotiation ongoing · Exclusivity window: 24 months · SLA: 99.99% uptime · Competitor definition TBD
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 13 — TEAM & THE ASK
+═══════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Leadership &amp; Investment</div>
+  <h2>The Team &amp; The Ask</h2>
+  <div class="divider"></div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="team-card">
+      <div class="team-avatar">IA</div>
+      <div>
+        <div class="team-name">Izzy Aala</div>
+        <div class="team-title">Founder &amp; CEO</div>
+        <div class="team-bio">35+ years transportation technology. Founded CabConnect 2002, CardONE 2007, acquired Flywheel 2017. Negotiated SF regulatory change enabling Uber × taxi integration. Signed Uber contract April 5, 2022. DOT Innovation Award recipient (Obama administration, Secretary Fox of Transportation).</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">HK</div>
+      <div>
+        <div class="team-name">Hansu Kim</div>
+        <div class="team-title">Co-Founder &amp; CTO</div>
+        <div class="team-bio">Co-built original Flywheel platform (Cabulous). Acquired DeSoto Cab San Francisco 2011. Rebranded as Flywheel Taxi 2016. Deep Uber integration expertise. Platform architect behind the TaxiOS technology stack.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:14px;">The Ask</h3>
+      <div class="three-col" style="margin-bottom:14px;gap:10px;">
+        <div class="card"><div class="stat-val red">$15M</div><div class="stat-label">Series A</div></div>
+        <div class="card"><div class="stat-val">$265M</div><div class="stat-label">Pre-Money</div></div>
+        <div class="card"><div class="stat-val">$280M</div><div class="stat-label">Post-Money</div></div>
+      </div>
+      <h3 style="margin-bottom:10px;font-size:0.95rem;">Use of Proceeds</h3>
+      <div class="proceed-row"><div class="proceed-label">Engineering &amp; Product</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:40%"></div></div><div class="proceed-pct">40% · $6M</div></div>
+      <div class="proceed-row"><div class="proceed-label">Market Expansion</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:30%"></div></div><div class="proceed-pct">30% · $4.5M</div></div>
+      <div class="proceed-row"><div class="proceed-label">Working Capital</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:20%"></div></div><div class="proceed-pct">20% · $3M</div></div>
+      <div class="proceed-row" style="border-bottom:none;"><div class="proceed-label">G&amp;A</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:10%"></div></div><div class="proceed-pct">10% · $1.5M</div></div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:14px;">Return Scenarios</h3>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="label" style="margin-bottom:4px;">Conservative 4×</div>
+        <div class="stat-val">$1.1B</div>
+        <div class="stat-label">$280M post → 4× = $1.1B exit</div>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="label" style="margin-bottom:4px;">Base 10×</div>
+        <div class="stat-val">$2.65B</div>
+        <div class="stat-label">$265M pre × 10× multiple</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--red);">
+        <div class="label" style="margin-bottom:4px;">Strategic (Uber Acquisition)</div>
+        <div class="stat-val red">$750M–$1B</div>
+        <div class="stat-label">P0 partner — accelerating acquisition path</div>
+      </div>
+      <div class="cta-block" style="margin-top:14px;padding:16px;">
+        <p style="font-size:0.88rem;margin-bottom:6px;">Ready to partner?</p>
+        <strong>izzy@flywheel.com</strong><br>
+        <span style="color:var(--muted);font-size:0.8rem;">meet.google.com/ihk-pfrx-cea</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div><!-- /slides-container -->
+
+    <div class="bottom-nav">
+      <button class="nav-btn" onclick="prev()">↑</button>
+      <span class="slide-counter" id="slide-counter">01 / 13</span>
+      <button class="nav-btn" onclick="next()">↓</button>
+    </div>
+    <div class="slide-num-bg" id="slide-num-bg">1</div>
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// Password gate
+function checkPass() {
+  const v = document.getElementById('gate-input').value.trim();
+  if (v === 'flywheel2026' || v === 'FLYWHEEL2026') {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    init();
+  } else {
+    document.getElementById('gate-err').style.display = 'block';
+  }
+}
+document.getElementById('gate-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPass(); });
+
+const SLIDES = ['01 — Cover','02 — Company Timeline','03 — Platform Foundation',
+  '04 — Executive Summary','05 — The Uber Opportunity','06 — Product Suite',
+  '07 — Market Opportunity','08 — Sales Pipeline','09 — Unit Economics',
+  '10 — Proforma 2026–2029','11 — Traction','12 — Term Sheet','13 — Team & The Ask'];
+
+let current = 0;
+
+function init() {
+  const sidebar = document.getElementById('sidebar-items');
+  SLIDES.forEach((name, i) => {
+    const d = document.createElement('div');
+    d.className = 'sidebar-item' + (i === 0 ? ' active' : '');
+    d.innerHTML = `<span class="sidebar-num">${String(i+1).padStart(2,'0')}</span>${name.replace(/^\d+ — /,'')}`;
+    d.onclick = () => goTo(i);
+    sidebar.appendChild(d);
+  });
+  updateCounter();
+  initChart();
+}
+
+function goTo(n) {
+  const slides = document.querySelectorAll('.slide');
+  const items = document.querySelectorAll('.sidebar-item');
+  slides[current].classList.remove('active');
+  items[current].classList.remove('active');
+  current = Math.max(0, Math.min(n, SLIDES.length - 1));
+  slides[current].classList.add('active');
+  items[current].classList.add('active');
+  slides[current].scrollTop = 0;
+  updateCounter();
+}
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+function updateCounter() {
+  const n = String(current + 1).padStart(2,'0');
+  document.getElementById('slide-counter').textContent = n + ' / ' + String(SLIDES.length).padStart(2,'0');
+  document.getElementById('slide-num-bg').textContent = current + 1;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') prev();
+});
+
+let lightMode = false;
+function toggleMode() {
+  lightMode = !lightMode;
+  document.body.classList.toggle('light-mode', lightMode);
+  document.querySelector('.topbar button').textContent = lightMode ? '🌙 Dark' : '☀ Light';
+  if (window._finChart) {
+    window._finChart.options.scales.x.ticks.color = lightMode ? '#666' : '#888';
+    window._finChart.options.scales.y.ticks.color = lightMode ? '#666' : '#888';
+    window._finChart.options.scales.y2.ticks.color = lightMode ? '#666' : '#888';
+    window._finChart.update();
+  }
+}
+
+function initChart() {
+  const ctx = document.getElementById('finChart');
+  if (!ctx) return;
+  window._finChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['2026','2027','2028','2029'],
+      datasets: [
+        { label:'GMV ($M)', data:[51,150,350,562], backgroundColor:'rgba(59,130,246,0.5)', borderColor:'#3B82F6', borderWidth:1, borderRadius:4, yAxisID:'y2', order:2 },
+        { label:'Net Revenue ($M)', data:[4.1,12,28,45], backgroundColor:'#CC1A1A', borderColor:'#e01c1c', borderWidth:1, borderRadius:4, yAxisID:'y', order:1 },
+        { label:'EBITDA ($M)', data:[1.1,4.2,14,25], backgroundColor:'rgba(34,197,94,0.8)', borderColor:'#16A34A', borderWidth:1, borderRadius:4, yAxisID:'y', order:0 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      plugins:{ legend:{labels:{color:'#888',font:{size:11}}}, tooltip:{backgroundColor:'#1a1a1a',borderColor:'rgba(204,26,26,0.4)',borderWidth:1,callbacks:{label:ctx=>' '+ctx.dataset.label+': $'+ctx.parsed.y+'M'}} },
+      scales:{
+        y:{ position:'left', grid:{color:'rgba(255,255,255,0.06)'}, ticks:{color:'#888',callback:v=>'$'+v+'M'} },
+        y2:{ position:'right', grid:{display:false}, ticks:{color:'#888',callback:v=>'$'+v+'M'} },
+        x:{ grid:{display:false}, ticks:{color:'#888'} }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
