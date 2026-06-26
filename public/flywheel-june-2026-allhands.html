@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flywheel — June 2026 All-Hands</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Outfit:wght@400;600&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:     #0C0C0C;
+      --bg2:    #1C1C1E;
+      --bg3:    #2A2A2E;
+      --text:   #F0EDE8;
+      --muted:  #8A8882;
+      --red:    #CC1A1A;
+      --red-hi: #E52525;
+      --tbd:    #C96A1A;
+      --border: rgba(240,237,232,0.07);
+      --card:   rgba(255,255,255,0.04);
+    }
+    [data-theme="light"] {
+      --bg:     #F8F5F0;
+      --bg2:    #EDEAE4;
+      --bg3:    #E0DDD8;
+      --text:   #1C1C1E;
+      --muted:  #6A6862;
+      --border: rgba(28,28,30,0.09);
+      --card:   rgba(0,0,0,0.035);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ───── Controls ───── */
+    #controls {
+      position: fixed; top: 24px; right: 32px;
+      display: flex; gap: 10px; z-index: 200;
+    }
+    .ctrl-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 8px 16px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ctrl-btn:hover { background: var(--bg3); border-color: var(--red); }
+
+    /* ───── Nav ───── */
+    #nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 56px; display: flex; align-items: center; justify-content: center; gap: 20px;
+      background: rgba(12,12,12,0.92); backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border); z-index: 200;
+    }
+    [data-theme="light"] #nav { background: rgba(248,245,240,0.92); }
+    .nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text); font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--bg3); border-color: var(--red); }
+    .nav-btn:disabled { opacity: 0.25; cursor: default; }
+    #slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--muted); width: 56px; text-align: center;
+    }
+
+    /* ───── Slides ───── */
+    #deck { width: 100%; height: 100%; position: relative; }
+    .slide {
+      position: absolute; inset: 0;
+      padding: 56px 80px 80px;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .slide.active { opacity: 1; pointer-events: all; }
+
+    /* ───── Slide decoration ───── */
+    .slide-num {
+      position: absolute; bottom: 64px; right: 80px;
+      font-family: 'JetBrains Mono', monospace; font-size: 56px;
+      color: var(--border); line-height: 1; pointer-events: none; user-select: none;
+    }
+    .s-mark {
+      position: absolute; bottom: 64px; left: 80px;
+      width: 24px; height: 24px; border: 2px solid var(--border);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700;
+      color: var(--border);
+    }
+
+    /* ───── Typography ───── */
+    .label {
+      font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .label-red { color: var(--red) !important; }
+    .slide-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 44px; line-height: 1.05; margin-bottom: 6px;
+    }
+    .slide-sub {
+      font-size: 15px; color: var(--muted); font-weight: 300;
+      margin-bottom: 36px;
+    }
+    .divider { width: 40px; height: 3px; background: var(--red); margin-bottom: 28px; }
+
+    .hero-num {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 52px; color: var(--red); line-height: 1;
+    }
+    .hero-num-xl {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 72px; color: var(--red); line-height: 0.95;
+    }
+    .hero-label {
+      font-size: 12px; color: var(--muted); margin-top: 6px; font-weight: 300;
+    }
+
+    /* ───── TBD ───── */
+    .tbd { color: var(--tbd) !important; font-style: italic; }
+    .tbd-block {
+      color: var(--tbd); font-family: 'Outfit', sans-serif;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      background: rgba(201,106,26,0.08); border: 1px solid rgba(201,106,26,0.2);
+      border-radius: 4px; padding: 2px 8px; display: inline-block; margin-top: 4px;
+    }
+
+    /* ───── Grids ───── */
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .col-6040 { grid-template-columns: 6fr 4fr; }
+    .col-4060 { grid-template-columns: 4fr 6fr; }
+    .col-5050 { grid-template-columns: 1fr 1fr; }
+
+    /* ───── Cards ───── */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 28px;
+    }
+    .card-red {
+      border-color: rgba(204,26,26,0.25);
+      background: rgba(204,26,26,0.06);
+    }
+    .card-highlight {
+      border-color: rgba(204,26,26,0.4);
+      background: rgba(204,26,26,0.08);
+    }
+    .card-mexico {
+      border-color: rgba(201,106,26,0.3);
+      background: rgba(201,106,26,0.05);
+    }
+
+    /* ───── Tables ───── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .data-table th {
+      font-family: 'Outfit', sans-serif; font-size: 9.5px; font-weight: 600;
+      letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted);
+      padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .data-table .num { font-family: 'JetBrains Mono', monospace; text-align: right; }
+    .red-text { color: var(--red); font-weight: 600; }
+    .muted-text { color: var(--muted); }
+
+    /* ───── Bar charts ───── */
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .bar-label { font-size: 11.5px; color: var(--muted); flex-shrink: 0; width: 120px; }
+    .bar-track { flex: 1; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; background: var(--red); }
+    .bar-fill-gray { background: var(--muted); }
+    .bar-fill-light { background: rgba(204,26,26,0.35); }
+    .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); width: 52px; text-align: right; }
+
+    /* ───── Badges ───── */
+    .badge {
+      display: inline-flex; font-family: 'Outfit', sans-serif;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      padding: 3px 9px; border-radius: 20px; text-transform: uppercase;
+    }
+    .badge-red  { background: rgba(204,26,26,0.15); color: var(--red); }
+    .badge-gray { background: var(--bg3); color: var(--muted); }
+    .badge-orange { background: rgba(201,106,26,0.15); color: var(--tbd); }
+
+    /* ───── Callout chip ───── */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(204,26,26,0.1); border: 1px solid rgba(204,26,26,0.2);
+      border-radius: 6px; padding: 5px 12px;
+      font-family: 'Outfit', sans-serif; font-size: 11.5px; font-weight: 600;
+      color: var(--red); letter-spacing: 0.04em;
+    }
+    .chip-orange {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(201,106,26,0.1); border: 1px solid rgba(201,106,26,0.25);
+      border-radius: 6px; padding: 5px 12px;
+      font-family: 'Outfit', sans-serif; font-size: 11.5px; font-weight: 600;
+      color: var(--tbd); letter-spacing: 0.04em;
+    }
+
+    /* ───── Logo ───── */
+    .fw-logo { display: flex; align-items: center; gap: 11px; margin-bottom: 44px; }
+    .fw-logo img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      display: block;
+    }
+
+    /* ───── Feature list ───── */
+    .feature-group { margin-bottom: 24px; }
+    .feature-group-title {
+      font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--red);
+      margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid rgba(240,237,232,0.04);
+    }
+    .feature-item:last-child { border-bottom: none; }
+    .feature-dot {
+      width: 6px; height: 6px; background: var(--red); border-radius: 50%;
+      flex-shrink: 0; margin-top: 5px;
+    }
+    .feature-name {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+      color: var(--text); line-height: 1.3;
+    }
+    .feature-desc {
+      font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.5;
+    }
+
+    /* ───── Priority cards ───── */
+    .priority-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 28px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .priority-num {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 32px; color: rgba(204,26,26,0.25);
+    }
+    .priority-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: 18px; line-height: 1.2;
+    }
+    .priority-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ───── Slide 1 specifics ───── */
+    #s1-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+    .s1-main { display: flex; flex-direction: column; justify-content: flex-end; }
+    .s1-stat { display: flex; flex-direction: column; justify-content: flex-end; }
+
+    /* ───── Print ───── */
+    @media print {
+      html, body { overflow: visible; height: auto; }
+      .slide {
+        position: relative !important; opacity: 1 !important;
+        pointer-events: all !important; page-break-after: always;
+        min-height: 100vh;
+      }
+      #nav, #controls { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Controls -->
+<div id="controls">
+  <button class="ctrl-btn" onclick="toggleTheme()">◑ &nbsp;Theme</button>
+  <button class="ctrl-btn" onclick="printDeck()">↓ &nbsp;Print PDF</button>
+</div>
+
+<div id="deck">
+
+  <!-- ╔══════════════════════════════╗ -->
+  <!-- ║  SLIDE 1 — Platform Numbers  ║ -->
+  <!-- ╚══════════════════════════════╝ -->
+  <div class="slide active" id="slide-1">
+    <div class="fw-logo">
+      <img src="data:image/jpeg;base64,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" alt="Flywheel">
+    </div>
+
+    <div id="s1-grid">
+      <!-- Main title block -->
+      <div class="s1-main">
+        <p class="label label-red">All-Hands · June 2026</p>
+        <div class="slide-title" style="font-size:52px;">The platform<br>is scaling.</div>
+        <p class="slide-sub" style="margin-top:12px;">Platform traction · as of June 26, 2026</p>
+        <div class="divider"></div>
+        <div style="display:flex; flex-wrap:wrap; gap:32px; margin-bottom:8px;">
+          <div>
+            <div class="hero-num-xl">$2.28M</div>
+            <div class="hero-label">Total GMV (L30D) · −1.9% vs May</div>
+          </div>
+          <div>
+            <div class="hero-num-xl" style="color:var(--text); font-size:52px;">85,747</div>
+            <div class="hero-label">Total trips · +6.8% vs May</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; margin-top:16px; flex-wrap:wrap;">
+          <span class="chip">8 FA markets</span>
+          <span class="chip">1 FC market · LV</span>
+          <span class="chip-orange">🇲🇽 Mexico — June 28</span>
+        </div>
+      </div>
+
+      <!-- FA card -->
+      <div class="s1-stat">
+        <div class="card card-red" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+          <p class="label label-red">Uber 3P</p>
+          <div class="hero-num">$823K</div>
+          <div class="hero-label">GMV · +12.5% vs May</div>
+          <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:var(--text);">49,738</div>
+          <div class="hero-label">trips · 6 markets</div>
+          <div style="margin-top:16px; font-size:12px; color:var(--muted); line-height:1.6;">
+            292 earning drivers (non-LV)<br>+ 495 in Las Vegas
+          </div>
+        </div>
+      </div>
+
+      <!-- FC card -->
+      <div class="s1-stat">
+        <div class="card" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+          <p class="label">Flywheel Connect (FC)</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:36px; color:var(--text);">$1.45M</div>
+          <div class="hero-label">1P GMV · −8.5% vs May</div>
+          <div style="margin-top:16px; font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:var(--text);">36,009</div>
+          <div class="hero-label">1P trips · 7 markets</div>
+          <div style="margin-top:16px; font-size:12px; color:var(--muted); line-height:1.6;">
+            SD · FTL · SF · PS<br>SAC · Reno · Houston
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">01</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  SLIDE 2 — Uber 3P Platform Features ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <div class="slide" id="slide-2">
+    <p class="label label-red">Uber 3P · Platform Capabilities</p>
+    <div class="slide-title">What the platform<br>gives our drivers.</div>
+    <div class="divider"></div>
+
+    <div class="grid grid-3" style="flex:1; align-items:start; gap:24px;">
+
+      <!-- Dispatch & Offers -->
+      <div class="card" style="height:100%;">
+        <div class="feature-group">
+          <div class="feature-group-title">Dispatch &amp; Offers</div>
+
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Guaranteed Offers</div>
+              <div class="feature-desc">Locked-in offer before driver accepts — full trip visibility upfront</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Tentative Offers</div>
+              <div class="feature-desc">Soft dispatch while driver completes current trip</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Forward Dispatch</div>
+              <div class="feature-desc">Next ride queued before current trip ends</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Job Board</div>
+              <div class="feature-desc">Visible pool of available trips for manual selection</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Reserve</div>
+              <div class="feature-desc">Pre-booked future rides dispatched to driver in advance</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot" style="background:var(--tbd);"></div>
+            <div>
+              <div class="feature-name" style="color:var(--tbd);">Earner Accept PIN</div>
+              <div class="feature-desc" style="color:var(--tbd);">Taxi Stand PIN / Pair and Ride — rider walks up, shows PIN, driver enters it → receives and accepts offer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Driver Experience -->
+      <div class="card" style="height:100%;">
+        <div class="feature-group">
+          <div class="feature-group-title">Driver Experience</div>
+
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Intercom</div>
+              <div class="feature-desc">In-app driver ↔ rider communication channel</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Mid-Trip Cancellation</div>
+              <div class="feature-desc">Controlled cancellation flow mid-ride with rider notification</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Edit Destination</div>
+              <div class="feature-desc">Modify drop-off in real time — keeps dispatch optimized</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Rider to Driver Location Sharing</div>
+              <div class="feature-desc">Rider shares live location so driver can find them at pickup — especially at airports and large venues</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Incentives -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card">
+          <div class="feature-group-title">Incentives</div>
+
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Do X Get Y</div>
+              <div class="feature-desc">Complete a target # of trips → earn bonus. Drives engagement and on-time activation</div>
+            </div>
+          </div>
+          <div class="feature-item" style="border-bottom:none;">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Per Trip Bonus (PTB)</div>
+              <div class="feature-desc">Fixed bonus applied per trip in high-demand windows or markets</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-red" style="padding:24px;">
+          <p class="label label-red" style="margin-bottom:8px;">The advantage</p>
+          <div style="font-size:14px; color:var(--muted); line-height:1.7;">
+            These tools are <strong style="color:var(--text);">driver-side features</strong> — Uber's toolkit, accessible only through a licensed 3P operator like Flywheel.
+          </div>
+          <div style="margin-top:16px; font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; color:var(--red);">
+            No other taxi platform has this.
+          </div>
+        </div>
+
+        <div class="card" style="padding:20px; text-align:center;">
+          <div class="label" style="margin-bottom:8px;">Platform classification</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:var(--red);">P0 Partner</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Uber's #1 taxi tech partner classification</div>
+        </div>
+      </div>
+
+    </div>
+
+    <span class="slide-num">02</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 3 — Market Footprint      ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-3">
+    <p class="label label-red">Market Footprint · June 2026</p>
+    <div class="slide-title">8 FA markets. 1 FC market.<br>Mexico launching June 28.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-6040" style="flex:1; align-items:start; gap:24px;">
+      <!-- Market table -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">Flywheel Advantage (FA) — Hardware markets</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Contract</th>
+                <th class="num">Active</th>
+                <th class="num">On Uber</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th colspan="5" style="color:var(--red); padding-top:14px; font-size:10px; letter-spacing:0.1em;">UBER 3P MARKETS (JUNE L30D)</th></tr>
+              <tr>
+                <td><strong>San Diego</strong></td>
+                <td class="num red-text">35,160 trips</td>
+                <td class="num">5.0% fill</td>
+                <td class="num red-text">186</td>
+                <td><span class="badge badge-red">Live</span></td>
+              </tr>
+              <tr>
+                <td>Las Vegas <span style="font-size:10px; color:var(--muted);">FC</span></td>
+                <td class="num">6,085 trips</td>
+                <td class="num red-text">1.8% fill ⚠️</td>
+                <td class="num">495</td>
+                <td><span class="badge badge-gray">Low util</span></td>
+              </tr>
+              <tr>
+                <td>Fort Lauderdale</td>
+                <td class="num">4,042 trips</td>
+                <td class="num">6.0% fill</td>
+                <td class="num">40</td>
+                <td><span class="badge badge-red">Live</span></td>
+              </tr>
+              <tr>
+                <td>San Francisco</td>
+                <td class="num">3,090 trips</td>
+                <td class="num">4.4% fill</td>
+                <td class="num">36</td>
+                <td><span class="badge badge-red">Live</span></td>
+              </tr>
+              <tr>
+                <td>Palm Springs <span style="color:var(--red); font-size:10px;">★ best</span></td>
+                <td class="num">956 trips</td>
+                <td class="num red-text">14.7% fill</td>
+                <td class="num">24</td>
+                <td><span class="badge badge-red">Live</span></td>
+              </tr>
+              <tr>
+                <td>Houston</td>
+                <td class="num">405 trips</td>
+                <td class="num">5.8% fill</td>
+                <td class="num">6</td>
+                <td><span class="badge badge-gray">Early</span></td>
+              </tr>
+              <tr>
+                <td style="color:var(--tbd);">Miami</td>
+                <td class="num muted-text">—</td>
+                <td class="num muted-text">—</td>
+                <td class="num muted-text">—</td>
+                <td><span class="badge badge-orange">July 1</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card card-mexico" style="padding:20px;">
+          <p class="label" style="color:var(--tbd); margin-bottom:8px;">🇲🇽 Mexico — Launching June 28</p>
+          <div style="display:flex; gap:24px;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--tbd);">1,825</div>
+              <div style="font-size:11px; color:var(--muted);">vehicles · Phase 1</div>
+            </div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:16px; color:var(--muted); margin-top:4px;">Cancún · Tulum · Playa del Carmen</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right callouts -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-red" style="padding:24px;">
+          <p class="label label-red">Volume engine</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">San Diego</div>
+          <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--red);">186</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">active drivers on Uber</div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">May avg: 180.5 trips/driver/mo</div>
+        </div>
+
+        <div class="card" style="padding:24px;">
+          <p class="label">FC engine</p>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">Las Vegas</div>
+          <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700;">2,400</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">active on Uber via Kaptyn</div>
+          <div style="margin-top:8px; font-size:12px; color:var(--muted);">Fill rate: 3% · 39.6 offers/trip</div>
+          <div style="margin-top:4px; font-size:12px; color:var(--muted);">Acceptance improvement = biggest unlock</div>
+        </div>
+
+        <div class="card card-mexico" style="padding:24px;">
+          <p class="label" style="color:var(--tbd);">Pipeline</p>
+          <div style="font-size:13px; color:var(--muted); line-height:1.8;">
+            <div><span style="color:var(--tbd); font-weight:600;">Mexico Phase 2</span> — CDMX · Guadalajara · Toluca</div>
+            <div style="margin-top:6px;"><span style="color:var(--text); font-weight:600;">iCabbi</span> — 10K target · Q4 2026</div>
+            <div style="margin-top:6px;"><span style="color:var(--text); font-weight:600;">8,500+</span> signed &amp; ready to activate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">03</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 4 — Uber 3P Dispatch      ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-4">
+    <p class="label label-red">Uber 3P · Dispatch Engine</p>
+    <div class="slide-title">Flywheel as Uber's<br>supply-side partner.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-6040" style="flex:1; align-items:start;">
+      <!-- Left: tables -->
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">Network dispatch efficiency — June vs May (L30D)</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th class="num">June 2026</th>
+                <th class="num">May 2026</th>
+                <th class="num">Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Uber 3P GMV</td>
+                <td class="num red-text">$823,105</td>
+                <td class="num muted-text">$731,706</td>
+                <td class="num red-text">+12.5%</td>
+              </tr>
+              <tr>
+                <td>Fill Rate (L30D)</td>
+                <td class="num red-text">4.2%</td>
+                <td class="num muted-text">3.5%</td>
+                <td class="num red-text">+20%</td>
+              </tr>
+              <tr>
+                <td>Offers / Completed Trip</td>
+                <td class="num red-text">27.23</td>
+                <td class="num muted-text">34.83</td>
+                <td class="num red-text">−22%</td>
+              </tr>
+              <tr>
+                <td>Acceptance Rate</td>
+                <td class="num red-text">5.8%</td>
+                <td class="num muted-text">~3.5%</td>
+                <td class="num red-text">+66%</td>
+              </tr>
+              <tr>
+                <td>LV Offer Volume</td>
+                <td class="num">337K</td>
+                <td class="num muted-text">575K</td>
+                <td class="num red-text">−41% ⚠️</td>
+              </tr>
+              <tr>
+                <td>LV Completed Trips</td>
+                <td class="num">6,085</td>
+                <td class="num muted-text">8,648</td>
+                <td class="num red-text">−30%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid grid-2" style="gap:14px;">
+          <div class="card" style="text-align:center; padding:18px;">
+            <div class="label" style="margin-bottom:6px;">Offers / trip improvement</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:var(--red);">−22%</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">35 offers/trip → 27 in one month</div>
+          </div>
+          <div class="card" style="text-align:center; padding:18px;">
+            <div class="label" style="margin-bottom:6px;">Palm Springs fill rate</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:var(--red);">14.7%</div>
+            <div style="font-size:11px; color:var(--muted); margin-top:4px;">3–4× better than any other market</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: key stats -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-highlight" style="text-align:center; padding:28px 20px;">
+          <div class="label label-red" style="margin-bottom:10px;">Step-change in efficiency</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:52px; font-weight:700; color:var(--red);">27.23</div>
+          <div style="font-size:13px; color:var(--muted); margin-top:8px;">offers per completed trip</div>
+          <div style="margin-top:8px; font-size:11px; color:var(--muted);">Down from 34.83 in May — 22% gain in one month</div>
+        </div>
+        <div class="card card-red" style="text-align:center; padding:20px;">
+          <div class="label label-red" style="margin-bottom:6px;">LV — investigate ⚠️</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:36px; font-weight:700; color:var(--red);">1.8%</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Fill rate · 495 drivers · 12.3 trips/mo</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:8px; line-height:1.5;">Offer volume down 41%. Cause unknown.</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px;">
+          <div class="label" style="margin-bottom:6px;">Fill rate target</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:36px; font-weight:700;">10%</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:4px;">At 4.2% — path: forward dispatch + SPZ + acceptance</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">04</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 5 — Driver Impact         ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-5">
+    <p class="label label-red">Driver Impact</p>
+    <div class="slide-title">Real earnings.<br>Real people.</div>
+    <div class="divider"></div>
+
+    <div class="grid col-4060" style="flex:1; align-items:start; gap:24px;">
+      <!-- Left: headline earnings card -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card card-highlight" style="text-align:center; padding:32px 24px;">
+          <div class="label label-red" style="margin-bottom:12px;">June L30D — avg earning driver</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:52px; font-weight:700; color:var(--red);">$2,504</div>
+          <div style="margin-top:8px; font-size:13px; color:var(--muted);">up from $2,469 in May</div>
+          <div style="margin-top:12px; font-size:11px; color:var(--muted); line-height:1.5;">
+            292 earning drivers (non-LV)
+          </div>
+        </div>
+        <div class="card card-red" style="padding:20px; text-align:center;">
+          <div class="label label-red" style="margin-bottom:8px;">June top earner</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; color:var(--red);">$8,796</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">+$319 vs May's $8,477</div>
+          <div style="margin-top:8px; font-size:12px; color:var(--muted);">Top 10 combined: $72,412</div>
+        </div>
+        <div class="card" style="padding:18px; text-align:center;">
+          <div class="label" style="margin-bottom:6px;">Platform earnings note</div>
+          <div style="font-size:12px; color:var(--muted); line-height:1.6;">
+            Flywheel takes <strong style="color:var(--text);">no share</strong> of Uber 3P driver payouts.<br>Drivers keep 100% of Uber earnings.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: productivity + table -->
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="card">
+          <p class="label" style="margin-bottom:12px;">Driver productivity by market — May baseline</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Market</th>
+                <th class="num">Drivers</th>
+                <th class="num">Trips / driver / mo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>San Diego</strong></td>
+                <td class="num">186</td>
+                <td class="num red-text">180.5</td>
+              </tr>
+              <tr>
+                <td>San Francisco</td>
+                <td class="num">37</td>
+                <td class="num">107.1</td>
+              </tr>
+              <tr>
+                <td>Fort Lauderdale</td>
+                <td class="num">42</td>
+                <td class="num">75.0</td>
+              </tr>
+              <tr>
+                <td>Palm Springs</td>
+                <td class="num">26</td>
+                <td class="num">59.6</td>
+              </tr>
+              <tr>
+                <td class="muted-text">Houston</td>
+                <td class="num muted-text">10 on Uber</td>
+                <td class="num muted-text tbd">TBD</td>
+              </tr>
+              <tr>
+                <td class="muted-text">Baltimore</td>
+                <td class="num muted-text">13</td>
+                <td class="num muted-text tbd">TBD</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card" style="padding:20px;">
+          <p class="label" style="margin-bottom:10px;">June L30D driver earnings</p>
+          <div class="tbd-block" style="display:block; padding:12px; text-align:center;">[ PENDING — Redash L30D pull ]</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:8px; line-height:1.5;">Network grew from 296 earning drivers (May) to 3,500+ live. June earnings update coming.</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">05</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 6 — Mexico Wave 1         ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-6">
+    <p class="label" style="color:var(--tbd);">🇲🇽 Mexico · Wave 1 Launch</p>
+    <div class="slide-title">Cancún goes live<br>June 28, 2026.</div>
+    <div class="divider" style="background:var(--tbd);"></div>
+
+    <div class="grid col-5050" style="flex:1; align-items:start; gap:24px;">
+      <!-- Left: key stats -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card card-mexico" style="text-align:center; padding:32px 24px;">
+          <div class="label" style="color:var(--tbd); margin-bottom:12px;">Phase 1 Fleet</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:72px; font-weight:700; color:var(--tbd); line-height:1;">1,825</div>
+          <div style="font-size:14px; color:var(--muted); margin-top:8px;">vehicles · Quintana Roo</div>
+        </div>
+
+        <div class="grid grid-3" style="gap:12px;">
+          <div class="card" style="text-align:center; padding:16px;">
+            <div class="label" style="margin-bottom:6px;">Cancún</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--tbd);">325</div>
+          </div>
+          <div class="card" style="text-align:center; padding:16px;">
+            <div class="label" style="margin-bottom:6px;">Tulum</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--tbd);">1,200</div>
+          </div>
+          <div class="card" style="text-align:center; padding:16px;">
+            <div class="label" style="margin-bottom:6px;">Playa del Carmen</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; color:var(--tbd);">300</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:20px;">
+          <p class="label" style="margin-bottom:10px;">Uber Mexico fee structure</p>
+          <div style="font-size:13px; color:var(--muted); line-height:1.8;">
+            <div>Base rate: <strong style="color:var(--text);">2.0%</strong></div>
+            <div>With targets: <strong style="color:var(--red);">2.5%</strong></div>
+            <div>Performance bonus: up to <strong style="color:var(--red);">4.0%</strong></div>
+            <div style="margin-top:8px; font-size:11px; color:var(--muted);">Non-binding term sheet received June 16 · Daily settlement ✅</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: story + Phase 2 -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card" style="padding:24px;">
+          <p class="label label-red" style="margin-bottom:12px;">Why Mexico, why now</p>
+          <div style="font-size:14px; color:var(--muted); line-height:1.8;">
+            <div style="margin-bottom:8px;">🤝 <strong style="color:var(--text);">Uber invited Flywheel</strong> to fix Mexican taxi reputation — safety, security, transparency</div>
+            <div style="margin-bottom:8px;">🛡️ <strong style="color:var(--text);">Nexar AI dashcams</strong> — government-required trust layer, recurring revenue share</div>
+            <div style="margin-bottom:8px;">📋 <strong style="color:var(--text);">6,000 cars secured</strong> in Quintana Roo + Yucatan</div>
+            <div>💰 <strong style="color:var(--text);">Flywheel net take:</strong> 2.0–4.0% of rider payment</div>
+          </div>
+        </div>
+
+        <div class="card card-mexico" style="padding:24px;">
+          <p class="label" style="color:var(--tbd); margin-bottom:12px;">Phase 2 Pipeline</p>
+          <div style="font-size:14px; color:var(--muted); line-height:1.8;">
+            <div>🏙️ Mexico City (CDMX)</div>
+            <div>🏙️ Guadalajara</div>
+            <div>🏙️ Toluca</div>
+          </div>
+          <div style="margin-top:16px; font-size:11px; color:var(--muted);">Phase 2 launch TBD following Phase 1 performance</div>
+        </div>
+
+        <div class="card card-red" style="padding:20px; text-align:center;">
+          <div class="label label-red" style="margin-bottom:8px;">Uber classification</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">P0 Partner</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Uber's 2 most profitable 2025 divisions:<br>groceries + taxis</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="slide-num">06</span>
+    <span class="s-mark">S</span>
+  </div>
+
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  SLIDE 7 — What's Next           ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="slide" id="slide-7">
+    <p class="label label-red">What's Next</p>
+    <div class="slide-title">Four moves in<br>the next 30 days.</div>
+    <div class="divider"></div>
+
+    <div class="grid grid-2" style="flex:1; align-items:start; gap:20px;">
+
+      <div class="priority-card">
+        <div class="priority-num">01</div>
+        <div class="priority-title">🇲🇽 Mexico · Cancún Launch — June 28</div>
+        <div class="priority-body">
+          Phase 1 goes live with <strong>1,825 vehicles</strong> across Cancún, Tulum, and Playa del Carmen.
+          Uber non-binding term sheet in hand. Nexar dashcam trust layer active.
+          First revenue from the Mexican market. This is the playbook for Phase 2 (CDMX, Guadalajara, Toluca).
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">02</div>
+        <div class="priority-title">Miami Full Activation — July 1</div>
+        <div class="priority-body">
+          <strong>457 contracted vehicles</strong> activate on Uber July 1.
+          This is the largest single-market activation since Las Vegas.
+          Execution here proves the FA rollout model at scale and builds the case for the next 8 markets in pipeline.
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">03</div>
+        <div class="priority-title">Fix Las Vegas Conversion</div>
+        <div class="priority-body">
+          LV has <strong>2,400 drivers</strong> but a <strong>3% fill rate</strong> and <strong>39.6 offers per trip</strong> — worst in the network.
+          Demand is declining WoW −27%, MoM −45%. Driver acceptance is the root problem.
+          Kaptyn + Flywheel alignment on driver engagement is the priority action this month.
+        </div>
+      </div>
+
+      <div class="priority-card">
+        <div class="priority-num">04</div>
+        <div class="priority-title">iCabbi Integration · Q4 2026</div>
+        <div class="priority-body">
+          iCabbi operates <strong>100,000 vehicles globally</strong>. We're targeting 10,000 (20 fleets) through Flywheel Connect.
+          Q4 2026 integration start. This is the largest single pipeline opportunity in the network —
+          one contract = overnight scale without hardware deployment.
+        </div>
+      </div>
+
+    </div>
+
+    <span class="slide-num">07</span>
+    <span class="s-mark">S</span>
+  </div>
+
+</div>
+
+<!-- Nav -->
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#8592;</button>
+  <span id="slide-counter">01 / 07</span>
+  <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#8594;</button>
+</div>
+
+<script>
+  let current = 0;
+  const TOTAL = 7;
+  const slides = document.querySelectorAll('.slide');
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, TOTAL - 1));
+    slides[current].classList.add('active');
+    document.getElementById('slide-counter').textContent =
+      String(current + 1).padStart(2, '0') + ' / 07';
+    document.getElementById('prev-btn').disabled = current === 0;
+    document.getElementById('next-btn').disabled = current === TOTAL - 1;
+  }
+
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevSlide();
+  });
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  function printDeck() {
+    document.documentElement.dataset.theme = 'light';
+    window.print();
+  }
+</script>
+</body>
+</html>
