@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1901 Emmons Avenue — EZLiving Investor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:    #0C0C0C;
+  --ink:   #F0EDE8;
+  --gold:  #C9A052;
+  --dim:   #3A3830;
+  --muted: #A0A098;
+  --line:  rgba(240,237,232,0.08);
+}
+body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; font-weight:300; overflow:hidden; height:100vh; width:100vw; }
+.slide { position:absolute; inset:0; display:none; }
+.slide.active { display:block; }
+nav { position:fixed; bottom:32px; left:50%; transform:translateX(-50%); z-index:200; display:flex; align-items:center; gap:20px; }
+nav button { background:rgba(240,237,232,0.08); border:1px solid rgba(240,237,232,0.12); color:var(--ink); cursor:pointer; font-size:22px; transition:all .2s; padding:10px 22px; border-radius:8px; line-height:1; min-width:56px; min-height:44px; }
+nav button:hover { color:var(--gold); border-color:var(--gold); background:rgba(201,160,82,0.1); }
+nav button:active { transform:scale(0.95); }
+.snum { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); min-width:64px; text-align:center; letter-spacing:2px; }
+.back-btn { position:fixed; top:28px; left:36px; z-index:200; display:flex; align-items:center; gap:8px; padding:8px 18px; background:rgba(240,237,232,0.06); border:1px solid rgba(240,237,232,0.12); border-radius:8px; color:var(--muted); text-decoration:none; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; transition:all .2s; }
+.back-btn:hover { color:var(--gold); border-color:var(--gold); background:rgba(201,160,82,0.08); }
+.eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+.eyebrow.gold { color:var(--gold); }
+.h1 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:52px; letter-spacing:-2px; line-height:1.0; color:var(--ink); }
+.h2 { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:38px; letter-spacing:-1.5px; line-height:1.05; }
+.hero-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:96px; letter-spacing:-4px; line-height:1; color:var(--gold); }
+.body { font-size:15px; line-height:1.75; color:var(--muted); font-weight:300; }
+.tbd { color:#C96A1A; font-weight:600; }
+.slide-n { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:120px; color:rgba(240,237,232,0.04); letter-spacing:-6px; line-height:1; user-select:none; position:absolute; right:64px; bottom:72px; }
+.pad { padding:64px 72px; height:100%; display:flex; flex-direction:column; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:64px; flex:1; }
+.rule { width:48px; height:2px; background:var(--gold); margin-bottom:28px; }
+.divider { width:100%; height:1px; background:var(--line); margin:24px 0; }
+.stat-row { display:flex; gap:0; margin-top:40px; }
+.stat { flex:1; padding-right:40px; border-right:1px solid var(--line); margin-right:40px; }
+.stat:last-child { border-right:none; margin-right:0; padding-right:0; }
+.stat-val { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:32px; letter-spacing:-1px; color:var(--ink); line-height:1; }
+.stat-val.gold { color:var(--gold); }
+.stat-val.tbd { color:#C96A1A; font-size:22px; }
+.stat-lbl { font-size:11px; color:var(--muted); margin-top:6px; text-transform:uppercase; letter-spacing:2px; }
+.kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); border-radius:2px; overflow:hidden; }
+.kpi-cell { padding:20px 24px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+.kpi-cell:nth-child(even) { border-right:none; }
+.kpi-cell:nth-last-child(-n+2) { border-bottom:none; }
+.kpi-v { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; letter-spacing:-1px; color:var(--gold); }
+.kpi-v.tbd { color:#C96A1A; font-size:18px; }
+.kpi-l { font-size:11px; color:var(--muted); margin-top:4px; letter-spacing:1.5px; text-transform:uppercase; }
+.stack { display:flex; flex-direction:column; gap:0; }
+.stack-row { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--line); }
+.stack-row:last-child { border-bottom:none; }
+.stack-label { font-size:14px; color:var(--muted); }
+.stack-val { font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; }
+.stack-val.gold { color:var(--gold); }
+.stack-val.tbd { color:#C96A1A; }
+.pill { display:inline-block; padding:4px 12px; background:rgba(201,160,82,0.1); border:1px solid rgba(201,160,82,0.2); border-radius:100px; font-size:11px; color:var(--gold); font-family:'JetBrains Mono',monospace; letter-spacing:1px; margin-top:12px; }
+.cover-bg { position:absolute; inset:0; background:linear-gradient(135deg, #0C0C0C 0%, #0A0C14 50%, #0C100C 100%); }
+.cover-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(201,160,82,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,160,82,0.025) 1px,transparent 1px); background-size:80px 80px; }
+.cover-glow { position:absolute; top:-100px; right:-100px; width:600px; height:600px; border-radius:50%; background:radial-gradient(circle,rgba(201,160,82,0.04) 0%,transparent 70%); pointer-events:none; }
+.tag { display:inline-block; padding:5px 14px; border:1px solid rgba(240,237,232,0.15); border-radius:100px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:28px; }
+.token-guard { display:none; position:fixed; inset:0; background:var(--bg); z-index:9999; align-items:center; justify-content:center; flex-direction:column; gap:16px; text-align:center; }
+.token-guard.show { display:flex; }
+</style>
+</head>
+<body>
+
+<!-- Token guard -->
+<div class="token-guard" id="tokenGuard">
+  <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;">Access Required</div>
+  <div style="color:var(--muted);font-size:15px;">Please access this deck through the EZLiving investor portal.</div>
+  <a href="https://www.ezliving.com" style="margin-top:8px;padding:12px 28px;background:var(--gold);color:#0C0C0C;border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;">Go to Portal →</a>
+</div>
+
+<!-- Back to storyboard -->
+<a href="https://sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html" class="back-btn">← Storyboard</a>
+
+<!-- NAV -->
+<nav>
+  <button onclick="go(-1)">←</button>
+  <span class="snum" id="snum">01 / 06</span>
+  <button onclick="go(1)">→</button>
+</nav>
+
+<!-- ═══════════════════════════════════ SLIDE 1 — COVER -->
+<div class="slide active" id="s1">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="pad" style="position:relative;z-index:2;justify-content:space-between;">
+    <div>
+      <div class="tag">P-03 · Sheepshead Bay, Brooklyn</div>
+      <div class="hero-num">1901</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-1px;margin-top:4px;">Emmons Avenue</div>
+      <div style="font-size:15px;color:var(--muted);margin-top:8px;">Brooklyn, NY 11235</div>
+    </div>
+    <div style="max-width:560px;">
+      <div class="rule"></div>
+      <div class="h2" style="font-size:28px;letter-spacing:-1px;margin-bottom:16px;">The Crown Jewel —<br>Waterfront Mixed-Use</div>
+      <div class="body">The largest and most transformative property in the EZLiving portfolio. 220 luxury residences, 41,536 SF of ground retail, and a waterfront setting on Emmons Avenue in Sheepshead Bay — a once-in-a-generation development opportunity.</div>
+      <div class="stat-row" style="margin-top:32px;">
+        <div class="stat">
+          <div class="stat-val">220</div>
+          <div class="stat-lbl">Residential Units</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">260K</div>
+          <div class="stat-lbl">Square Feet</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val gold">3.4×</div>
+          <div class="stat-lbl">Return Multiple</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">01</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 2 — SITE OVERVIEW -->
+<div class="slide" id="s2">
+  <div class="pad">
+    <div class="eyebrow gold">Site Overview</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">The site at<br>1901 Emmons Ave</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:24px;">1901 Emmons Avenue sits directly on the Emmons Avenue waterfront in Sheepshead Bay — one of Brooklyn's most recognizable and beloved destinations. The site offers dramatic water views, immediate access to the marina district, and a scale that commands market attention.</div>
+        <div class="body">The project is subject to a pending rezoning that, if approved, would unlock significantly higher density and value than the as-of-right baseline. The rezoning path represents the portfolio's single highest-upside scenario.</div>
+        <div class="pill">Rezoning Pending · Upside Opportunity</div>
+        <div style="margin-top:32px;">
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Address</span>
+              <span class="stack-val">1901 Emmons Ave, Brooklyn NY 11235</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Total SF</span>
+              <span class="stack-val">260,492 SF</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Residential</span>
+              <span class="stack-val">220 units</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Retail</span>
+              <span class="stack-val gold">41,536 SF</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Target Operations</span>
+              <span class="stack-val">2028</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-grid" style="margin-top:48px;">
+          <div class="kpi-cell">
+            <div class="kpi-v">220</div>
+            <div class="kpi-l">Residential Units</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">41,536</div>
+            <div class="kpi-l">Retail SF</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">$300M</div>
+            <div class="kpi-l">Projected Sell-Out</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">3.4×</div>
+            <div class="kpi-l">Return Multiple</div>
+          </div>
+          <div class="kpi-cell" style="grid-column:span 2;">
+            <div class="kpi-v">$88M</div>
+            <div class="kpi-l">Total Capital Required</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">02</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 3 — NEIGHBORHOOD -->
+<div class="slide" id="s3">
+  <div class="pad">
+    <div class="eyebrow gold">Neighborhood</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Sheepshead Bay,<br>Brooklyn</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:24px;">Sheepshead Bay is a vibrant waterfront community in southern Brooklyn — famous for its marina, fishing boats, and the legendary Emmons Avenue promenade. It's a destination neighborhood with a strong residential demand and a walkable, authentic character that luxury buyers increasingly prize.</div>
+        <div class="body">1901 sits at the epicenter of the Emmons Avenue strip — with unobstructed water views and direct access to one of New York City's most active recreational waterfronts.</div>
+        <div class="divider"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+            <div class="body">Direct Emmons Avenue waterfront — marina, promenade, dining</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+            <div class="body">B/Q subway — 45 min to Midtown Manhattan</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+            <div class="body">Proximity to Manhattan Beach — Brooklyn's premier coastal enclave</div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+            <div class="body">Strong demand from growing professional + family buyer segment</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;margin-top:48px;">
+        <div style="background:rgba(240,237,232,0.03);border:1px solid var(--line);border-radius:4px;padding:28px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Market Context</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Waterfront premium over inland</span>
+              <span class="stack-val gold">+20–35%</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Emmons Ave foot traffic daily</span>
+              <span class="stack-val">10,000+</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Retail vacancy rate (area)</span>
+              <span class="stack-val">~4%</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">LaaS waterfront premium (est.)</span>
+              <span class="stack-val gold">+20–30%</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(201,160,82,0.06);border:1px solid rgba(201,160,82,0.15);border-radius:4px;padding:20px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;margin-bottom:8px;">Rezoning upside</div>
+          <div class="body" style="font-size:13px;">If rezoning is approved, density increases significantly — creating a higher-value exit scenario beyond the base 3.4× return projection.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">03</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 4 — CAPITAL STACK -->
+<div class="slide" id="s4">
+  <div class="pad">
+    <div class="eyebrow gold">Capital Structure</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">The<br>Numbers</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:32px;">1901 is the portfolio's flagship return opportunity — the largest capital deployment with the highest projected return multiple. The mixed-use structure provides both condominium sell-out revenue and long-term retail income.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Total Capital Required</span>
+            <span class="stack-val">$88M</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Projected Gross Sell-Out</span>
+            <span class="stack-val gold">$300M</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Projected Gross Profit</span>
+            <span class="stack-val gold">$212M</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Return Multiple</span>
+            <span class="stack-val gold">3.4×</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Avg Residential Unit Price</span>
+            <span class="stack-val">~$1,100,000</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Retail Revenue (stabilized)</span>
+            <span class="stack-val gold">TBD at lease-up</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">LaaS Monthly Revenue (220 units)</span>
+            <span class="stack-val gold">$195,800 / mo</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div style="background:rgba(240,237,232,0.03);border:1px solid var(--line);border-radius:4px;padding:28px;margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:16px;">Capital Stack</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Senior Construction Loan</span>
+              <span class="stack-val">~65%</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Mezzanine / Preferred Equity</span>
+              <span class="stack-val">~20%</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Sponsor Equity</span>
+              <span class="stack-val gold">~15%</span>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(201,160,82,0.06);border:1px solid rgba(201,160,82,0.15);border-radius:4px;padding:24px;">
+          <div class="kpi-grid" style="border:none;gap:16px;">
+            <div style="text-align:center;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:var(--gold);">$88M</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;">Total Capital</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:var(--gold);">$300M</div>
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;">Sell-Out</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">04</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 5 — THE ASK -->
+<div class="slide" id="s5">
+  <div class="pad">
+    <div class="eyebrow gold">The Ask</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Investment<br>Opportunity</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:32px;">1901 Emmons Avenue is the flagship investment opportunity in the EZLiving portfolio — the highest-returning, highest-scale asset, combining residential sell-out upside with long-term retail income and rezoning optionality.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Equity Raise</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Investment Structure</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Preferred Return</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Target IRR</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Hold Period</span>
+            <span class="stack-val">36–48 months</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Minimum Investment</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+        </div>
+        <div style="margin-top:20px;padding:16px 20px;background:rgba(201,160,82,0.06);border:1px solid rgba(201,160,82,0.15);border-radius:4px;">
+          <div style="font-size:12px;color:#C96A1A;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">TBD fields will be updated with confirmed terms. Contact us for current information.</div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div style="background:rgba(240,237,232,0.03);border:1px solid var(--line);border-radius:4px;padding:28px;">
+          <div class="eyebrow" style="margin-bottom:16px;">Why 1901</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Waterfront premium</strong> — Emmons Avenue is among the most desirable addresses in Brooklyn; scarcity drives pricing</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Dual income streams</strong> — residential sell-out + stabilized retail lease income from 41,536 SF ground floor</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Rezoning optionality</strong> — pending approval unlocks a higher-density, higher-value scenario beyond the 3.4× base case</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Largest LaaS deployment</strong> — 220 units × $890/mo = $195,800/mo in recurring platform revenue from day one of occupancy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">05</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 6 — CTA -->
+<div class="slide" id="s6">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="pad" style="position:relative;z-index:2;align-items:center;justify-content:center;text-align:center;">
+    <div style="max-width:600px;">
+      <div class="eyebrow gold" style="display:block;text-align:center;margin-bottom:28px;">1901 Emmons Avenue · Sheepshead Bay, Brooklyn</div>
+      <div class="h1" style="font-size:48px;margin-bottom:20px;">Ready to move<br>forward?</div>
+      <div class="rule" style="margin:0 auto 28px;"></div>
+      <div class="body" style="margin-bottom:40px;font-size:16px;">This deck is part of the EZLiving investor platform. To discuss terms, review the full financial model, or schedule a site visit — reach out through the portal.</div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="https://www.ezliving.com/contact" style="padding:16px 36px;background:var(--gold);color:#0C0C0C;border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;">Contact EZLiving →</a>
+        <a href="https://sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html" style="padding:16px 36px;background:rgba(240,237,232,0.06);border:1px solid rgba(240,237,232,0.15);color:var(--ink);border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;">← View Storyboard</a>
+      </div>
+      <div style="margin-top:32px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;">CONFIDENTIAL · NDA REQUIRED · QUALIFIED INVESTORS ONLY</div>
+    </div>
+  </div>
+  <div class="slide-n">06</div>
+</div>
+
+<script>
+  // Token guard
+  const token = localStorage.getItem('ezliving_deck_token');
+  if (!token || token !== 'EZL2026DECK') {
+    document.getElementById('tokenGuard').classList.add('show');
+  }
+
+  // Slide engine
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+  const total = slides.length;
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    document.getElementById('snum').textContent =
+      String(cur + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  }
+  function go(d) { show(cur + d); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+</script>
+</body>
+</html>
