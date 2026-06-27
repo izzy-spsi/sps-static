@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>EZLiving Investor Platform — How to Use</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0C1B2A;
+    --bg2: #142236;
+    --bg3: #1C2E42;
+    --text: #F0EDE8;
+    --muted: #8A9BB0;
+    --accent: #C9A052;
+    --border: rgba(240,237,232,0.08);
+    --card: rgba(255,255,255,0.04);
+    --green: #4CAF82;
+    --amber: #F4C842;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-logo { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; }
+  .header-logo span { color: var(--accent); }
+  .header-meta { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+    padding: 64px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .hero h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 42px; letter-spacing: -1.5px; line-height: 1.1; max-width: 620px; }
+  .hero p { font-size: 16px; color: var(--muted); margin-top: 16px; max-width: 580px; }
+
+  /* ── Layout ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 64px 48px; }
+  .section { margin-bottom: 56px; }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent);
+    color: #0C1B2A;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-desc { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .gold-rule { width: 36px; height: 2px; background: var(--accent); margin: 16px 0; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-accent { border-color: rgba(201,160,82,0.3); background: rgba(201,160,82,0.05); }
+  .card-green { border-color: rgba(76,175,130,0.3); background: rgba(76,175,130,0.05); }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* ── URL / Code blocks ── */
+  .url-block {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    word-break: break-all;
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .url-block .copy-hint { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  /* ── Steps ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid rgba(201,160,82,0.4);
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .step-content p { font-size: 14px; color: var(--muted); }
+  .step-content .note { font-size: 13px; color: var(--muted); margin-top: 8px; font-style: italic; }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    margin: 2px 2px 2px 0;
+  }
+  .tag-green { color: var(--green); border-color: rgba(76,175,130,0.3); }
+  .tag-gold { color: var(--accent); border-color: rgba(201,160,82,0.3); }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .data-table th { text-align: left; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+
+  /* ── Alert box ── */
+  .alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 16px 0;
+  }
+  .alert-amber { background: rgba(244,200,66,0.08); border: 1px solid rgba(244,200,66,0.25); }
+  .alert-green { background: rgba(76,175,130,0.08); border: 1px solid rgba(76,175,130,0.25); }
+
+  /* ── Print ── */
+  .print-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: #0C1B2A;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(201,160,82,0.3);
+  }
+  @media print {
+    .print-btn { display: none; }
+    body { background: white; color: #1A1208; }
+    .header, .hero { background: #F7F4EF; }
+    .url-block { background: #EEE; color: #8B4513; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⬇ Save as PDF</button>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo"><span>EZ</span>Living · Investor Platform</div>
+  <div class="header-meta">CONFIDENTIAL · ADMIN GUIDE · JUNE 2026</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">Platform Admin Guide</div>
+  <h1>How to Use the EZLiving Investor Platform</h1>
+  <p>A step-by-step guide for Tim Ziss and Izzy Aala — covering investor onboarding, deck access, admin tools, and the full platform flow.</p>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+
+  <!-- SECTION 1: Your Admin Link -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">1</div>
+      Your Admin Access Link
+    </div>
+    <div class="gold-rule"></div>
+    <p class="section-desc">This is your one-click link. Bookmark it. It bypasses the NDA and access code flow entirely — you go straight to the investor materials page.</p>
+
+    <div class="card card-accent">
+      <div class="card-title">⚡ Admin Bypass Link</div>
+      <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">One click → straight to all investor materials. No form, no NDA, no code required.</p>
+      <div class="url-block">
+        https://ezliving-portal-production.up.railway.app/bypass?key=ezl-admin-a1638f8ee07bb0d19d47b8fc
+        <span class="copy-hint">← Bookmark this</span>
+      </div>
+      <div class="alert alert-amber" style="margin-top:12px;">
+        <span>⚠️</span>
+        <span>Keep this link private. Anyone with this URL gets full admin access to all materials. Do not share it with investors — use the investor flow below for that.</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="card-title" style="font-size:14px; color:var(--muted);">📋 Admin Panel (investor management)</div>
+      <div class="url-block">
+        https://ezliving-portal-production.up.railway.app/admin
+      </div>
+      <p style="font-size:13px; color:var(--muted);">Password: <span style="font-family:'JetBrains Mono',monospace; color:var(--accent);">ezliving2026</span> · View leads, generate access codes, send email to investors.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: What's on the Platform -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">2</div>
+      What's on the Platform
+    </div>
+    <div class="gold-rule"></div>
+    <p class="section-desc">Once you're on the materials page (via your admin link or investor access code), you'll see four live investor decks.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Deck</th>
+          <th>Property</th>
+          <th>Key Numbers</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>EZLiving Storyboard</td>
+          <td>Full portfolio overview</td>
+          <td>22 slides · All 3 properties · LaaS vision</td>
+          <td><span class="tag tag-green">Live v0.4.0</span></td>
+        </tr>
+        <tr>
+          <td>P-01 · 9201 4th Ave</td>
+          <td>Bay Ridge, Brooklyn</td>
+          <td>105 units · $171.9M sell-out · Full financials</td>
+          <td><span class="tag tag-green">Live v0.2</span></td>
+        </tr>
+        <tr>
+          <td>P-02 · 7614 4th Ave</td>
+          <td>Bay Ridge, Brooklyn</td>
+          <td>70 units · $70M sell-out · 2.7× return</td>
+          <td><span class="tag tag-green">Live v0.1</span></td>
+        </tr>
+        <tr>
+          <td>P-03 · 1901 Emmons Ave</td>
+          <td>Sheepshead Bay, Brooklyn</td>
+          <td>220 units · $300M sell-out · 3.4× return</td>
+          <td><span class="tag tag-green">Live v0.1</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-green">
+      <span>✅</span>
+      <span>All decks open in a new tab directly from the materials page. Navigation arrows appear at the bottom of every deck. Light/Dark mode toggle and PDF export are in the top-right corner of each deck.</span>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Investor Flow -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">3</div>
+      How an Investor Gets Access
+    </div>
+    <div class="gold-rule"></div>
+    <p class="section-desc">This is the flow every investor goes through. You only step in at Step 4 — everything else is automated.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Investor fills out the contact form</h4>
+          <p>They visit <span style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-size:12px;">ezliving-portal-production.up.railway.app</span> (soon: <strong>ezliving.com</strong>), enter their name, email, phone, and interest level.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>NDA signing via DocuSeal</h4>
+          <p>Immediately after submitting, they're directed to sign the EZLiving Investor NDA. The document is pre-filled with EZLiving LLC / Tim Ziss on the company side — investor only needs to fill their name, title, and signature.</p>
+          <p class="note">The signed NDA is stored automatically. You'll receive an email alert at izzy@spsi.ai when an investor completes signing.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Investor lands on confirmation page</h4>
+          <p>They see a confirmation that their NDA was received and that an access code will be sent shortly.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>You generate and send the access code (1 click)</h4>
+          <p>Go to the Admin Panel → find the investor in the leads list → click <strong>"Generate Code"</strong> → click <strong>"Send Code"</strong>. The investor receives an email with their unique access code automatically.</p>
+          <p class="note">This is the only manual step in the entire flow. A future update will automate this on NDA completion.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Investor enters their code → full materials access</h4>
+          <p>They return to the portal, enter their unique access code, and immediately see all four investor decks. Each deck opens in a new tab. If they try to access a deck directly without a valid code, they're redirected back to the portal to request access.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Admin Panel Walkthrough -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">4</div>
+      Admin Panel Walkthrough
+    </div>
+    <div class="gold-rule"></div>
+    <p class="section-desc">The admin panel at <span style="color:var(--accent); font-family:'JetBrains Mono',monospace; font-size:12px;">/admin</span> is where you manage all investor leads.</p>
+
+    <div class="card">
+      <div class="card-title">📋 What you can see and do</div>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:20px; flex-shrink:0;">👤</span>
+          <div><strong>Leads list</strong> — every investor who filled out the contact form. Shows name, email, phone, interest level, NDA signed status, and whether an access code has been sent.</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:20px; flex-shrink:0;">🔑</span>
+          <div><strong>Generate Code</strong> — creates a unique one-time access code for any investor. The code is tied to their account.</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--border);">
+          <span style="font-size:20px; flex-shrink:0;">📧</span>
+          <div><strong>Send Code</strong> — fires an email to the investor with their access code and a link back to the portal to enter it.</div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start; padding:12px 0;">
+          <span style="font-size:20px; flex-shrink:0;">✅</span>
+          <div><strong>NDA status</strong> — shows which investors have completed signing. Green checkmark = signed. You only send codes to investors who have signed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Security -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">5</div>
+      Security Overview
+    </div>
+    <div class="gold-rule"></div>
+    <p class="section-desc">How the platform protects the decks from unauthorized access.</p>
+
+    <div class="card">
+      <table class="data-table" style="margin:0;">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>How It Works</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NDA Gate</td>
+            <td>Investor must sign before receiving an access code. Signed documents stored in DocuSeal.</td>
+          </tr>
+          <tr>
+            <td>Access Code</td>
+            <td>Unique per-investor code. Required to unlock the materials page.</td>
+          </tr>
+          <tr>
+            <td>Deck Token</td>
+            <td>Materials page injects a session token into every deck link. Token is stored in the browser and verified on each deck load.</td>
+          </tr>
+          <tr>
+            <td>Direct URL block</td>
+            <td>Anyone who navigates directly to a deck URL without a valid token is immediately redirected to the investor portal.</td>
+          </tr>
+          <tr>
+            <td>Admin bypass</td>
+            <td>Separate admin key — works independently from investor tokens. Can be rotated at any time without affecting investor access.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 6: URLs -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">6</div>
+      Quick Reference — All URLs
+    </div>
+    <div class="gold-rule"></div>
+
+    <div class="card card-accent">
+      <div class="card-title" style="color:var(--accent);">🔐 Your Admin Links (private)</div>
+      <div class="url-block" style="margin-top:16px;">
+        <div>
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">ADMIN BYPASS (bookmark this)</div>
+          https://ezliving-portal-production.up.railway.app/bypass?key=ezl-admin-a1638f8ee07bb0d19d47b8fc
+        </div>
+      </div>
+      <div class="url-block">
+        <div>
+          <div style="font-size:11px; color:var(--muted); margin-bottom:4px;">ADMIN PANEL · password: ezliving2026</div>
+          https://ezliving-portal-production.up.railway.app/admin
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="card-title" style="font-size:14px;">🌐 Public Investor Entry Point</div>
+      <div class="url-block">
+        https://ezliving-portal-production.up.railway.app
+        <span class="copy-hint">→ ezliving.com (soon)</span>
+      </div>
+      <p style="font-size:13px; color:var(--muted);">This is the URL to share with potential investors. They start here.</p>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="card-title" style="font-size:14px;">📊 Investor Decks (via materials page only)</div>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+        <div class="url-block" style="font-size:12px;">
+          <div>
+            <div style="font-size:10px; color:var(--muted); margin-bottom:3px;">STORYBOARD v0.4.0</div>
+            sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html
+          </div>
+        </div>
+        <div class="url-block" style="font-size:12px;">
+          <div>
+            <div style="font-size:10px; color:var(--muted); margin-bottom:3px;">P-01 · 9201 4th Ave</div>
+            geopulse-ai-production.up.railway.app/9201-investor-deck-v0.2.html
+          </div>
+        </div>
+        <div class="url-block" style="font-size:12px;">
+          <div>
+            <div style="font-size:10px; color:var(--muted); margin-bottom:3px;">P-02 · 7614 4th Ave</div>
+            sps-production-7dbc.up.railway.app/7614-investor-deck-v0.1.0.html
+          </div>
+        </div>
+        <div class="url-block" style="font-size:12px;">
+          <div>
+            <div style="font-size:10px; color:var(--muted); margin-bottom:3px;">P-03 · 1901 Emmons Ave</div>
+            sps-production-7dbc.up.railway.app/1901-investor-deck-v0.1.0.html
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: Coming Soon -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-num">7</div>
+      Coming Soon
+    </div>
+    <div class="gold-rule"></div>
+
+    <div class="card">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+          <span>ezliving.com domain live</span>
+          <span class="tag tag-gold">In Progress</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+          <span>Auto-send access code on NDA completion</span>
+          <span class="tag">Planned</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+          <span>P-02 + P-03 raise amount / valuation (TBD fields)</span>
+          <span class="tag">Awaiting Tim</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+          <span>DocuSeal webhook for automated NDA alerts</span>
+          <span class="tag">Planned</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+          <span>Access code expiry + resend flow</span>
+          <span class="tag">Planned</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Footer -->
+<div style="background:var(--bg2); border-top:1px solid var(--border); padding:28px 64px; display:flex; justify-content:space-between; align-items:center;">
+  <div style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700;"><span style="color:var(--accent);">EZ</span>Living LLC</div>
+  <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:1px;">CONFIDENTIAL · FOR ADMIN USE ONLY · JUNE 2026</div>
+</div>
+
+</body>
+</html>
