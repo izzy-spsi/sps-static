@@ -16,12 +16,15 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { overflow-y: scroll; }
+
   body {
     font-family: 'DM Sans', Georgia, serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.7;
     font-size: 15px;
+    min-height: 100vh;
   }
 
   #wrapper {
@@ -212,7 +215,7 @@
   .tb-btn.primary { background: var(--orange); border-color: var(--orange); color: white; }
   .tb-btn.primary:hover { background: #e04e10; }
 
-  #wrapper { padding-top: 80px; }
+  #wrapper { padding-top: 80px; padding-bottom: 100px; }
 
   /* Footer */
   .doc-footer {
@@ -242,10 +245,35 @@
   }
   .note-box strong { color: var(--text); }
 
+  /* Floating print button */
+  #print-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 22px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,94,26,0.4);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 200;
+    transition: all 0.2s;
+  }
+  #print-fab:hover { background: #e04e10; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,94,26,0.5); }
+
   @media print {
     #topbar { display: none !important; }
-    body { background: white; color: #111; }
-    #wrapper { padding-top: 40px; }
+    #print-fab { display: none !important; }
+    body { background: white !important; color: #111 !important; }
+    html { overflow-y: visible; }
+    #wrapper { padding-top: 40px !important; padding-bottom: 40px !important; max-width: 100% !important; }
     :root {
       --orange: #cc3300;
       --bg: white;
@@ -253,8 +281,11 @@
       --muted: #555;
       --border: rgba(0,0,0,0.15);
     }
-    .summary-box { border: 1px solid rgba(204,51,0,0.3); background: rgba(204,51,0,0.03); }
-    .doc-mark { background: linear-gradient(135deg, #cc3300, #991100); }
+    .summary-box { border: 1px solid rgba(204,51,0,0.3) !important; background: rgba(204,51,0,0.03) !important; }
+    .doc-mark { background: linear-gradient(135deg, #cc3300, #991100) !important; }
+    .sig-block { page-break-inside: avoid; }
+    h2 { page-break-after: avoid; }
+    .def-list, ol, .note-box { page-break-inside: avoid; }
   }
 </style>
 </head>
@@ -476,5 +507,8 @@
   </div>
 
 </div><!-- /wrapper -->
+
+<button id="print-fab" onclick="window.print()">🖨 Print / Save PDF</button>
+
 </body>
 </html>
