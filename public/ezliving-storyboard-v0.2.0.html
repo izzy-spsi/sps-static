@@ -321,19 +321,7 @@
 <body>
 
 <!-- NAV -->
-<!-- AUTH GATE -->
-<div id="authGate">
-  <div class="auth-box">
-    <div class="auth-logo"><span class="ez">EZ</span><span class="living">Living</span></div>
-    <div class="auth-sub">Investor Storyboard &mdash; Confidential</div>
-    <div style="font-size: 12px; color: var(--muted); margin-bottom: 20px; letter-spacing: 0.3px;">Enter your access code to continue</div>
-    <input class="auth-input" id="authCode" type="text" placeholder="Access code (e.g. EZL-XXXX)"
-      autocomplete="off" style="text-transform:uppercase;letter-spacing:2px;font-family:'JetBrains Mono',monospace;"
-      onkeydown="if(event.key==='Enter')doAuth()" />
-    <div class="auth-error" id="authErr"></div>
-    <button class="auth-btn" id="authSubmitBtn" onclick="doAuth()">Enter</button>
-  </div>
-</div>
+
 
 <nav class="nav">
   <div class="nav-brand" onclick="goTo(1)" style="cursor:pointer;" title="Back to start"><span class="ez">EZ</span><span class="living">Living</span><span class="deck-version">v0.2.0</span></div>
@@ -1081,53 +1069,8 @@
     window.print();
   }
 
-  // ─── AUTH ───
-  (function() {
-    if (sessionStorage.getItem('ezl_access') === 'ok') {
-      document.getElementById('authGate').style.display = 'none';
-      setTimeout(() => { assignEditIds(); restoreDrafts(); }, 50);
-    } else {
-      document.getElementById('authGate').style.display = 'flex';
-      setTimeout(() => document.getElementById('authCode').focus(), 100);
-    }
-  })();
-
-  async function doAuth() {
-    const code = document.getElementById('authCode').value.trim().toUpperCase();
-    const btn = document.getElementById('authSubmitBtn');
-    const err = document.getElementById('authErr');
-    if (!code) return;
-
-    btn.textContent = 'Verifying...';
-    btn.disabled = true;
-    err.textContent = '';
-
-    try {
-      const res = await fetch('/api/ezliving/validate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
-      });
-      const data = await res.json();
-
-      if (data.valid) {
-        sessionStorage.setItem('ezl_access', 'ok');
-        document.getElementById('authGate').style.display = 'none';
-        assignEditIds();
-        restoreDrafts();
-      } else {
-        err.textContent = data.reason || 'Invalid access code. Try again.';
-        document.getElementById('authCode').value = '';
-        document.getElementById('authCode').focus();
-        btn.textContent = 'Enter';
-        btn.disabled = false;
-      }
-    } catch {
-      err.textContent = 'Connection error. Please try again.';
-      btn.textContent = 'Enter';
-      btn.disabled = false;
-    }
-  }
+  // Auth gate removed — access controlled by EZLiving investor portal
+  (function() { setTimeout(() => { assignEditIds(); restoreDrafts(); }, 50); })();
 
   // ─── EDIT MODE ───
   let editMode = false;
