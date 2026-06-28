@@ -229,13 +229,11 @@ nav button:active { transform: scale(0.95); }
 .tl-phase.dim { color: var(--muted); }
 
 /* ─── TOKEN GUARD ─── */
-.token-guard {
   display: none; position: fixed; inset: 0;
   background: var(--bg); z-index: 9999;
   align-items: center; justify-content: center;
   flex-direction: column; gap: 16px; text-align: center;
 }
-.token-guard.show { display: flex; }
 
 /* ─── ADMIN BUTTONS ─── */
 .admin-only {
@@ -259,13 +257,6 @@ nav button:active { transform: scale(0.95); }
 </style>
 </head>
 <body>
-
-<!-- Token guard -->
-<div class="token-guard" id="tokenGuard">
-  <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;">Access Required</div>
-  <div style="color:var(--muted);font-size:15px;">Please access this deck through the EZLiving investor portal.</div>
-  <a href="https://ezliving-portal-production.up.railway.app" style="margin-top:8px;padding:12px 28px;background:var(--gold);color:#0C0C0C;border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;">Go to Portal →</a>
-</div>
 
 <!-- Back button -->
 <a href="https://sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html" class="back-btn">← Storyboard</a>
@@ -1085,12 +1076,7 @@ nav button:active { transform: scale(0.95); }
 </div>
 
 <script>
-  // Token guard
-  const token = localStorage.getItem('ezliving_deck_token');
   const adminSession = sessionStorage.getItem('ezliving_admin');
-  if (!token || token !== 'EZL2026DECK') {
-    document.getElementById('tokenGuard').classList.add('show');
-  }
   if (adminSession === 'true') {
     document.getElementById('adminControls').classList.add('visible');
   }
