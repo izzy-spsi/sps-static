@@ -8,6 +8,15 @@
     if (urlToken === TOKEN) {
       localStorage.setItem('ezl_deck_token', TOKEN);
     }
+    // Show Edit + PDF only for admins
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('ezliving_admin') === 'true') {
+        const eb = document.getElementById('editBtn');
+        const pb = document.getElementById('pdfBtn');
+        if (eb) eb.style.display = '';
+        if (pb) pb.style.display = '';
+      }
+    });
   })();
 </script>
   <meta charset="UTF-8" />
@@ -335,9 +344,9 @@
 <nav class="nav">
   <div class="nav-brand" onclick="goTo(1)" style="cursor:pointer;" title="Back to start"><span class="ez">EZ</span><span class="living">Living</span><span class="deck-version">v0.4.0</span></div>
   <div class="nav-controls">
-    <button class="btn-sm" id="editBtn" onclick="toggleEdit()">✏️ Edit</button>
+    <button class="btn-sm" id="editBtn" onclick="toggleEdit()" style="display:none">✏️ Edit</button>
     <button class="btn-sm" onclick="toggleTheme()">☀ / ☾</button>
-    <button class="btn-sm" onclick="printDeck()">⬇ PDF</button>
+    <button class="btn-sm" id="pdfBtn" onclick="printDeck()" style="display:none">⬇ PDF</button>
   </div>
 </nav>
 
