@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7614 4th Avenue — EZLiving Investor Deck v0.3.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:    #0C0C0C;
+  --ink:   #F0EDE8;
+  --gold:  #C9A052;
+  --dim:   #3A3830;
+  --muted: #A0A098;
+  --line:  rgba(240,237,232,0.08);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ─── ENGINE ─── */
+.slide { position:absolute; inset:0; display:none; }
+.slide.active { display:block; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%); z-index: 200;
+  display: flex; align-items: center; gap: 20px;
+}
+nav button {
+  background: rgba(240,237,232,0.08); border: 1px solid rgba(240,237,232,0.12);
+  color: var(--ink); cursor: pointer; font-size: 22px; transition: all .2s;
+  padding: 10px 22px; border-radius: 8px; line-height: 1;
+  min-width: 56px; min-height: 44px;
+}
+nav button:hover { color: var(--gold); border-color: var(--gold); background: rgba(201,160,82,0.1); }
+nav button:active { transform: scale(0.95); }
+.snum {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: var(--muted); min-width: 64px; text-align: center;
+  letter-spacing: 2px;
+}
+
+/* ─── BACK BUTTON ─── */
+.back-btn {
+  position: fixed; top: 28px; left: 36px; z-index: 200;
+  display: flex; align-items: center; gap: 8px; padding: 8px 18px;
+  background: rgba(240,237,232,0.06); border: 1px solid rgba(240,237,232,0.12);
+  border-radius: 8px; color: var(--muted); text-decoration: none;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 2px; text-transform: uppercase; transition: all .2s;
+}
+.back-btn:hover { color: var(--gold); border-color: var(--gold); background: rgba(201,160,82,0.08); }
+
+/* ─── TYPOGRAPHY ─── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 20px;
+}
+.eyebrow.gold { color: var(--gold); }
+.h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 52px;
+  letter-spacing: -2px; line-height: 1.0;
+  color: var(--ink);
+}
+.h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 38px;
+  letter-spacing: -1.5px; line-height: 1.05;
+}
+.hero-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 96px;
+  letter-spacing: -4px; line-height: 1;
+  color: var(--gold);
+}
+.body { font-size: 15px; line-height: 1.75; color: var(--muted); font-weight: 300; }
+.tbd { color: #C96A1A; font-weight: 600; }
+.slide-n {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 120px;
+  color: rgba(240,237,232,0.04); letter-spacing: -6px;
+  line-height: 1; user-select: none;
+  position: absolute; right: 64px; bottom: 72px;
+}
+
+/* ─── LAYOUT ─── */
+.pad { padding: 64px 72px; height: 100%; display: flex; flex-direction: column; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; flex: 1; }
+.rule { width: 48px; height: 2px; background: var(--gold); margin-bottom: 28px; }
+.divider { width: 100%; height: 1px; background: var(--line); margin: 24px 0; }
+
+/* ─── STAT BLOCK ─── */
+.stat-row { display: flex; gap: 0; margin-top: 40px; }
+.stat {
+  flex: 1; padding-right: 40px; border-right: 1px solid var(--line);
+  margin-right: 40px;
+}
+.stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.stat-val {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 32px; letter-spacing: -1px;
+  color: var(--ink); line-height: 1;
+}
+.stat-val.gold { color: var(--gold); }
+.stat-val.tbd { color: #C96A1A; font-size: 22px; }
+.stat-lbl {
+  font-size: 11px; color: var(--muted); margin-top: 6px;
+  text-transform: uppercase; letter-spacing: 2px;
+}
+
+/* ─── KPI GRID ─── */
+.kpi-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border: 1px solid var(--line); border-radius: 2px; overflow: hidden;
+}
+.kpi-cell {
+  padding: 20px 24px; border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.kpi-cell:nth-child(even) { border-right: none; }
+.kpi-cell:nth-last-child(-n+2) { border-bottom: none; }
+.kpi-cell.full { grid-column: span 2; border-right: none; }
+.kpi-v {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; font-size: 24px; letter-spacing: -1px; color: var(--gold);
+}
+.kpi-v.tbd { color: #C96A1A; font-size: 18px; }
+.kpi-v.ink { color: var(--ink); }
+.kpi-l { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+/* ─── STACK TABLE ─── */
+.stack { display: flex; flex-direction: column; gap: 0; }
+.stack-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid var(--line);
+}
+.stack-row:last-child { border-bottom: none; }
+.stack-label { font-size: 14px; color: var(--muted); }
+.stack-val { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; }
+.stack-val.gold { color: var(--gold); }
+.stack-val.tbd { color: #C96A1A; }
+
+/* ─── PILLS / TAGS ─── */
+.pill {
+  display: inline-block; padding: 4px 12px;
+  background: rgba(201,160,82,0.1); border: 1px solid rgba(201,160,82,0.2);
+  border-radius: 100px; font-size: 11px; color: var(--gold);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; margin-top: 12px;
+}
+.tag {
+  display: inline-block; padding: 5px 14px;
+  border: 1px solid rgba(240,237,232,0.15); border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+}
+
+/* ─── COVER BG ─── */
+.cover-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0C0C0C 0%, #141414 50%, #0C0C14 100%); }
+.cover-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(201,160,82,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,160,82,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.cover-glow {
+  position: absolute; top: -100px; right: -100px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,160,82,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── BULLET LIST ─── */
+.bullet-list { display: flex; flex-direction: column; gap: 12px; }
+.bullet-item { display: flex; gap: 14px; align-items: flex-start; }
+.bullet-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; }
+.bullet-dot.muted { background: var(--muted); }
+
+/* ─── CARD ─── */
+.card {
+  background: rgba(240,237,232,0.03);
+  border: 1px solid var(--line);
+  border-radius: 4px; padding: 24px;
+}
+.card.gold-tint {
+  background: rgba(201,160,82,0.06);
+  border-color: rgba(201,160,82,0.15);
+}
+
+/* ─── COMPLIANCE ROW ─── */
+.comply-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--line); gap: 12px;
+}
+.comply-row:last-child { border-bottom: none; }
+.comply-badge {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; padding: 3px 10px; border-radius: 100px; flex-shrink: 0;
+}
+.comply-badge.ok { background: rgba(100,180,100,0.12); color: #7DC47D; border: 1px solid rgba(100,180,100,0.2); }
+.comply-badge.sp { background: rgba(201,160,82,0.12); color: var(--gold); border: 1px solid rgba(201,160,82,0.2); }
+
+/* ─── TIMELINE ─── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.tl-item:last-child { border-bottom: none; }
+.tl-dot-col { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 4px; }
+.tl-dot.dim { background: var(--dim); border: 1px solid var(--muted); }
+.tl-phase {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--gold); letter-spacing: 2px; text-transform: uppercase; white-space: nowrap;
+  min-width: 80px;
+}
+.tl-phase.dim { color: var(--muted); }
+
+/* ─── TOKEN GUARD ─── */
+.token-guard {
+  display: none; position: fixed; inset: 0;
+  background: var(--bg); z-index: 9999;
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px; text-align: center;
+}
+.token-guard.show { display: flex; }
+
+/* ─── ADMIN BUTTONS ─── */
+.admin-only {
+  display: none; position: fixed; top: 28px; right: 36px; z-index: 200;
+  gap: 10px;
+}
+.admin-only.visible { display: flex; }
+.admin-btn {
+  padding: 8px 18px; border-radius: 8px; font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+  transition: all .2s; border: 1px solid;
+}
+.admin-btn.edit-btn {
+  background: rgba(201,160,82,0.1); border-color: rgba(201,160,82,0.3); color: var(--gold);
+}
+.admin-btn.edit-btn:hover { background: rgba(201,160,82,0.2); }
+.admin-btn.pdf-btn {
+  background: rgba(240,237,232,0.06); border-color: rgba(240,237,232,0.15); color: var(--ink);
+}
+.admin-btn.pdf-btn:hover { background: rgba(240,237,232,0.12); }
+</style>
+</head>
+<body>
+
+<!-- Token guard -->
+<div class="token-guard" id="tokenGuard">
+  <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;">Access Required</div>
+  <div style="color:var(--muted);font-size:15px;">Please access this deck through the EZLiving investor portal.</div>
+  <a href="https://ezliving-portal-production.up.railway.app" style="margin-top:8px;padding:12px 28px;background:var(--gold);color:#0C0C0C;border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;">Go to Portal →</a>
+</div>
+
+<!-- Back button -->
+<a href="https://sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html" class="back-btn">← Storyboard</a>
+
+<!-- Admin controls (hidden from investors) -->
+<div class="admin-only" id="adminControls">
+  <button class="admin-btn edit-btn" onclick="toggleEdit()">✏️ Edit</button>
+  <button class="admin-btn pdf-btn" onclick="window.print()">⬇ PDF</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <button onclick="go(-1)">←</button>
+  <span class="snum" id="snum">01 / 12</span>
+  <button onclick="go(1)">→</button>
+</nav>
+
+<!-- ═══════════════════════════════════ SLIDE 1 — COVER -->
+<div class="slide active" id="s1">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="pad" style="position:relative;z-index:2;justify-content:space-between;">
+    <div>
+      <div class="eyebrow gold">Confidential Investment Presentation · 2026</div>
+      <div class="hero-num">7614</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-1px;margin-top:4px;">4th Avenue</div>
+      <div style="font-size:15px;color:var(--muted);margin-top:8px;">Bay Ridge, Brooklyn NY 11209</div>
+    </div>
+    <div style="max-width:600px;">
+      <div class="rule"></div>
+      <div class="h2" style="font-size:28px;letter-spacing:-1px;margin-bottom:16px;">13-Story Mixed-Income<br>Residential Development</div>
+      <div class="body">60-unit ground-up development at the corner of 4th Avenue and 76th Street — same corridor as the EZLiving flagship at 9201. Special permit architecture approved. LaaS platform integration from day one.</div>
+      <div class="stat-row" style="margin-top:32px;">
+        <div class="stat">
+          <div class="stat-val">60</div>
+          <div class="stat-lbl">Residential Units</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">62,018</div>
+          <div class="stat-lbl">Zoning SF</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val gold">13</div>
+          <div class="stat-lbl">Stories · 141'</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">01</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 2 — THE DEAL -->
+<div class="slide" id="s2">
+  <div class="pad">
+    <div class="eyebrow gold">The Deal</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Investment<br>Highlights</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">7614 is a 13-story, 60-unit residential development with 25% affordable component — positioned on the same 4th Avenue corridor as the 9201 flagship and sharing the same LaaS platform infrastructure.</div>
+        <div class="bullet-list">
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body"><strong style="color:var(--ink);">Special Permit secured path</strong> — ZR 74-95 process underway through NYC City Planning, enabling 141' height vs 95' as-of-right maximum</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body"><strong style="color:var(--ink);">Dual-zone lot</strong> — 18,623 SF corner + interior lot spans R4A and R7B districts, maximizing allowable FAR via affordable housing bonus</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body"><strong style="color:var(--ink);">Highest building on the corridor</strong> — 13 stories significantly above neighborhood context, establishing marquee positioning</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body"><strong style="color:var(--ink);">Platform synergy</strong> — zero incremental LaaS infrastructure cost; EZLiving brand equity transfers directly from 9201</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body"><strong style="color:var(--ink);">Institutional quality architecture</strong> — Fontan Architecture (AIA), DOB Job No. 2025002, filed January 2026</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="kpi-grid" style="margin-top:48px;">
+          <div class="kpi-cell">
+            <div class="kpi-v">60</div>
+            <div class="kpi-l">Total Units</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">45</div>
+            <div class="kpi-l">Market Rate</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">15</div>
+            <div class="kpi-l">Affordable (25%)</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">13</div>
+            <div class="kpi-l">Stories</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">62,018</div>
+            <div class="kpi-l">Zoning SF</div>
+          </div>
+          <div class="kpi-cell">
+            <div class="kpi-v">~32</div>
+            <div class="kpi-l">Parking Spaces</div>
+          </div>
+          <div class="kpi-cell full">
+            <div class="kpi-v tbd">[ RAISE: TBD ]</div>
+            <div class="kpi-l">Current Equity Round</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">02</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 3 — SITE OVERVIEW -->
+<div class="slide" id="s3">
+  <div class="pad">
+    <div class="eyebrow gold">Site Context</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">The Site at<br>7614 4th Ave</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">A corner lot at 4th Avenue and 76th Street in Bay Ridge, Brooklyn — combining two adjacent lots (Block 5950, Lots 47 & 52) into an 18,623 SF consolidated development site. The dual-lot structure spans both R4A and R7B zoning districts, unlocking the full affordable housing FAR bonus.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Address</span>
+            <span class="stack-val">7614 4th Ave, Brooklyn NY 11209</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Block / Lots</span>
+            <span class="stack-val">5950 / Lots 47 & 52</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Total Lot Area</span>
+            <span class="stack-val">18,623 SF</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Lot Type</span>
+            <span class="stack-val">Corner + Interior</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">4th Ave Frontage</span>
+            <span class="stack-val">100' wide street</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">77th St Frontage</span>
+            <span class="stack-val">60' narrow street</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Owner</span>
+            <span class="stack-val gold">Tim Ziss</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Community Board</span>
+            <span class="stack-val">Brooklyn CD 10</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Zoning Breakdown</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">R4A Area (14.4%)</span>
+              <span class="stack-val">2,690 SF · FAR 1.65</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">R7B Area (85.6%)</span>
+              <span class="stack-val">15,966 SF · FAR 3.90</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">District</span>
+              <span class="stack-val">Special Bay Ridge District</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Max Allowable ZFA</span>
+              <span class="stack-val gold">62,260 SF</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Proposed ZFA</span>
+              <span class="stack-val">62,018 SF</span>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">Same Corridor as 9201</div>
+          <div class="body" style="font-size:13px;">7614 benefits from the EZLiving brand presence already established by the 9201 flagship. Buyers familiar with the platform represent a pre-qualified pipeline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">03</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 4 — SPECIAL PERMIT -->
+<div class="slide" id="s4">
+  <div class="pad">
+    <div class="eyebrow gold">Entitlement Strategy</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">The Special<br>Permit Path</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:24px;">7614 requires a Special Permit under ZR 74-95 to achieve its full 13-story, 141' massing. Two zoning variances require City Planning approval — both are standard and well-precedented for mixed-income developments of this type.</div>
+        <div style="margin-bottom:24px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Variance 1 — Building Height</div>
+          <div class="comply-row">
+            <span class="stack-label" style="font-size:13px;">As-of-right maximum height</span>
+            <span class="comply-badge ok">95'</span>
+          </div>
+          <div class="comply-row">
+            <span class="stack-label" style="font-size:13px;">Base height proposed</span>
+            <span class="comply-badge ok">57' ✓ Complies</span>
+          </div>
+          <div class="comply-row">
+            <span class="stack-label" style="font-size:13px;">Full building height proposed</span>
+            <span class="comply-badge sp">141' · ZR 74-95</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Variance 2 — Open Area</div>
+          <div class="comply-row">
+            <span class="stack-label" style="font-size:13px;">Min. distance between buildings</span>
+            <span class="comply-badge ok">40' required</span>
+          </div>
+          <div class="comply-row">
+            <span class="stack-label" style="font-size:13px;">Proposed distance to church</span>
+            <span class="comply-badge sp">4.5' · ZR 74-95</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Why ZR 74-95 Works Here</div>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">R7B with qualifying affordable housing (25%) is a strong basis for City Planning approval — height bonuses for affordability are core to NYC housing policy</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">All other zoning metrics comply — lot coverage (68.8% vs 100% max), setbacks (7' provided), FAR (62,018 vs 62,260 max)</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Fontan Architecture has a track record of navigating Special Permits in NYC's outer boroughs — DOB filing active as of January 2026</div>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:10px;">Zoning Compliances at a Glance</div>
+          <div class="stack">
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label" style="font-size:13px;">Lot area / width</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ COMPLIES</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label" style="font-size:13px;">FAR regulations</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ COMPLIES</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label" style="font-size:13px;">Rear yard (below 75')</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ COMPLIES</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label" style="font-size:13px;">Lot coverage (68.8% / 80% max)</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ COMPLIES</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label" style="font-size:13px;">Street wall / setback</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ COMPLIES</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">04</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 5 — NEIGHBORHOOD -->
+<div class="slide" id="s5">
+  <div class="pad">
+    <div class="eyebrow gold">Location Analysis</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Bay Ridge,<br>Brooklyn</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:24px;">Bay Ridge is one of Brooklyn's most stable and sought-after residential neighborhoods — known for its tree-lined streets, waterfront access, and strong owner-occupant culture. It has consistently outperformed broader Brooklyn metrics in price appreciation and long-term demand.</div>
+        <div class="body" style="margin-bottom:24px;">The 4th Avenue corridor is emerging as Brooklyn's next premium residential spine. 9201 set the standard. 7614 is the next address on the same street.</div>
+        <div class="divider"></div>
+        <div class="bullet-list">
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body">R train — 30 minutes to Midtown Manhattan</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body">Direct access to Shore Road waterfront park system</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body">Low crime, high owner-occupancy, family-oriented community</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body">Strong retail corridor along 3rd and 5th Avenues</div>
+          </div>
+          <div class="bullet-item">
+            <div class="bullet-dot"></div>
+            <div class="body">7-story building already under construction adjacent on 4th Ave — demand confirmed</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Market Context</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Bay Ridge median condo price</span>
+              <span class="stack-val gold">$750K–$950K</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">5-year appreciation trend</span>
+              <span class="stack-val">+18–22%</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Avg. days on market</span>
+              <span class="stack-val">28 days</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">LaaS premium (est.)</span>
+              <span class="stack-val gold">+15–25%</span>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">Special Bay Ridge District</div>
+          <div class="body" style="font-size:13px;">Brooklyn Community District 10. The Special Bay Ridge District zoning overlay protects neighborhood character while enabling well-designed affordable housing to exceed standard height limits — precisely what 7614 is built to leverage.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">05</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 6 — BUILDING PROGRAM -->
+<div class="slide" id="s6">
+  <div class="pad">
+    <div class="eyebrow gold">Project Overview</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Building<br>Program</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">A 13-story, non-combustible Class II-A construction residential building with ground-floor group parking. The building is designed to maximize allowable FAR under the R7B affordable housing bonus, with a 25% affordable component qualifying for the 3.90 FAR uplift.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Building Stories</span>
+            <span class="stack-val">13 Floors</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Building Height</span>
+            <span class="stack-val gold">141' (Special Permit)</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Base Height</span>
+            <span class="stack-val">57'</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Construction Class</span>
+            <span class="stack-val">II-A Non-Combustible</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Occupancy Group</span>
+            <span class="stack-val">R-2 Residential</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Ground Floor</span>
+            <span class="stack-val">Group Parking (~32 spaces)</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Total Footprint (proposed)</span>
+            <span class="stack-val">8,801 SF</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:14px;">Unit Mix (60 Units)</div>
+          <div style="display:flex;gap:0;margin-bottom:20px;">
+            <div style="flex:1;text-align:center;padding:16px;border-right:1px solid var(--line);">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:var(--gold);">45</div>
+              <div style="font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">Market Rate</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:16px;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:var(--muted);">15</div>
+              <div style="font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;">Affordable</div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label">1-Bedroom units</span>
+              <span class="stack-val">41</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label">2-Bedroom units</span>
+              <span class="stack-val">11</span>
+            </div>
+            <div class="stack-row" style="padding:10px 0;">
+              <span class="stack-label">3-Bedroom units</span>
+              <span class="stack-val">17</span>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">Inclusionary Housing Bonus</div>
+          <div class="body" style="font-size:13px;">The 25% affordable component (15 units) qualifies for the R7B Inclusionary Housing program — enabling FAR 3.90 vs the standard 3.45, unlocking an additional ~7,200 SF of development rights.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">06</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 7 — FLOOR PLATE -->
+<div class="slide" id="s7">
+  <div class="pad">
+    <div class="eyebrow gold">Floor Plan Analysis</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Floor-by-Floor<br>Breakdown</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">The building is designed with an efficient floor plate that steps back above the base height to comply with zoning setback requirements. Ground-floor parking (~32 spaces) reduces below-grade cost while providing resident amenity value on a transit-rich corridor.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Floor 1</span>
+            <span class="stack-val">8,801 SF · Group Parking</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Floor 2</span>
+            <span class="stack-val">7,502 SF (parking) + 1,299 SF</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Floor 3 amenities</span>
+            <span class="stack-val">6,594 SF · 1,621 SF amenities</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Floors 4–6 (typical)</span>
+            <span class="stack-val">~6,180–6,594 SF / floor</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Floors 7–12 (upper)</span>
+            <span class="stack-val">~4,574–4,969 SF / floor</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Floor 13 (penthouse tier)</span>
+            <span class="stack-val">~395–403 SF</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Total Proposed ZFA</span>
+            <span class="stack-val gold">62,018 SF</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Height & Setback Profile</div>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Base height: 57' (complies with 40' min / 65' standard max)</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">7' setback along 4th Avenue (wide street) — fully compliant</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Rear yard: 20' below 75', 30' above 75' — compliant</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Total massing: 141' via ZR 74-95 Special Permit</div>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">Architect of Record</div>
+          <div class="body" style="font-size:13px;">Fontan Architecture · Jorge Fontan AIA<br>28 W 27th St, Suite 606, New York NY 10001<br>DOB Job No. 2025002 · Filed January 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">07</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 8 — TIMELINE -->
+<div class="slide" id="s8">
+  <div class="pad">
+    <div class="eyebrow gold">Execution</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Development<br>Timeline</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">The critical path runs through City Planning for the ZR 74-95 Special Permit. Once approved, construction follows a standard 24-30 month build cycle for a building of this scale. EZLiving platform integration happens in parallel with construction, not after.</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-phase">Q1 2026</div>
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;">Architectural Filing</div>
+              <div class="body" style="font-size:13px;">DOB Job 2025002 filed · ZR 74-95 Special Permit submitted to City Planning</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase tbd">2026</div>
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#C96A1A;">[ Special Permit Approval ]</div>
+              <div class="body" style="font-size:13px;">City Planning review · Community Board input · ULURP process</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase tbd">TBD</div>
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#C96A1A;">[ Construction Financing Closed ]</div>
+              <div class="body" style="font-size:13px;">Senior construction loan + equity close · shovel-ready</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase tbd">TBD</div>
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#C96A1A;">[ Construction Start ]</div>
+              <div class="body" style="font-size:13px;">Demo · foundation · 24–30 month build cycle</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase tbd">TBD+30</div>
+            <div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:4px;color:#C96A1A;">[ TCO & LaaS Activation ]</div>
+              <div class="body" style="font-size:13px;">Temporary Certificate of Occupancy · EZLiving LaaS goes live · sales close</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">Key Milestones</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Architecture filed</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ JAN 2026</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">ZR 74-95 submission</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7DC47D;">✓ ACTIVE</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">City Planning approval</span>
+              <span class="stack-val tbd" style="font-size:13px;">TBD</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Construction start</span>
+              <span class="stack-val tbd" style="font-size:13px;">TBD</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">TCO / sell-out</span>
+              <span class="stack-val tbd" style="font-size:13px;">TBD</span>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">Special Permit Precedent</div>
+          <div class="body" style="font-size:13px;">ZR 74-95 is a well-established mechanism used across NYC outer boroughs for mixed-income residential development that exceeds height limits via affordable housing commitment. City Planning has consistently approved projects with stronger community benefit ratios than required.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">08</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 9 — REVENUE -->
+<div class="slide" id="s9">
+  <div class="pad">
+    <div class="eyebrow gold">Revenue & Sell-Out</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Revenue<br>Model</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">Revenue at 7614 operates on two horizons: a one-time condominium sell-out of market-rate units, and a recurring LaaS subscription stream that begins at TCO and continues indefinitely. The LaaS component is what distinguishes EZLiving from a traditional condo developer.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Market Rate Units</span>
+            <span class="stack-val">45 units</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Avg Sale Price / Unit</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Projected Gross Sell-Out</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">LaaS Monthly / Unit</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Stabilized LaaS Revenue</span>
+            <span class="stack-val tbd">[ TBD / mo ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Affordable Unit Income</span>
+            <span class="stack-val">Rental / restricted</span>
+          </div>
+        </div>
+        <div style="margin-top:20px;padding:16px 20px;background:rgba(201,160,82,0.04);border:1px solid rgba(201,160,82,0.1);border-radius:4px;">
+          <div style="font-size:12px;color:#C96A1A;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">Financial projections pending construction financing terms. Contact EZLiving for current proforma.</div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">LaaS Revenue Engine</div>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Not a one-time transaction</strong> — LaaS subscription continues post-sale, creating recurring institutional-quality revenue</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Zero incremental cost</strong> — 7614 runs on the same platform as 9201; no duplicated tech build</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Pricing premium</strong> — Bay Ridge data on 9201 validates 15–25% premium on comparable units without LaaS</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;"><strong style="color:var(--ink);">Pre-sold pipeline</strong> — 9201 residents + waitlist = direct buyer pipeline for 7614</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">09</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 10 — CAPITAL STACK -->
+<div class="slide" id="s10">
+  <div class="pad">
+    <div class="eyebrow gold">Capital Stack</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Capital<br>Structure</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">7614 will be capitalized with a conventional construction finance stack — senior loan, mezzanine, and sponsor equity — with the equity raise structured to offer investors preferred return with upside participation in the sell-out and LaaS revenue stream.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Total Capital Required</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Senior Construction Loan</span>
+            <span class="stack-val">~65% LTC</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Mezzanine / Preferred Equity</span>
+            <span class="stack-val">~20%</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Sponsor Equity</span>
+            <span class="stack-val gold">~15%</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Current Raise (investor equity)</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Preferred Return</span>
+            <span class="stack-val tbd">[ TBD ]</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Hold Period</span>
+            <span class="stack-val">24–36 months</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card gold-tint" style="margin-bottom:20px;">
+          <div style="text-align:center;padding:16px 0;">
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;color:var(--gold);letter-spacing:-2px;line-height:1;">TBD</div>
+            <div style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:8px;">Total Capital Stack</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="eyebrow" style="margin-bottom:12px;">Investment Terms</div>
+          <div class="stack">
+            <div class="stack-row">
+              <span class="stack-label">Investment Structure</span>
+              <span class="stack-val tbd">[ TBD ]</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Target IRR</span>
+              <span class="stack-val tbd">[ TBD ]</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Return Multiple</span>
+              <span class="stack-val tbd">[ TBD ]</span>
+            </div>
+            <div class="stack-row">
+              <span class="stack-label">Minimum Investment</span>
+              <span class="stack-val tbd">[ TBD ]</span>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding:12px 16px;background:rgba(201,160,82,0.04);border:1px solid rgba(201,160,82,0.1);border-radius:4px;">
+            <div style="font-size:11px;color:#C96A1A;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">Contact EZLiving for current term sheet and proforma.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">10</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 11 — SPONSOR -->
+<div class="slide" id="s11">
+  <div class="pad">
+    <div class="eyebrow gold">Sponsor</div>
+    <div class="two" style="margin-top:0;">
+      <div>
+        <div class="h2" style="margin-bottom:20px;">Allied<br>Properties LLC</div>
+        <div class="rule"></div>
+        <div class="body" style="margin-bottom:28px;">Allied Properties LLC is the sponsor and owner of record for 7614 4th Avenue. Led by Tim Ziss, Allied has assembled a portfolio of development sites along the 4th Avenue corridor, with 7614 representing the firm's most ambitious vertical project to date — and its first LaaS-integrated development through the EZLiving platform.</div>
+        <div class="stack">
+          <div class="stack-row">
+            <span class="stack-label">Sponsor</span>
+            <span class="stack-val gold">Allied Properties LLC</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Principal</span>
+            <span class="stack-val">Tim Ziss</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Contact</span>
+            <span class="stack-val">timziss@alliedproperties.com</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Role</span>
+            <span class="stack-val">Developer / Owner of Record</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Platform Partner</span>
+            <span class="stack-val">EZLiving (LaaS)</span>
+          </div>
+          <div class="stack-row">
+            <span class="stack-label">Architect</span>
+            <span class="stack-val">Fontan Architecture (AIA)</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:48px;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="eyebrow" style="margin-bottom:12px;">EZLiving Partnership</div>
+          <div class="bullet-list">
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">7614 is the second EZLiving property on the 4th Ave corridor — 9201 established the proof of concept</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">LaaS integration reduces Allied's tech overhead to zero — EZLiving handles platform, residents, and services</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Brand halo from 9201 extends to 7614 without additional marketing spend</div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-dot"></div>
+              <div class="body" style="font-size:14px;">Shared buyer pipeline: 9201 waitlist and residents are the first-call audience for 7614</div>
+            </div>
+          </div>
+        </div>
+        <div class="card gold-tint">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;margin-bottom:8px;">The EZLiving Platform</div>
+          <div class="body" style="font-size:13px;">EZLiving is a Living-as-a-Service (LaaS) platform that integrates technology, services, and community infrastructure directly into residential buildings — enabling developers to command a 15–25% price premium while generating predictable recurring revenue from every unit.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-n">11</div>
+</div>
+
+<!-- ═══════════════════════════════════ SLIDE 12 — CTA -->
+<div class="slide" id="s12">
+  <div class="cover-bg"></div>
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="pad" style="position:relative;z-index:2;align-items:center;justify-content:center;text-align:center;">
+    <div style="max-width:640px;">
+      <div class="eyebrow gold" style="display:block;text-align:center;margin-bottom:28px;">P-02 · 7614 4th Avenue · Bay Ridge, Brooklyn</div>
+      <div class="h1" style="font-size:48px;margin-bottom:20px;">Ready to move<br>forward?</div>
+      <div class="rule" style="margin:0 auto 28px;"></div>
+      <div class="body" style="margin-bottom:40px;font-size:16px;">7614 is the next address on Bay Ridge's most active development corridor — with active architecture, a clear Special Permit path, and the EZLiving platform already built. To discuss terms, review the proforma, or schedule a site visit, reach out through the portal.</div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="https://ezliving-portal-production.up.railway.app/contact" style="padding:16px 36px;background:var(--gold);color:#0C0C0C;border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;">Contact EZLiving →</a>
+        <a href="https://sps-production-7dbc.up.railway.app/ezliving-storyboard-v0.4.0.html" style="padding:16px 36px;background:rgba(240,237,232,0.06);border:1px solid rgba(240,237,232,0.15);color:var(--ink);border-radius:8px;text-decoration:none;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;">← View Storyboard</a>
+      </div>
+      <div style="margin-top:32px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;">CONFIDENTIAL · NDA REQUIRED · QUALIFIED INVESTORS ONLY</div>
+    </div>
+  </div>
+  <div class="slide-n">12</div>
+</div>
+
+<script>
+  // Token guard
+  const token = localStorage.getItem('ezliving_deck_token');
+  const adminSession = sessionStorage.getItem('ezliving_admin');
+  if (!token || token !== 'EZL2026DECK') {
+    document.getElementById('tokenGuard').classList.add('show');
+  }
+  if (adminSession === 'true') {
+    document.getElementById('adminControls').classList.add('visible');
+  }
+
+  // Edit mode
+  let editMode = false;
+  function toggleEdit() {
+    editMode = !editMode;
+    document.querySelectorAll('[data-editable]').forEach(el => {
+      el.contentEditable = editMode ? 'true' : 'false';
+      el.style.outline = editMode ? '1px dashed rgba(201,160,82,0.5)' : 'none';
+    });
+    document.querySelector('.edit-btn').textContent = editMode ? '✓ Done' : '✏️ Edit';
+  }
+
+  // Slide engine
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+  const total = slides.length;
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    document.getElementById('snum').textContent =
+      String(cur + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  }
+  function go(d) { show(cur + d); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+</script>
+</body>
+</html>
