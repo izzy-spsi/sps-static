@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Flywheel México · Cancún Launch 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #CC1A1A;
+    --red2:   #E02020;
+    --bg:     #0A0A0A;
+    --bg2:    #141414;
+    --bg3:    #1E1E1E;
+    --bg4:    #252525;
+    --text:   #F4F0EB;
+    --muted:  #888880;
+    --border: rgba(244,240,235,0.08);
+    --card:   rgba(255,255,255,0.04);
+    --gold:   #C9A052;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html, body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  /* ─── TOP BAR ─── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 200;
+  }
+  .topbar-logo img { height: 26px; object-fit: contain; }
+  .topbar-center {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .tb-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; padding: 5px 13px; border-radius: 20px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tb-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* ─── PROGRESS ─── */
+  .progress {
+    position: fixed; top: 56px; left: 0; right: 0; height: 2px;
+    background: rgba(244,240,235,0.06); z-index: 199;
+  }
+  .progress-fill {
+    height: 100%; background: var(--red);
+    transition: width 0.4s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  /* ─── SLIDE ENGINE ─── */
+  .deck {
+    position: fixed; inset: 0; top: 58px;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 80px 80px;
+  }
+  .slide.active { display: flex; }
+  .slide.forward  { animation: fwd 0.38s cubic-bezier(0.22,1,0.36,1) both; }
+  .slide.backward { animation: bwd 0.38s cubic-bezier(0.22,1,0.36,1) both; }
+  @keyframes fwd  { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes bwd  { from { opacity:0; transform:translateX(-40px);} to { opacity:1; transform:translateX(0); } }
+
+  /* ─── NAV BAR ─── */
+  .navbar {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border); z-index: 200;
+  }
+  .nav-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:hover { background: var(--red); border-color: var(--red); }
+  .nav-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted); min-width: 52px; text-align: center;
+  }
+  .nav-dots { display: flex; gap: 6px; align-items: center; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--border); transition: all 0.3s; cursor: pointer;
+  }
+  .dot.active { background: var(--red); width: 18px; border-radius: 3px; }
+
+  /* ─── UTILITY ─── */
+  .label {
+    font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--red);
+    margin-bottom: 16px;
+  }
+  .headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    line-height: 1.1;
+  }
+  .hl-xl  { font-size: clamp(36px, 5vw, 60px); }
+  .hl-lg  { font-size: clamp(28px, 4vw, 46px); }
+  .hl-md  { font-size: clamp(22px, 3vw, 34px); }
+  .body   { font-size: 16px; line-height: 1.7; color: rgba(244,240,235,0.75); }
+  .body-lg{ font-size: 18px; line-height: 1.7; color: rgba(244,240,235,0.75); }
+
+  .red    { color: var(--red); }
+  .gold   { color: var(--gold); }
+  .muted  { color: var(--muted); }
+
+  hr.rule {
+    border: none; border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  /* ─── CARDS ─── */
+  .cards {
+    display: grid; gap: 16px; width: 100%;
+  }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+  .cards-5 { grid-template-columns: repeat(5,1fr); }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+
+  .card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card-icon { font-size: 28px; }
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px; font-weight: 700; color: var(--red);
+    line-height: 1;
+  }
+  .card-title {
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--text);
+  }
+  .card-body { font-size: 13px; line-height: 1.6; color: var(--muted); }
+
+  /* ─── PHASE CARDS ─── */
+  .phase-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px 24px;
+    position: relative; overflow: hidden;
+  }
+  .phase-card.active-phase {
+    border-color: var(--red);
+    background: rgba(204,26,26,0.06);
+  }
+  .phase-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    font-weight: 500; letter-spacing: 0.1em;
+    padding: 3px 10px; border-radius: 20px;
+    background: var(--red); color: #fff;
+    margin-bottom: 12px;
+  }
+  .phase-tag.future { background: var(--bg4); color: var(--muted); }
+  .phase-num {
+    font-family: 'Space Grotesk', sans-serif; font-size: 42px;
+    font-weight: 700; color: var(--red); line-height: 1;
+    margin-bottom: 4px;
+  }
+  .phase-num.dim { color: var(--bg4); }
+  .phase-title {
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .phase-items { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .phase-items li {
+    font-size: 13px; color: rgba(244,240,235,0.7);
+    padding-left: 16px; position: relative; line-height: 1.5;
+  }
+  .phase-items li::before {
+    content: '—';
+    position: absolute; left: 0; color: var(--red); font-size: 11px;
+  }
+
+  /* ─── PILLARS ─── */
+  .pillar {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .pillar:first-child { border-color: var(--red); background: rgba(204,26,26,0.05); }
+  .pillar-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--muted);
+  }
+  .pillar-icon { font-size: 22px; }
+  .pillar-title {
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+  }
+  .pillar-body { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+  /* ─── COVER ─── */
+  .slide-cover {
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(204,26,26,0.10) 0%, transparent 70%),
+      var(--bg);
+    align-items: flex-start;
+    padding-left: 10vw;
+  }
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.12em;
+    color: var(--red); margin-bottom: 20px;
+  }
+  .cover-tagline {
+    font-size: 17px; color: rgba(244,240,235,0.6);
+    margin-top: 20px; max-width: 560px; line-height: 1.7;
+  }
+  .cover-meta {
+    margin-top: 36px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .cover-meta-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted); letter-spacing: 0.05em;
+  }
+  .cover-meta-item span { color: var(--text); }
+  .cover-line {
+    width: 48px; height: 3px; background: var(--red);
+    border-radius: 2px; margin-bottom: 20px;
+  }
+
+  /* ─── PRESENCE GRID ─── */
+  .city-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 30px; padding: 10px 18px;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600;
+  }
+  .city-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+
+  /* ─── QUOTE / CALLOUT ─── */
+  .callout {
+    border-left: 3px solid var(--red);
+    padding: 16px 20px;
+    background: rgba(204,26,26,0.05);
+    border-radius: 0 8px 8px 0;
+    font-size: 15px; font-style: italic;
+    color: rgba(244,240,235,0.8); line-height: 1.7;
+  }
+
+  /* ─── VISION PATH ─── */
+  .vision-path {
+    display: flex; align-items: center; gap: 0; width: 100%;
+    margin-top: 8px;
+  }
+  .vp-node {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; flex: 1;
+  }
+  .vp-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--red); border: 2px solid var(--red);
+    position: relative; z-index: 2;
+  }
+  .vp-dot.future { background: var(--bg3); border-color: var(--border); }
+  .vp-label {
+    font-family: 'Outfit', sans-serif; font-size: 12px;
+    font-weight: 600; text-align: center; color: var(--text);
+  }
+  .vp-label.future { color: var(--muted); }
+  .vp-line {
+    flex: 1; height: 2px; background: var(--border);
+    position: relative; top: -4px; margin: 0 -2px;
+  }
+  .vp-line.active { background: var(--red); }
+
+  /* ─── TWO-COL LAYOUT ─── */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; width: 100%; align-items: start;
+  }
+  .three-col {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px; width: 100%; align-items: start;
+  }
+
+  /* ─── STAT ─── */
+  .stat-block { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: 48px; color: var(--red); line-height: 1;
+  }
+  .stat-label { font-size: 14px; color: var(--muted); }
+
+  /* ─── SPS MARK ─── */
+  .sps-mark {
+    position: fixed; bottom: 68px; right: 24px;
+    font-family: 'Outfit', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.08em;
+    color: rgba(244,240,235,0.15); z-index: 150;
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .topbar, .navbar, .progress, .sps-mark { display: none !important; }
+    .deck { position: static; top: 0; }
+    .slide { display: flex !important; position: relative; height: 100vh; page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAQDAwQDAwQEAwQFBAQFBgoHBgYGBg0JCggKDw0QEA8NDw4RExgUERIXEg4PFRwVFxkZGxsbEBQdHx0aHxgaGxr/2wBDAQQFBQYFBgwHBwwaEQ8RGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhoaGhr/wAARCABjAUADASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAcIAQIGBQMECf/EAFEQAAEDAwIDBAQGDAwDCQAAAAEAAgMEBREGBxIhMQhBUWETInGBFBgyQpHSFRcjVVZicpOUlbHBJSg1NzhUdIKhstPwFqLDM0RFZHWEpMLR/8QAHAEBAAEFAQEAAAAAAAAAAAAAAAQBAgMFBgcI/8QAOREAAQQBAgQCBwYEBwAAAAAAAQACAwQRBSEGEjFRQXETFCJhgZGhMkJiwdHhFiNT8BUkUnKCorH/2gAMAwEAAhEDEQA/AL/IiIiIiIiIixnyRFlFo+VsYLn+q0DJcegXLnc/RTXOa7Vtia5pwQblD9ZWucG9Vljhll+w0nyGV1aLk/toaJ/C6w/rKH6yfbQ0T+F1h/WcP1lTnb3Wb1O1/Td8iusRcn9tDRP4XWH9Zw/WT7aGifwusP6zh+snOzunqdr+m75FdYi5P7aGiPwvsP6yh+svtR7i6SuNZFR0GprNVVUx4Y4obhE97z4Bodk9VUPafFUNSy0ZMbvkV0yLGVlXKKiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi//2Q==" alt="Flywheel">
+  </div>
+  <div class="topbar-center">FLYWHEEL MÉXICO · CANCÚN LAUNCH 2026</div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="window.print()">⎙ Print</button>
+    <button class="tb-btn" onclick="toggleFS()">⛶ Full Screen</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- SPS MARK -->
+<div class="sps-mark">FW·MX·2026</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SLIDES
+════════════════════════════════════════════════════ -->
+<div class="deck" id="deck">
+
+  <!-- ── SLIDE 1 · COVER ── -->
+  <div class="slide slide-cover active" data-slide="1">
+    <div class="cover-eyebrow">FLYWHEEL MÉXICO · JUNE 29, 2026</div>
+    <div class="cover-line"></div>
+    <div class="headline hl-xl" style="max-width:660px; margin-bottom:8px;">
+      The Future of Safe,<br>Modern Taxi<br><span class="red">Starts Here.</span>
+    </div>
+    <div class="cover-tagline">
+      The taxi Cancún already trusts — modernized,<br>safer, and ready for what's next.
+    </div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">📍 <span>Courtyard Cancún Airport</span></div>
+      <div class="cover-meta-item">🕙 <span>10:00 a.m. · Monday, June 29, 2026</span></div>
+      <div class="cover-meta-item" style="margin-top:4px;">Presented by <span>Izzy Aala, CEO — Flywheel Technologies</span></div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2 · WHO WE ARE ── -->
+  <div class="slide" data-slide="2" style="background: radial-gradient(ellipse 50% 60% at 90% 50%, rgba(204,26,26,0.07) 0%, transparent 70%), var(--bg);">
+    <div style="width:100%; max-width:960px;">
+      <div class="label">Who We Are</div>
+      <div class="headline hl-lg" style="margin-bottom:12px;">
+        Leaders in Technology<br>for the U.S. Taxi System
+      </div>
+      <div class="body" style="max-width:600px; margin-bottom:36px;">
+        Flywheel is headquartered in San Francisco, California. We arm the traditional, licensed driver with best-in-class hardware and software — so the regulated taxi can compete with global ride-hailing apps, and <strong style="color:var(--text);">win.</strong>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:36px;">
+        <div class="city-pill"><div class="city-dot"></div>San Francisco</div>
+        <div class="city-pill"><div class="city-dot"></div>Los Angeles</div>
+        <div class="city-pill"><div class="city-dot"></div>New York</div>
+        <div class="city-pill"><div class="city-dot"></div>Las Vegas</div>
+        <div class="city-pill"><div class="city-dot"></div>Miami</div>
+        <div class="city-pill"><div class="city-dot"></div>San Diego</div>
+        <div class="city-pill" style="border-color:var(--red); color:var(--red);"><div class="city-dot"></div>Cancún ✦</div>
+      </div>
+
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-num">20+</div>
+          <div class="card-title">Years of Experience</div>
+          <div class="card-body">Powering taxi technology since 2002</div>
+        </div>
+        <div class="card">
+          <div class="card-num">M+</div>
+          <div class="card-title">Rides Managed</div>
+          <div class="card-body">Proven, robust, continuously evolving</div>
+        </div>
+        <div class="card">
+          <div class="card-num">#1</div>
+          <div class="card-title">U.S. Taxi Tech Partner</div>
+          <div class="card-body">Uber's top-classified taxi technology partner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3 · THE PROBLEM ── -->
+  <div class="slide" data-slide="3">
+    <div style="width:100%; max-width:960px;">
+      <div class="label">The Problem</div>
+      <div class="headline hl-lg" style="margin-bottom:32px;">
+        The Apps Globalized<br>Local Mobility — <span class="red">At a Cost.</span>
+      </div>
+
+      <div class="cards cards-3" style="margin-bottom:32px;">
+        <div class="card">
+          <div class="card-icon">📉</div>
+          <div class="card-title">Market Share Lost</div>
+          <div class="card-body">Global platforms commoditized local mobility, taking market share from regulated taxis and turning drivers into faceless numbers with no control over their work.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚠️</div>
+          <div class="card-title">Safety Gaps Opened</div>
+          <div class="card-body">Weak vetting, little real accountability. Both passengers and drivers face greater exposure with no legal backing when incidents occur.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <div class="card-title">A Technology Gap</div>
+          <div class="card-body">The regulated taxi didn't lose ground because it was worse — it lacked the technology to compete. That is exactly the gap Flywheel closes.</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        "The taxi didn't fail the passenger. The industry was simply outpaced by technology. We're here to change that — starting in Cancún."
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4 · WHY MEXICO, WHY CANCÚN ── -->
+  <div class="slide" data-slide="4">
+    <div style="width:100%; max-width:960px;">
+      <div class="label">Why Mexico · Why Cancún</div>
+      <div class="headline hl-lg" style="margin-bottom:8px;">
+        The Right Place.<br><span class="red">The Right Moment.</span>
+      </div>
+      <div class="body" style="max-width:600px; margin-bottom:32px;">
+        Mexico is one of the world's most dynamic mobility markets. Modernizing it is a historic opportunity to raise safety, quality, and experience — for passengers and drivers alike.
+      </div>
+
+      <div class="two-col">
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card" style="flex-direction:row; align-items:flex-start; gap:16px;">
+            <div style="font-size:24px; flex-shrink:0;">🌎</div>
+            <div>
+              <div class="card-title" style="margin-bottom:4px;">Mexico's Market Potential</div>
+              <div class="card-body">Growing market · highly connected population · real need for safety · authorities and businesses open to innovation.</div>
+            </div>
+          </div>
+          <div class="card" style="flex-direction:row; align-items:flex-start; gap:16px;">
+            <div style="font-size:24px; flex-shrink:0;">🏖️</div>
+            <div>
+              <div class="card-title" style="margin-bottom:4px;">Cancún in Particular</div>
+              <div class="card-body">30M+ visitors per year. Mobility is central to the city's reputation and safety — and the taxi union is ready to lead the change.</div>
+            </div>
+          </div>
+          <div class="card" style="flex-direction:row; align-items:flex-start; gap:16px;">
+            <div style="font-size:24px; flex-shrink:0;">🤝</div>
+            <div>
+              <div class="card-title" style="margin-bottom:4px;">Partnership with the Union</div>
+              <div class="card-body">The Sindicato Andrés Quintana Roo — the organized, regulated taxi base — is the foundation this program is built on.</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; gap:12px; text-align:center;">
+          <div class="stat-block" style="align-items:center;">
+            <div class="stat-num">30M+</div>
+            <div class="stat-label">Visitors per year</div>
+          </div>
+          <div style="width:1px; height:32px; background:var(--border);"></div>
+          <div class="stat-block" style="align-items:center;">
+            <div class="stat-num">6,000</div>
+            <div class="stat-label">Vehicles secured · Quintana Roo + Yucatán</div>
+          </div>
+          <div style="width:1px; height:32px; background:var(--border);"></div>
+          <div class="callout" style="text-align:left; font-size:14px;">
+            <strong style="color:var(--text); font-style:normal;">Our purpose:</strong><br>Modernize to protect. Modernize to serve.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5 · OUR SOLUTION ── -->
+  <div class="slide" data-slide="5">
+    <div style="width:100%; max-width:1020px;">
+      <div class="label">Our Complete Solution</div>
+      <div class="headline hl-md" style="margin-bottom:6px;">
+        One Program. Five Pillars. <span class="red">One Purpose.</span>
+      </div>
+      <div class="body" style="margin-bottom:24px; font-size:14px;">
+        Integrated Safety · Advanced Technology · Operational Efficiency · Driver Well-Being · Strategic Alliance with the Union
+      </div>
+
+      <div class="cards cards-5" style="margin-bottom:20px;">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div class="pillar-icon">🛡️</div>
+          <div class="pillar-title">Integrated Safety</div>
+          <div class="pillar-body">Nexar AI camera · cloud storage · real-time alerts · protects passenger + driver · legal backing with real evidence. C-5 integration in progress.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div class="pillar-icon">📡</div>
+          <div class="pillar-title">Advanced Technology</div>
+          <div class="pillar-body">Real-time GPS · cloud analytics · cybersecurity · world-class control center. Hardware + software stack built for professional transport.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div class="pillar-icon">⚡</div>
+          <div class="pillar-title">Operational Efficiency</div>
+          <div class="pillar-body">4 booking channels: Flywheel app · phone dispatch · WhatsApp · street hail. Digital taximeter with regulated, no-surprise fare. Card + cash via NEXGO N62.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">04</div>
+          <div class="pillar-icon">🧑‍✈️</div>
+          <div class="pillar-title">Driver Well-Being</div>
+          <div class="pillar-body">Higher earnings · professional recognition · full legal protection · career path within a structured, dignified mobility ecosystem.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">05</div>
+          <div class="pillar-icon">🤝</div>
+          <div class="pillar-title">Alliance with the Union</div>
+          <div class="pillar-body">Built in partnership with the Sindicato Andrés Quintana Roo — the backbone of regulated, trusted taxi transport in Cancún.</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+        <div style="background:rgba(204,26,26,0.06); border:1px solid rgba(204,26,26,0.2); border-radius:8px; padding:14px 16px; font-size:13px;">
+          🎥 <strong>Nexar AI Camera</strong> in every vehicle — AI video, cloud storage, real-time incident alerts
+        </div>
+        <div style="background:rgba(204,26,26,0.06); border:1px solid rgba(204,26,26,0.2); border-radius:8px; padding:14px 16px; font-size:13px;">
+          📱 <strong>NEXGO N62</strong> — credit/debit card + cash. Digital taximeter. Transparent regulated fares.
+        </div>
+        <div style="background:rgba(204,26,26,0.06); border:1px solid rgba(204,26,26,0.2); border-radius:8px; padding:14px 16px; font-size:13px;">
+          🏷️ <strong>Visual Identity</strong> — instantly recognizable Flywheel-branded vehicles across Cancún
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 6 · WHERE WE ARE ── -->
+  <div class="slide" data-slide="6">
+    <div style="width:100%; max-width:960px;">
+      <div class="label">Where We Are · Rollout</div>
+      <div class="headline hl-lg" style="margin-bottom:8px;">
+        Three Phases.<br><span class="red">Real, Measured Progress.</span>
+      </div>
+      <div class="body" style="margin-bottom:32px; font-size:14px;">
+        We anchor expectations in what is real — and show a clear path to what is next.
+      </div>
+
+      <div class="three-col">
+        <!-- Phase 1 -->
+        <div class="phase-card active-phase">
+          <div class="phase-tag">NOW · LIVE</div>
+          <div class="phase-num">50</div>
+          <div class="phase-title">Phase 1 — Safety First</div>
+          <ul class="phase-items">
+            <li>50 drivers · 50 fully equipped & branded vehicles</li>
+            <li>Integrated safety system live</li>
+            <li>Nexar cameras operating · C-5 integration in progress</li>
+            <li>Front screen + digital taximeter active</li>
+            <li>NEXGO N62 card payment live</li>
+            <li>Flywheel app in testing</li>
+          </ul>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase-card">
+          <div class="phase-tag future">AUGUST 2026</div>
+          <div class="phase-num dim">200</div>
+          <div class="phase-title">Phase 2 — Full Service</div>
+          <ul class="phase-items">
+            <li>200 fully equipped drivers</li>
+            <li>Contact center live — dispatch + support</li>
+            <li>Flywheel app officially launched</li>
+            <li>Complete solution fully deployed</li>
+            <li>All booking channels operational</li>
+          </ul>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="phase-card">
+          <div class="phase-tag future">END OF YEAR</div>
+          <div class="phase-num dim">1K</div>
+          <div class="phase-title">Phase 3 — Market Scale</div>
+          <ul class="phase-items">
+            <li>Target: 1,000 affiliated drivers</li>
+            <li>Full Cancún market coverage</li>
+            <li>Data-driven operational intelligence</li>
+            <li>Foundation set for regional expansion</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7 · THE VISION ── -->
+  <div class="slide" data-slide="7" style="background: radial-gradient(ellipse 55% 50% at 50% 80%, rgba(204,26,26,0.08) 0%, transparent 70%), var(--bg);">
+    <div style="width:100%; max-width:960px;">
+      <div class="label">The Vision</div>
+      <div class="headline hl-lg" style="margin-bottom:12px;">
+        Cancún Is the Beginning.<br><span class="red">Latin America Is the Destination.</span>
+      </div>
+      <div class="body" style="max-width:640px; margin-bottom:40px;">
+        Hand in hand with local talent, authorities, and operators — building a safer, more modern, and more efficient taxi transport system that scales nationally and beyond.
+      </div>
+
+      <!-- Path -->
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:14px; padding:32px 36px; margin-bottom:32px;">
+        <div style="font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;">Expansion Path</div>
+        <div class="vision-path">
+          <div class="vp-node">
+            <div class="vp-dot"></div>
+            <div class="vp-label" style="color:var(--red);">Cancún<br><span style="font-size:10px; color:var(--muted);">NOW ✦</span></div>
+          </div>
+          <div class="vp-line active"></div>
+          <div class="vp-node">
+            <div class="vp-dot"></div>
+            <div class="vp-label">Tulum<br><span style="font-size:10px; color:var(--muted);">Phase 2</span></div>
+          </div>
+          <div class="vp-line active"></div>
+          <div class="vp-node">
+            <div class="vp-dot"></div>
+            <div class="vp-label">Playa<br>del Carmen<br><span style="font-size:10px; color:var(--muted);">Phase 2</span></div>
+          </div>
+          <div class="vp-line"></div>
+          <div class="vp-node">
+            <div class="vp-dot future"></div>
+            <div class="vp-label future">Mexico City<br><span style="font-size:10px;">Phase 3</span></div>
+          </div>
+          <div class="vp-line"></div>
+          <div class="vp-node">
+            <div class="vp-dot future"></div>
+            <div class="vp-label future">Latin America<br><span style="font-size:10px;">Beyond</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <div class="card-title">Safety Standard</div>
+          <div class="card-body">Elevating the safety benchmark for regulated taxi across Mexico and the region</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧑‍🤝‍🧑</div>
+          <div class="card-title">Local Partnerships</div>
+          <div class="card-body">Unions, operators, authorities — built together, owned locally</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">World-Class Platform</div>
+          <div class="card-body">The same technology that powers U.S. taxi operations — now in Latin America</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8 · CALL TO ACTION ── -->
+  <div class="slide" data-slide="8" style="background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(204,26,26,0.12) 0%, transparent 65%), var(--bg); text-align:center; justify-content:center; align-items:center;">
+    <div style="max-width:700px; display:flex; flex-direction:column; align-items:center; gap:0;">
+      <div class="label" style="text-align:center;">Let's Build This Together</div>
+      <div class="cover-line" style="margin:0 auto 28px;"></div>
+      <div class="headline hl-xl" style="text-align:center; margin-bottom:20px;">
+        Safer Mobility.<br>A Better Taxi.<br><span class="red">Starting Today.</span>
+      </div>
+      <div class="body-lg" style="text-align:center; margin-bottom:40px; max-width:560px;">
+        Together with the authorities, the Union, and the drivers who already trust Flywheel — we take the taxi forward. Not away from its roots, but forward.
+      </div>
+
+      <div style="display:flex; gap:24px; margin-bottom:40px; flex-wrap:wrap; justify-content:center;">
+        <div style="text-align:center;">
+          <div class="stat-num" style="font-size:36px;">June 29</div>
+          <div class="stat-label">Today's milestone</div>
+        </div>
+        <div style="width:1px; background:var(--border);"></div>
+        <div style="text-align:center;">
+          <div class="stat-num" style="font-size:36px;">50</div>
+          <div class="stat-label">Vehicles live right now</div>
+        </div>
+        <div style="width:1px; background:var(--border);"></div>
+        <div style="text-align:center;">
+          <div class="stat-num" style="font-size:36px;">1,000</div>
+          <div class="stat-label">Goal by year-end</div>
+        </div>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); margin-top:8px;">
+        Izzy Aala · CEO, Flywheel Technologies · izzy@flywheel.com
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <button class="nav-btn" onclick="go(-1)" title="Previous">←</button>
+  <div class="nav-dots" id="dots"></div>
+  <div class="nav-counter" id="counter">01 / 08</div>
+  <button class="nav-btn" onclick="go(1)" title="Next">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i, i > cur ? 'forward' : 'backward');
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    document.getElementById('counter').textContent =
+      String(cur + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    document.getElementById('progressFill').style.width =
+      ((cur + 1) / total * 100) + '%';
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === cur);
+    });
+  }
+
+  function goTo(idx, dir) {
+    if (idx < 0 || idx >= total || idx === cur) return;
+    slides[cur].classList.remove('active','forward','backward');
+    cur = idx;
+    slides[cur].classList.add('active', dir || 'forward');
+    update();
+    // Remove animation class after it finishes
+    setTimeout(() => slides[cur].classList.remove('forward','backward'), 420);
+  }
+
+  function go(delta) {
+    goTo(cur + delta, delta > 0 ? 'forward' : 'backward');
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(-1);
+  });
+
+  // Touch/swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+  }, {passive:true});
+
+  function toggleFS() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  }
+
+  update();
+</script>
+</body>
+</html>

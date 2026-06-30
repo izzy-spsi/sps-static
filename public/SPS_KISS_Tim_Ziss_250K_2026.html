@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KISS Agreement — Super Power Studios Inc. | Tim Ziss</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #FF5E1A;
+    --dark: #0C0C0C;
+    --text: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #E0DDD8;
+    --bg: #FAFAF8;
+    --surface: #F5F2ED;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11pt;
+    line-height: 1.75;
+  }
+
+  /* ── Cover / Header ── */
+  .cover {
+    background: var(--dark);
+    padding: 48px 64px 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .cover-left {}
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .brand-mark {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, #FF5E1A, #c93a00);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 20px; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 15px; color: #F0EDE8;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-sub {
+    font-size: 11px; color: #A0A098;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .cover-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #F0EDE8;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .cover-sub {
+    font-size: 13px;
+    color: #A0A098;
+    line-height: 1.6;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(255,94,26,0.15);
+    border: 1px solid rgba(255,94,26,0.3);
+    color: var(--orange);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .cover-right {
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(240,237,232,0.1);
+    border-radius: 12px;
+    padding: 24px 28px;
+    min-width: 220px;
+  }
+
+  .term-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .term-item {}
+
+  .term-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #A0A098;
+    margin-bottom: 2px;
+  }
+
+  .term-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #F0EDE8;
+  }
+
+  .term-value.highlight { color: var(--orange); }
+
+  /* ── Disclaimer ── */
+  .disclaimer {
+    background: #FFF8F0;
+    border-left: 3px solid var(--orange);
+    padding: 14px 20px;
+    margin: 32px 64px;
+    font-size: 9.5pt;
+    color: #5A4A3A;
+    line-height: 1.6;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── Document Body ── */
+  .doc-body {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 64px 80px;
+  }
+
+  .preamble {
+    font-size: 11pt;
+    line-height: 1.8;
+    margin-bottom: 32px;
+    padding: 24px 28px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  /* ── Section Headings ── */
+  h2.section {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13pt;
+    color: var(--dark);
+    margin: 36px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--orange);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2.section .sec-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: var(--orange);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Definition List ── */
+  .def-list { margin: 0; }
+
+  .def-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 12px 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0EDE8;
+    align-items: baseline;
+  }
+
+  .def-item:last-child { border-bottom: none; }
+
+  .def-term {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 10.5pt;
+    color: var(--dark);
+  }
+
+  .def-body {
+    font-size: 10.5pt;
+    line-height: 1.7;
+    color: #333;
+  }
+
+  /* ── Sub-definitions (a, b, c) ── */
+  .sub-def {
+    margin: 8px 0 8px 16px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-left: 3px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    font-size: 10.5pt;
+    line-height: 1.7;
+  }
+
+  .sub-def + .sub-def { margin-top: 6px; }
+
+  /* ── Section Paragraphs ── */
+  .sec-para {
+    font-size: 10.5pt;
+    line-height: 1.75;
+    margin-bottom: 14px;
+    color: #333;
+  }
+
+  .sec-para strong {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  /* ── Signature Page ── */
+  .sig-page {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid var(--dark);
+    page-break-before: always;
+  }
+
+  .sig-page-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 16px;
+  }
+
+  .sig-block {}
+
+  .sig-entity {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .sig-role {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .sig-line {
+    border-bottom: 1.5px solid var(--dark);
+    margin-bottom: 6px;
+    height: 36px;
+  }
+
+  .sig-field-label {
+    font-size: 9px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .sig-prefilled {
+    font-size: 10.5pt;
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 6px;
+  }
+
+  /* ── Approval Box ── */
+  .approval-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-size: 10.5pt;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  /* ── Footer ── */
+  .doc-footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; font-size: 10pt; }
+    .cover { padding: 32px 48px 28px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .disclaimer { margin: 20px 48px; }
+    .doc-body { padding: 24px 48px 48px; }
+    .sig-page { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     COVER HEADER
+═══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-left">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <div>
+        <div class="brand-name">Super Power Studios</div>
+        <div class="brand-sub">superpowerstudios.ai</div>
+      </div>
+    </div>
+    <div class="cover-badge">Confidential · Founding Round</div>
+    <div class="cover-title">KISS<br>Agreement</div>
+    <div class="cover-sub">Keep It Simple Security<br>Super Power Studios, Inc. &nbsp;×&nbsp; Tim Ziss</div>
+  </div>
+
+  <div class="cover-right">
+    <div class="term-row">
+      <div class="term-item">
+        <div class="term-label">Principal</div>
+        <div class="term-value highlight">$250,000</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Interest Rate</div>
+        <div class="term-value">15% / yr (PIK)</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Valuation Cap</div>
+        <div class="term-value">$50,000,000</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Discount</div>
+        <div class="term-value">20%</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Conversion Trigger</div>
+        <div class="term-value">$2.5M Equity Raise</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Maturity</div>
+        <div class="term-value">24 Months</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Governing Law</div>
+        <div class="term-value">Nevada</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     DISCLAIMER
+═══════════════════════════════════════════════════════════ -->
+<div class="disclaimer">
+  THIS INSTRUMENT AND THE SECURITIES ISSUABLE UPON THE CONVERSION HEREOF HAVE NOT BEEN REGISTERED UNDER THE SECURITIES ACT OF 1933, AS AMENDED. THEY MAY NOT BE SOLD, OFFERED FOR SALE, PLEDGED, HYPOTHECATED, OR OTHERWISE TRANSFERRED EXCEPT PURSUANT TO AN EFFECTIVE REGISTRATION STATEMENT UNDER THE SECURITIES ACT OF 1933, AS AMENDED, OR AN OPINION OF COUNSEL SATISFACTORY TO THE COMPANY THAT REGISTRATION IS NOT REQUIRED UNDER SUCH ACT OR UNLESS SOLD PURSUANT TO RULE 144 UNDER SUCH ACT.
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     DOCUMENT BODY
+═══════════════════════════════════════════════════════════ -->
+<div class="doc-body">
+
+  <!-- Preamble -->
+  <div class="preamble">
+    FOR VALUE RECEIVED, <strong>Super Power Studios, Inc.</strong>, a Nevada corporation (the "Company"), hereby promises to pay to the order of <strong>Tim Ziss</strong> (the "Investor"), the principal sum of <strong>Two Hundred Fifty Thousand Dollars (US$250,000.00)</strong> (the "Purchase Price"), together with interest thereon from the Date of Issuance. Interest shall accrue at the Interest Rate and shall compound annually. No periodic payments of principal or interest shall be required. Unless earlier converted into Conversion Shares pursuant to Section 2, the outstanding principal and all accrued but unpaid interest shall be due and payable in full by the Company on the Maturity Date.
+  </div>
+
+  <!-- ── SECTION 1: DEFINITIONS ── -->
+  <h2 class="section"><span class="sec-num">1</span> Definitions</h2>
+
+  <div class="def-list">
+
+    <div class="def-item">
+      <div class="def-term">"Conversion Shares"</div>
+      <div class="def-body">
+        <div class="sub-def"><strong>(i)</strong> With respect to a conversion pursuant to Section 2.1, shares of the Company's Preferred Stock issued in the Next Equity Financing; and</div>
+        <div class="sub-def"><strong>(ii)</strong> With respect to a conversion pursuant to Section 2.2 or Section 2.3, shares of the Company's Common Stock.</div>
+      </div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Conversion Price"</div>
+      <div class="def-body">
+        <div class="sub-def"><strong>(i)</strong> With respect to Section 2.1, the lower of (A) the product of (1) one (1) minus the Discount and (2) the price per share paid in the Next Equity Financing, or (B) the Valuation Cap divided by the Fully-Diluted Capitalization immediately prior to closing;</div>
+        <div class="sub-def"><strong>(ii)</strong> With respect to Section 2.2, the Valuation Cap divided by the Fully-Diluted Capitalization immediately prior to the Corporate Transaction; and</div>
+        <div class="sub-def"><strong>(iii)</strong> With respect to Section 2.3, the Valuation Cap divided by the Fully-Diluted Capitalization immediately prior to conversion.</div>
+      </div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Corporate Transaction"</div>
+      <div class="def-body">The closing of a sale of all or substantially all of the Company's assets; a merger or consolidation resulting in a change of control; or the liquidation, dissolution or winding up of the Company. The sale of shares of Preferred Stock in a bona fide financing shall not be deemed a Corporate Transaction.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Corporate Transaction Payment"</div>
+      <div class="def-body">All accrued and unpaid interest due on this KISS plus one times (1×) the Purchase Price.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Discount"</div>
+      <div class="def-body"><strong>Twenty percent (20%).</strong></div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Equity Securities"</div>
+      <div class="def-body">The Company's Common Stock or Preferred Stock or any securities conferring the right to purchase or convert into Common Stock or Preferred Stock, except securities issued to directors, officers, employees, or consultants as compensation.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Financial Statements"</div>
+      <div class="def-body">An income statement, balance sheet, statement of stockholders' equity, and/or statement of cash flows, as of the end of each fiscal quarter and fiscal year.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Fully-Diluted Capitalization"</div>
+      <div class="def-body">All outstanding Common Stock on a fully-diluted basis, including conversion of all convertible securities, exercise of all options and warrants, and shares reserved under existing stock option plans, excluding the conversion contemplated by the applicable provision of Section 2.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Holder"</div>
+      <div class="def-body">The Investor, for so long as the Investor holds this KISS.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Interest Rate"</div>
+      <div class="def-body"><strong>Fifteen percent (15%) per annum, compounded annually.</strong></div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Maturity Date"</div>
+      <div class="def-body">The date that is <strong>twenty-four (24) months</strong> following the Date of Issuance.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Next Equity Financing"</div>
+      <div class="def-body">The next sale (or series of related sales) by the Company of its Preferred Stock from which the Company receives gross proceeds of not less than <strong>$2,500,000</strong> (excluding amounts converted from notes in connection with such sale).</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Participation Amount"</div>
+      <div class="def-body">An amount equal to one times (1×) the Purchase Price.</div>
+    </div>
+
+    <div class="def-item">
+      <div class="def-term">"Valuation Cap"</div>
+      <div class="def-body"><strong>US$50,000,000.</strong></div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 2: CONVERSION ── -->
+  <h2 class="section"><span class="sec-num">2</span> Conversion of the KISS</h2>
+
+  <p class="sec-para"><strong>2.1 Next Equity Financing.</strong> Upon the closing of the Next Equity Financing, this KISS will be automatically converted into Conversion Shares equal to the quotient of the Purchase Price plus accrued interest divided by the Conversion Price. Accrued interest may be paid in cash at the Company's option. The Company shall provide at least five (5) days' written notice prior to closing. Conversion Shares shall be issued on the same terms and conditions as Preferred Stock sold in such financing.</p>
+
+  <p class="sec-para"><strong>2.2 Corporate Transaction.</strong> In the event of a Corporate Transaction prior to conversion pursuant to Section 2.1 or 2.3, at the Investor's election: (i) this KISS shall convert into Conversion Shares at the Conversion Price; or (ii) the Investor shall be paid the Corporate Transaction Payment. The Company shall provide at least ten (10) days' written notice prior to closing.</p>
+
+  <p class="sec-para"><strong>2.3 Maturity Conversion.</strong> Unless earlier converted or paid pursuant to Section 2.1 or 2.2, at the election of the Investor at any time on or after the Maturity Date, this KISS shall convert into Conversion Shares equal to the quotient of the Purchase Price plus accrued interest divided by the Conversion Price.</p>
+
+  <p class="sec-para"><strong>2.4 No Fractional Shares.</strong> In lieu of fractional shares, the Company shall pay the Investor cash equal to such fraction multiplied by the Conversion Price.</p>
+
+  <p class="sec-para"><strong>2.5 Mechanics of Conversion.</strong> As promptly as practicable after conversion, the Company shall issue and deliver a certificate or certificates for the Conversion Shares. Conversion may be made contingent upon the closing of the Next Equity Financing or Corporate Transaction.</p>
+
+  <!-- ── SECTION 3: COMPANY REPS ── -->
+  <h2 class="section"><span class="sec-num">3</span> Representations &amp; Warranties of the Company</h2>
+
+  <p class="sec-para"><strong>3.1 Organization.</strong> The Company is a corporation duly organized, validly existing, and in good standing under the laws of the State of Nevada, with all requisite corporate power and authority to carry on its business as now conducted.</p>
+
+  <p class="sec-para"><strong>3.2 Authorization.</strong> All corporate action necessary for the authorization, execution, and delivery of this KISS has been taken. This KISS constitutes the valid and legally binding obligation of the Company, enforceable in accordance with its terms.</p>
+
+  <p class="sec-para"><strong>3.3 Offering.</strong> The offer, sale, and issuance of this KISS are exempt from the registration requirements of applicable state and federal securities laws.</p>
+
+  <p class="sec-para"><strong>3.4 Compliance.</strong> The execution, delivery, and performance of this KISS will not result in a default or breach of any material provision of the Company's Certificate of Incorporation, bylaws, or any material agreement to which it is a party.</p>
+
+  <p class="sec-para"><strong>3.5 Valid Issuance.</strong> The Conversion Shares, when issued upon conversion, will be duly authorized, validly issued, fully paid, and nonassessable, and issued in compliance with all applicable securities laws.</p>
+
+  <p class="sec-para"><strong>3.6 Intellectual Property.</strong> To its knowledge, the Company owns or possesses sufficient rights to all intellectual property necessary to conduct its business without conflict with the rights of others.</p>
+
+  <p class="sec-para"><strong>3.7 Litigation.</strong> To the Company's knowledge, there is no pending or threatened action, suit, or proceeding that could reasonably be expected to have a material adverse effect on the Company.</p>
+
+  <p class="sec-para"><strong>3.8 No Disqualifying Events.</strong> No director, officer, or beneficial owner of 20% or more of the Company's voting securities has been subject to a Disqualifying Event under Rule 506(d)(1) under the Securities Act of 1933.</p>
+
+  <p class="sec-para"><strong>3.9 Compliance with Laws.</strong> The Company and its officers and directors have complied with all applicable laws and regulations prohibiting bribery, corruption, kick-backs, or similar unethical practices.</p>
+
+  <!-- ── SECTION 4: INVESTOR REPS ── -->
+  <h2 class="section"><span class="sec-num">4</span> Representations &amp; Warranties of the Investor</h2>
+
+  <p class="sec-para"><strong>4.1 Authorization.</strong> This KISS constitutes the Investor's valid and legally binding obligation, enforceable in accordance with its terms.</p>
+
+  <p class="sec-para"><strong>4.2 Own Account.</strong> The KISS is being acquired for investment for the Investor's own account, not with a view to distribution, and the Investor has no present intention of selling or distributing the same.</p>
+
+  <p class="sec-para"><strong>4.3 Investment Experience.</strong> The Investor is able to fend for itself, can bear the economic risk of the investment, and has sufficient knowledge and experience to evaluate the merits and risks of this KISS.</p>
+
+  <p class="sec-para"><strong>4.4 Accredited Investor.</strong> The Investor is an "accredited investor" within the meaning of Rule 501 of Regulation D under the Securities Act of 1933.</p>
+
+  <p class="sec-para"><strong>4.5 Restricted Security.</strong> The Investor understands this KISS is a "restricted security" under federal securities laws and may be resold without registration only in certain limited circumstances.</p>
+
+  <!-- ── SECTION 5: MISCELLANEOUS ── -->
+  <h2 class="section"><span class="sec-num">5</span> Miscellaneous</h2>
+
+  <p class="sec-para"><strong>5.1 Most Favored Nation.</strong> If the Company issues convertible instruments with more favorable terms prior to conversion, repayment, or a Corporate Transaction, the Company shall notify the Investor within five (5) days, and the Investor may elect to exchange this KISS for such instrument.</p>
+
+  <p class="sec-para"><strong>5.2 Major Investor Rights.</strong> As the Purchase Price exceeds $150,000, the Investor is a "Major Investor" and is entitled to: <br><br>
+  <strong>(a) Information Rights.</strong> Financial Statements within 30 days after each fiscal quarter-end and 90 days after each fiscal year-end, to the extent prepared.<br><br>
+  <strong>(b) Participation Rights.</strong> Right of first offer to participate in future Equity Security offerings up to the Participation Amount, on the same terms as other investors, with at least ten (10) business days' prior notice.</p>
+
+  <p class="sec-para"><strong>5.3 Payment.</strong> All payments shall be in lawful U.S. currency. The Company may prepay this KISS at any time without penalty by paying outstanding principal plus all accrued interest.</p>
+
+  <p class="sec-para"><strong>5.4 Costs and Indemnity.</strong> The Company shall pay all reasonable expenses, including attorneys' fees, incurred by the Investor in collecting amounts not paid when due, and shall indemnify and hold the Investor harmless from related losses.</p>
+
+  <p class="sec-para"><strong>5.5 Security.</strong> This KISS is a general unsecured obligation of the Company.</p>
+
+  <p class="sec-para"><strong>5.6 Successors and Assigns.</strong> This KISS binds the respective successors and assigns of the parties. The Company may not assign its obligations without the Investor's prior written consent.</p>
+
+  <p class="sec-para"><strong>5.7 Governing Law.</strong> This KISS shall be governed by and construed under the laws of the State of Nevada, regardless of the laws that might otherwise govern under applicable principles of conflicts of law.</p>
+
+  <p class="sec-para"><strong>5.8 Notices.</strong> All notices shall be in writing and deemed effectively given upon actual receipt, email during business hours, five (5) days by registered mail, or one (1) business day by overnight courier.</p>
+
+  <p class="sec-para"><strong>5.9 Financing Agreements.</strong> The Investor agrees to execute all agreements required in connection with conversion, including purchase, registration, co-sale, and voting rights agreements, on the same terms as Preferred Stock sold in the Next Equity Financing.</p>
+
+  <p class="sec-para"><strong>5.10 Severability.</strong> If any provision is held unenforceable, the balance of this KISS shall remain enforceable in accordance with its terms.</p>
+
+  <p class="sec-para"><strong>5.11 Acknowledgement.</strong> The Investor shall be entitled to the benefit of all adjustments in shares arising from splits, recapitalizations, or similar transactions occurring prior to conversion.</p>
+
+  <p class="sec-para"><strong>5.12 Further Assurance.</strong> The Company shall execute additional documents and provide information as the Investor may reasonably require.</p>
+
+  <p class="sec-para"><strong>5.13 Transfer.</strong> Subject to applicable securities laws, this KISS is transferable in whole or in part upon written notice to the Company.</p>
+
+  <p class="sec-para"><strong>5.14 Entire Agreement.</strong> This KISS constitutes the full and entire understanding between the parties. Amendments require written consent of both parties.</p>
+
+  <p class="sec-para"><strong>5.15 Exculpation.</strong> The Investor is not relying upon any person other than the Company and its officers and directors in making its investment decision.</p>
+
+  <!-- ── APPROVAL ── -->
+  <div class="approval-box">
+    <strong>Board Approval.</strong> The Company hereby represents that its Board of Directors has approved the Company's execution of this KISS based upon a reasonable belief that the Purchase Price is appropriate after reasonable inquiry concerning the Company's financing objectives and financial situation. The Company intends to use the Purchase Price primarily for the operations of its business, and not for any personal, family, or household purpose.
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SIGNATURE PAGE
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="sig-page">
+    <div class="sig-page-label">— Signature Page —</div>
+
+    <div class="sig-grid">
+
+      <!-- Company -->
+      <div class="sig-block">
+        <div class="sig-entity">Super Power Studios, Inc.</div>
+        <div class="sig-role">The Company</div>
+
+        <div class="sig-line"></div>
+        <div class="sig-field-label">Signature</div>
+
+        <div class="sig-prefilled">Izzy Aala</div>
+        <div class="sig-field-label">Name</div>
+
+        <div class="sig-prefilled">Chief Executive Officer</div>
+        <div class="sig-field-label">Title</div>
+
+        <div class="sig-line" style="height:28px;"></div>
+        <div class="sig-field-label">Date</div>
+      </div>
+
+      <!-- Investor -->
+      <div class="sig-block">
+        <div class="sig-entity">Tim Ziss</div>
+        <div class="sig-role">The Investor — Acknowledged &amp; Agreed</div>
+
+        <div class="sig-line"></div>
+        <div class="sig-field-label">Signature</div>
+
+        <div class="sig-prefilled">Tim Ziss</div>
+        <div class="sig-field-label">Name</div>
+
+        <div class="sig-line" style="height:28px;"></div>
+        <div class="sig-field-label">Title / Entity</div>
+
+        <div class="sig-line" style="height:28px;"></div>
+        <div class="sig-field-label">Date</div>
+
+        <div class="sig-line" style="height:28px; margin-top:12px;"></div>
+        <div class="sig-line" style="height:28px;"></div>
+        <div class="sig-field-label">Address</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="doc-footer">
+    Super Power Studios Inc. · Nevada C-Corp<br>
+    CONFIDENTIAL — For Qualified Investors Only · Founding Round 2026
+  </div>
+
+</div>
+</body>
+</html>
