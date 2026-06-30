@@ -121,6 +121,8 @@ p,li{font-size:clamp(.85rem,1.3vw,1rem);line-height:1.65}
 
 /* ── Asset cards ── */
 .asset-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:5px;text-decoration:none;color:inherit;transition:border-color .2s,background .2s;cursor:pointer}
+.btn-safe{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;background:transparent;border:2px solid var(--accent);color:var(--accent);font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-safe:hover{background:var(--accent);color:#111114}
 .asset-card:hover{border-color:rgba(255,94,26,.35);background:rgba(255,94,26,.04)}
 .asset-icon{font-size:1.2rem}
 .asset-name{font-family:'Outfit',sans-serif;font-weight:600;font-size:.88rem}
@@ -396,7 +398,7 @@ p,li{font-size:clamp(.85rem,1.3vw,1rem);line-height:1.65}
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div class="label">3-Year Financial Model</div>
         <div style="display:flex;gap:12px;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);">
-          <span>ARPU $1,100 founding · $1,500 standard</span>
+          <span>ARPU $899 founding (40% off) · $1,499 standard</span>
           <span>·</span>
           <span>LLM: API→SLM transition Y2</span>
           <span>·</span>
@@ -657,6 +659,9 @@ p,li{font-size:clamp(.85rem,1.3vw,1rem);line-height:1.65}
           <li style="font-size:.84rem;"><strong>Sign</strong> SAFE agreement</li>
           <li style="font-size:.84rem;"><strong>Wire</strong> to SPS escrow · Q3 2026 close target</li>
         </ul>
+        <div style="margin-top: 20px;">
+          <a href="https://sps-production-7dbc.up.railway.app/sps-safe-sign.html" target="_blank" class="btn-safe">📄 Sign SAFE Agreement →</a>
+        </div>
       </div>
     </div>
     <div class="quote" style="padding:14px 22px;text-align:center;"><p style="font-size:.95rem;">Every SPS investor <strong>is also a customer.</strong> You invest, we activate SPS tools inside your business. <span class="orange">Capital in. Superpowers out.</span></p></div>
@@ -726,6 +731,7 @@ p,li{font-size:clamp(.85rem,1.3vw,1rem);line-height:1.65}
     <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
       <a href="mailto:izzy@spsi.ai?subject=SPS%20SAFE%20Investment%20Inquiry" style="padding:13px 28px;background:var(--accent);border-radius:8px;color:#fff;font-family:'Outfit',sans-serif;font-weight:600;font-size:.92rem;text-decoration:none;">📩 izzy@spsi.ai</a>
       <a href="sps-book-a-call.html" target="_blank" style="padding:13px 28px;background:rgba(250,249,246,.07);border:1px solid rgba(250,249,246,.13);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-weight:600;font-size:.92rem;text-decoration:none;">📅 Schedule a Call</a>
+      <a href="https://sps-production-7dbc.up.railway.app/sps-safe-sign.html" target="_blank" class="btn-safe" style="padding:13px 28px;">📄 Sign SAFE</a>
     </div>
     <!-- Timeline -->
     <div style="display:flex;gap:0;align-items:center;margin-top:4px;">
