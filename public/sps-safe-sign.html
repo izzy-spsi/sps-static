@@ -305,12 +305,12 @@ async function goStep3() {
             role: 'Investor',
             email: investorData.email,
             name: investorData.name,
-            fields: [
-              { name: 'Investor Name', default_value: investorData.name },
-              { name: 'Investor Email', default_value: investorData.email },
-              { name: 'Investor Address', default_value: investorData.address },
-              { name: 'Investment Amount (USD)', default_value: investorData.amount }
-            ]
+            prefill_values: {
+              'Investor Name': investorData.name,
+              'Investor Email': investorData.email,
+              'Investor Address': investorData.address,
+              'Investment Amount (USD)': investorData.amount
+            }
           },
           {
             role: 'Company',
