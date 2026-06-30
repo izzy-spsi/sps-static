@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pair & Pay — Street Hail Flow | Flywheel</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0A0C14;
+  color: #F0EDE8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: #111320;
+  border-bottom: 3px solid #E53E3E;
+  padding: 20px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark {
+  width: 38px; height: 38px; background: #E53E3E;
+  border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; font-weight: 900; font-size: 20px; color: white;
+}
+.logo-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.doc-title { text-align: center; }
+.doc-title h1 { font-size: 20px; font-weight: 800; }
+.doc-title p { font-size: 12px; color: #666; margin-top: 3px; }
+.badge {
+  background: rgba(229,62,62,0.12); border: 1px solid rgba(229,62,62,0.35);
+  color: #E53E3E; padding: 6px 14px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+}
+
+/* ── CONTENT ── */
+.content { max-width: 1300px; margin: 0 auto; padding: 40px 32px; }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex; gap: 28px; justify-content: center;
+  margin-bottom: 44px; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ── STEP ── */
+.step { margin-bottom: 52px; }
+.step-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+.step-number {
+  width: 38px; height: 38px; background: #E53E3E; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 16px; flex-shrink: 0; margin-top: 2px;
+}
+.step-title { font-size: 18px; font-weight: 800; }
+.step-desc { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.5; }
+
+.step-row {
+  display: flex; align-items: center; gap: 20px;
+}
+
+.device-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.device-label { font-size: 11px; color: #555; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+
+/* ── TABLET FRAME ── */
+.tablet-frame {
+  width: 530px; height: 340px;
+  background: #1C1E30; border-radius: 22px;
+  border: 3px solid #2A2D45; padding: 12px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  position: relative;
+}
+.tablet-frame::before {
+  content: ''; position: absolute; left: 50%; top: 6px;
+  transform: translateX(-50%);
+  width: 30px; height: 4px; background: #2A2D45; border-radius: 2px;
+}
+.tablet-screen { width: 100%; height: 100%; background: #000; border-radius: 12px; overflow: hidden; position: relative; }
+
+/* ── PHONE FRAME ── */
+.phone-frame {
+  width: 218px;
+  background: #1A1C2E; border-radius: 38px;
+  border: 3px solid #28294A; padding: 14px 10px 18px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  display: flex; flex-direction: column; align-items: center;
+}
+.phone-notch { width: 56px; height: 7px; background: #111; border-radius: 4px; margin-bottom: 10px; }
+.phone-screen { width: 100%; background: #fff; border-radius: 14px; overflow: hidden; }
+.phone-home-btn {
+  width: 40px; height: 5px; background: #28294A;
+  border-radius: 3px; margin-top: 14px;
+}
+
+/* ── CONNECTION ── */
+.connection {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; min-width: 148px; flex-shrink: 0;
+}
+.arrow-row { display: flex; align-items: center; width: 100%; }
+.arrow-line { flex: 1; height: 2px; background: linear-gradient(90deg, rgba(229,62,62,0.2), rgba(229,62,62,0.8), rgba(229,62,62,0.2)); }
+.arrow-head { color: #E53E3E; font-size: 16px; line-height: 1; }
+.sync-label {
+  font-size: 10px; color: #E53E3E; font-weight: 700; text-align: center;
+  background: rgba(229,62,62,0.08); border: 1px solid rgba(229,62,62,0.2);
+  border-radius: 8px; padding: 5px 10px; line-height: 1.5;
+}
+.no-sync { font-size: 10px; color: #3a3a4a; text-align: center; font-style: italic; line-height: 1.5; }
+
+.step-divider { height: 1px; background: linear-gradient(90deg, transparent, #1a1d30, transparent); margin-bottom: 52px; }
+
+/* ════════════════════ TABLET UI ════════════════════ */
+
+/* Meter screen */
+.meter-bg { background: #000; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 10px 12px; gap: 8px; }
+.meter-top { display: flex; justify-content: space-between; align-items: center; }
+.meter-time-info { display: flex; gap: 18px; }
+.meter-time-item { display: flex; flex-direction: column; align-items: center; }
+.m-label { font-size: 8px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+.m-val { font-family: 'Courier New', monospace; font-size: 13px; color: #cc3333; font-weight: 700; }
+.toggle-bar { display: flex; border-radius: 6px; overflow: hidden; border: 1px solid #2a2a2a; }
+.toggle-opt { padding: 5px 12px; font-size: 10px; font-weight: 700; color: #444; background: #0d0d0d; cursor: pointer; }
+.toggle-opt.on { background: #1244cc; color: #fff; }
+.meter-body { display: flex; gap: 10px; flex: 1; }
+.meter-rows { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.meter-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border: 1px solid #1a1a1a; border-radius: 5px; background: #060606; }
+.meter-row-label { font-size: 9px; color: #444; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.meter-row-val { font-family: 'Courier New', monospace; font-size: 20px; color: #dd3333; font-weight: 700; }
+.meter-row-val.dim { color: #333; }
+.meter-row-val.total { font-size: 26px; color: #ff5511; }
+.meter-btns { width: 78px; display: flex; flex-direction: column; gap: 5px; }
+.m-btn { background: #0f0f0f; border: 1px solid #1f1f1f; border-radius: 6px; padding: 7px 5px; text-align: center; color: #888; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.m-btn.stop { background: #2a0000; color: #ff4444; border-color: #440000; }
+
+/* PIN screen */
+.pin-screen { background: #000; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 12px; gap: 8px; }
+.stepper { display: flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0; }
+.st-step { font-size: 10px; font-weight: 700; color: #333; white-space: nowrap; }
+.st-step.active { color: #1a6eff; }
+.st-step.done { color: #22cc44; }
+.st-line { flex: 1; height: 1px; background: #222; max-width: 28px; }
+.st-line.done { background: #22cc44; }
+.pin-field { text-align: center; padding: 12px; background: #0a0a0a; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 30px; color: #22cc44; letter-spacing: 14px; border: 1.5px solid #222; flex-shrink: 0; }
+.pin-field.empty { color: #222; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; flex: 1; }
+.key { background: #0f0f0f; border: 1px solid #222; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #ccc; }
+.key.ok { background: #1244cc; color: #fff; border-color: #1a55ee; font-size: 13px; font-weight: 900; }
+.key.ok.off { background: #0a0a1a; color: #333; border-color: #1a1a1a; }
+
+/* Waiting screen */
+.waiting-screen { background: #000; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; }
+.spin { width: 42px; height: 42px; border: 3px solid #1a1a1a; border-top-color: #1a6eff; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.wait-title { font-size: 17px; font-weight: 800; color: #ddd; text-align: center; }
+.wait-sub { font-size: 11px; color: #444; text-align: center; line-height: 1.5; }
+.cancel-pair-btn { border: 1px solid #2a2a2a; border-radius: 20px; padding: 7px 22px; color: #666; font-size: 11px; font-weight: 700; margin-top: 4px; }
+
+/* Paired screen */
+.paired-screen { background: #000; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; }
+.paired-check { width: 58px; height: 58px; background: #0a2a14; border: 2px solid #22cc44; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.paired-title { font-size: 22px; font-weight: 900; color: #22cc44; }
+.t-card { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 10px; padding: 12px 18px; width: 100%; max-width: 310px; }
+.t-card-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #888; padding: 3px 0; }
+.t-dot-r { color: #E53E3E; }
+.t-dot-g { color: #22cc44; font-size: 10px; }
+
+/* Fare screen */
+.fare-screen { background: #000; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 16px; gap: 8px; }
+.fare-hdr { font-size: 13px; font-weight: 800; color: #888; text-align: center; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.fare-r { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #0f0f0f; font-size: 13px; color: #888; }
+.fare-r.total { font-size: 20px; font-weight: 900; color: #fff; border: none; margin-top: 2px; }
+.no-collect { background: #1a0800; border: 1px solid #aa3300; border-radius: 8px; padding: 10px 14px; color: #ff6633; font-size: 11px; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+.done-btn { background: #0a2a0a; border: 1px solid #22cc44; border-radius: 10px; padding: 12px; text-align: center; color: #22cc44; font-size: 14px; font-weight: 900; margin-top: auto; }
+
+/* Paired meter screen */
+.paired-badge { background: #0a2a0a; border: 1px solid #22cc44; border-radius: 12px; padding: 3px 10px; font-size: 9px; color: #22cc44; font-weight: 800; }
+
+/* ════════════════════ PHONE UI ════════════════════ */
+
+.p-status { display: flex; justify-content: space-between; padding: 5px 10px; font-size: 9px; font-weight: 700; color: #111; background: #f5f5f5; }
+.p-map { height: 155px; background: linear-gradient(135deg, #e4eef8, #cfe0f5); position: relative; overflow: hidden; }
+.p-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(160,190,220,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(160,190,220,0.35) 1px, transparent 1px); background-size: 22px 22px; }
+.p-road-h { position: absolute; height: 5px; background: #fff; left: 0; right: 0; }
+.p-road-v { position: absolute; width: 5px; background: #fff; top: 0; bottom: 0; }
+.p-car { position: absolute; font-size: 16px; }
+.p-pin { position: absolute; font-size: 18px; }
+.p-search { margin: 8px; background: #efefef; border-radius: 20px; padding: 7px 14px; font-size: 11px; color: #999; display: flex; align-items: center; gap: 6px; }
+.p-sugg { padding: 0 10px; }
+.p-sugg-lbl { font-size: 8px; color: #aaa; font-weight: 800; text-transform: uppercase; padding: 3px 0 2px; letter-spacing: 0.5px; }
+.p-sugg-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f3f3f3; font-size: 10px; color: #333; }
+.pair-card { margin: 8px; background: #FFFBEE; border: 1.5px solid #F59E0B; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+.pair-card-text { flex: 1; }
+.pair-card-title { font-size: 11px; font-weight: 900; color: #222; }
+.pair-card-sub { font-size: 9px; color: #777; margin-top: 2px; line-height: 1.4; }
+
+/* Code screen phone */
+.p-code-screen { width: 100%; background: #fff; display: flex; flex-direction: column; align-items: center; padding: 16px 14px 20px; gap: 10px; }
+.p-screen-title { font-size: 16px; font-weight: 900; color: #111; text-align: center; }
+.p-screen-sub { font-size: 9px; color: #888; text-align: center; line-height: 1.5; }
+.code-box { display: flex; gap: 8px; padding: 14px 18px; background: #f7f7f7; border-radius: 12px; border: 2px dashed #ddd; }
+.code-d { font-size: 30px; font-weight: 900; color: #111; width: 28px; text-align: center; }
+.wait-status { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #888; font-weight: 600; }
+.wait-dot { width: 7px; height: 7px; border-radius: 50%; background: #1a6eff; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+/* Confirm screen phone */
+.p-confirm { width: 100%; background: #fff; display: flex; flex-direction: column; padding: 10px 12px 14px; gap: 7px; }
+.p-confirm-hdr { display: flex; align-items: center; gap: 8px; padding-bottom: 7px; border-bottom: 1px solid #f0f0f0; }
+.x-btn { width: 20px; height: 20px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #555; font-weight: 900; }
+.p-confirm-title { font-size: 11px; font-weight: 800; color: #222; }
+.p-big { font-size: 14px; font-weight: 900; color: #111; }
+.p-verify { font-size: 8px; color: #aaa; }
+.trip-box { background: #f8f8f8; border-radius: 8px; padding: 8px 10px; }
+.trip-row { display: flex; align-items: flex-start; gap: 7px; padding: 3px 0; }
+.t-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
+.t-dot.pick { background: #E53E3E; }
+.t-dot.drop { background: #333; }
+.t-place { font-size: 10px; font-weight: 700; color: #222; }
+.t-place-lbl { font-size: 8px; color: #bbb; text-transform: uppercase; letter-spacing: 0.4px; }
+.drv-card { background: #f5f5f5; border-radius: 8px; padding: 7px 9px; display: flex; align-items: center; gap: 7px; }
+.drv-ava { width: 28px; height: 28px; background: #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.drv-name { font-size: 10px; font-weight: 800; color: #111; }
+.drv-rating { font-size: 9px; color: #F59E0B; }
+.drv-veh { font-size: 8px; color: #888; }
+.pay-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+.cc { display: flex; align-items: center; gap: 5px; }
+.cc-badge { width: 22px; height: 14px; background: #EB001B; border-radius: 3px; position: relative; overflow: hidden; flex-shrink: 0; }
+.cc-badge::after { content:''; position:absolute; left:10px; top:0; bottom:0; width:14px; background:#F79E1B; border-radius:3px; opacity:0.75; }
+.fare-est { font-size: 14px; font-weight: 900; color: #111; }
+.confirm-btn { background: #E53E3E; color: #fff; border-radius: 10px; padding: 10px; text-align: center; font-size: 12px; font-weight: 900; }
+
+/* Live map phone */
+.p-live { width: 100%; background: #e4eef8; display: flex; flex-direction: column; }
+.p-live-map { position: relative; height: 210px; background: linear-gradient(135deg, #e4eef8, #cfe0f5); overflow: hidden; }
+.route-line { position: absolute; height: 3px; background: #E53E3E; }
+.live-bottom { background: #fff; padding: 10px 12px; border-radius: 14px 14px 0 0; box-shadow: 0 -4px 16px rgba(0,0,0,0.08); }
+.live-eta { font-size: 12px; font-weight: 900; color: #111; margin-bottom: 5px; }
+.live-stats { display: flex; gap: 10px; margin-bottom: 7px; }
+.live-stat { flex: 1; text-align: center; }
+.live-stat-v { font-size: 12px; font-weight: 900; color: #111; }
+.live-stat-l { font-size: 8px; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 1px; }
+
+/* Success screen */
+.p-success { width: 100%; background: #fff; display: flex; flex-direction: column; align-items: center; padding: 16px 14px 18px; gap: 9px; }
+.success-lbl { font-size: 10px; color: #aaa; font-weight: 700; }
+.success-icon { width: 54px; height: 54px; background: #f0fdf4; border: 2px solid #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.success-title { font-size: 16px; font-weight: 900; color: #111; }
+.fare-bd { width: 100%; background: #f8f8f8; border-radius: 10px; padding: 10px 12px; }
+.fare-bd-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 10px; color: #666; }
+.fare-bd-row.tot { font-size: 13px; font-weight: 900; color: #111; border-top: 1px solid #eee; padding-top: 6px; margin-top: 3px; }
+.continue-btn { width: 100%; background: #E53E3E; color: #fff; border-radius: 10px; padding: 10px; text-align: center; font-size: 12px; font-weight: 900; margin-top: 4px; }
+
+/* Footer */
+.footer { background: #0d0f1c; border-top: 1px solid #171928; padding: 18px 48px; text-align: center; font-size: 11px; color: #333; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">F</div>
+    <div class="logo-text">Flywheel</div>
+  </div>
+  <div class="doc-title">
+    <h1>Pair &amp; Pay — Street Hail Flow</h1>
+    <p>Driver (Tablet) + Rider (Phone) · Side-by-Side Screen Documentation</p>
+  </div>
+  <div class="badge">CONFIDENTIAL</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1a6eff"></div>Driver App (Tablet)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#E53E3E"></div>Rider App (Phone)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>Sync / Handshake Point</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22cc44"></div>Payment Event</div>
+  </div>
+
+  <!-- ══════════════════════════════ STEP 1 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Active Meter Running — Rider Opens App</div>
+        <div class="step-desc">Rider has flagged down a Flywheel cab. Driver starts the meter. Rider opens the Flywheel app and sees the "Pair and Pay" card on the home screen.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="meter-bg">
+              <div class="meter-top">
+                <div class="meter-time-info">
+                  <div class="meter-time-item"><div class="m-label">Time Off</div><div class="m-val">09:09</div></div>
+                  <div class="meter-time-item"><div class="m-label">Miles</div><div class="m-val">0.02</div></div>
+                  <div class="meter-time-item"><div class="m-label">Fare Miles</div><div class="m-val">0.00</div></div>
+                </div>
+                <div class="toggle-bar">
+                  <div class="toggle-opt on">Meter</div>
+                  <div class="toggle-opt">Enter PIN</div>
+                </div>
+              </div>
+              <div class="meter-body">
+                <div class="meter-rows">
+                  <div class="meter-row"><div class="meter-row-label">FARE $</div><div class="meter-row-val">8.45</div></div>
+                  <div class="meter-row"><div class="meter-row-label">TOLLS $</div><div class="meter-row-val dim">0.00</div></div>
+                  <div class="meter-row"><div class="meter-row-label">EXTRAS $</div><div class="meter-row-val dim">0.00</div></div>
+                  <div class="meter-row"><div class="meter-row-label">TOTAL $</div><div class="meter-row-val total">8.45</div></div>
+                </div>
+                <div class="meter-btns">
+                  <div class="m-btn">👤 Pax</div>
+                  <div class="m-btn">Tolls</div>
+                  <div class="m-btn">Extras</div>
+                  <div class="m-btn stop">STOP</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="no-sync">Independent<br>actions —<br>ride begins</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-status"><span>9:41</span><span>📶 🔋</span></div>
+            <div class="p-map">
+              <div class="p-grid"></div>
+              <div class="p-road-h" style="top:38%"></div>
+              <div class="p-road-h" style="top:68%"></div>
+              <div class="p-road-v" style="left:33%"></div>
+              <div class="p-road-v" style="left:64%"></div>
+              <div class="p-car" style="top:22%;left:18%">🚖</div>
+              <div class="p-car" style="top:50%;left:52%">🚖</div>
+              <div class="p-car" style="top:18%;left:68%">🚖</div>
+              <div class="p-pin" style="top:42%;left:38%">📍</div>
+            </div>
+            <div class="p-search">🔍 Where to?</div>
+            <div class="p-sugg">
+              <div class="p-sugg-lbl">Suggested</div>
+              <div class="p-sugg-item">🕐 SFO International Airport</div>
+              <div class="p-sugg-item">🕐 Van Ness Ave &amp; Union St</div>
+            </div>
+            <div class="pair-card">
+              <div style="font-size:22px">🚕</div>
+              <div class="pair-card-text">
+                <div class="pair-card-title">Pair and Pay</div>
+                <div class="pair-card-sub">Already in a Flywheel cab? Tap to pay with your app.</div>
+              </div>
+              <div style="color:#F59E0B;font-size:14px">›</div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 2 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Initiate Pairing — Code Generated</div>
+        <div class="step-desc">Rider taps "Pair and Pay" → app generates a unique 4-digit session code. Driver taps "Enter PIN" → keypad appears. Rider reads code aloud to driver.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="pin-screen">
+              <div class="stepper">
+                <div class="st-step active">Entering PIN</div>
+                <div class="st-line"></div>
+                <div class="st-step">Rider confirming</div>
+                <div class="st-line"></div>
+                <div class="st-step">Paired</div>
+              </div>
+              <div class="pin-field empty">_ _ _ _</div>
+              <div class="keypad">
+                <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+                <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+                <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+                <div class="key" style="font-size:13px;color:#666">⌫</div>
+                <div class="key">0</div>
+                <div class="key ok off">OK</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="arrow-row">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">▶</div>
+        </div>
+        <div class="sync-label">Rider reads<br>code to Driver</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-code-screen">
+              <div class="p-status" style="width:100%;margin:-0px">9:41 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 📶🔋</div>
+              <div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-top:6px">Pair and Pay</div>
+              <div class="p-screen-title">Your pairing code</div>
+              <div class="p-screen-sub">Share this code with your driver<br>to connect your trip.</div>
+              <div class="code-box">
+                <div class="code-d">2</div>
+                <div class="code-d">8</div>
+                <div class="code-d">4</div>
+                <div class="code-d">7</div>
+              </div>
+              <div class="wait-status">
+                <div class="wait-dot"></div>
+                Waiting for your driver
+              </div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 3 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <div class="step-title">Driver Enters &amp; Submits PIN</div>
+        <div class="step-desc">Driver types the 4-digit code and taps OK. System verifies the code server-side. Both devices show a verification state.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="pin-screen">
+              <div class="stepper">
+                <div class="st-step active">Entering PIN</div>
+                <div class="st-line"></div>
+                <div class="st-step">Rider confirming</div>
+                <div class="st-line"></div>
+                <div class="st-step">Paired</div>
+              </div>
+              <div class="pin-field" style="color:#22cc44">2847</div>
+              <div class="keypad">
+                <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+                <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+                <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+                <div class="key" style="font-size:13px;color:#666">⌫</div>
+                <div class="key">0</div>
+                <div class="key ok">OK ↵</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="no-sync">Verifying<br>with server...</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-code-screen">
+              <div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-top:6px">Pair and Pay</div>
+              <div class="p-screen-title">Your pairing code</div>
+              <div class="p-screen-sub" style="color:#1a6eff">Driver is entering your code...</div>
+              <div class="code-box" style="border-color:#1a6eff;background:#f0f6ff">
+                <div class="code-d" style="color:#1a6eff">2</div>
+                <div class="code-d" style="color:#1a6eff">8</div>
+                <div class="code-d" style="color:#1a6eff">4</div>
+                <div class="code-d" style="color:#1a6eff">7</div>
+              </div>
+              <div class="wait-status">
+                <div class="wait-dot"></div>
+                Verifying code...
+              </div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 4 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <div class="step-title">Rider Reviews &amp; Confirms Trip</div>
+        <div class="step-desc">Driver waits. Rider sees driver name, vehicle, plate, pickup/drop-off, and payment method. Rider taps Confirm → triggers final pairing.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="waiting-screen">
+              <div class="stepper" style="margin-bottom:8px">
+                <div class="st-step done">Entering PIN</div>
+                <div class="st-line done"></div>
+                <div class="st-step active">Rider confirming</div>
+                <div class="st-line"></div>
+                <div class="st-step">Paired</div>
+              </div>
+              <div class="spin"></div>
+              <div class="wait-title">Waiting for rider<br>to confirm</div>
+              <div class="wait-sub">The rider is reviewing trip<br>details on their phone</div>
+              <div class="cancel-pair-btn">Cancel Pair</div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="arrow-row">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">▶</div>
+        </div>
+        <div class="sync-label">Rider taps Confirm<br>→ pairing locked</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-confirm">
+              <div class="p-status" style="margin:-10px -12px 6px; padding:5px 12px; background:#f5f5f5;">
+                <span>9:41</span><span>📶 🔋</span>
+              </div>
+              <div class="p-confirm-hdr">
+                <div class="x-btn">✕</div>
+                <div class="p-confirm-title">Pair and Pay</div>
+              </div>
+              <div class="p-big">Confirm your trip</div>
+              <div class="p-verify">Make sure this matches the cab you're in.</div>
+              <div class="trip-box">
+                <div class="trip-row">
+                  <div class="t-dot pick"></div>
+                  <div><div class="t-place-lbl">Pick-up</div><div class="t-place">Van Ness Ave &amp; Union St</div></div>
+                </div>
+                <div class="trip-row" style="margin-top:4px">
+                  <div class="t-dot drop"></div>
+                  <div><div class="t-place-lbl">Drop-off</div><div class="t-place">Powell BART Station</div></div>
+                </div>
+              </div>
+              <div class="drv-card">
+                <div class="drv-ava">👩</div>
+                <div style="flex:1">
+                  <div class="drv-name">Dianne Russell <span style="color:#22cc44;font-size:8px">✓</span></div>
+                  <div class="drv-rating">★ 5.00</div>
+                  <div class="drv-veh">Toyota Camry · 1ABC234</div>
+                </div>
+              </div>
+              <div class="pay-row">
+                <div class="cc"><div class="cc-badge"></div><span style="font-size:9px;color:#666">Mastercard 2345 ****</span></div>
+                <div class="fare-est">$29.42</div>
+              </div>
+              <div class="confirm-btn">Confirm</div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 5 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">5</div>
+      <div>
+        <div class="step-title">Pairing Confirmed — Trip Linked</div>
+        <div class="step-desc">Both devices confirm the pairing simultaneously. Driver sees "Paired with John." Rider enters live trip tracking view.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="paired-screen">
+              <div class="stepper" style="margin-bottom:8px">
+                <div class="st-step done">Entering PIN</div>
+                <div class="st-line done"></div>
+                <div class="st-step done">Rider confirming</div>
+                <div class="st-line done"></div>
+                <div class="st-step done" style="color:#22cc44">Paired ✓</div>
+              </div>
+              <div class="paired-check">✓</div>
+              <div class="paired-title">Paired with John</div>
+              <div class="t-card">
+                <div class="t-card-row"><span class="t-dot-r">●</span>Van Ness Ave &amp; Union St</div>
+                <div class="t-card-row"><span>○</span>Powell BART Station</div>
+                <div class="t-card-row" style="margin-top:6px;color:#22cc44;font-size:10px;font-weight:700">💳 Payment linked — do not collect cash</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div style="text-align:center;font-size:22px">✅</div>
+        <div class="sync-label">Both confirm<br>pairing complete</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-live">
+              <div class="p-live-map">
+                <div class="p-grid"></div>
+                <div class="p-road-h" style="top:40%;height:5px;background:#fff"></div>
+                <div class="p-road-h" style="top:68%;height:5px;background:#fff"></div>
+                <div class="p-road-v" style="left:32%;width:5px;background:#fff"></div>
+                <div class="p-road-v" style="left:64%;width:5px;background:#fff"></div>
+                <div style="position:absolute;top:22px;left:28px;width:130px;height:3px;background:#E53E3E;transform:rotate(18deg);transform-origin:left center"></div>
+                <div style="position:absolute;top:44px;left:70px;font-size:18px">🚖</div>
+                <div style="position:absolute;top:10px;left:18px;font-size:16px">📍</div>
+                <div style="position:absolute;bottom:12px;right:14px;font-size:16px">🎯</div>
+                <div style="position:absolute;top:8px;right:8px;background:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;box-shadow:0 2px 6px rgba(0,0,0,0.15)">☰</div>
+              </div>
+              <div class="live-bottom">
+                <div class="live-eta">Drop off at 10:30 AM ✕</div>
+                <div class="live-stats">
+                  <div class="live-stat"><div class="live-stat-v">$29.42</div><div class="live-stat-l">Your Fare</div></div>
+                  <div class="live-stat"><div class="live-stat-v">10:30</div><div class="live-stat-l">ETA</div></div>
+                  <div class="live-stat"><div class="live-stat-v">ANY</div><div class="live-stat-l">Ride Type</div></div>
+                </div>
+                <div class="drv-card" style="padding:5px 8px">
+                  <div class="drv-ava" style="width:22px;height:22px;font-size:10px">👩</div>
+                  <div style="flex:1">
+                    <div class="drv-name" style="font-size:9px">Dianne Russell ★ 5.00</div>
+                    <div class="drv-veh">Toyota Camry · 1ABC234</div>
+                  </div>
+                  <div class="cc-badge"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 6 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">6</div>
+      <div>
+        <div class="step-title">Trip in Progress — Meter Accumulating</div>
+        <div class="step-desc">Meter continues running. Driver sees the "PAIRED" badge. Rider tracks live route, ETA, and running fare on the map view.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="meter-bg">
+              <div class="meter-top">
+                <div class="meter-time-info">
+                  <div class="meter-time-item"><div class="m-label">Time Off</div><div class="m-val">14:22</div></div>
+                  <div class="meter-time-item"><div class="m-label">Miles</div><div class="m-val">2.14</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="paired-badge">● PAIRED — John</div>
+                  <div class="toggle-bar">
+                    <div class="toggle-opt on">Meter</div>
+                    <div class="toggle-opt">Enter PIN</div>
+                  </div>
+                </div>
+              </div>
+              <div class="meter-body">
+                <div class="meter-rows">
+                  <div class="meter-row"><div class="meter-row-label">FARE $</div><div class="meter-row-val">21.40</div></div>
+                  <div class="meter-row"><div class="meter-row-label">TOLLS $</div><div class="meter-row-val">5.00</div></div>
+                  <div class="meter-row"><div class="meter-row-label">EXTRAS $</div><div class="meter-row-val dim">0.00</div></div>
+                  <div class="meter-row"><div class="meter-row-label">TOTAL $</div><div class="meter-row-val total">26.40</div></div>
+                </div>
+                <div class="meter-btns">
+                  <div class="m-btn">👤 Pax</div>
+                  <div class="m-btn">Tolls</div>
+                  <div class="m-btn">Extras</div>
+                  <div class="m-btn stop">STOP</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="no-sync">Fare running<br>in real time</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-live">
+              <div class="p-live-map">
+                <div class="p-grid"></div>
+                <div class="p-road-h" style="top:40%;height:5px;background:#fff"></div>
+                <div class="p-road-h" style="top:68%;height:5px;background:#fff"></div>
+                <div class="p-road-v" style="left:32%;width:5px;background:#fff"></div>
+                <div class="p-road-v" style="left:64%;width:5px;background:#fff"></div>
+                <div style="position:absolute;top:18px;left:20px;width:140px;height:3px;background:#E53E3E;transform:rotate(14deg);transform-origin:left center"></div>
+                <div style="position:absolute;top:55px;left:95px;font-size:18px">🚖</div>
+                <div style="position:absolute;top:8px;left:14px;font-size:14px">📍</div>
+                <div style="position:absolute;bottom:12px;right:12px;font-size:14px">🎯</div>
+              </div>
+              <div class="live-bottom">
+                <div class="live-eta">Drop off at 10:30 AM ✕</div>
+                <div class="live-stats">
+                  <div class="live-stat"><div class="live-stat-v">$26.40</div><div class="live-stat-l">Your Fare</div></div>
+                  <div class="live-stat"><div class="live-stat-v">10:30</div><div class="live-stat-l">ETA</div></div>
+                  <div class="live-stat"><div class="live-stat-v">ANY</div><div class="live-stat-l">Ride Type</div></div>
+                </div>
+                <div class="drv-card" style="padding:5px 8px">
+                  <div class="drv-ava" style="width:22px;height:22px;font-size:10px">👩</div>
+                  <div style="flex:1">
+                    <div class="drv-name" style="font-size:9px">Dianne Russell ★ 5.00</div>
+                    <div class="drv-veh">Toyota Camry · 1ABC234</div>
+                  </div>
+                  <div class="cc-badge"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-divider"></div>
+
+  <!-- ══════════════════════════════ STEP 7 ══════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">7</div>
+      <div>
+        <div class="step-title">Trip Complete — Automatic Payment Processed</div>
+        <div class="step-desc">Driver stops the meter. Fare is automatically charged to the rider's Flywheel account. Driver is explicitly told NOT to collect. Rider receives payment confirmation with full breakdown.</div>
+      </div>
+    </div>
+    <div class="step-row">
+      <!-- TABLET -->
+      <div class="device-container">
+        <div class="tablet-frame">
+          <div class="tablet-screen">
+            <div class="fare-screen">
+              <div class="fare-hdr">Flywheel — Fare Details</div>
+              <div class="fare-r"><span>Base Fare</span><span>$26.60</span></div>
+              <div class="fare-r"><span>Airport &amp; State Surcharges</span><span>$0.79</span></div>
+              <div class="fare-r"><span>Tolls</span><span>$5.00</span></div>
+              <div class="fare-r total"><span>TOTAL</span><span>$32.39</span></div>
+              <div class="no-collect">⚠️ Do Not Collect Fare From Passenger<br>Charge is processed automatically</div>
+              <div class="done-btn">✓ Done</div>
+            </div>
+          </div>
+        </div>
+        <div class="device-label">🖥️ Driver App — Tablet</div>
+      </div>
+
+      <!-- CONNECTION -->
+      <div class="connection">
+        <div class="arrow-row">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">▶</div>
+        </div>
+        <div class="sync-label" style="background:rgba(34,204,68,0.08);border-color:rgba(34,204,68,0.25);color:#22cc44">💳 Auto-charged to<br>Rider's account</div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="device-container">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="p-success">
+              <div class="p-status" style="width:100%;margin:-16px -14px 8px;padding:5px 14px;background:#f5f5f5;">
+                <span>9:41</span><span>📶 🔋</span>
+              </div>
+              <div class="success-lbl">Trip complete</div>
+              <div class="success-icon">✓</div>
+              <div class="success-title">Payment Successful</div>
+              <div class="fare-bd">
+                <div class="fare-bd-row tot"><span>Total Fare</span><span>$32.39</span></div>
+                <div class="fare-bd-row"><span>Metered fare</span><span>$26.60</span></div>
+                <div class="fare-bd-row"><span>Airport &amp; state surcharges</span><span>$0.79</span></div>
+                <div class="fare-bd-row"><span>Tolls</span><span>$5.00</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:9px;color:#888">
+                <div class="cc-badge"></div>Mastercard 6534 ****
+              </div>
+              <div class="continue-btn">Continue</div>
+            </div>
+          </div>
+          <div class="phone-home-btn"></div>
+        </div>
+        <div class="device-label">📱 Rider App — Phone</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Flywheel Technologies · Pair &amp; Pay Street Hail Flow · Confidential · 2026
+</div>
+
+</body>
+</html>
