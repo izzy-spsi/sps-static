@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel Pair & Pay — Product Overview for Uber</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #E53E3E;
+  --red-dark: #C53030;
+  --red-light: rgba(229,62,62,0.1);
+  --red-border: rgba(229,62,62,0.25);
+  --bg: #0A0C14;
+  --bg2: #111320;
+  --bg3: #161828;
+  --card: #1A1D2E;
+  --card2: #1F2235;
+  --border: rgba(255,255,255,0.06);
+  --text: #F0EDE8;
+  --muted: #8B8FA8;
+  --muted2: #555A70;
+  --green: #22C55E;
+  --blue: #3B82F6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo-group { display: flex; align-items: center; gap: 12px; }
+.fw-logo {
+  width: 36px; height: 36px; background: var(--red);
+  border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; font-weight: 900; font-size: 18px; color: #fff;
+}
+.fw-name { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.conf-badge {
+  background: var(--red-light); border: 1px solid var(--red-border);
+  color: var(--red); padding: 4px 12px; border-radius: 20px;
+  font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+}
+.date-badge { font-size: 11px; color: var(--muted2); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(160deg, #0e1022 0%, #0a0c14 60%);
+  border-bottom: 1px solid var(--border);
+  padding: 72px 80px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -80px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(229,62,62,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--red-light); border: 1px solid var(--red-border);
+  color: var(--red); padding: 6px 14px; border-radius: 20px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: 52px; font-weight: 900; line-height: 1.08;
+  letter-spacing: -1.5px; margin-bottom: 20px;
+  max-width: 680px;
+}
+.hero h1 span { color: var(--red); }
+.hero-sub {
+  font-size: 18px; color: var(--muted); font-weight: 400; max-width: 580px;
+  line-height: 1.6; margin-bottom: 36px;
+}
+.hero-meta {
+  display: flex; gap: 36px; flex-wrap: wrap;
+}
+.hero-stat { display: flex; flex-direction: column; gap: 3px; }
+.hero-stat-val { font-size: 22px; font-weight: 900; color: var(--text); }
+.hero-stat-lbl { font-size: 11px; color: var(--muted2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── SECTION ── */
+.section { padding: 64px 80px; border-bottom: 1px solid var(--border); }
+.section:last-of-type { border-bottom: none; }
+.section-label {
+  font-size: 10px; font-weight: 800; color: var(--red);
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+}
+.section h2 {
+  font-size: 32px; font-weight: 900; letter-spacing: -0.8px;
+  margin-bottom: 14px; line-height: 1.2;
+}
+.section-intro { font-size: 16px; color: var(--muted); max-width: 640px; line-height: 1.7; margin-bottom: 48px; }
+
+/* ── PROBLEM / SOLUTION ── */
+.ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.ps-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 32px;
+}
+.ps-card.problem { border-left: 3px solid #F59E0B; }
+.ps-card.solution { border-left: 3px solid var(--green); }
+.ps-icon { font-size: 28px; margin-bottom: 14px; }
+.ps-title { font-size: 15px; font-weight: 800; margin-bottom: 10px; }
+.ps-card.problem .ps-title { color: #F59E0B; }
+.ps-card.solution .ps-title { color: var(--green); }
+.ps-body { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ── HOW IT WORKS ── */
+.steps-grid { display: flex; flex-direction: column; gap: 0; }
+.step-item {
+  display: flex; gap: 32px; padding: 32px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.step-item:last-child { border-bottom: none; }
+.step-num-col { display: flex; flex-direction: column; align-items: center; gap: 0; flex-shrink: 0; width: 60px; }
+.step-num {
+  width: 44px; height: 44px; background: var(--red);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 17px; flex-shrink: 0; z-index: 1;
+}
+.step-connector { width: 2px; flex: 1; min-height: 40px; background: linear-gradient(var(--red), var(--border)); margin-top: 4px; }
+.step-content { flex: 1; padding-top: 10px; }
+.step-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.step-body { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+.step-devices { display: flex; gap: 12px; flex-wrap: wrap; }
+.device-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 8px 14px; font-size: 12px;
+}
+.device-pill-icon { font-size: 14px; }
+.device-pill-label { font-weight: 700; color: var(--text); }
+.device-pill-action { color: var(--muted); }
+.step-sync {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+  color: var(--blue); border-radius: 8px; padding: 5px 12px;
+  font-size: 11px; font-weight: 700; margin-top: 10px;
+}
+
+/* ── DUAL EXPERIENCE ── */
+.exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.exp-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 32px;
+}
+.exp-card.driver { border-top: 3px solid var(--blue); }
+.exp-card.rider  { border-top: 3px solid var(--red); }
+.exp-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.exp-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.exp-card.driver .exp-icon { background: rgba(59,130,246,0.12); }
+.exp-card.rider  .exp-icon { background: var(--red-light); }
+.exp-device { font-size: 10px; color: var(--muted2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+.exp-title { font-size: 18px; font-weight: 800; }
+.exp-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.exp-steps li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.exp-step-n {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900; margin-top: 1px;
+}
+.exp-card.driver .exp-step-n { background: rgba(59,130,246,0.15); color: var(--blue); }
+.exp-card.rider  .exp-step-n { background: var(--red-light); color: var(--red); }
+
+/* ── KEY BENEFITS ── */
+.benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.benefit-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 24px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.benefit-icon { font-size: 32px; }
+.benefit-who {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted2);
+}
+.benefit-title { font-size: 16px; font-weight: 800; }
+.benefit-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ── USE CASES ── */
+.use-cases-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.use-case {
+  display: flex; align-items: flex-start; gap: 16px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px 24px;
+}
+.use-case-icon { font-size: 28px; flex-shrink: 0; }
+.use-case-title { font-size: 14px; font-weight: 800; margin-bottom: 5px; }
+.use-case-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── HANDSHAKE DIAGRAM ── */
+.handshake { 
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 40px; margin-top: 0;
+}
+.handshake-title { font-size: 16px; font-weight: 800; text-align: center; margin-bottom: 36px; }
+.hs-flow { display: flex; align-items: center; gap: 0; }
+.hs-device {
+  flex: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px; text-align: center;
+}
+.hs-device-icon { font-size: 32px; margin-bottom: 8px; }
+.hs-device-name { font-size: 12px; font-weight: 800; margin-bottom: 4px; }
+.hs-device-sub { font-size: 10px; color: var(--muted2); }
+.hs-arrow {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; padding: 0 16px; min-width: 140px;
+}
+.hs-arrow-line { width: 100%; height: 2px; background: linear-gradient(90deg, var(--blue), var(--red)); }
+.hs-arrow-label { font-size: 10px; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.4; }
+.hs-steps-col { flex: 2; display: flex; flex-direction: column; gap: 12px; padding: 0 24px; }
+.hs-step {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 16px;
+}
+.hs-step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; }
+.hs-step-text { font-size: 12px; color: var(--muted); }
+.hs-step-text strong { color: var(--text); }
+
+/* ── ERROR STATES ── */
+.error-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.error-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px;
+}
+.error-icon { font-size: 24px; margin-bottom: 10px; }
+.error-type { font-size: 10px; color: #F59E0B; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.error-title { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+.error-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── SUMMARY TABLE ── */
+.summary-table { width: 100%; border-collapse: collapse; }
+.summary-table th {
+  text-align: left; padding: 12px 20px; font-size: 11px;
+  font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--muted2); border-bottom: 1px solid var(--border);
+  background: var(--card2);
+}
+.summary-table th:first-child { border-radius: 12px 0 0 0; }
+.summary-table th:last-child { border-radius: 0 12px 0 0; }
+.summary-table td {
+  padding: 14px 20px; font-size: 13px; color: var(--muted);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.summary-table td:first-child { color: var(--text); font-weight: 700; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:hover td { background: rgba(255,255,255,0.02); }
+.summary-table-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 28px 80px; display: flex; justify-content: space-between; align-items: center;
+}
+.footer-left { font-size: 13px; font-weight: 700; }
+.footer-right { font-size: 11px; color: var(--muted2); }
+
+/* ── CHIPS ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.chip.green { background: rgba(34,197,94,0.1); color: var(--green); }
+.chip.red { background: var(--red-light); color: var(--red); }
+.chip.blue { background: rgba(59,130,246,0.1); color: var(--blue); }
+.chip.yellow { background: rgba(245,158,11,0.1); color: #F59E0B; }
+
+/* Print */
+@media print {
+  body { background: #fff; color: #111; }
+  .topbar, .hero { background: #f5f5f5; }
+  .section { padding: 40px; }
+  .footer { background: #f5f5f5; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-group">
+    <div class="fw-logo">F</div>
+    <div class="fw-name">Flywheel</div>
+  </div>
+  <div class="topbar-right">
+    <div class="date-badge">June 2026</div>
+    <div class="conf-badge">Confidential</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">🤝 Flywheel × Uber</div>
+  <h1>Pair &amp; Pay<br><span>for Street Hails</span></h1>
+  <p class="hero-sub">
+    A seamless in-trip pairing system that lets Flywheel riders connect their app to any flagged or dispatched cab mid-ride — and pay digitally without pre-booking.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <div class="hero-stat-val">4-digit</div>
+      <div class="hero-stat-lbl">Secure PIN</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">&lt;30 sec</div>
+      <div class="hero-stat-lbl">Pairing time</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">0 cash</div>
+      <div class="hero-stat-lbl">Auto-charged to app</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">5 attempts</div>
+      <div class="hero-stat-lbl">Fraud-safe PIN limit</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM / SOLUTION -->
+<div class="section">
+  <div class="section-label">The Problem We Solve</div>
+  <h2>Street hails are analog in a digital world</h2>
+  <p class="section-intro">When a rider flags down a Flywheel cab, they're cut off from the digital ecosystem — no tracking, no digital receipt, no app-based payment. Pair &amp; Pay bridges that gap.</p>
+  <div class="ps-grid">
+    <div class="ps-card problem">
+      <div class="ps-icon">⚠️</div>
+      <div class="ps-title">The Problem</div>
+      <div class="ps-body">
+        A rider flags down a Flywheel cab or gets dispatched without using the app. The trip is completely analog — cash or swipe only. No digital receipt. No trip history. No loyalty. No fraud protection. The rider loses all benefits of the Flywheel platform just because they didn't book ahead.
+      </div>
+    </div>
+    <div class="ps-card solution">
+      <div class="ps-icon">✅</div>
+      <div class="ps-title">The Solution</div>
+      <div class="ps-body">
+        Pair &amp; Pay lets the rider tap one button in the Flywheel app while already in the cab. A secure 4-digit code links their session to the driver's tablet. The trip is confirmed, tracked, and charged automatically — no cash, no card swipe, no pre-booking required.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-label">How It Works</div>
+  <h2>Five steps, under 30 seconds</h2>
+  <p class="section-intro">The entire pairing handshake — from code generation to confirmed payment link — completes in a single exchange between the rider's phone and the driver's tablet.</p>
+
+  <div class="steps-grid">
+
+    <div class="step-item">
+      <div class="step-num-col">
+        <div class="step-num">1</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Ride begins without a pre-booking</div>
+        <div class="step-body">The rider flags down a Flywheel cab on the street (or is dispatched) and gets in. The driver starts the meter as normal. No app interaction required to start.</div>
+        <div class="step-devices">
+          <div class="device-pill"><div class="device-pill-icon">🖥️</div><div class="device-pill-label">Driver tablet</div><div class="device-pill-action">— Meter running</div></div>
+          <div class="device-pill"><div class="device-pill-icon">📱</div><div class="device-pill-label">Rider phone</div><div class="device-pill-action">— Opens Flywheel app</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num-col">
+        <div class="step-num">2</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Rider initiates pairing — code generated</div>
+        <div class="step-body">Rider taps the <strong>"Pair and Pay"</strong> card on the Flywheel home screen. The app instantly generates a unique 4-digit session code tied to this trip window. Driver taps <strong>"Enter PIN"</strong> on their tablet — the meter keypad appears.</div>
+        <div class="step-devices">
+          <div class="device-pill"><div class="device-pill-icon">🖥️</div><div class="device-pill-label">Driver tablet</div><div class="device-pill-action">— PIN keypad shown</div></div>
+          <div class="device-pill"><div class="device-pill-icon">📱</div><div class="device-pill-label">Rider phone</div><div class="device-pill-action">— "2847" code displayed</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num-col">
+        <div class="step-num">3</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Rider reads code aloud — driver enters it</div>
+        <div class="step-body">The rider reads the 4-digit code to the driver. The driver enters it on the tablet keypad and taps <strong>OK</strong>. The system verifies the code server-side and matches it to the active rider session.</div>
+        <div class="step-devices">
+          <div class="device-pill"><div class="device-pill-icon">🖥️</div><div class="device-pill-label">Driver tablet</div><div class="device-pill-action">— Types 2847, taps OK</div></div>
+          <div class="device-pill"><div class="device-pill-icon">📱</div><div class="device-pill-label">Rider phone</div><div class="device-pill-action">— "Verifying..." state</div></div>
+        </div>
+        <div class="step-sync">🔐 Secure server-side verification — code is single-use and session-bound</div>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num-col">
+        <div class="step-num">4</div>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Rider confirms trip details</div>
+        <div class="step-body">The rider sees a confirmation screen with the driver's name, photo, vehicle make/model, license plate, pickup and drop-off locations, and their payment method on file. They verify it's the right cab and tap <strong>Confirm</strong>. Meanwhile the driver sees <em>"Waiting for rider to confirm."</em></div>
+        <div class="step-devices">
+          <div class="device-pill"><div class="device-pill-icon">🖥️</div><div class="device-pill-label">Driver tablet</div><div class="device-pill-action">— Waiting spinner</div></div>
+          <div class="device-pill"><div class="device-pill-icon">📱</div><div class="device-pill-label">Rider phone</div><div class="device-pill-action">— Reviews &amp; taps Confirm</div></div>
+        </div>
+        <div class="step-sync">🛡️ Fraud protection — rider explicitly verifies driver, vehicle, and plate before payment is linked</div>
+      </div>
+    </div>
+
+    <div class="step-item">
+      <div class="step-num-col">
+        <div class="step-num">5</div>
+      </div>
+      <div class="step-content">
+        <div class="step-title">Pairing complete — ride &amp; auto-pay</div>
+        <div class="step-body">Both devices confirm pairing instantly. Driver sees <strong>"Paired with [Rider]"</strong> and the meter continues running. Rider tracks the live trip on the map. At drop-off, the driver stops the meter — the final fare is automatically charged to the rider's Flywheel account. Driver is explicitly instructed: <strong>Do Not Collect Fare.</strong> Rider receives a full digital receipt.</div>
+        <div class="step-devices">
+          <div class="device-pill"><div class="device-pill-icon">🖥️</div><div class="device-pill-label">Driver tablet</div><div class="device-pill-action">— "Do not collect fare"</div></div>
+          <div class="device-pill"><div class="device-pill-icon">📱</div><div class="device-pill-label">Rider phone</div><div class="device-pill-action">— "Payment Successful" ✓</div></div>
+        </div>
+        <div class="step-sync">💳 Fare auto-charged to rider's Flywheel account — no cash, no card swipe, no terminal</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DUAL EXPERIENCE -->
+<div class="section">
+  <div class="section-label">Experience Breakdown</div>
+  <h2>Two sides of the same handshake</h2>
+  <p class="section-intro">Pair &amp; Pay was designed so both the driver and rider feel in control at every step — with clear cues, confirmations, and fallbacks built in.</p>
+  <div class="exp-grid">
+
+    <div class="exp-card driver">
+      <div class="exp-header">
+        <div class="exp-icon">🖥️</div>
+        <div>
+          <div class="exp-device">Driver · Tablet App</div>
+          <div class="exp-title">Driver Experience</div>
+        </div>
+      </div>
+      <ul class="exp-steps">
+        <li><div class="exp-step-n">1</div>Meter starts running as normal — no change to existing workflow</li>
+        <li><div class="exp-step-n">2</div>Taps "Enter PIN" toggle in the top-right of the meter screen</li>
+        <li><div class="exp-step-n">3</div>3-step progress bar appears: <em>Entering PIN → Rider confirming → Paired</em></li>
+        <li><div class="exp-step-n">4</div>Types the 4-digit code the rider reads aloud, taps OK</li>
+        <li><div class="exp-step-n">5</div>Waits for rider to confirm on their phone (spinner shown)</li>
+        <li><div class="exp-step-n">6</div>Sees "Paired with [Rider]" confirmation — returns to meter view with a green PAIRED badge</li>
+        <li><div class="exp-step-n">7</div>Stops meter at destination — sees fare breakdown and explicit <strong>"Do Not Collect"</strong> instruction</li>
+      </ul>
+    </div>
+
+    <div class="exp-card rider">
+      <div class="exp-header">
+        <div class="exp-icon">📱</div>
+        <div>
+          <div class="exp-device">Rider · Phone App</div>
+          <div class="exp-title">Rider Experience</div>
+        </div>
+      </div>
+      <ul class="exp-steps">
+        <li><div class="exp-step-n">1</div>Gets into any Flywheel cab — opens the app, sees "Pair and Pay" card on the home screen</li>
+        <li><div class="exp-step-n">2</div>Taps Pair and Pay — a unique 4-digit code appears instantly</li>
+        <li><div class="exp-step-n">3</div>Reads the code aloud to the driver — app shows "Waiting for your driver"</li>
+        <li><div class="exp-step-n">4</div>Receives a confirmation screen showing driver name, photo, vehicle, plate, route, and payment card — verifies it's the right cab</li>
+        <li><div class="exp-step-n">5</div>Taps Confirm — enters live trip tracking view (map, ETA, running fare)</li>
+        <li><div class="exp-step-n">6</div>At drop-off, receives "Payment Successful" screen with itemized receipt — no action needed</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- HANDSHAKE DIAGRAM -->
+<div class="section">
+  <div class="section-label">Technical Handshake</div>
+  <h2>How the pairing session works</h2>
+  <p class="section-intro">The pairing is a 3-way secure handshake between the Rider App, the Flywheel Server, and the Driver Tablet — ensuring the correct trip, driver, and payment are always matched.</p>
+  <div class="handshake">
+    <div class="handshake-title">Pair &amp; Pay Session Handshake Flow</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <div class="hs-step">
+        <div class="hs-step-num">1</div>
+        <div class="hs-step-text"><strong>Rider</strong> taps Pair &amp; Pay → Rider App sends session open request to Flywheel Server → Server generates unique 4-digit code tied to rider session ID + timestamp</div>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-num">2</div>
+        <div class="hs-step-text"><strong>Driver</strong> taps Enter PIN → Driver Tablet enters ready-to-pair state → Code is transmitted from rider verbally (out-of-band)</div>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-num">3</div>
+        <div class="hs-step-text"><strong>Driver</strong> submits code → Driver Tablet sends code + driver session ID to Flywheel Server → Server validates: code match + time window + no prior use</div>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-num">4</div>
+        <div class="hs-step-text"><strong>Server</strong> returns trip context to Rider App (driver name, photo, vehicle, plate, pickup/dropoff) → Rider reviews and confirms → Server locks the pairing</div>
+      </div>
+      <div class="hs-step">
+        <div class="hs-step-num">5</div>
+        <div class="hs-step-text"><strong>Both devices</strong> receive pairing confirmation → Meter fare is linked to rider's payment token → At trip end, server auto-processes charge and sends receipt to rider</div>
+      </div>
+
+    </div>
+    <div style="display:flex;gap:16px;margin-top:24px;flex-wrap:wrap">
+      <div class="chip blue">🔐 Code is single-use</div>
+      <div class="chip blue">⏱️ Session window expires</div>
+      <div class="chip green">✓ 5-attempt fraud limit</div>
+      <div class="chip green">✓ Rider verifies driver before payment links</div>
+      <div class="chip yellow">⚡ Full handshake &lt; 30 seconds</div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY BENEFITS -->
+<div class="section">
+  <div class="section-label">Value Proposition</div>
+  <h2>Benefits across every stakeholder</h2>
+  <p class="section-intro">Pair &amp; Pay unlocks digital economics for trips that were previously entirely offline.</p>
+  <div class="benefits-grid">
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🚖</div>
+      <div class="benefit-who">For Drivers</div>
+      <div class="benefit-title">No cash handling on app-paid trips</div>
+      <div class="benefit-body">Drivers receive guaranteed digital payment — no cash disputes, no change-making, no terminal swipes. Payment confirmed before drop-off. Applies to street hails and dispatched trips equally.</div>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">📱</div>
+      <div class="benefit-who">For Riders</div>
+      <div class="benefit-title">Full Flywheel benefits on any ride</div>
+      <div class="benefit-body">Digital receipt, trip history, loyalty points, and saved payment — even on a street hail. Riders no longer lose platform benefits just because they didn't pre-book. Identity and payment are always protected.</div>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🏢</div>
+      <div class="benefit-who">For Fleet Operators</div>
+      <div class="benefit-title">Full trip visibility &amp; digital revenue</div>
+      <div class="benefit-body">Every paired trip is captured in Flywheel's system — full audit trail, revenue reconciliation, and driver performance data. Eliminates the cash blind spot in street hail revenue.</div>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🤝</div>
+      <div class="benefit-who">For Uber</div>
+      <div class="benefit-title">Demand capture on non-Uber trips</div>
+      <div class="benefit-body">Riders who would otherwise use cash or swipe are now in a digital ecosystem — trackable, retargetable, and potentially convertible to Uber platform trips. Pair &amp; Pay is a bridge into the Flywheel × Uber network.</div>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🛡️</div>
+      <div class="benefit-who">Safety &amp; Trust</div>
+      <div class="benefit-title">Rider verifies driver before payment</div>
+      <div class="benefit-body">Before any payment is linked, the rider sees the driver's full profile, vehicle details, and license plate. This safety confirmation step mirrors Uber's own booking confirmation — applying it to the street hail context for the first time.</div>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">📊</div>
+      <div class="benefit-who">Data &amp; Analytics</div>
+      <div class="benefit-title">Complete trip data capture</div>
+      <div class="benefit-body">Every Pair &amp; Pay trip generates the same data footprint as a pre-booked trip — pickup/dropoff, duration, fare, driver, route. This feeds into Flywheel analytics and is available for reporting to fleet operators and partners.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- USE CASES -->
+<div class="section">
+  <div class="section-label">Use Cases</div>
+  <h2>Where Pair &amp; Pay activates</h2>
+  <p class="section-intro">Designed for the real-world scenarios where traditional taxi hailing meets modern digital expectations.</p>
+  <div class="use-cases-grid">
+
+    <div class="use-case">
+      <div class="use-case-icon">🚕</div>
+      <div>
+        <div class="use-case-title">Street Hail</div>
+        <div class="use-case-body">Rider flags down a cab on any street corner. No pre-booking. Once inside, they pair mid-trip and the entire ride is captured and billed digitally.</div>
+      </div>
+    </div>
+
+    <div class="use-case">
+      <div class="use-case-icon">📞</div>
+      <div>
+        <div class="use-case-title">Phone Dispatch</div>
+        <div class="use-case-body">Rider called a cab through the fleet's dispatch line, not through the app. Pair &amp; Pay brings that offline dispatch trip into the Flywheel digital platform.</div>
+      </div>
+    </div>
+
+    <div class="use-case">
+      <div class="use-case-icon">🏨</div>
+      <div>
+        <div class="use-case-title">Hotel / Venue Taxi Stand</div>
+        <div class="use-case-body">Rider takes the next available cab from a taxi stand at a hotel, airport, or event venue. No booking flow — they pair on the spot once seated.</div>
+      </div>
+    </div>
+
+    <div class="use-case">
+      <div class="use-case-icon">🌍</div>
+      <div>
+        <div class="use-case-title">Tourist / Casual Rider</div>
+        <div class="use-case-body">Visitors unfamiliar with the app can still benefit from digital payment and receipt by pairing mid-ride — no account setup required in advance.</div>
+      </div>
+    </div>
+
+    <div class="use-case">
+      <div class="use-case-icon">🔄</div>
+      <div>
+        <div class="use-case-title">App Handoff</div>
+        <div class="use-case-body">Rider started the trip through a dispatch system or different booking channel. Pair &amp; Pay migrates the payment to Flywheel in-trip, unifying revenue tracking.</div>
+      </div>
+    </div>
+
+    <div class="use-case">
+      <div class="use-case-icon">✈️</div>
+      <div>
+        <div class="use-case-title">Airport Pickup</div>
+        <div class="use-case-body">Rider arranged a cab via phone from the terminal. Driver pulls up — rider pairs immediately for digital payment, tip, and receipt without a pre-booked app session.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ERROR STATES -->
+<div class="section">
+  <div class="section-label">Edge Cases &amp; Fallbacks</div>
+  <h2>Graceful degradation at every failure point</h2>
+  <p class="section-intro">Pair &amp; Pay is designed to never disrupt the trip. If pairing fails for any reason, the ride continues normally.</p>
+  <div class="error-grid">
+
+    <div class="error-card">
+      <div class="error-icon">🔢</div>
+      <div class="error-type">Invalid Code</div>
+      <div class="error-title">Wrong PIN entered</div>
+      <div class="error-body">Driver sees "Invalid code" with remaining attempts displayed. Up to 5 attempts allowed. On exhaustion, pairing is blocked and driver reverts to standard cash/card collection.</div>
+    </div>
+
+    <div class="error-card">
+      <div class="error-icon">📶</div>
+      <div class="error-type">Network Issue</div>
+      <div class="error-title">Connection lost mid-pairing</div>
+      <div class="error-body">"Pairing interrupted" dialog appears with a Try Again option. If the session is still active, driver can retry. If unrecoverable, reverts to standard collection with no trip disruption.</div>
+    </div>
+
+    <div class="error-card">
+      <div class="error-icon">❌</div>
+      <div class="error-type">Rider Cancels</div>
+      <div class="error-title">Rider doesn't confirm</div>
+      <div class="error-body">"Pairing cancelled" message shown to driver. Trip continues with standard payment. Neither driver nor rider is penalized — the meter has been running throughout.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUMMARY TABLE -->
+<div class="section">
+  <div class="section-label">Quick Reference</div>
+  <h2>Feature summary</h2>
+  <p class="section-intro"></p>
+  <div class="summary-table-wrap">
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Trigger</td><td>Rider taps "Pair and Pay" in the Flywheel Rider App</td></tr>
+        <tr><td>Code format</td><td>4-digit numeric, unique per session, single-use</td></tr>
+        <tr><td>Code handoff</td><td>Verbal — rider reads aloud to driver</td></tr>
+        <tr><td>Session window</td><td>Time-limited — code expires if not used within the trip window</td></tr>
+        <tr><td>Fraud protection</td><td>5 attempts max, rider confirms driver identity before payment links</td></tr>
+        <tr><td>Payment trigger</td><td>Driver stops meter at destination — auto-charged to rider's Flywheel account</td></tr>
+        <tr><td>Driver instruction</td><td>Explicit "Do Not Collect Fare" shown on Driver Tablet at trip end</td></tr>
+        <tr><td>Rider receipt</td><td>Full itemized digital receipt: base fare, surcharges, tolls, total</td></tr>
+        <tr><td>Fallback</td><td>If pairing fails at any step, trip reverts to standard cash/card collection</td></tr>
+        <tr><td>Driver hardware</td><td>Flywheel-equipped tablet (Flywheel Advantage or Connect)</td></tr>
+        <tr><td>Rider app</td><td>Flywheel Rider App (iOS / Android)</td></tr>
+        <tr><td>Trip data</td><td>Full trip record captured: pickup, dropoff, duration, route, fare, driver</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">Flywheel Technologies · Pair &amp; Pay Product Overview</div>
+  <div class="footer-right">Prepared for Uber · June 2026 · Confidential</div>
+</div>
+
+</body>
+</html>
