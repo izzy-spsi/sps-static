@@ -9,11 +9,12 @@
   :root {
     --orange: #FF5E1A;
     --dark: #0C0C0C;
-    --text: #1A1A1A;
-    --muted: #6B6B6B;
-    --border: #E0DDD8;
-    --bg: #FAFAF8;
-    --surface: #F5F2ED;
+    --text: #F0EDE8;
+    --muted: #A0A098;
+    --border: rgba(240,237,232,0.1);
+    --bg: #0C0C0C;
+    --surface: #1C1C1E;
+    --surface2: #141416;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,12 +135,12 @@
 
   /* ── Disclaimer ── */
   .disclaimer {
-    background: #FFF8F0;
+    background: rgba(255,94,26,0.07);
     border-left: 3px solid var(--orange);
     padding: 14px 20px;
     margin: 32px 64px;
     font-size: 9.5pt;
-    color: #5A4A3A;
+    color: #C0A898;
     line-height: 1.6;
     font-weight: 500;
     font-family: 'DM Sans', sans-serif;
@@ -157,7 +158,7 @@
     line-height: 1.8;
     margin-bottom: 32px;
     padding: 24px 28px;
-    background: #fff;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
   }
@@ -167,7 +168,7 @@
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 13pt;
-    color: var(--dark);
+    color: var(--text);
     margin: 36px 0 12px;
     padding-bottom: 8px;
     border-bottom: 2px solid var(--orange);
@@ -197,7 +198,7 @@
     grid-template-columns: 180px 1fr;
     gap: 12px 20px;
     padding: 10px 0;
-    border-bottom: 1px solid #F0EDE8;
+    border-bottom: 1px solid var(--border);
     align-items: baseline;
   }
 
@@ -207,21 +208,21 @@
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     font-size: 10.5pt;
-    color: var(--dark);
+    color: var(--orange);
   }
 
   .def-body {
     font-size: 10.5pt;
     line-height: 1.7;
-    color: #333;
+    color: var(--text);
   }
 
   /* ── Sub-definitions (a, b, c) ── */
   .sub-def {
     margin: 8px 0 8px 16px;
     padding: 10px 14px;
-    background: var(--surface);
-    border-left: 3px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    border-left: 3px solid rgba(255,94,26,0.3);
     border-radius: 0 6px 6px 0;
     font-size: 10.5pt;
     line-height: 1.7;
@@ -234,20 +235,20 @@
     font-size: 10.5pt;
     line-height: 1.75;
     margin-bottom: 14px;
-    color: #333;
+    color: #C8C4BE;
   }
 
   .sec-para strong {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
-    color: var(--dark);
+    color: var(--text);
   }
 
   /* ── Signature Page ── */
   .sig-page {
     margin-top: 48px;
     padding-top: 32px;
-    border-top: 2px solid var(--dark);
+    border-top: 2px solid var(--orange);
     page-break-before: always;
   }
 
@@ -274,7 +275,7 @@
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 12pt;
-    color: var(--dark);
+    color: var(--text);
     margin-bottom: 4px;
   }
 
@@ -288,7 +289,7 @@
   }
 
   .sig-line {
-    border-bottom: 1.5px solid var(--dark);
+    border-bottom: 1.5px solid rgba(240,237,232,0.25);
     margin-bottom: 6px;
     height: 36px;
   }
@@ -304,7 +305,7 @@
 
   .sig-prefilled {
     font-size: 10.5pt;
-    color: var(--dark);
+    color: var(--text);
     font-family: 'DM Sans', sans-serif;
     margin-bottom: 6px;
   }
@@ -318,7 +319,7 @@
     margin: 28px 0;
     font-size: 10.5pt;
     line-height: 1.7;
-    color: #444;
+    color: #C8C4BE;
   }
 
   /* ── Footer ── */
@@ -332,12 +333,13 @@
     letter-spacing: 1px;
     color: var(--muted);
     line-height: 1.8;
+    opacity: 0.5;
   }
 
   /* ── Print ── */
   @media print {
-    body { background: #fff; font-size: 10pt; }
-    .cover { padding: 32px 48px 28px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #0C0C0C; color: #F0EDE8; font-size: 10pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cover { padding: 32px 48px 28px; }
     .disclaimer { margin: 20px 48px; }
     .doc-body { padding: 24px 48px 48px; }
     .sig-page { page-break-before: always; }
