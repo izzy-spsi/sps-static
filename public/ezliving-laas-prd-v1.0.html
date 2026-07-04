@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZLiving LaaS Platform — Product Requirements Document v1.0</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1520;
+    --navy2: #0F1E2E;
+    --gold: #C9A052;
+    --gold-light: #E4C88A;
+    --text: #E8ECF1;
+    --text-dim: #9AA7B5;
+    --border: rgba(201,160,82,0.18);
+    --card: rgba(255,255,255,0.03);
+    --green: #4ADE80;
+    --amber: #F0B429;
+    --red: #F87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--navy);
+    background-image: radial-gradient(circle at 20% 0%, rgba(201,160,82,0.06), transparent 40%),
+                       radial-gradient(circle at 80% 100%, rgba(201,160,82,0.05), transparent 40%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 60px 28px 120px; }
+  header.top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 28px; margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.5px; }
+  .brand span { color: var(--gold); }
+  .tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gold); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 20px; background: rgba(201,160,82,0.06);
+  }
+  .hero { margin-bottom: 56px; }
+  .hero .eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold-light); margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700;
+    margin: 0 0 18px; line-height: 1.15; color: #fff;
+  }
+  .hero p.sub { font-size: 17px; color: var(--text-dim); max-width: 700px; margin: 0 0 24px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 24px; font-size: 13px; color: var(--text-dim); }
+  .meta-row div strong { color: var(--text); display: block; font-size: 13px; margin-bottom: 2px; }
+  .meta-row div span.label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 36px 0 56px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 18px;
+  }
+  .stat-card .num { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--gold-light); }
+  .stat-card .lbl { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+  section { margin-bottom: 56px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: 13px;
+  }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; margin: 0; color: #fff; }
+  h2 .req-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px;
+    border-radius: 6px; margin-left: 10px; vertical-align: middle; font-weight: 500;
+  }
+  p.lede { color: var(--text-dim); font-size: 15px; margin: -6px 0 22px; }
+
+  .layer-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px 28px; margin-bottom: 20px;
+  }
+  .layer-card .layer-title {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .layer-title h3 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; margin: 0; color: var(--gold-light); }
+  .badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.8px; padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .badge.v1 { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+  .badge.phase2 { background: rgba(240,180,41,0.12); color: var(--amber); border: 1px solid rgba(240,180,41,0.3); }
+  .badge.risk { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .vision-line { font-size: 14px; color: var(--text-dim); margin-bottom: 16px; font-style: italic; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } .stat-grid { grid-template-columns: repeat(2,1fr); } h1 { font-size: 30px; } }
+  .cols h4 {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--gold); margin: 0 0 10px;
+  }
+  ul.feat { margin: 0; padding-left: 18px; font-size: 14px; color: var(--text); }
+  ul.feat li { margin-bottom: 8px; }
+  ul.feat li::marker { color: var(--gold); }
+  .open-q {
+    margin-top: 16px; padding: 12px 16px; background: rgba(248,113,113,0.05);
+    border-left: 2px solid var(--red); border-radius: 4px; font-size: 13px; color: var(--text-dim);
+  }
+  .open-q strong { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  table.bvp { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.bvp th {
+    text-align: left; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--gold); padding: 10px 14px; border-bottom: 1px solid var(--border);
+  }
+  table.bvp td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: top; }
+  table.bvp tr:last-child td { border-bottom: none; }
+  .rec { font-weight: 500; }
+  .rec.build { color: var(--green); }
+  .rec.partner { color: var(--amber); }
+
+  .gap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 720px) { .gap-grid { grid-template-columns: 1fr; } }
+  .gap-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px;
+  }
+  .gap-card strong { display: block; color: var(--gold-light); font-size: 14px; margin-bottom: 6px; }
+  .gap-card span { font-size: 13px; color: var(--text-dim); }
+
+  ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+  ol.steps li {
+    counter-increment: step; position: relative; padding: 4px 0 16px 42px; font-size: 14px;
+  }
+  ol.steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 2px; width: 28px; height: 28px;
+    background: rgba(201,160,82,0.1); border: 1px solid var(--border); color: var(--gold);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+
+  footer {
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  .toc { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 0 0 56px; padding: 18px 22px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; }
+  .toc a { color: var(--text-dim); text-decoration: none; font-size: 13px; }
+  .toc a:hover { color: var(--gold-light); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">EZ<span>Living</span></div>
+    <div class="tag">Internal Draft · v1.0</div>
+  </header>
+
+  <div class="hero">
+    <div class="eyebrow">Product Requirements Document</div>
+    <h1>EZLiving LaaS Platform</h1>
+    <p class="sub">A working breakdown of the Living-as-a-Service platform across all seven layers of Tim Ziss's vision — features, technical requirements, resource gaps, and build-vs-partner calls, scoped against the 9201 Fourth Avenue pilot.</p>
+    <div class="meta-row">
+      <div><span class="label">Status</span><strong>Internal Draft — not yet shared with Tim</strong></div>
+      <div><span class="label">Version</span><strong>v1.0 — July 3, 2026</strong></div>
+      <div><span class="label">Pilot Property</span><strong>9201 Fourth Avenue, Bay Ridge</strong></div>
+      <div><span class="label">Owner</span><strong>Izzy Aala / SPS</strong></div>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">3</div><div class="lbl">Brooklyn properties in pipeline</div></div>
+    <div class="stat-card"><div class="num">395</div><div class="lbl">LaaS-integrated units</div></div>
+    <div class="stat-card"><div class="num">$440M</div><div class="lbl">Combined sell-out value</div></div>
+    <div class="stat-card"><div class="num">7</div><div class="lbl">Platform layers to build</div></div>
+  </div>
+
+  <div class="toc">
+    <a href="#context">Context</a>
+    <a href="#layer1">1 · Real Estate</a>
+    <a href="#layer2">2 · Furnishings</a>
+    <a href="#layer3">3 · Mobility</a>
+    <a href="#layer4">4 · Services</a>
+    <a href="#layer5">5 · Cloud Closet</a>
+    <a href="#layer6">6 · Exchange</a>
+    <a href="#layer7">7 · AI + Robotics</a>
+    <a href="#cross">Cross-Cutting Requirements</a>
+    <a href="#gaps">Resource Gaps</a>
+    <a href="#build">Build vs. Partner</a>
+    <a href="#next">Next Steps</a>
+  </div>
+
+  <section id="context">
+    <div class="section-head"><span class="section-num">00</span><h2>Context</h2></div>
+    <p class="lede">Tim Ziss's Living-as-a-Service (LaaS) vision, first laid out June 4, 2026, spans seven conceptual layers — real estate, furnishings, mobility, services, storage, exchange, and AI/robotics. This document breaks each layer into concrete platform requirements so there's something tangible to work from once Tim decides how he wants to run point on the build (and separately, on the Corcoran distribution relationship, which is being handled on its own track).</p>
+  </section>
+
+  <section id="layer1">
+    <div class="section-head"><span class="section-num">01</span><h2>Real Estate <span class="badge v1" style="margin-left:10px">Foundation</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">What exists: 9201 Fourth Ave (pilot, Bay Ridge) + 2 pipeline properties, 2027–2028 delivery.</div>
+      <div class="cols">
+        <div>
+          <h4>Platform Needs</h4>
+          <ul class="feat">
+            <li>Property/unit database — floorplans, pricing, availability, buyer status, closing dates</li>
+            <li>Buyer CRM — lead → contract → close → LaaS onboarding (the handoff point into every other layer)</li>
+            <li>Closing document integration (title, mortgage, HOA/condo docs)</li>
+            <li>Ownership/resident directory — single source of truth every other layer reads from</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul class="feat">
+            <li>Data model + backend (property, unit, buyer, resident entities)</li>
+            <li>Bridge/API to whoever underwrites closing + financing</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Who's the mortgage lender partner? Does each property need its own instance, or one multi-tenant platform serving all three from day one?</div>
+    </div>
+  </section>
+
+  <section id="layer2">
+    <div class="section-head"><span class="section-num">02</span><h2>Furnishings <span class="badge risk" style="margin-left:10px">Highest Risk</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: Italian designer-curated packages (Option A/B/C), amortized into the 30-year mortgage, move-in ready same week as closing.</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Package selection tool — buyer picks A/B/C pre-close, sees renders + pricing</li>
+            <li>Vendor/designer relationship management</li>
+            <li>Procurement + install logistics for ~395 units across 3 properties</li>
+            <li>Cost amortization calculator (ties to Layer 1 mortgage integration)</li>
+            <li>Warranty/replacement tracking per item (feeds Cloud Closet's digital twin)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Interior design/vendor partner(s) — Corcoran has asked to meet this team</li>
+            <li>Install/logistics contractor (movers, furniture installers)</li>
+            <li><strong>Financing partner willing to embed furnishings cost into the mortgage</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Is "financed into mortgage" legally and structurally solved today, or still a concept needing a lender partner and legal framework? This is the single most unusual and unproven assumption in the entire model.</div>
+    </div>
+  </section>
+
+  <section id="layer3">
+    <div class="section-head"><span class="section-num">03</span><h2>Mobility <span class="badge phase2" style="margin-left:10px">Partial Roadmap</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: Autonomous cars (Zipcar-style, embedded), Blue Highway hydrofoils (NYC ↔ Hamptons, Manhattan ↔ Connecticut).</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Booking/dispatch app for building-embedded vehicles</li>
+            <li>Integration point with Flywheel — natural internal synergy</li>
+            <li>Hydrofoil booking/scheduling (Blue Highway vessel still in development, 2029 target)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Vehicle fleet or leasing partner — autonomous fleets aren't commercially mature; likely need a conventional EV fleet as v1 bridge</li>
+            <li>Blue Highway is years out — treat as roadmap, not v1 requirement</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Is Flywheel the intended mobility backend for EZLiving? Obvious internal cross-venture integration worth raising directly with Tim.</div>
+    </div>
+  </section>
+
+  <section id="layer4">
+    <div class="section-head"><span class="section-num">04</span><h2>Services <span class="badge v1" style="margin-left:10px">v1 Candidate</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: DoorDash, Uber Eats, Instacart, dry cleaning, laundry, package management, utilities/WiFi — all bundled.</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Single resident app/portal — the daily front door across all services</li>
+            <li>Package management — smart lockers or concierge desk + notifications</li>
+            <li>Utilities/WiFi bundling — building-wide account, billed via LaaS subscription</li>
+            <li>Third-party service aggregation (API integration or concierge-request routing)</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Building staff/concierge for package handling</li>
+            <li>Vendor agreements/affiliate relationships with delivery services</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Deep API integration (residents order inside the EZLiving app) vs. lighter concierge-request layer (staff place orders)? Very different build complexity — needs a decision early.</div>
+    </div>
+  </section>
+
+  <section id="layer5">
+    <div class="section-head"><span class="section-num">05</span><h2>Cloud Closet <span class="badge phase2" style="margin-left:10px">Recommend Partner</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: AI-powered physical asset management — digital twin of possessions, smart box assignment, seasonal concierge, resale marketplace. SPS-branded.</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Digital inventory/twin — photo + catalog every stored item per resident</li>
+            <li>Smart box/pickup logistics (functionally identical to Clutter/MakeSpace)</li>
+            <li>Seasonal rotation concierge</li>
+            <li>Resale/marketplace layer for stored items</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Physical warehouse/storage facility, or partnership with an existing operator</li>
+            <li>Pickup/delivery logistics fleet or contracted service</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Build in-house or partner/license from an existing on-demand storage operator? This is the most operationally complex, capital-intensive layer (real warehouses, real trucks) — strong candidate to partner rather than build.</div>
+    </div>
+  </section>
+
+  <section id="layer6">
+    <div class="section-head"><span class="section-num">06</span><h2>Exchange <span class="badge phase2" style="margin-left:10px">Phase 2+</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: Property swap clearing house (no brokers) as the network scales across properties/cities.</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Listing/matching engine for residents wanting to swap within the network</li>
+            <li>Valuation/equity-transfer logic — legal + financial infrastructure, not just an app</li>
+            <li>Legal framework for property exchange without traditional brokers</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Real estate attorney specializing in property exchange structures</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Only relevant once there's meaningful multi-property/multi-city scale. Not a v1 requirement — but legal groundwork is slow to stand up, so early scoping is worthwhile.</div>
+    </div>
+  </section>
+
+  <section id="layer7">
+    <div class="section-head"><span class="section-num">07</span><h2>AI + Robotics <span class="badge phase2" style="margin-left:10px">Experimental</span></h2></div>
+    <div class="layer-card">
+      <div class="vision-line">Vision: AI building management + companion robots for elderly residents (Tesla pilot referenced).</div>
+      <div class="cols">
+        <div>
+          <h4>Features / Products</h4>
+          <ul class="feat">
+            <li>Building management AI — predictive maintenance, energy, security monitoring</li>
+            <li>Companion robot pilot — far-future, not core to launch</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources Needed</h4>
+          <ul class="feat">
+            <li>Tesla or similar robotics partner (referenced but not confirmed as active)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="open-q"><strong>Open Question</strong><br>Confirm whether the "Tesla pilot" is an active conversation or aspirational framing — affects whether it belongs in the near-term roadmap at all.</div>
+    </div>
+  </section>
+
+  <section id="cross">
+    <div class="section-head"><span class="section-num">08</span><h2>Cross-Cutting Platform Requirements</h2></div>
+    <p class="lede">Infrastructure needed regardless of which layer is being built — the backbone every layer plugs into.</p>
+    <div class="layer-card">
+      <ul class="feat">
+        <li><strong>Resident-facing app/portal</strong> — the unifying front door across Services, Mobility, Cloud Closet, and community/Exchange</li>
+        <li><strong>Admin/ops dashboard</strong> — building staff view: packages, requests, maintenance, resident directory</li>
+        <li><strong>Identity & accounts</strong> — single resident login across all 3 properties, multi-tenant from day one</li>
+        <li><strong>Billing/subscription engine</strong> — LaaS is "one payment" bundling mortgage + furnishings + utilities + mobility + services. This consolidation is a serious fintech build on its own — likely wants a payments partner (Stripe Connect or similar, per existing Flywheel experience) rather than being built from scratch</li>
+        <li><strong>GeoPulse AI integration</strong> — already built (neighborhood intelligence engine); should feed the resident app as the "why this neighborhood" layer and the pre-close marketing/sales funnel</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="gaps">
+    <div class="section-head"><span class="section-num">09</span><h2>Resource Gaps to Raise with Tim</h2></div>
+    <div class="gap-grid">
+      <div class="gap-card"><strong>Product/Eng Team</strong><span>Who is actually building this? Is SPS the build partner for the whole stack, or does Tim have his own dev resources?</span></div>
+      <div class="gap-card"><strong>Design Partner</strong><span>Corcoran asked to meet "the design team" — does one exist yet, or is this just the Italian furnishings designers?</span></div>
+      <div class="gap-card"><strong>Legal Counsel</strong><span>Furnishings-in-mortgage financing, Exchange clearinghouse, and multi-property resident agreements all likely need dedicated real estate/fintech counsel</span></div>
+      <div class="gap-card"><strong>Ops/Logistics</strong><span>Furnishing installs, package management, storage pickup — real-world physical operations, not just software</span></div>
+      <div class="gap-card"><strong>Financing Partner</strong><span>The lender who will actually embed furnishings cost into the mortgage note — the load-bearing assumption of the whole model</span></div>
+    </div>
+  </section>
+
+  <section id="build">
+    <div class="section-head"><span class="section-num">10</span><h2>Build vs. Partner Decisions</h2></div>
+    <div class="layer-card">
+      <table class="bvp">
+        <tr><th>Layer</th><th>Recommendation</th><th>Rationale</th></tr>
+        <tr><td>Resident app/portal</td><td class="rec build">Build</td><td>Core IP — the unifying product experience</td></tr>
+        <tr><td>Furnishings procurement</td><td class="rec partner">Partner</td><td>Partner with designer/vendor — don't build a supply chain</td></tr>
+        <tr><td>Mobility</td><td class="rec partner">Partner (internal)</td><td>Use Flywheel internally where possible</td></tr>
+        <tr><td>Services (delivery)</td><td class="rec partner">Partner</td><td>Affiliate/API with DoorDash etc. — don't rebuild</td></tr>
+        <tr><td>Cloud Closet (storage)</td><td class="rec partner">Partner / License</td><td>Study Clutter/MakeSpace model — capital-intensive to build alone</td></tr>
+        <tr><td>Exchange</td><td class="rec build">Build (legal-heavy)</td><td>Phase 2+, needs custom legal infrastructure</td></tr>
+        <tr><td>AI / Robotics</td><td class="rec partner">Partner</td><td>Experimental, low near-term priority</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="section-head"><span class="section-num">11</span><h2>Suggested Next Steps</h2></div>
+    <div class="layer-card">
+      <ol class="steps">
+        <li>Confirm which layers already have real partners/contracts vs. which are still conceptual — furnishings financing especially, since that's the load-bearing wall of the whole model.</li>
+        <li>Scope a true v1 MVP — most likely Layers 1 + 2 + 4 (real estate handoff, furnishings, daily services), since Mobility, Cloud Closet, Exchange, and AI are either partner-able or Phase 2+.</li>
+        <li>Identify the build owner — is this an SPS-built platform, or does Tim have separate product/eng resources already in motion?</li>
+        <li>Get a real financing partner conversation started for the furnishings-into-mortgage piece — the single riskiest unproven assumption in the entire model.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <div>EZLiving LaaS Platform PRD · v1.0 · Internal draft, not for external distribution</div>
+    <div>Last updated July 3, 2026</div>
+  </footer>
+
+</div>
+</body>
+</html>
