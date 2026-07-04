@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SPS Command Center — PRD v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root[data-theme="dark"] {
+    --bg: #0C0C0C;
+    --surface: #111111;
+    --surface2: #1A1A18;
+    --surface3: #222220;
+    --text: #F0EDE8;
+    --muted: #A0A098;
+    --accent: #FF5E1A;
+    --accent-hover: #ff7f47;
+    --border: rgba(240,237,232,0.08);
+    --border-accent: rgba(255,94,26,0.3);
+    --tbd: #C96A1A;
+    --tbd-bg: rgba(201,106,26,0.12);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #F8F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE8;
+    --surface3: #E8E4DC;
+    --text: #1A1A18;
+    --muted: #6A6A62;
+    --accent: #D6480F;
+    --accent-hover: #FF5E1A;
+    --border: rgba(26,26,24,0.1);
+    --border-accent: rgba(214,72,15,0.3);
+    --tbd: #B85A10;
+    --tbd-bg: rgba(185,90,16,0.1);
+    --sidebar-w: 260px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  h1,h2,h3,h4,h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; line-height: 1.25; }
+
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+  }
+  .header-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .version-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    background: var(--border-accent);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .header-controls { display: flex; align-items: center; gap: 10px; }
+  .ctrl-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .ctrl-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-accent); }
+  .ctrl-btn.edit-active { background: var(--border-accent); color: var(--accent); border-color: var(--border-accent); }
+  .theme-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { background: var(--surface3); border-color: var(--border-accent); }
+
+  .layout { display: flex; padding-top: 60px; min-height: 100vh; }
+
+  .sidebar {
+    position: fixed;
+    top: 60px; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 0;
+    z-index: 50;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .sidebar-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 0 20px 10px;
+  }
+  .toc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .toc-link:hover { color: var(--text); background: var(--surface2); }
+  .toc-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--tbd-bg); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .main { margin-left: var(--sidebar-w); flex: 1; max-width: 900px; padding: 48px 60px 120px; }
+
+  .section { margin-bottom: 64px; scroll-margin-top: 80px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--border-accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .section-title { font-size: 22px; color: var(--text); }
+
+  .subsection { margin-bottom: 32px; }
+  .subsection-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .info-box.accent { border-color: var(--border-accent); background: rgba(255,94,26,0.05); }
+  .info-box.warning { border-color: rgba(201,106,26,0.3); background: var(--tbd-bg); }
+
+  .tbd {
+    color: var(--tbd);
+    background: var(--tbd-bg);
+    border: 1px solid rgba(201,106,26,0.25);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .table-wrap { overflow-x: auto; margin-bottom: 16px; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .pill-green { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+  .pill-yellow { background: rgba(255,94,26,0.12); color: var(--accent); border: 1px solid var(--border-accent); }
+  .pill-red { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+  .pill-blue { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
+  .pill-orange { background: var(--tbd-bg); color: var(--tbd); border: 1px solid rgba(201,106,26,0.25); }
+  .pill-purple { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+  .pill-pink { background: rgba(244,114,182,0.12); color: #f472b6; border: 1px solid rgba(244,114,182,0.2); }
+
+  .phase-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .phase-header {
+    background: var(--surface2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .phase-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); }
+  .phase-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; flex: 1; }
+  .phase-body { padding: 16px 20px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .stat-lbl { font-size: 12px; color: var(--muted); }
+
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 6px; color: var(--text); }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* COMPANY / SECTION TILE CARDS */
+  .company-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .company-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .company-icon { font-size: 22px; }
+  .company-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; }
+  .company-tag { margin-left: auto; }
+
+  .arch-diagram {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.9;
+    white-space: pre;
+    overflow-x: auto;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .arch-diagram .lbl-root { color: var(--accent); font-weight: 700; }
+  .arch-diagram .lbl-co { color: #60a5fa; }
+  .arch-diagram .lbl-sec { color: #34d399; }
+  .arch-diagram .lbl-muted { color: var(--muted); }
+
+  [contenteditable="true"] {
+    outline: 2px dashed var(--accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+    min-width: 40px;
+    min-height: 1em;
+    display: inline-block;
+    cursor: text;
+    transition: outline 0.2s;
+  }
+  [contenteditable="true"]:focus { outline-color: var(--accent-hover); background: rgba(255,94,26,0.05); }
+
+  .edit-mode-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border-accent);
+    border-radius: 14px;
+    padding: 10px 20px;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+    font-size: 13px;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-mode-bar.visible { display: flex; }
+  .edit-bar-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-bar-btn.save { background: var(--accent); color: #0C0C0C; }
+  .edit-bar-btn.save:hover { background: var(--accent-hover); }
+  .edit-bar-btn.restore { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .edit-bar-btn.restore:hover { color: var(--text); }
+  .edit-bar-btn.exit { background: transparent; color: var(--muted); border: none; }
+
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    z-index: 300;
+    background: var(--surface2);
+    border: 1px solid var(--border-accent);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transform: translateX(120%);
+    transition: transform 0.3s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show { transform: translateX(0); }
+
+  .footer {
+    position: fixed;
+    bottom: 0; right: 0;
+    padding: 8px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  @media print {
+    .header, .sidebar, .footer, .edit-mode-bar, .toast { display: none !important; }
+    .main { margin-left: 0; padding: 20px; max-width: 100%; }
+    body { background: white; color: black; }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 32px 24px 80px; }
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  .intro-hero {
+    background: linear-gradient(135deg, rgba(255,94,26,0.08), rgba(201,106,26,0.05));
+    border: 1px solid var(--border-accent);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+  }
+  .intro-hero h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .intro-hero .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .meta-item span { color: var(--text); }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .feature-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .feature-icon { font-size: 18px; margin-bottom: 8px; }
+  .feature-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">
+    🕹️ SPS Command Center — PRD
+    <span class="version-badge">v1.0</span>
+  </div>
+  <div class="header-controls">
+    <button class="ctrl-btn" onclick="window.print()">🖨️ Print / PDF</button>
+    <button class="ctrl-btn" id="editToggleBtn" onclick="toggleEditMode()">✏️ Edit</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle light/dark">🌙</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-label">Contents</div>
+  <a class="toc-link" href="#overview"><span class="toc-num">01</span>Overview</a>
+  <a class="toc-link" href="#problem"><span class="toc-num">02</span>Problem Statement</a>
+  <a class="toc-link" href="#architecture"><span class="toc-num">03</span>Architecture</a>
+  <a class="toc-link" href="#security"><span class="toc-num">04</span>Security &amp; Auth</a>
+  <a class="toc-link" href="#companies"><span class="toc-num">05</span>Companies</a>
+  <a class="toc-link" href="#sections"><span class="toc-num">06</span>Company Sections</a>
+  <a class="toc-link" href="#scalability"><span class="toc-num">07</span>Adding New Companies</a>
+  <a class="toc-link" href="#data"><span class="toc-num">08</span>Data Sources</a>
+  <a class="toc-link" href="#tech"><span class="toc-num">09</span>Tech Stack</a>
+  <a class="toc-link" href="#tasklist"><span class="toc-num">10</span>Task List &amp; Phasing</a>
+  <a class="toc-link" href="#open-questions"><span class="toc-num">11</span>Open Questions</a>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+<main class="main">
+
+  <!-- HERO -->
+  <div class="intro-hero">
+    <h1>SPS Command Center</h1>
+    <p class="subtitle">Product Requirements Document — Unified, Secure Command Center for Every SPS Venture</p>
+    <div class="meta-row">
+      <div class="meta-item">📅 Date: <span class="editable">July 3, 2026</span></div>
+      <div class="meta-item">👤 Owner: <span class="editable">Izzy Aala</span></div>
+      <div class="meta-item">🏢 Scope: <span>All SPS Ventures</span></div>
+      <div class="meta-item">📋 Status: <span class="pill pill-yellow">Planning — Not Yet Built</span></div>
+    </div>
+  </div>
+
+  <!-- 01 OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+    <p>The current Jarvis HQ Dashboard (<code>izzy-spsi.github.io/jarvis-dashboard</code>) is a single static HTML page — a curated list of project links and version badges. It has served well as a project directory, but Izzy has outgrown it: it can't hold structured data, has no login/security, and has no concept of "a company's stuff lives here."</p>
+    <p>This PRD defines its replacement: the <strong>SPS Command Center</strong> — one secure home base, gated by two-factor authentication, with a dedicated Command Center underneath it for every company SPS manages. Each company Command Center follows the same 5-section template (Resources, Business, Investment, Marketing, Operations), so the system stays consistent and predictable no matter how many companies get added.</p>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">One secure entrance</div>
+        <div class="feature-desc">2FA at the root, trusted-device bypass for known devices, full 2FA required everywhere else.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏢</div>
+        <div class="feature-title">One command center per company</div>
+        <div class="feature-desc">Domo Cafe, Flywheel, EZLiving, Blue Highway, Family — each fully organized, each with its own identity.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🧱</div>
+        <div class="feature-title">Same shell, different content</div>
+        <div class="feature-desc">Resources / Business / Investment / Marketing / Operations repeat everywhere — Operations content differs per company.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">➕</div>
+        <div class="feature-title">Built to grow</div>
+        <div class="feature-desc">New companies are a config entry, not a rebuild — the architecture is designed for this from day one.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 PROBLEM STATEMENT -->
+  <section class="section" id="problem">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Problem Statement</h2>
+    </div>
+    <div class="info-box warning">
+      <div class="card-title">Izzy's words: "I've outgrown it."</div>
+      <p style="margin-bottom:0;">The Jarvis HQ Dashboard was built as a link directory (project cards + version badges). It cannot hold real structured data — proforma numbers, NDA status, unit costs, task lists — it can only point at other tools that hold that data. As the number of ventures and the depth of tracking needed has grown, the dashboard has stopped being a "command center" in any real sense.</p>
+    </div>
+    <table>
+      <thead><tr><th>Gap</th><th>Current State</th><th>Needed</th></tr></thead>
+      <tbody>
+        <tr><td>Security</td><td>None — public static page</td><td>2FA-gated, trusted-device aware</td></tr>
+        <tr><td>Structure</td><td>Flat list of cards, one page</td><td>Per-company command centers with consistent internal structure</td></tr>
+        <tr><td>Data</td><td>Links out to other tools/decks/APIs</td><td>Can host or embed real structured data (BI, proforma, docs)</td></tr>
+        <tr><td>Growth</td><td>Manual HTML edit + redeploy per change</td><td>New companies added via config, not code</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 03 ARCHITECTURE -->
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Architecture</h2>
+    </div>
+    <p>One root shell, gated by 2FA, containing a tile per company. Each company opens into the same 5-section template.</p>
+    <div class="arch-diagram">🔐 <span class="lbl-root">SPS Command Center</span> (root — 2FA gated)
+ ├── 🥐 <span class="lbl-co">Domo Cafe</span>
+ ├── 🚕 <span class="lbl-co">Flywheel</span>
+ ├── 🏙️ <span class="lbl-co">EZLiving</span>
+ ├── 🚤 <span class="lbl-co">Blue Highway</span>
+ ├── 👨‍👩‍👧‍👦 <span class="lbl-co">Family</span>
+ └── <span class="lbl-muted">(future companies added via config — see Section 07)</span>
+
+Inside each company:
+ ├── 📦 <span class="lbl-sec">Resources</span>    — tech stack, tools, vendors, partnerships
+ ├── 📊 <span class="lbl-sec">Business</span>      — BI data, proforma, unit costs, revenue model
+ ├── 💰 <span class="lbl-sec">Investment</span>    — plan, raise, valuation, pitch deck, notes, NDAs
+ ├── 📣 <span class="lbl-sec">Marketing</span>     — site, social, events, costs, run-of-show, collabs
+ └── ⚙️ <span class="lbl-sec">Operations</span>    — automation, training, HR, scheduling (differs per company)</div>
+    <div class="info-box accent">
+      <div class="card-title">Key design decision: companies are data, not code</div>
+      <p style="margin-bottom:0;">Instead of hand-building 5 pages per company, there is <strong>one generic Company Command Center template</strong> driven by a <code>companies</code> config (name, slug, brand colors/logo, which sections are enabled). This is what makes new companies cheap to add — see Section 07.</p>
+    </div>
+  </section>
+
+  <!-- 04 SECURITY & AUTH -->
+  <section class="section" id="security">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Security &amp; Auth</h2>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">Requirements (from Izzy)</div>
+      <ul>
+        <li>The root Command Center must be secured — 2FA required.</li>
+        <li>Trusted devices (laptop, phone, desktop) get a persistent key/token so they skip full 2FA on every visit.</li>
+        <li>Any other device/method must still complete full 2FA — no backdoor around it.</li>
+        <li>Once authenticated at the root, no re-authentication is required to move between company command centers (single session covers everything underneath).</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">Proposed Implementation</div>
+      <table>
+        <thead><tr><th>Piece</th><th>Approach</th></tr></thead>
+        <tbody>
+          <tr><td>2FA method</td><td>TOTP (Google Authenticator / 1Password-style authenticator app) — no SMS costs, works offline, industry standard</td></tr>
+          <tr><td>Trusted device</td><td>Signed long-lived token/cookie issued per device after first full 2FA pass ("remember this device" pattern, e.g. 30–90 day expiry, revocable)</td></tr>
+          <tr><td>Untrusted access</td><td>Any login without a valid trusted-device token always requires the full TOTP challenge</td></tr>
+          <tr><td>Session scope</td><td>One root session token grants access to all company command centers underneath — no per-company re-auth</td></tr>
+          <tr><td>Revocation</td><td>Admin control to revoke a specific trusted device (e.g. lost phone) without resetting 2FA entirely</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 COMPANIES -->
+  <section class="section" id="companies">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Companies (Launch Set)</h2>
+    </div>
+    <div class="company-card">
+      <div class="company-header"><span class="company-icon">🥐</span><span class="company-name">Domo Cafe</span><span class="company-tag pill pill-green">Most data already exists</span></div>
+      <p style="margin-bottom:0;">Toast POS sync, live proforma actuals, tech stack doc, partnerships (Flash Society, NHK) already tracked in memory — best candidate to build the template against first.</p>
+    </div>
+    <div class="company-card">
+      <div class="company-header"><span class="company-icon">🚕</span><span class="company-name">Flywheel</span><span class="company-tag pill pill-blue">Complex ops</span></div>
+      <p style="margin-bottom:0;">CabConnect, Uber partnership, Mexico expansion, market proforma — heaviest Business/Investment section of the set.</p>
+    </div>
+    <div class="company-card">
+      <div class="company-header"><span class="company-icon">🏙️</span><span class="company-name">EZLiving</span><span class="company-tag pill pill-green">Portal already live</span></div>
+      <p style="margin-bottom:0;">Investor portal, decks, NDA flow already built and operating independently — Command Center would mainly surface/link this existing infrastructure.</p>
+    </div>
+    <div class="company-card">
+      <div class="company-header"><span class="company-icon">🚤</span><span class="company-name">Blue Highway</span><span class="company-tag pill pill-yellow">Early stage</span></div>
+      <p style="margin-bottom:0;">Hydrofoil/EV transport concept — lighter footprint today, room to grow into the template as the venture matures.</p>
+    </div>
+    <div class="company-card">
+      <div class="company-header"><span class="company-icon">👨‍👩‍👧‍👦</span><span class="company-name">Family</span><span class="company-tag pill pill-purple">Different shape — flag below</span></div>
+      <p style="margin-bottom:0;">Not a business — likely needs a lighter/different structure than the 5-section business template (see Open Questions).</p>
+    </div>
+    <div class="info-box">
+      <p style="margin-bottom:0;"><strong>Also considered:</strong> SPS itself (the studio) may warrant its own command center rather than just being the root shell, since SPS has its own Business/Investment/Marketing (see Open Questions).</p>
+    </div>
+  </section>
+
+  <!-- 06 COMPANY SECTIONS -->
+  <section class="section" id="sections">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Company Sections (the 5-part template)</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Section</th><th>Contains</th></tr></thead>
+        <tbody>
+          <tr><td>📦 <strong>Resources</strong></td><td>Tech stack in use, partnerships, vendor/tool inventory for that company.</td></tr>
+          <tr><td>📊 <strong>Business</strong></td><td>Business intelligence data, proforma, unit costs, revenue models.</td></tr>
+          <tr><td>💰 <strong>Investment</strong></td><td>Business plan, ideas, cost basis, raise details, valuation calc, pitch deck, convertible notes, NDAs.</td></tr>
+          <tr><td>📣 <strong>Marketing</strong></td><td>Website, social media, events, cost tracking, projects, run-of-shows, collaborations.</td></tr>
+          <tr><td>⚙️ <strong>Operations</strong></td><td>Workflow automation, training, evaluation, HR, scheduling — <span class="tbd">shape differs per company</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-box warning">
+      <div class="card-title">⚠️ Operations is the one section that will NOT look the same everywhere</div>
+      <p style="margin-bottom:0;">Domo Cafe Operations = shift scheduling, training, service standards. Flywheel Operations = driver onboarding/dispatch. Family Operations = todos, school stuff, birthdays — a completely different domain. Build this section as a flexible content area (arrangeable structured blocks/widgets), not a fixed form, so it can hold genuinely different content types without a separate code path per company.</p>
+    </div>
+  </section>
+
+  <!-- 07 ADDING NEW COMPANIES -->
+  <section class="section" id="scalability">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Adding New Companies (Scalability)</h2>
+    </div>
+    <div class="info-box accent">
+      <div class="card-title">Answer to Izzy's question: "Will this architecture allow me to add new companies?"</div>
+      <p style="margin-bottom:0;"><strong>Yes — by design.</strong> Companies are config, not hardcoded pages. Adding a new company is meant to be an admin action, not a development project (for the standard case).</p>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">What adding a company looks like</div>
+      <ol>
+        <li>Add a row to the company config: name, slug, logo, brand accent color, which of the 5 sections are enabled.</li>
+        <li>It automatically appears as a tile on the root dashboard.</li>
+        <li>All 5 section pages exist immediately, empty and ready to populate — no new code, no redeploy.</li>
+      </ol>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">What stays free (no extra engineering per company)</div>
+      <ul>
+        <li><strong>Branding</strong> — logo/accent/theme pulled from the config row (Domo's brown/cream vs. Flywheel's red/dark just works).</li>
+        <li><strong>Section toggling</strong> — a company that doesn't need "Marketing" yet can hide that tab without deleting anything.</li>
+        <li><strong>Operations flexibility</strong> — built as arrangeable content blocks, so Family's todos/school-stuff and Flywheel's dispatch ops both fit the same section type.</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <div class="subsection-title">What still needs real engineering (expected, not a flaw)</div>
+      <p>Any <em>bespoke live data integration</em> — e.g. Domo's Toast POS sync — is genuine per-integration work regardless of architecture. The shell scales for free; real pipelines still take real build time. New company = config action. New data source = a small scoped engineering task.</p>
+    </div>
+  </section>
+
+  <!-- 08 DATA SOURCES -->
+  <section class="section" id="data">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">Data Sources</h2>
+    </div>
+    <p>Open decision (see Section 11): for Business/Investment sections, do we pull live data (APIs into Postgres/Notion, e.g. Domo's existing Toast/Proforma pipeline) or start with manual curation and upgrade later per company?</p>
+    <table>
+      <thead><tr><th>Source</th><th>Already Exists For</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Postgres (Railway)</td><td>Domo Cafe (Toast sync + proforma actuals)</td><td>Proven pattern — self-healing nightly sync already built</td></tr>
+        <tr><td>Notion</td><td>Cross-venture Projects/Tasks/Agents/Activity Log DBs</td><td>Already the source of truth for task tracking per AGENTS.md</td></tr>
+        <tr><td>Manual entry / docs</td><td>Everything not yet wired to live data</td><td>Fastest to stand up, upgrade to live data opportunistically</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 09 TECH STACK -->
+  <section class="section" id="tech">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Tech Stack (Proposed)</h2>
+    </div>
+    <table>
+      <thead><tr><th>Layer</th><th>Proposed</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Framework</td><td>Next.js</td><td>Matches the pattern already proven in EZLiving + SPS Investor Portal — fastest to build against, reusable auth/session code</td></tr>
+        <tr><td>Auth</td><td>TOTP 2FA + signed trusted-device tokens</td><td>Same session-cookie approach already used across SPS/EZLiving portals</td></tr>
+        <tr><td>Database</td><td>Postgres (Railway)</td><td>Already the standard for SPS/Domo data; supports structured company config + BI data</td></tr>
+        <tr><td>Hosting</td><td>Railway</td><td>Consistent with EZLiving, SPS Investor Portal, Domo Proforma deployment pattern</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 10 TASK LIST & PHASING -->
+  <section class="section" id="tasklist">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2 class="section-title">Task List &amp; Phasing</h2>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 0</span>
+        <span class="phase-title">Foundation — nothing else works without this</span>
+        <span class="pill pill-red">Not Started</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Stand up the app (Next.js + Postgres) — this becomes the root shell</li>
+          <li>2FA login (TOTP)</li>
+          <li>Trusted-device mechanic (remember device 30–90 days, full 2FA otherwise)</li>
+          <li>Session-wide SSO — root auth covers every company command center underneath</li>
+          <li><strong>Company config schema</strong> — companies are data, not hardcoded pages (see Section 07)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 1</span>
+        <span class="phase-title">Shell &amp; Navigation</span>
+        <span class="pill pill-blue">Planned</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Root landing page: company tiles (Domo Cafe, Flywheel, EZLiving, Blue Highway, Family, + SPS itself if in scope)</li>
+          <li>Generic Company Command Center template — 5 sections as tabs/sidebar</li>
+          <li>Per-company branding pulled from config (Domo brown/cream, Flywheel red/dark, etc.)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 2</span>
+        <span class="phase-title">Populate One Company End-to-End (Template Company)</span>
+        <span class="pill pill-blue">Planned</span>
+        <span class="tbd">[ Recommend: Domo Cafe ]</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Resources — tech stack + partnerships</li>
+          <li>Business — wire in existing live Toast/Proforma data (real numbers, not placeholders)</li>
+          <li>Investment — link/embed existing docs (KISS notes, NDAs, decks)</li>
+          <li>Marketing — costs, run-of-show, collabs (manual entry to start)</li>
+          <li>Operations — build Domo's version first as the working pattern; do not assume it generalizes as-is to other companies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 3</span>
+        <span class="phase-title">Replicate to Remaining Companies</span>
+        <span class="pill pill-green">Future</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Flywheel, EZLiving, Blue Highway, Family — same shell, populate with what already exists in memory/Notion/decks first</li>
+          <li>Flag real content gaps per company after initial population, not before</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-num">PHASE 4</span>
+        <span class="phase-title">Polish</span>
+        <span class="pill pill-green">Future</span>
+      </div>
+      <div class="phase-body">
+        <ul>
+          <li>Global search across all companies/sections</li>
+          <li>Mobile responsiveness (apply patterns already proven on SPS + EZLiving this week)</li>
+          <li>Root-level alerts/notifications (e.g. "EZLiving has 2 pending NDAs")</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box warning">
+      <p style="margin-bottom:0;"><strong>Status: Planning only.</strong> Per Izzy's instruction, no build has started. This document is for review/prioritization before any Phase 0 work begins.</p>
+    </div>
+  </section>
+
+  <!-- 11 OPEN QUESTIONS -->
+  <section class="section" id="open-questions">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2 class="section-title">Open Questions</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Question</th><th>Owner</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td><code>Q1</code></td><td>Confirm tech choice — Next.js app (matches EZLiving/SPS Investor Portal pattern) vs. something else?</td><td class="editable">Izzy</td><td><span class="pill pill-red">HIGH</span></td></tr>
+          <tr><td><code>Q2</code></td><td>Data source of truth per section — live API pulls (Postgres/Notion) or manual curation to start, upgrade later?</td><td class="editable">Izzy</td><td><span class="pill pill-red">HIGH</span></td></tr>
+          <tr><td><code>Q3</code></td><td>"Family" command center — is this more personal/private than a "company"? Does it need a different structure or lighter security than the 5-section business template?</td><td class="editable">Izzy</td><td><span class="pill pill-red">HIGH</span></td></tr>
+          <tr><td><code>Q4</code></td><td>Does SPS (the studio itself) get its own command center, or stay as the root/shell only?</td><td class="editable">Izzy</td><td><span class="pill pill-yellow">MED</span></td></tr>
+          <tr><td><code>Q5</code></td><td>Confirm launch priority order for populating companies (recommend Domo Cafe first — most data already exists)</td><td class="editable">Izzy</td><td><span class="pill pill-yellow">MED</span></td></tr>
+          <tr><td><code>Q6</code></td><td>Trusted-device token lifetime — 30, 60, or 90 days before re-verification?</td><td class="editable">Izzy</td><td><span class="pill pill-green">LOW</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<!-- EDIT MODE BAR -->
+<div class="edit-mode-bar" id="editBar">
+  ✏️ Edit Mode Active
+  <button class="edit-bar-btn save" onclick="saveEdits()">💾 Save</button>
+  <button class="edit-bar-btn restore" onclick="restoreEdits()">↩️ Restore</button>
+  <button class="edit-bar-btn exit" onclick="exitEditMode()">✕ Exit</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER / SPS MARK -->
+<div class="footer">⚙ SPS</div>
+
+<script>
+// ─── THEME ───────────────────────────────────────────
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('sps-cc-prd-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('sps-cc-prd-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+  }
+})();
+
+// ─── TOC ACTIVE ──────────────────────────────────────
+const sections = document.querySelectorAll('.section');
+const tocLinks = document.querySelectorAll('.toc-link');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ─── EDIT AUTH ───────────────────────────────────────
+const _EDIT_HASH = '08d2ccb2e858548c639f7fa890c5ccbf5d62be0be17183d8aabe5b406d288d42';
+async function _hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function requireEditAuth(onSuccess) {
+  if (sessionStorage.getItem('deck-edit-auth') === '1') { onSuccess(); return; }
+  const ov = document.createElement('div');
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  ov.innerHTML = `<div style="background:#1A1A18;border:1px solid rgba(255,94,26,0.3);border-radius:16px;padding:40px;max-width:360px;width:90%;text-align:center;">
+    <div style="font-size:32px;margin-bottom:16px;">🔒</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#F0EDE8;margin-bottom:6px;">Edit Access Required</div>
+    <div style="font-size:12px;color:#A0A098;margin-bottom:24px;">Contact Jarvis to receive the edit password.</div>
+    <input id="_editPwInput" type="password" placeholder="Enter password" style="width:100%;padding:12px 16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F0EDE8;font-size:14px;outline:none;font-family:monospace;margin-bottom:10px;" />
+    <div id="_editPwErr" style="color:#ef4444;font-size:12px;min-height:16px;margin-bottom:10px;"></div>
+    <button id="_editPwBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#FF5E1A,#ff7f47);border:none;border-radius:8px;color:#0C0C0C;font-size:14px;font-weight:700;cursor:pointer;">Unlock</button>
+    <button id="_editPwCancel" style="width:100%;margin-top:10px;padding:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#A0A098;font-size:13px;cursor:pointer;">Cancel</button>
+  </div>`;
+  document.body.appendChild(ov);
+  const inp = document.getElementById('_editPwInput');
+  inp.focus();
+  const attempt = async () => {
+    const hash = await _hashStr(inp.value);
+    if (hash === _EDIT_HASH) { sessionStorage.setItem('deck-edit-auth','1'); ov.remove(); onSuccess(); }
+    else { document.getElementById('_editPwErr').textContent='Incorrect password. Contact Jarvis.'; inp.value=''; inp.focus(); }
+  };
+  document.getElementById('_editPwBtn').onclick = attempt;
+  document.getElementById('_editPwCancel').onclick = () => ov.remove();
+  inp.addEventListener('keydown', e => { if(e.key==='Enter') attempt(); });
+}
+
+// ─── EDIT MODE ───────────────────────────────────────
+let editMode = false;
+const LS_KEY = 'sps-cc-prd-edits';
+
+function toggleEditMode() {
+  if (!editMode) {
+    requireEditAuth(() => enterEditMode());
+  } else {
+    exitEditMode();
+  }
+}
+
+function enterEditMode() {
+  editMode = true;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+  });
+  document.getElementById('editBar').classList.add('visible');
+  document.getElementById('editToggleBtn').classList.add('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Editing';
+  showToast('✅ Edit mode unlocked');
+}
+
+function exitEditMode() {
+  editMode = false;
+  document.querySelectorAll('.editable').forEach(el => {
+    el.removeAttribute('contenteditable');
+  });
+  document.getElementById('editBar').classList.remove('visible');
+  document.getElementById('editToggleBtn').classList.remove('edit-active');
+  document.getElementById('editToggleBtn').textContent = '✏️ Edit';
+  showToast('Edit mode closed');
+}
+
+function saveEdits() {
+  const data = {};
+  document.querySelectorAll('.editable').forEach((el, i) => {
+    data[i] = el.innerHTML;
+  });
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+  showToast('💾 Changes saved');
+}
+
+function restoreEdits() {
+  localStorage.removeItem(LS_KEY);
+  location.reload();
+}
+
+// Load saved edits
+(function() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      document.querySelectorAll('.editable').forEach((el, i) => {
+        if (data[i] !== undefined) el.innerHTML = data[i];
+      });
+    } catch(e) {}
+  }
+})();
+
+// ─── TOAST ───────────────────────────────────────────
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+</script>
+</body>
+</html>
