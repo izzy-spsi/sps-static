@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flywheel — Uber Incremental ROI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width: 1280px;
+    height: 720px;
+    background: #0A0B0D;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(211,44,44,0.10), transparent 45%),
+      radial-gradient(circle at 90% 85%, rgba(211,44,44,0.08), transparent 45%);
+    font-family: 'DM Sans', sans-serif;
+    color: #F2F1EE;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .grain { position:absolute; inset:0; opacity:.03; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .wrap { position:relative; z-index:2; padding: 34px 46px 26px; height:100%; display:flex; flex-direction:column; }
+
+  .topbar { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 18px; }
+  .brand { display:flex; align-items:center; gap:10px; }
+  .brand .mark { width:30px; height:30px; border-radius:8px; background:linear-gradient(135deg,#D32C2C,#8a1c1c); display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Outfit'; font-size:15px; }
+  .brand .name { font-family:'Outfit'; font-weight:700; font-size:15px; letter-spacing:0.3px; }
+  .tag { font-size:10.5px; color:#8b8f96; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+
+  .titleblock { text-align:right; }
+  .kicker { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#D32C2C; font-weight:700; margin-bottom:4px; }
+  h1 { font-family:'Outfit'; font-weight:800; font-size:27px; line-height:1.15; color:#fff; letter-spacing:-0.3px; }
+  h1 span { color:#D32C2C; }
+
+  .subhead { font-size:13.5px; color:#B9BCC2; margin-top:8px; max-width:1180px; line-height:1.5; }
+  .subhead b { color:#fff; font-weight:700; }
+
+  /* Flow row */
+  .flow { display:flex; align-items:stretch; gap:0; margin: 20px 0 16px; }
+  .fstep { flex:1; background: rgba(255,255,255,0.035); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px; position:relative; }
+  .fstep.hot { border-color: rgba(211,44,44,0.4); background: rgba(211,44,44,0.06); }
+  .fstep .lbl { font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#8b8f96; font-weight:700; margin-bottom:6px; }
+  .fstep .val { font-family:'JetBrains Mono'; font-weight:700; font-size:20px; color:#fff; }
+  .fstep .sub { font-size:10.5px; color:#9a9ea5; margin-top:4px; }
+  .arrow { display:flex; align-items:center; justify-content:center; width:34px; color:#D32C2C; font-size:20px; font-weight:800; }
+
+  /* Main grid: split rate table + ROI chart */
+  .main { display:flex; gap:20px; flex:1; min-height:0; }
+
+  .panel { background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px 20px; }
+  .panel h3 { font-family:'Outfit'; font-size:13px; font-weight:700; color:#fff; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .panel h3 .dot { width:7px; height:7px; border-radius:50%; background:#D32C2C; }
+
+  /* Left: take rate comparison */
+  .left { width: 300px; display:flex; flex-direction:column; gap:12px; }
+
+  .takebars { display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .tb-row { display:flex; align-items:center; gap:8px; }
+  .tb-label { width:64px; font-size:10.5px; color:#B9BCC2; font-weight:600; }
+  .tb-track { flex:1; height:20px; background:rgba(255,255,255,0.06); border-radius:5px; position:relative; display:flex; align-items:center; }
+  .tb-fill { height:100%; border-radius:5px; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; }
+  .tb-fill.uber { background:linear-gradient(90deg,#0d0d0d,#2b2b2b); border:1px solid rgba(255,255,255,0.15); }
+  .tb-fill.fw { background:linear-gradient(90deg,#8a1c1c,#D32C2C); }
+  .tb-val { font-family:'JetBrains Mono'; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; }
+  .tb-val-outside { position:absolute; left:calc(16% + 8px); color:#fff; }
+
+  .keypoint { background: rgba(211,44,44,0.08); border:1px solid rgba(211,44,44,0.25); border-radius:10px; padding:12px 14px; font-size:11.5px; line-height:1.5; color:#EFEAE5; }
+  .keypoint b { color:#ff6b6b; }
+
+  /* Middle: FR sensitivity table */
+  .middle { flex:1; }
+  table.fr { width:100%; border-collapse:collapse; font-size:11px; }
+  table.fr th { text-align:left; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:#8b8f96; padding:5px 8px; border-bottom:1px solid rgba(255,255,255,0.12); }
+  table.fr td { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'JetBrains Mono'; }
+  table.fr tr.hi td { background: rgba(211,44,44,0.10); }
+  table.fr td.city { font-family:'DM Sans'; font-weight:600; color:#fff; }
+  .badge { display:inline-block; padding:1px 7px; border-radius:99px; font-size:9px; font-weight:700; }
+  .badge.low { background:rgba(211,44,44,0.2); color:#ff8080; }
+  .badge.mid { background:rgba(230,180,60,0.2); color:#f0c25e; }
+  .badge.hi { background:rgba(60,200,120,0.2); color:#6fe3a0; }
+
+  /* Right: ROI projection */
+  .right { width: 330px; display:flex; flex-direction:column; }
+  .roi-stats { display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:14px; }
+  .roi-stat { background:rgba(255,255,255,0.04); border-radius:8px; padding:10px 12px; }
+  .roi-stat .n { font-family:'JetBrains Mono'; font-weight:700; font-size:17px; color:#fff; }
+  .roi-stat .l { font-size:9.5px; color:#9a9ea5; margin-top:2px; }
+
+  .bar-chart { flex:1; display:flex; align-items:flex-end; gap:10px; padding: 6px 4px 0; position:relative; }
+  .bcol { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .bcol .bars { display:flex; align-items:flex-end; gap:3px; height:100%; width:100%; justify-content:center; }
+  .bcol .bar { width:13px; border-radius:3px 3px 0 0; }
+  .bcol .bar.fw { background:linear-gradient(180deg,#D32C2C,#8a1c1c); }
+  .bcol .bar.uber { background:linear-gradient(180deg,#4a4a4a,#1c1c1c); border:1px solid rgba(255,255,255,0.15); }
+  .bcol .xlabel { font-size:9px; color:#9a9ea5; margin-top:6px; font-weight:600; }
+
+  .legend { display:flex; gap:14px; justify-content:center; margin-top:8px; font-size:9.5px; color:#B9BCC2; }
+  .legend span { display:flex; align-items:center; gap:5px; }
+  .legend i { width:9px; height:9px; border-radius:2px; display:inline-block; }
+  .legend i.fw { background:#D32C2C; }
+  .legend i.uber { background:#4a4a4a; border:1px solid rgba(255,255,255,0.2); }
+
+  .footer { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:9.5px; color:#6b6f76; }
+  .footer .conf { color:#D32C2C; font-weight:700; letter-spacing:1px; }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark">FW</div>
+      <div>
+        <div class="name">FLYWHEEL</div>
+        <div class="tag">Uber Partnership · Investment Case</div>
+      </div>
+    </div>
+    <div class="titleblock">
+      <div class="kicker">Fill Rate → Referral Fee → Uber Take Rate</div>
+      <h1>Every point of <span>Fill Rate</span> we add, Uber earns more too</h1>
+    </div>
+  </div>
+
+  <div class="subhead">
+    Flywheel is paid <b>2.5%–4%</b> of rider payment as a 3P referral fee. Uber takes <b>15%–25%</b> of the same trip. Because Driver Earnings <b>are</b> our GMV,
+    every completed trip we convert pays <b>both</b> parties — and Uber's dollar take is <b>4–8x larger</b> than ours on the identical ride. Our investment in driver
+    conversion is disproportionately an investment in Uber's revenue.
+  </div>
+
+  <!-- Flow -->
+  <div class="flow">
+    <div class="fstep">
+      <div class="lbl">Acceptance Rate (AR)</div>
+      <div class="val">4% → 12%</div>
+      <div class="sub">Driver accepts the dispatched offer</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fstep">
+      <div class="lbl">Cancellation Rate (CR)</div>
+      <div class="val">↓ improves</div>
+      <div class="sub">Fewer accepted trips fall through</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fstep hot">
+      <div class="lbl">Fill Rate (FR)</div>
+      <div class="val">3% → 9%</div>
+      <div class="sub">Completed Trips ÷ Offers Sent</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fstep hot">
+      <div class="lbl">Driver Earnings = GMV</div>
+      <div class="val">3x Trips</div>
+      <div class="sub">We're the 3P payment provider on every ride</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="fstep hot">
+      <div class="lbl">Referral Fee + Uber Take</div>
+      <div class="val">Both ↑ Together</div>
+      <div class="sub">Same GMV base, shared upside</div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- LEFT: take rate split -->
+    <div class="panel left">
+      <h3><span class="dot"></span>Who Gets Paid, Per Trip</h3>
+      <div class="takebars">
+        <div class="tb-row">
+          <div class="tb-label">Uber</div>
+          <div class="tb-track"><div class="tb-fill uber" style="width:88%"><span class="tb-val">15–25%</span></div></div>
+        </div>
+        <div class="tb-row">
+          <div class="tb-label">Flywheel</div>
+          <div class="tb-track"><div class="tb-fill fw" style="width:16%"></div><span class="tb-val tb-val-outside">2.5–4%</span></div>
+        </div>
+      </div>
+      <div class="keypoint">
+        On a <b>$17 average Uber 3P fare</b>, Uber nets <b>~$3.40</b> and Flywheel nets <b>~$0.55</b> per completed trip &mdash;
+        <b>Uber earns ~6x more than we do on every ride we fill.</b> We only get paid when the trip completes &mdash; so
+        we're economically aligned to push Fill Rate, and Uber's revenue rides on our success.
+      </div>
+      <div class="keypoint">
+        <b>Live proof point (Las Vegas / Kaptyn):</b> Fill Rate has ranged 3%&ndash;16% across live Uber 3P markets on
+        identical driver-offer volume. The gap is <b>conversion, not demand</b> &mdash; exactly what Flywheel investment closes.
+      </div>
+    </div>
+
+    <!-- MIDDLE: fill rate by market table -->
+    <div class="panel middle">
+      <h3><span class="dot"></span>Fill Rate Today Across Live Markets (L7D, Uber 3P Dashboard)</h3>
+      <table class="fr">
+        <tr><th>Market</th><th>Offers Sent</th><th>Accept Rate</th><th>Fill Rate</th><th>Status</th></tr>
+        <tr class="hi"><td class="city">Las Vegas</td><td>60,950</td><td>4%</td><td>3%</td><td><span class="badge low">Worst — biggest upside</span></td></tr>
+        <tr><td class="city">San Francisco</td><td>—</td><td>—</td><td>4%</td><td><span class="badge low">Low</span></td></tr>
+        <tr><td class="city">San Diego</td><td>—</td><td>—</td><td>5%</td><td><span class="badge mid">Below avg</span></td></tr>
+        <tr><td class="city">Houston</td><td>—</td><td>—</td><td>7%</td><td><span class="badge mid">Average</span></td></tr>
+        <tr><td class="city">Fort Lauderdale</td><td>—</td><td>—</td><td>7%</td><td><span class="badge mid">Average</span></td></tr>
+        <tr class="hi"><td class="city">Palm Springs</td><td>—</td><td>—</td><td>16%</td><td><span class="badge hi">Best — proof it's fixable</span></td></tr>
+      </table>
+      <div class="keypoint" style="margin-top:12px;">
+        Same platform, same rider demand pool, same rate card &mdash; <b>5x spread in Fill Rate</b> between our worst
+        and best live markets. Closing that spread market-by-market is the entire Flywheel investment thesis: it's not
+        a new bet, it's <b>replicating what already works in Palm Springs</b>.
+      </div>
+    </div>
+
+    <!-- RIGHT: ROI projection -->
+    <div class="panel right">
+      <h3><span class="dot"></span>Payback: Las Vegas Fill-Rate Fix</h3>
+      <div class="roi-stats">
+        <div class="roi-stat"><div class="n">3% → 9%</div><div class="l">Fill Rate target (3x)</div></div>
+        <div class="roi-stat"><div class="n">3x</div><div class="l">Completed trips</div></div>
+        <div class="roi-stat"><div class="n">&lt; 90 days</div><div class="l">Uber payback window*</div></div>
+        <div class="roi-stat"><div class="n">6x</div><div class="l">Uber $ vs. our $, same trip</div></div>
+      </div>
+      <div class="bar-chart">
+        <div class="bcol">
+          <div class="bars">
+            <div class="bar fw" style="height:14%"></div>
+            <div class="bar uber" style="height:22%"></div>
+          </div>
+          <div class="xlabel">Today (3% FR)</div>
+        </div>
+        <div class="bcol">
+          <div class="bars">
+            <div class="bar fw" style="height:28%"></div>
+            <div class="bar uber" style="height:44%"></div>
+          </div>
+          <div class="xlabel">Mo. 2 (6% FR)</div>
+        </div>
+        <div class="bcol">
+          <div class="bars">
+            <div class="bar fw" style="height:42%"></div>
+            <div class="bar uber" style="height:66%"></div>
+          </div>
+          <div class="xlabel">Mo. 4 (9% FR)</div>
+        </div>
+        <div class="bcol">
+          <div class="bars">
+            <div class="bar fw" style="height:56%"></div>
+            <div class="bar uber" style="height:88%"></div>
+          </div>
+          <div class="xlabel">Mo. 6 (12% FR)</div>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="fw"></i>Flywheel Referral Fee</span>
+        <span><i class="uber"></i>Uber Take Rate</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div>*Illustrative, one-market model (Las Vegas) scaled to Flywheel's 32-market Uber expansion plan · Source: Uber 3P Dashboard L7D pulls, June 2026</div>
+    <div class="conf">CONFIDENTIAL</div>
+  </div>
+
+</div>
+</body>
+</html>
