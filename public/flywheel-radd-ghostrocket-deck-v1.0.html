@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flywheel × Uber × RADD × Ghost Rocket — Partnership Proposal</title>
+<style>
+  :root{
+    --fw-red:#cc1a1a;
+    --fw-red-dark:#8f0f0f;
+    --bg:#0a0a0a;
+    --bg2:#121212;
+    --card:#1a1a1a;
+    --card2:#1f1f1f;
+    --border:#2a2a2a;
+    --text:#f5f5f5;
+    --muted:#9a9a9a;
+    --gold:#e8c46a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .slide{
+    min-height:100vh;
+    width:100%;
+    padding:60px 8vw;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    border-bottom:1px solid var(--border);
+    background:
+      radial-gradient(circle at 85% 10%, rgba(204,26,26,0.12), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(204,26,26,0.08), transparent 40%),
+      var(--bg);
+  }
+  .slide-num{
+    position:absolute;
+    top:28px;
+    right:36px;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:2px;
+  }
+  .brandbar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:34px;
+  }
+  .brandbar img{height:34px;}
+  .brand-x{
+    color:var(--muted);
+    font-size:20px;
+    font-weight:300;
+  }
+  .brand-name{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:0.5px;
+  }
+  .brand-name.uber{color:#fff;}
+  .brand-name.radd{color:var(--gold);}
+  .brand-name.ghostrocket{color:#ff5b3c;}
+  .eyebrow{
+    color:var(--fw-red);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  h1{
+    font-size:56px;
+    line-height:1.08;
+    font-weight:800;
+    letter-spacing:-1px;
+    margin-bottom:24px;
+    max-width:900px;
+  }
+  h1 .accent{color:var(--fw-red);}
+  .lede{
+    font-size:19px;
+    line-height:1.6;
+    color:#d5d5d5;
+    max-width:760px;
+    margin-bottom:8px;
+  }
+  .section-title{
+    font-size:38px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+    margin-bottom:14px;
+  }
+  .section-sub{
+    font-size:18px;
+    color:var(--muted);
+    max-width:700px;
+    margin-bottom:36px;
+  }
+
+  /* Tour dates grid (slide 1) */
+  .tour-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:16px;
+    margin-top:20px;
+  }
+  .tour-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px 16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .tour-card::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--fw-red),var(--fw-red-dark));
+  }
+  .tour-date{
+    font-size:13px;
+    font-weight:800;
+    color:var(--fw-red);
+    letter-spacing:1.5px;
+    margin-bottom:10px;
+  }
+  .tour-city{font-size:19px;font-weight:700;margin-bottom:6px;}
+  .tour-venue{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.4;}
+  .tour-cap{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin-bottom:2px;
+  }
+  .tour-cap-val{font-size:16px;font-weight:700;color:#fff;}
+  .tour-footer{
+    margin-top:30px;
+    font-size:15px;
+    color:var(--muted);
+    text-align:center;
+    letter-spacing:0.5px;
+  }
+  .tour-footer b{color:#fff;}
+
+  /* Ask slide */
+  .ask-flow{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:32px 36px;
+    margin-bottom:36px;
+  }
+  .ask-flow-item{flex:1;text-align:center;}
+  .ask-flow-item .label{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .ask-flow-item .value{font-size:22px;font-weight:800;}
+  .ask-flow-item .value.give{color:var(--fw-red);}
+  .ask-flow-item .value.get{color:var(--gold);}
+  .ask-arrow{font-size:28px;color:var(--muted);}
+
+  .benefits-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px 40px;
+  }
+  .benefit{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+    font-size:15.5px;
+    line-height:1.4;
+  }
+  .benefit .check{
+    color:var(--fw-red);
+    font-weight:800;
+    font-size:16px;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .benefit .foot{
+    color:var(--muted);
+    font-size:12px;
+  }
+  .footnote{
+    margin-top:24px;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* Additional offerings grid */
+  .offer-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+  }
+  .offer-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:24px;
+  }
+  .offer-icon{
+    width:44px;height:44px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--fw-red),var(--fw-red-dark));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:18px;
+    margin-bottom:16px;
+  }
+  .offer-title{font-size:17px;font-weight:700;margin-bottom:8px;}
+  .offer-desc{font-size:14px;color:var(--muted);line-height:1.5;}
+
+  /* Value / stats slide */
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:44px;
+  }
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:26px 20px;
+    text-align:center;
+  }
+  .stat-num{
+    font-size:36px;
+    font-weight:800;
+    color:var(--fw-red);
+    letter-spacing:-1px;
+  }
+  .stat-label{
+    font-size:13px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-top:6px;
+  }
+  .path-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+  }
+  .path-card{
+    background:var(--card2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px;
+  }
+  .path-icon{
+    width:38px;height:38px;
+    border-radius:9px;
+    background:rgba(204,26,26,0.15);
+    border:1px solid rgba(204,26,26,0.4);
+    color:var(--fw-red);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    margin-bottom:14px;
+  }
+  .path-title{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .path-desc{font-size:13px;color:var(--muted);line-height:1.5;}
+
+  .closer{
+    text-align:center;
+    padding:80px 8vw;
+    background:linear-gradient(180deg,var(--bg),#150606);
+  }
+  .closer h2{
+    font-size:44px;
+    font-weight:800;
+    max-width:780px;
+    margin:0 auto 20px;
+    line-height:1.2;
+  }
+  .closer h2 .accent{color:var(--fw-red);}
+  .closer p{
+    font-size:17px;
+    color:var(--muted);
+    max-width:560px;
+    margin:0 auto 32px;
+  }
+  .pill-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .pill{
+    border:1px solid var(--border);
+    background:var(--card);
+    padding:10px 20px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:600;
+  }
+  .pill.fw{border-color:var(--fw-red);color:#ffb3b3;}
+
+  @media (max-width:1100px){
+    .tour-grid{grid-template-columns:repeat(2,1fr);}
+    .benefits-grid{grid-template-columns:1fr;}
+    .offer-grid{grid-template-columns:repeat(2,1fr);}
+    .stats-grid{grid-template-columns:repeat(2,1fr);}
+    .path-grid{grid-template-columns:repeat(2,1fr);}
+    h1{font-size:38px;}
+    .section-title{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: COVER + TOUR -->
+<section class="slide">
+  <div class="slide-num">01 / 04</div>
+  <div class="brandbar">
+    <img src="flywheel-logo-red-transparent.png" alt="Flywheel">
+    <span class="brand-x">×</span>
+    <span class="brand-name uber">Uber</span>
+    <span class="brand-x">×</span>
+    <span class="brand-name radd">RADD</span>
+    <span class="brand-x">×</span>
+    <span class="brand-name ghostrocket">Ghost Rocket</span>
+  </div>
+  <div class="eyebrow">Partnership Proposal · Summer – Fall 2026</div>
+  <h1>Getting Fans<br><span class="accent">Home Safely.</span></h1>
+  <p class="lede">RADD uses music and artists to champion safe-ride messaging. We're partnering with Ghost Rocket on a 5-city independent music showcase — and want <b>Flywheel + Uber</b> as the exclusive ride-share sponsor at every event, delivered by Flywheel's licensed, professional driver network.</p>
+
+  <div class="tour-grid">
+    <div class="tour-card">
+      <div class="tour-date">JUL 30</div>
+      <div class="tour-city">Los Angeles, CA</div>
+      <div class="tour-venue">Avalon Hollywood · Hollywood Independent Music Awards + Afterparty</div>
+      <div class="tour-cap">Capacity</div>
+      <div class="tour-cap-val">300 after / 700 main</div>
+    </div>
+    <div class="tour-card">
+      <div class="tour-date">AUG 12</div>
+      <div class="tour-city">Nashville, TN</div>
+      <div class="tour-venue">The Basement · Ghost Rocket Industry Showcase</div>
+      <div class="tour-cap">Capacity</div>
+      <div class="tour-cap-val">200</div>
+    </div>
+    <div class="tour-card">
+      <div class="tour-date">AUG 19</div>
+      <div class="tour-city">New York, NY</div>
+      <div class="tour-venue">DROM · Ghost Rocket Industry Showcase</div>
+      <div class="tour-cap">Capacity</div>
+      <div class="tour-cap-val">400</div>
+    </div>
+    <div class="tour-card">
+      <div class="tour-date">AUG 26</div>
+      <div class="tour-city">Toronto, ON</div>
+      <div class="tour-venue">The Rivoli · Ghost Rocket Industry Showcase</div>
+      <div class="tour-cap">Capacity</div>
+      <div class="tour-cap-val">250</div>
+    </div>
+    <div class="tour-card">
+      <div class="tour-date">LATE SEPT</div>
+      <div class="tour-city">Nashville, TN</div>
+      <div class="tour-venue">Nashville Film Festival · Ghost Rocket Party</div>
+      <div class="tour-cap">Capacity</div>
+      <div class="tour-cap-val">TBD</div>
+    </div>
+  </div>
+  <div class="tour-footer"><b>5 events</b> · <b>4 cities</b> · <b>2 countries</b> · Summer – Fall 2026</div>
+</section>
+
+<!-- SLIDE 2: THE ASK -->
+<section class="slide">
+  <div class="slide-num">02 / 04</div>
+  <div class="eyebrow">The Ask</div>
+  <h1>No cash sponsorship.<br><span class="accent">Just rides — delivered right.</span></h1>
+  <p class="lede">We're asking Flywheel + Uber to provide free or discounted rides home from each event, using Flywheel's licensed professional driver network. In return, you receive full exclusive ride-share sponsorship recognition at every stop — including the Hollywood Independent Music Awards on July 30.</p>
+
+  <div class="ask-flow">
+    <div class="ask-flow-item">
+      <div class="label">What Flywheel + Uber Give</div>
+      <div class="value give">Safe rides home</div>
+    </div>
+    <div class="ask-arrow">→</div>
+    <div class="ask-flow-item">
+      <div class="label">What Flywheel + Uber Get</div>
+      <div class="value get">Exclusive Ride-Share Sponsor</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:22px;margin-bottom:20px;">What Flywheel + Uber Receive · Per Event</div>
+  <div class="benefits-grid">
+    <div class="benefit"><span class="check">✓</span> Exclusive Ride-Share category sponsor at every event</div>
+    <div class="benefit"><span class="check">✓</span> VIP access for guests — table seating or priority entry <span class="foot">†</span></div>
+    <div class="benefit"><span class="check">✓</span> Up to 10 comp VIP tickets per event</div>
+    <div class="benefit"><span class="check">✓</span> Logo in event logo loop on venue screens <span class="foot">†</span></div>
+    <div class="benefit"><span class="check">✓</span> Logo on branded Step &amp; Repeat backdrop at each event</div>
+    <div class="benefit"><span class="check">✓</span> Optional 30–45 sec branded bumper video on-stage <span class="foot">†</span></div>
+    <div class="benefit"><span class="check">✓</span> Opportunity for hosts/announcers at events</div>
+    <div class="benefit"><span class="check">✓</span> Brand inclusion in all event marketing &amp; social media</div>
+    <div class="benefit"><span class="check">✓</span> Full-page color ad in event program <span class="foot">*</span></div>
+    <div class="benefit"><span class="check">✓</span> Professional social-media-ready photo + video, post-event</div>
+    <div class="benefit"><span class="check">✓</span> Livestream social media takeovers + artist integration available</div>
+  </div>
+  <div class="footnote">* HIMA Awards (July 30) only &nbsp;&nbsp;&nbsp; † Subject to venue technology &amp; setup</div>
+</section>
+
+<!-- SLIDE 3: ADDITIONAL OFFERINGS -->
+<section class="slide">
+  <div class="slide-num">03 / 04</div>
+  <div class="eyebrow">Additional Offerings</div>
+  <div class="section-title">Optional enhancements, any event stop.</div>
+  <div class="section-sub">Extend the Flywheel + Uber footprint beyond the ride — deeper brand integration across every touchpoint.</div>
+
+  <div class="offer-grid">
+    <div class="offer-card">
+      <div class="offer-icon">P</div>
+      <div class="offer-title">Photo Opportunities</div>
+      <div class="offer-desc">Photo ops for Flywheel + Uber guests with fans, artists, and music industry attendees.</div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">M</div>
+      <div class="offer-title">Artist Meet &amp; Greets</div>
+      <div class="offer-desc">Exclusive meet &amp; greet access with performing artists for sponsored guests.</div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">G</div>
+      <div class="offer-title">Autographed Merch</div>
+      <div class="offer-desc">Free autographed merchandise distributed to event attendees on Flywheel + Uber's behalf.</div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">S</div>
+      <div class="offer-title">Artist Social Media</div>
+      <div class="offer-desc">Artist social media participation featuring Flywheel + Uber brand integration and messaging.</div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">@</div>
+      <div class="offer-title">Online Advertising</div>
+      <div class="offer-desc">Flywheel + Uber logo and branding included in all Ghost Rocket online event advertising.</div>
+    </div>
+    <div class="offer-card">
+      <div class="offer-icon">U</div>
+      <div class="offer-title">Ride Credit Sampling</div>
+      <div class="offer-desc">Ghost Rocket ops team distributes ride credits or promo codes directly to guests.</div>
+    </div>
+  </div>
+  <div class="footnote" style="margin-top:24px;">All offerings subject to event logistics and Ghost Rocket producer approval.</div>
+</section>
+
+<!-- SLIDE 4: ADDED VALUE + CLOSER -->
+<section class="slide">
+  <div class="slide-num">04 / 04</div>
+  <div class="eyebrow">The Added Value · HIMA Awards — July 30, Avalon Hollywood</div>
+  <div class="section-title">Your brand rides alongside every artist, every fan, every post.</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num">50M+</div>
+      <div class="stat-label">Total Impressions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">200K</div>
+      <div class="stat-label">Unique Audience Reach</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">1M+</div>
+      <div class="stat-label">Partner Email Reach</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">20K+</div>
+      <div class="stat-label">Direct Email Database</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:20px;margin-bottom:18px;">How Your Brand Gets There</div>
+  <div class="path-grid">
+    <div class="path-card">
+      <div class="path-icon">@</div>
+      <div class="path-title">Email Campaigns</div>
+      <div class="path-desc">HIMA partner + direct database blasts featuring Flywheel + Uber as ride-share sponsor.</div>
+    </div>
+    <div class="path-card">
+      <div class="path-icon">S</div>
+      <div class="path-title">Social Media</div>
+      <div class="path-desc">Each of 40+ categories generates nominations — every nominated artist promotes to their own fanbase.</div>
+    </div>
+    <div class="path-card">
+      <div class="path-icon">A</div>
+      <div class="path-title">Artist Amplification</div>
+      <div class="path-desc">Nominated artists share event content across their streaming &amp; social channels.</div>
+    </div>
+    <div class="path-card">
+      <div class="path-icon">P</div>
+      <div class="path-title">Press &amp; Earned Media</div>
+      <div class="path-desc">Press and blog coverage across music industry outlets.</div>
+    </div>
+  </div>
+  <div class="footnote" style="margin-top:20px;">Reach figures based on HIMA 2026 data · HIMA Awards event only.</div>
+</section>
+
+<section class="closer">
+  <h2>Flywheel delivers the licensed, professional driver network that makes the <span class="accent">safe-ride promise real.</span></h2>
+  <p>Uber provides the platform and scale. RADD brings the mission. Ghost Rocket brings the artists and the stage. Together — the complete safe-ride solution, at every stop.</p>
+  <div class="pill-row">
+    <span class="pill fw">⚡ Flywheel — Licensed Drivers</span>
+    <span class="pill">🚗 Uber — Platform &amp; Reach</span>
+    <span class="pill">🎗 RADD — Safe-Ride Mission</span>
+    <span class="pill">🚀 Ghost Rocket — Artists &amp; Stage</span>
+  </div>
+</section>
+
+</body>
+</html>
