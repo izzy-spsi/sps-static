@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="0.1.0">
+<title>Domo Cafe — Staff OS PRD v0.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;
+  --tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);
+  --bg:var(--dark);--text:var(--warm);--sub:var(--muted);
+}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.badge-date{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+.badge-status{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(212,165,116,0.15);color:var(--tan);padding:4px 10px;border-radius:3px}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:600px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:32px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.mode-toggle:hover{color:var(--text)}
+
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+ul,ol{margin:0 0 16px 20px;color:var(--sub);font-size:14.5px;line-height:1.8}
+li{margin-bottom:4px}
+
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout.tan{border-left-color:var(--tan);background:rgba(212,165,116,0.08)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout.tan .callout-label{color:var(--tan)}
+.callout p{font-size:13.5px;margin:0;color:var(--sub)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+body.light .card{background:#fff}
+.card-icon{font-size:22px;margin-bottom:10px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-body{font-size:12.5px;color:var(--sub);line-height:1.6}
+
+.phase{display:inline-flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.p0{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.p1{background:rgba(139,69,19,0.15);color:var(--tan)}
+.p2{background:rgba(212,165,116,0.12);color:var(--muted)}
+.pnew{background:rgba(46,160,67,0.15);color:#5fd97a}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--sub);line-height:1.5}
+tr:last-child td{border-bottom:none}
+
+.status-live{color:#5fd97a;font-weight:600}
+.status-partial{color:var(--tan);font-weight:600}
+.status-none{color:#ff6b6b;font-weight:600}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px;text-align:center}
+body.light .kpi{background:#fff}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--red);margin-bottom:4px}
+.kpi-label{font-size:11px;color:var(--sub)}
+
+.qa{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:14px 0}
+body.light .qa{background:#fff}
+.qa-num{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px}
+.qa-q{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.qa-a{font-size:13px;color:var(--sub)}
+
+footer{margin-top:40px;padding:24px 0;font-family:'Outfit',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:40px 24px;max-width:100%}
+  .grid-2,.grid-3,.kpi-grid{grid-template-columns:1fr}
+  .doc-title{font-size:36px}
+}
+</style>
+</head>
+<body>
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☾ DARK':'☀ LIGHT'">☀ LIGHT</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">Staff OS · PRD v0.1</div>
+  </div>
+  <span class="nav-section">Overview</span>
+  <a class="nav-item" href="#s1">01 · Executive Summary</a>
+  <a class="nav-item" href="#s2">02 · Existing Build Audit</a>
+  <a class="nav-item" href="#s3">03 · Vision</a>
+  <span class="nav-section">Requirements</span>
+  <a class="nav-item" href="#s4">04 · Core Requirements</a>
+  <a class="nav-item" href="#s5">05 · Additional Features</a>
+  <a class="nav-item" href="#s6">06 · HR Policy Encoding</a>
+  <span class="nav-section">Technical</span>
+  <a class="nav-item" href="#s7">07 · Architecture</a>
+  <a class="nav-item" href="#s8">08 · Data Model</a>
+  <a class="nav-item" href="#s9">09 · Toast Integration</a>
+  <span class="nav-section">Planning</span>
+  <a class="nav-item" href="#s10">10 · Phasing</a>
+  <a class="nav-item" href="#s11">11 · Open Questions</a>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v0.1</span>
+      <span class="badge-status">Draft</span>
+      <span class="badge-date">July 2026 · GFC BP LLC</span>
+    </div>
+    <div class="doc-title">Staff <span>OS</span></div>
+    <div class="doc-sub">A single system for every staff-related workflow at Domo Cafe — data, scheduling, messaging, training, discipline, and labor optimization — architected to become a config-driven product for any restaurant.</div>
+  </div>
+
+  <section class="section" id="s1">
+    <span class="section-num">01</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Executive Summary</div>
+    <p>Izzy asked for one system where all staff information, scheduling, communication, training, and discipline live — with the explicit goal of optimizing labor spend. This document audits what already exists, proposes additional features, and lays out the architecture and phasing to build it for real.</p>
+    <p>Design principle: <strong>Toast is the source of truth for identity, wage, and clock data. Staff OS is the source of truth for everything Toast doesn't do</strong> — scheduling intelligence, training, discipline, messaging, and labor optimization logic.</p>
+    <div class="callout">
+      <div class="callout-label">Key Finding</div>
+      <p>Three partial systems already exist for this problem, built independently, none connected to each other or to Toast. The strongest foundation (a real Next.js + Prisma app called <code>domo-scheduler</code>) has never been deployed. Recommendation: consolidate onto that foundation rather than starting a fourth codebase.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s2">
+    <span class="section-num">02</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Existing Build Audit</div>
+    <p>Audited 2026-07-11. All three systems were built at different times for overlapping purposes — none share a database.</p>
+    <table>
+      <tr><th>System</th><th>Tech</th><th>Data Layer</th><th>Status</th></tr>
+      <tr><td><strong>Domo SIS</strong><br>izzy-spsi/domo-sis</td><td>Static HTML (148KB)</td><td>localStorage only</td><td><span class="status-partial">Live demo</span> — no backend, no cross-device sync</td></tr>
+      <tr><td><strong>Staff Portal</strong><br>domokuncafe-website/staff.html</td><td>Static HTML (78KB)</td><td>localStorage only</td><td><span class="status-none">Unshipped</span> — built on develop branch, never merged</td></tr>
+      <tr><td><strong>Domo Scheduler</strong><br>~/Documents/domo-scheduler</td><td>Next.js + Prisma</td><td>SQLite (local file)</td><td><span class="status-partial">Built, undeployed</span> — real schema, no git remote, no hosting</td></tr>
+    </table>
+    <h4>domo-scheduler — what's actually there</h4>
+    <p>The only real relational data model of the three. Existing Prisma models: <code>Staff</code>, <code>Availability</code>, <code>AvailabilityException</code>, <code>Shift</code>, <code>ShiftAssignment</code>, <code>OnCallVolunteer</code>, <code>SchedulerAdjustmentLog</code>. Has manager/staff login pages, JWT auth, and a <code>JARVIS_API_KEY</code> already scaffolded in <code>.env</code>. Adjustment log already tracks reason codes for shift changes — a genuinely useful pattern to extend into discipline tracking.</p>
+    <div class="callout brown">
+      <div class="callout-label">Decision Needed</div>
+      <p>Confirm we consolidate onto <code>domo-scheduler</code>'s foundation (recommended) and retire <code>domo-sis</code> / <code>staff.html</code> as design references only, rather than building a new codebase from scratch.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s3">
+    <span class="section-num">03</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Vision</div>
+    <p>A single system — <strong>Domo Staff OS</strong> — where all staff-related data, workflows, and communication live. Built first for Domo Cafe, architected so the same system (via configuration, not a rewrite) can be offered to other restaurants as an SPS product: an AI-customizable restaurant staff operating system.</p>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🗂️</div><div class="card-title">Single Source</div><div class="card-body">One place for every staff record, replacing three disconnected tools</div></div>
+      <div class="card"><div class="card-icon">📱</div><div class="card-title">Phone-First</div><div class="card-body">Staff log in daily from their phone — no app store dependency</div></div>
+      <div class="card"><div class="card-icon">🤖</div><div class="card-title">AI-Customizable</div><div class="card-body">Same core system, configured per restaurant's exact needs</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s4">
+    <span class="section-num">04</span>
+    <div class="section-label">Requirements</div>
+    <div class="section-title">Core Requirements</div>
+    <p>Verbatim intent from Izzy's request, 2026-07-11:</p>
+    <table>
+      <tr><th>#</th><th>Requirement</th><th>Notes</th></tr>
+      <tr><td>1</td><td>Central staff data store, Toast-synced base + SIS-extended data</td><td>Toast = identity/wage/job title/clock. SIS = certs, warnings, ratings, PTO, emergency contact.</td></tr>
+      <tr><td>2</td><td>Daily-use mobile web app for every staff member</td><td>Phone-first, PWA-style</td></tr>
+      <tr><td>3</td><td>Scheduling lives here</td><td>Full replacement for current scheduling process</td></tr>
+      <tr><td>4</td><td>Messaging — individual, group, all-staff</td><td>Broadcast + targeted, read receipts</td></tr>
+      <tr><td>5</td><td>Learning — videos + quizzes</td><td>Ports staff.html's Learn/Quiz/Certs concept, backend-persisted</td></tr>
+      <tr><td>6</td><td>Time-off requests + qualified-only shift swap marketplace</td><td>Swap candidates filtered to certified staff only</td></tr>
+      <tr><td>7</td><td>Manager-logged verbal/written warnings with reasons</td><td>Structured, timestamped, tied to employee record</td></tr>
+      <tr><td>8</td><td>Disciplinary process adherence</td><td>Workflow enforcement, not just data entry</td></tr>
+      <tr><td>9</td><td>Labor optimization — see overspend, adjust</td><td>Real-time labor % vs. target, driven by real Toast data</td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s5">
+    <span class="section-num">05</span>
+    <div class="section-label">Requirements</div>
+    <div class="section-title">Additional Recommended Features</div>
+    <p>Proposed by Jarvis, pending Izzy approval. Two flagged as highest-impact: Toast clock reconciliation (makes labor optimization real, not a dashboard of guesses) and the pre-publish labor-% guardrail (prevents overspend instead of reporting it after the fact).</p>
+    <table>
+      <tr><th>#</th><th>Feature</th><th>Why</th></tr>
+      <tr><td>10</td><td><strong>Toast clock-in/out reconciliation</strong></td><td>Compare scheduled vs. actual hours per shift → auto-flag no-shows, late clock-ins, early-outs, unscheduled OT</td></tr>
+      <tr><td>11</td><td><strong>Pre-publish labor-% guardrail</strong></td><td>Block/warn in the schedule builder before publishing a week that exceeds the 30% target</td></tr>
+      <tr><td>12</td><td>PTO balance tracking</td><td>Accrual, requested, approved, remaining — not just a request form</td></tr>
+      <tr><td>13</td><td>Discipline timeline per employee</td><td>Chronological, manager-only, reason-coded — supports "talk first" policy + unemployment defense</td></tr>
+      <tr><td>14</td><td>Manager daily brief</td><td>Auto-generated each morning: who's in, coverage gaps, pending requests, today's labor-% risk</td></tr>
+      <tr><td>15</td><td>New-hire onboarding checklist</td><td>Handbook sign-off, uniform size, initial training assignment</td></tr>
+      <tr><td>16</td><td>Shift swap qualification filter</td><td>Only certified staff can pick up a posted swap</td></tr>
+      <tr><td>17</td><td>Read-receipt broadcast messaging</td><td>Confirms staff actually saw policy changes / event briefs</td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s6">
+    <span class="section-num">06</span>
+    <div class="section-label">Requirements</div>
+    <div class="section-title">HR Policy Encoding</div>
+    <p>Standing policy from the 2026-07-03 managers meeting (MEMORY.md) must be enforced by workflow, not just documented:</p>
+    <ul>
+      <li>Hire fast / fire fast within 30-day probation window (minimizes unemployment insurance exposure)</li>
+      <li>Zero-tolerance, no probation grace: theft, drugs — already in the signed handbook</li>
+      <li>Izzy personally handles every exit interview, with Jerry present</li>
+      <li><strong>Hard rule: never write up an employee without talking to them directly first</strong> — no surprise write-ups</li>
+      <li>Labor target: 30% of net sales in F&amp;B labor (aspirational — currently intentionally overstaffing to build bench)</li>
+    </ul>
+    <div class="callout red">
+      <div class="callout-label">Enforcement Design</div>
+      <p>A "Write-Up" action in the system requires a linked "Conversation Logged" step first, timestamped, before the formal warning can be finalized. The system should make rule-breaking harder, not just record that it happened.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s7">
+    <span class="section-num">07</span>
+    <div class="section-label">Technical</div>
+    <div class="section-title">Architecture</div>
+    <ul>
+      <li><strong>Frontend:</strong> Next.js (App Router) — reuse domo-scheduler's existing <code>app/staff/*</code> and <code>app/manager/*</code> structure</li>
+      <li><strong>Backend/DB:</strong> Migrate domo-scheduler's Prisma schema from SQLite → Postgres, deployed (not local)</li>
+      <li><strong>Auth:</strong> Existing JWT pattern in <code>lib/auth.ts</code> — PIN login for staff (fast, phone-friendly), password login for managers</li>
+      <li><strong>Toast sync:</strong> New scheduled job mirroring the <code>toast-sync.mjs</code> pattern — pulls employee roster + clock-in/out (via the now-confirmed-working Analytics API credential) into <code>Staff</code> + a new <code>TimeClockEvent</code> table</li>
+      <li><strong>Jarvis API layer:</strong> Extend the already-scaffolded <code>app/api/jarvis</code> route per the mandatory <code>/api/jarvis/status</code> build standard</li>
+    </ul>
+  </section>
+
+  <section class="section" id="s8">
+    <span class="section-num">08</span>
+    <div class="section-label">Technical</div>
+    <div class="section-title">Data Model Additions</div>
+    <p>New Prisma models required beyond domo-scheduler's existing schema, to cover requirements 4–9 and the additional features:</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Message / MessageRecipient</div><div class="card-body">Broadcast + targeted messaging, read receipts</div></div>
+      <div class="card"><div class="card-title">TrainingModule / Quiz / QuizAttempt / Certification</div><div class="card-body">Learning system, backend-persisted</div></div>
+      <div class="card"><div class="card-title">TimeOffRequest</div><div class="card-body">Request → approval workflow</div></div>
+      <div class="card"><div class="card-title">ShiftSwapRequest</div><div class="card-body">Links to skill-matrix qualification filter</div></div>
+      <div class="card"><div class="card-title">DisciplinaryEvent</div><div class="card-body">Conversation-first workflow enforcement</div></div>
+      <div class="card"><div class="card-title">TimeClockEvent</div><div class="card-body">Toast sync target for reconciliation</div></div>
+      <div class="card"><div class="card-title">PtoBalance</div><div class="card-body">Accrual / requested / approved / remaining</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s9">
+    <span class="section-num">09</span>
+    <div class="section-label">Technical</div>
+    <div class="section-title">Toast Integration</div>
+    <p>The Toast Analytics API credential (client "Domo Analytics") was confirmed live and authenticating on 2026-07-11 — 200 SUCCESS, scope <code>enterprise-metrics:read</code>. This unlocks the Labor Report endpoint under <code>/era/v1/metrics</code>, which is the real data source behind requirement #9 and feature #10 (clock reconciliation).</p>
+    <div class="callout tan">
+      <div class="callout-label">Status</div>
+      <p>Credential saved to <code>storage/credentials/toast-analytics-api.json</code>. A separate 6-table Analytics schema (Menu/Metrics/Labor/Check reports + Merch SKU map + sync log) already exists as a draft SQL file for the Domo Proforma revenue project — Staff OS's <code>TimeClockEvent</code> table is a distinct, smaller addition focused only on labor hours, not revenue.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s10">
+    <span class="section-num">10</span>
+    <div class="section-label">Planning</div>
+    <div class="section-title">Phasing</div>
+    <span class="phase p0">Phase 1</span> Staff data + scheduling + labor guardrail<br><br>
+    <span class="phase p1">Phase 2</span> Messaging + learning/certs<br><br>
+    <span class="phase p2">Phase 3</span> Discipline workflow + shift-swap marketplace<br><br>
+    <span class="phase pnew">Phase 4</span> Productize as config-driven SPS offering
+    <p style="margin-top:20px">Exact phasing to be confirmed with Izzy — see Open Questions.</p>
+  </section>
+
+  <section class="section" id="s11">
+    <span class="section-num">11</span>
+    <div class="section-label">Planning</div>
+    <div class="section-title">Open Questions</div>
+    <div class="qa">
+      <div class="qa-num">Q1</div>
+      <div class="qa-q">Consolidate onto domo-scheduler, or start fresh?</div>
+      <div class="qa-a">Recommended: consolidate. It's the only system with a real relational schema.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q2</div>
+      <div class="qa-q">Railway or Vercel for hosting?</div>
+      <div class="qa-a">domo-scheduler is Next.js, which per the 2026-06-26 stack decision should go to Vercel — but it's tightly coupled to Railway-style env var patterns used elsewhere in the Domo stack. Needs Izzy's call.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q3</div>
+      <div class="qa-q">Should domo-sis and staff.html be taken down once this ships?</div>
+      <div class="qa-a">Or kept live until full feature parity is reached — TBD.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q4</div>
+      <div class="qa-q">Build all 17 features at once, or phase it?</div>
+      <div class="qa-a">Recommended phasing shown in Section 10 — needs confirmation.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q5</div>
+      <div class="qa-q">Productize from day one, or Domo-specific first?</div>
+      <div class="qa-a">Affects how much config-abstraction gets built into v1 vs. added later.</div>
+    </div>
+  </section>
+
+  <footer>Domo Cafe · Staff OS · PRD v0.1 · GFC BP LLC · Updated live as scope changes</footer>
+</main>
+</body>
+</html>
