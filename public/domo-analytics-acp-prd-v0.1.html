@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="0.1.0">
+<title>Domo Cafe — Analytics Data Platform &amp; ACP PRD v0.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;
+  --tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);
+  --bg:var(--dark);--text:var(--warm);--sub:var(--muted);
+}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.badge-date{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+.badge-status{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(212,165,116,0.15);color:var(--tan);padding:4px 10px;border-radius:3px}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:600px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:32px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.mode-toggle:hover{color:var(--text)}
+
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+ul,ol{margin:0 0 16px 20px;color:var(--sub);font-size:14.5px;line-height:1.8}
+li{margin-bottom:4px}
+code{font-family:'JetBrains Mono',monospace;font-size:0.85em;background:rgba(212,165,116,0.12);padding:1px 6px;border-radius:4px;color:var(--tan)}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;overflow-x:auto;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:var(--tan)}
+pre code{background:none;padding:0;color:inherit}
+
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout.tan{border-left-color:var(--tan);background:rgba(212,165,116,0.08)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout.tan .callout-label{color:var(--tan)}
+.callout p{font-size:13.5px;margin:0;color:var(--sub)}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+body.light .card{background:#fff}
+.card-icon{font-size:22px;margin-bottom:10px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-body{font-size:12.5px;color:var(--sub);line-height:1.6}
+
+.phase{display:inline-flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.p0{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.p1{background:rgba(139,69,19,0.15);color:var(--tan)}
+.p2{background:rgba(212,165,116,0.12);color:var(--muted)}
+.pnew{background:rgba(46,160,67,0.15);color:#5fd97a}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--sub);line-height:1.5}
+tr:last-child td{border-bottom:none}
+
+.status-live{color:#5fd97a;font-weight:600}
+.status-partial{color:var(--tan);font-weight:600}
+.status-none{color:#ff6b6b;font-weight:600}
+
+.qa{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:14px 0}
+body.light .qa{background:#fff}
+.qa-num{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px}
+.qa-q{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.qa-a{font-size:13px;color:var(--sub)}
+
+footer{margin-top:40px;padding:24px 0;font-family:'Outfit',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:40px 24px;max-width:100%}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .doc-title{font-size:36px}
+}
+</style>
+</head>
+<body>
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☾ DARK':'☀ LIGHT'">☀ LIGHT</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">Analytics Platform + ACP · PRD v0.1</div>
+  </div>
+  <span class="nav-section">Overview</span>
+  <a class="nav-item" href="#s1">01 · Executive Summary</a>
+  <a class="nav-item" href="#s2">02 · Analytics API Fields</a>
+  <a class="nav-item" href="#s3">03 · Refined Data Schema</a>
+  <span class="nav-section">Ingestion</span>
+  <a class="nav-item" href="#s4">04 · Sync Pipeline</a>
+  <a class="nav-item" href="#s5">05 · Other 3rd-Party Sources</a>
+  <span class="nav-section">Multi-Agent Access</span>
+  <a class="nav-item" href="#s6">06 · The Problem</a>
+  <a class="nav-item" href="#s7">07 · ACP Design</a>
+  <a class="nav-item" href="#s8">08 · Auth &amp; Permissions</a>
+  <a class="nav-item" href="#s9">09 · Reference Implementation</a>
+  <span class="nav-section">Planning</span>
+  <a class="nav-item" href="#s10">10 · Phasing</a>
+  <a class="nav-item" href="#s11">11 · Open Questions</a>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v0.1</span>
+      <span class="badge-status">Draft</span>
+      <span class="badge-date">July 2026 · GFC BP LLC</span>
+    </div>
+    <div class="doc-title">Analytics Data Platform <span>&amp; ACP</span></div>
+    <div class="doc-sub">A shared Postgres data platform for Domo Cafe — Toast Analytics API + other 3rd-party sources flow in through one owned pipeline, and a secure Agent Communication/access Protocol (ACP) lets other Jarvis agents read it without ever touching raw credentials.</div>
+  </div>
+
+  <section class="section" id="s1">
+    <span class="section-num">01</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Executive Summary</div>
+    <p>Izzy's ask, verbatim (2026-07-13): review the Toast Analytics API data fields, apply a smart DB schema, and — because that database will be shared by other agents going forward — design a protocol so other agents can securely access this data. This document is that design.</p>
+    <p>Two things are being solved together because they're the same system: <strong>(a)</strong> a real, reviewed schema for the Toast Analytics API (menu, metrics, labor, check, payout, guest, restaurant-info) that extends the existing <code>ToastDailySnapshot</code> Postgres database, and <strong>(b)</strong> an access protocol — the <strong>Domo Data ACP</strong> — that lets any future agent (Staff OS, Merch Portal, a finance agent, etc.) read this data over HTTP with a scoped API key, instead of every new agent getting its own copy of the Postgres connection string.</p>
+    <div class="callout">
+      <div class="callout-label">Design Principle</div>
+      <p><strong>I own ingestion. No other agent talks to Toast, and no other agent gets the raw <code>DATABASE_URL</code>.</strong> Every other agent talks to one HTTP API, gets exactly the fields its scope allows, and every access is logged. This is the same shape as the existing <code>/api/jarvis/status</code> pattern already used across the stack — just formalized and extended to real data reads, not just health checks.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🍞</div><div class="card-title">One Owner</div><div class="card-body">Toast Analytics + 3rd-party ingestion lives in one pipeline (this account), never duplicated per-agent</div></div>
+      <div class="card"><div class="card-icon">🔐</div><div class="card-title">Scoped Keys</div><div class="card-body">Each consuming agent gets its own API key tied to exactly the data it's allowed to see</div></div>
+      <div class="card"><div class="card-icon">📜</div><div class="card-title">Logged Access</div><div class="card-body">Every read is logged with agent identity, endpoint, and timestamp — auditable, revocable</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="s2">
+    <span class="section-num">02</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Toast Analytics API — Field Review</div>
+    <p>Credential status: <span class="status-live">LIVE</span> — client <code>Domo Analytics</code>, scope <code>enterprise-metrics:read</code>, verified 2026-07-11 (200, bearer token issued). Base path <code>POST https://ws-api.toasttab.com/era/v1/metrics</code>. This is a <em>separate</em> credential from the Standard API key already used for order-level sync — confirmed via live 403 test that the two are not interchangeable.</p>
+    <p>Toast's analytics API exposes seven report families. Reviewed against Toast's own devguide (apiAnalyticsOverview.html + per-report data-overview pages):</p>
+    <table>
+      <tr><th>Report</th><th>Endpoint</th><th>Grain</th><th>Key Fields</th><th>Solves</th></tr>
+      <tr><td><strong>Aggregated Sales / Metrics</strong></td><td><code>/era/v1/metrics</code></td><td>Day or hour, optional groupBy (revenue center / dining option / order source)</td><td>guestCount, ordersCount, netSales, grossSales, discounts, voids, refunds, avgOrderValue, blended labor hours/pay/sales-per-labor-hour</td><td>Richest single rollup — replaces manual daily-summary math with Toast's own numbers</td></tr>
+      <tr><td><strong>Menu Reporting</strong></td><td><code>/era/v1/menu</code></td><td>Per business date × menu/menu-group/item/modifier</td><td>netSales, grossSales, discounts, refunds, voids, qty sold, avg price, waste count/amount</td><td>Exact top-seller and true food-cost/waste tracking — currently done by eyeballing the Toast dashboard</td></tr>
+      <tr><td><strong>Labor Reporting</strong></td><td><code>/era/v1/labor/{day\|week\|month}</code></td><td>Per business date, optional groupBy employee/job</td><td>regular/OT hours &amp; cost, netSales-per-employee-hour, cost-as-%-of-sales</td><td>Upgrades manual FOH/BOH split math to real employee-level labor cost</td></tr>
+      <tr><td><strong>Check Reporting</strong></td><td><code>/era/v1/check/{day}</code></td><td>Per check, single day only</td><td>check amount, tax, tip, guests, dining option, order source, server</td><td>Server-level and dining-option-level detail beyond what Orders API groupings give</td></tr>
+      <tr><td><strong>Payout Reporting</strong></td><td><code>/era/v1/payout</code></td><td>Per deposit</td><td>settled date, payment methods, deposit amount</td><td>Bank-deposit reconciliation — not yet modeled, add in v0.2</td></tr>
+      <tr><td><strong>Guest Reporting</strong></td><td><code>/era/v1/guest</code></td><td>Per payment card</td><td>card-level payment detail</td><td>Low priority for Domo — no loyalty/CRM use case yet</td></tr>
+      <tr><td><strong>Restaurant Info</strong></td><td><code>/era/v1/restaurants</code></td><td>Per management group</td><td>restaurant names + GUIDs</td><td>Reference/lookup only — no table needed, cache in config</td></tr>
+    </table>
+    <div class="callout tan">
+      <div class="callout-label">Important Caveat (Toast's own docs)</div>
+      <p>"All metric data supported in the analytics API does not adhere to accounting standards such as GAAP rules. This information is solely for informational purposes." Analytics API numbers are directionally correct and great for operational reporting — <strong>Toast's own Orders API check-level data remains the reconciled source of truth for Net Sales</strong> (per the 2026-07-04 formula fix and 2026-07-11 net-sales-definition confirmation). Analytics API fills gaps Orders API can't reach: waste, true labor-cost-%, deposit-level payout detail — it does not replace the existing reconciliation.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s3">
+    <span class="section-num">03</span>
+    <div class="section-label">Overview</div>
+    <div class="section-title">Refined Data Schema</div>
+    <p>A raw-SQL draft schema (<code>toast-analytics-api-schema-v0.1.sql</code>) was already written 2026-07-10 for four of the seven report families. Reviewed against the actual live credential + Toast's overview docs — the shape holds up. Refinements for v0.1 of this PRD:</p>
+    <ul>
+      <li><strong>Port to Prisma, not raw SQL.</strong> <code>geopulse-ai/prisma/schema.prisma</code> is the existing home for <code>ToastDailySnapshot</code>/<code>ToastSyncLog</code>. Adding Prisma models (not a hand-run <code>.sql</code> file) keeps one schema-of-record and lets <code>prisma db push</code> apply it the same way every other Domo table has been applied.</li>
+      <li><strong>Add Payout Reporting</strong> as a sixth table (<code>ToastPayoutReport</code>) — missing from the v0.1 SQL draft, needed for bank-deposit reconciliation.</li>
+      <li><strong>Skip Guest Reporting</strong> for now — no CRM/loyalty use case exists yet; revisit if a loyalty program is ever built.</li>
+      <li><strong>Confirm-on-first-pull columns:</strong> the draft's <code>ToastCheckReport</code> carries a <code>rawPayload JSONB</code> fallback column specifically because its exact field list wasn't docs-confirmed when written — keep that safety net for the first real sync, then tighten typed columns once verified.</li>
+      <li>Keep the already-designed <code>ToastMerchSkuMap</code> support table — it's the missing link between Toast's flat menu-item list and Domo's licensed-vs-house-merch royalty math, and directly feeds the Merch Portal PRD's sell-through reporting.</li>
+    </ul>
+    <h4>Final table list (Prisma models to add to geopulse-ai/prisma/schema.prisma)</h4>
+    <table>
+      <tr><th>Model</th><th>Grain</th><th>Feeds</th></tr>
+      <tr><td><code>ToastMetricsReport</code></td><td>Day/hour × optional groupBy</td><td>Domo Proforma daily/hourly dashboards</td></tr>
+      <tr><td><code>ToastMenuReport</code></td><td>Business date × item/menu/modifier</td><td>True top-sellers, waste tracking, Merch Portal sell-through</td></tr>
+      <tr><td><code>ToastLaborReport</code></td><td>Business date × optional employee/job</td><td>Staff OS labor-optimization + labor-% guardrail</td></tr>
+      <tr><td><code>ToastCheckReport</code></td><td>Per check, single day</td><td>Server-level detail, dining-option analysis</td></tr>
+      <tr><td><code>ToastPayoutReport</code> <span class="phase pnew">NEW</span></td><td>Per deposit</td><td>Bank reconciliation (v0.2 target)</td></tr>
+      <tr><td><code>ToastMerchSkuMap</code></td><td>Per menu item (manual/curated)</td><td>Licensed vs. house classification, royalty rate, sell-through %</td></tr>
+      <tr><td><code>ToastAnalyticsSyncLog</code></td><td>Per sync run</td><td>Same pattern as existing <code>ToastSyncLog</code> — pull status/errors</td></tr>
+    </table>
+    <p>Full column-level detail matches the existing draft at <code>storage/toast-analytics-api-schema-v0.1.sql</code> (6 tables, unique constraints per business-date + dimension to make re-syncs idempotent, indexes on date + lookup dimensions). That file stays as the design reference; implementation happens as Prisma models per the principle above.</p>
+  </section>
+
+  <section class="section" id="s4">
+    <span class="section-num">04</span>
+    <div class="section-label">Ingestion</div>
+    <div class="section-title">Sync Pipeline</div>
+    <p>Mirrors the existing <code>toast-sync.mjs</code> / <code>toast-sync-today.mjs</code> pattern already proven for Orders API data — same repo, same credential-file convention, same idempotent-upsert shape.</p>
+    <ol>
+      <li><code>scripts/toast-analytics-sync.mjs</code> — new script, reads <code>storage/credentials/toast-analytics-api.json</code>, authenticates against the Analytics API's own auth endpoint (separate token from Standard API), pulls each report family for a date range, upserts into the six models above, writes a row to <code>ToastAnalyticsSyncLog</code> per report per run.</li>
+      <li>Historical backfill: opening date (2026-06-13) → yesterday, run once.</li>
+      <li>Daily/ongoing: cron-style scheduled run (same cadence as the existing Orders sync) for the closed prior day, plus a same-day partial-sync variant for live dashboards, matching the day/day-partial split already established.</li>
+      <li>Idempotency via the unique constraints already designed (business date + dimension) — safe to re-run without duplicating rows, same pattern as <code>ToastDailySnapshot</code>.</li>
+    </ol>
+  </section>
+
+  <section class="section" id="s5">
+    <span class="section-num">05</span>
+    <div class="section-label">Ingestion</div>
+    <div class="section-title">Other 3rd-Party Sources — Same Pipeline, Same Owner</div>
+    <p>Izzy's ask explicitly includes "Toast and other 3rd party sources" — the architecture is designed so any future source plugs into the same shape, not a one-off integration per source:</p>
+    <ul>
+      <li><strong>One sync-script-per-source convention</strong> (<code>scripts/&lt;source&gt;-sync.mjs</code>), each writing to its own clearly-namespaced tables (<code>Toast*</code>, future <code>Square*</code>, <code>Instagram*</code>, etc.) in the same shared Postgres DB.</li>
+      <li><strong>One sync-log table per source</strong> (<code>ToastAnalyticsSyncLog</code> today) — consistent shape so a future "data health" dashboard can query sync status across every source the same way.</li>
+      <li><strong>Credentials always in <code>storage/credentials/&lt;source&gt;-api.json</code></strong> (established convention) — never inline in scripts, never committed to git.</li>
+      <li><strong>This account (Domo bot) remains the single ingestion owner</strong> for all Domo Cafe 3rd-party data. Other agents never get source credentials — they get the ACP described below.</li>
+    </ul>
+  </section>
+
+  <section class="section" id="s6">
+    <span class="section-num">06</span>
+    <div class="section-label">Multi-Agent Access</div>
+    <div class="section-title">The Problem</div>
+    <p>Once Staff OS, Merch Portal, a future finance/reporting agent, and others all want this data, the naive path is copying the Postgres <code>DATABASE_URL</code> into every new app's environment variables. That's the wrong pattern for four reasons:</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-icon">🔓</div><div class="card-title">Credential Sprawl</div><div class="card-body">Every new agent/app is another place the DB password can leak, get logged, or get committed by accident</div></div>
+      <div class="card"><div class="card-icon">🧨</div><div class="card-title">No Blast Radius Control</div><div class="card-body">Raw DB access means any agent can read (or write) any table — no way to give an agent "labor data only"</div></div>
+      <div class="card"><div class="card-icon">🕵️</div><div class="card-title">No Audit Trail</div><div class="card-body">Postgres connection logs don't tell you which <em>agent</em> read what, when, or why</div></div>
+      <div class="card"><div class="card-icon">🔗</div><div class="card-title">Schema Coupling</div><div class="card-body">Every consumer that queries Postgres directly breaks the moment a column is renamed or a table is refactored</div></div>
+    </div>
+    <p>The fix: consuming agents talk to an HTTP API, never the database directly. This is already the exact pattern used by <code>/api/jarvis/status</code> across every Jarvis-integrated app (per the mandatory Jarvis API Build Standard) — this PRD formalizes and extends it into a real data-access layer, not just a status check.</p>
+  </section>
+
+  <section class="section" id="s7">
+    <span class="section-num">07</span>
+    <div class="section-label">Multi-Agent Access</div>
+    <div class="section-title">ACP Design — Domo Data Access Protocol</div>
+    <p><strong>ACP = Agent (Data) Communication Protocol.</strong> One HTTP API, hosted in <code>geopulse-ai</code> alongside the existing <code>/api/domo/*</code> routes, that any authorized agent calls to read Domo data. No agent — human-built app or AI agent — ever receives the Postgres connection string.</p>
+    <h4>Endpoint shape</h4>
+    <pre><code>GET  /api/acp/v1/health                    → {"ok": true, "sources": ["toast"]}
+GET  /api/acp/v1/metrics/daily?from=&to=    → ToastMetricsReport rows
+GET  /api/acp/v1/menu/top-sellers?from=&to=&limit=
+GET  /api/acp/v1/labor/summary?from=&to=&groupBy=employee|job
+GET  /api/acp/v1/checks?date=
+GET  /api/acp/v1/merch/sell-through?from=&to=
+POST /api/acp/v1/query   { "model": "ToastMetricsReport", "where": {...}, "select": [...] }
+                             ↳ generic, scope-checked, whitelisted-model-only escape hatch</code></pre>
+    <p>Every route: (1) validates the caller's API key, (2) checks the key's scope against the requested model/fields, (3) executes a read-only Prisma query, (4) writes one row to <code>AcpAccessLog</code>, (5) returns JSON. No route ever accepts arbitrary SQL. The generic <code>/query</code> escape hatch is model-whitelisted (Prisma model name + allowed field list per scope) — never a raw SQL passthrough.</p>
+    <h4>Why HTTP, not a shared Prisma client / package</h4>
+    <p>A tempting shortcut is publishing the Prisma schema as a shared npm package so other apps import the same client. Rejected: that still hands out full read/write DB credentials to every consumer, and doesn't give per-agent scoping or an audit trail. HTTP + scoped keys is slightly more code up front and is the only version of this that's actually secure.</p>
+  </section>
+
+  <section class="section" id="s8">
+    <span class="section-num">08</span>
+    <div class="section-label">Multi-Agent Access</div>
+    <div class="section-title">Auth &amp; Permissions</div>
+    <table>
+      <tr><th>Model</th><th>Design</th></tr>
+      <tr><td><strong>Auth</strong></td><td><code>x-api-key</code> header, same convention as <code>JARVIS_API_KEY</code>. Each consuming agent gets its <em>own</em> key — never a shared master key across agents (the master <code>JARVIS_API_KEY</code> remains for the existing <code>/api/jarvis/status</code> health-check pattern only, kept separate from ACP data-read keys).</td></tr>
+      <tr><td><strong>Scopes</strong></td><td>Each key row stores an allowed model + field list, e.g. <code>{"models": ["ToastLaborReport"], "fields": ["*"]}</code> for a future Staff OS key, or <code>{"models": ["ToastMenuReport","ToastMerchSkuMap"], "fields": ["*"]}</code> for Merch Portal. A key with no matching scope for a requested model gets 403, not a silent empty result.</td></tr>
+      <tr><td><strong>New table</strong></td><td><code>AcpApiKey</code> — id, key (hashed), label (agent name), scopes (JSON), active, createdAt, revokedAt, lastUsedAt.</td></tr>
+      <tr><td><strong>New table</strong></td><td><code>AcpAccessLog</code> — id, apiKeyId, endpoint, model, paramsJson, statusCode, rowsReturned, calledAt. This is the audit trail — answers "who read what, when" for any future security review.</td></tr>
+      <tr><td><strong>Revocation</strong></td><td>Set <code>active=false</code> or <code>revokedAt</code> on the key row — takes effect immediately, no redeploy needed since the check happens per-request.</td></tr>
+      <tr><td><strong>Rate limiting</strong></td><td>Simple per-key request counter (reuse whatever pattern, if any, protects <code>/api/jarvis/status</code> today; otherwise a basic sliding-window check) — prevents a misbehaving agent loop from hammering Postgres.</td></tr>
+      <tr><td><strong>Write access</strong></td><td>Out of scope for v0.1. ACP is read-only. If a future agent needs to write (e.g. update <code>ToastMerchSkuMap</code> classifications), that's a separate, explicitly-scoped write endpoint added later — not bundled into the generic query route.</td></tr>
+    </table>
+    <div class="callout brown">
+      <div class="callout-label">Bot Delegation Rule, Applied to Agents Too</div>
+      <p>This mirrors the existing human-facing rule in AGENTS.md — business bots operate in their own lane and relay rather than take over each other's work. The ACP is the technical enforcement of the same idea for agent-to-agent <em>data</em> access: an agent gets exactly the scope it needs for its lane, nothing more, and every cross-lane read is visible in the log.</p>
+    </div>
+  </section>
+
+  <section class="section" id="s9">
+    <span class="section-num">09</span>
+    <div class="section-label">Multi-Agent Access</div>
+    <div class="section-title">Reference Implementation — First Consumer</div>
+    <p>The Domo Staff OS PRD (v0.1, 2026-07-11) already calls for a Toast clock-in/out reconciliation feature and a labor-% guardrail. That becomes the first real ACP consumer: once <code>domo-scheduler</code> is deployed, it gets one scoped key (<code>{"models": ["ToastLaborReport"]}</code>) and calls <code>GET /api/acp/v1/labor/summary</code> instead of ever holding a Postgres credential of its own. This validates the protocol end-to-end on a real, already-planned feature rather than shipping ACP as an unused abstraction.</p>
+  </section>
+
+  <section class="section" id="s10">
+    <span class="section-num">10</span>
+    <div class="section-label">Planning</div>
+    <div class="section-title">Phasing</div>
+    <table>
+      <tr><th>Phase</th><th>Scope</th></tr>
+      <tr><td><span class="phase p0">Phase 1</span></td><td>Port the 6-table schema to Prisma in <code>geopulse-ai/prisma/schema.prisma</code>, <code>prisma db push</code> to prod. Build <code>scripts/toast-analytics-sync.mjs</code>, run historical backfill (opening → yesterday), verify against Toast Web dashboard totals.</td></tr>
+      <tr><td><span class="phase p1">Phase 2</span></td><td>Build the ACP layer: <code>AcpApiKey</code> / <code>AcpAccessLog</code> models, auth middleware, the 5 typed read routes + generic scoped <code>/query</code> escape hatch. Issue the first key to nothing yet — smoke test with a curl-based fake consumer.</td></tr>
+      <tr><td><span class="phase p2">Phase 3</span></td><td>Wire the real first consumer once <code>domo-scheduler</code>/Staff OS is deployed (per that PRD's own phasing) — labor summary endpoint feeds the labor-% guardrail.</td></tr>
+      <tr><td><span class="phase pnew">Phase 4</span></td><td>Add <code>ToastPayoutReport</code> for bank reconciliation; add a data-health view across all sync logs (Toast Orders + Toast Analytics + any future source) once a second 3rd-party source exists.</td></tr>
+    </table>
+  </section>
+
+  <section class="section" id="s11">
+    <span class="section-num">11</span>
+    <div class="section-label">Planning</div>
+    <div class="section-title">Open Questions</div>
+    <div class="qa">
+      <div class="qa-num">Q1</div>
+      <div class="qa-q">Which agents need access first, and to what scope?</div>
+      <div class="qa-a">Staff OS (labor data) is the clear first consumer per its own PRD. Merch Portal (menu/SKU data) is the likely second. Confirm before cutting real keys — scopes should be requested per-agent, not pre-issued broadly.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q2</div>
+      <div class="qa-q">Does the ACP live in <code>geopulse-ai</code> or move with the eventual "database moving to sps" migration noted in earlier memory (2026-06-30, still parked/open)?</div>
+      <div class="qa-a">Recommend building it in <code>geopulse-ai</code> now (where the data already lives) and carrying the ACP routes forward unchanged if/when that migration happens — the HTTP contract is what matters to consumers, not which repo serves it.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q3</div>
+      <div class="qa-q">Should non-agent consumers (e.g. a future investor-facing dashboard) use the same ACP, or a separate public-facing API?</div>
+      <div class="qa-a">Recommend separate. ACP is agent-to-agent, internal, and assumes a trusted-but-scoped caller. Anything investor/public-facing should go through its own gated layer (same pattern as the EZLiving/SPS investor portals), not directly through ACP keys.</div>
+    </div>
+    <div class="qa">
+      <div class="qa-num">Q4</div>
+      <div class="qa-q">Formal Prisma migration vs. <code>db push</code>?</div>
+      <div class="qa-a">Memory flags this as recurring debt (riderFarePerTrip columns, cash/creditRev columns all went in via <code>db push</code> with no migration file). Recommend generating a real migration for this batch of new tables since it's a bigger schema change than a nullable column add — cleaner history going forward.</div>
+    </div>
+  </section>
+
+  <footer>Domo Cafe · GFC BP LLC · Analytics Data Platform &amp; ACP PRD v0.1 · Draft, awaiting Izzy review</footer>
+</main>
+</body>
+</html>
