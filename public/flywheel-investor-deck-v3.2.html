@@ -293,7 +293,7 @@ tr:hover td { background: var(--bg3); }
   .sidebar, .topbar, .bottom-nav, .slide-num-bg { display: none !important; }
   .main { margin-left: 0 !important; }
   .slide { position: relative !important; opacity: 1 !important; pointer-events: auto !important; page-break-after: always; padding: 40px !important; }
-  #gate { display: none !important; }
+  #gate { display: none !important; } /* v3.2: gate disabled while editing */
   #app { display: block !important; }
 }
 
@@ -1230,7 +1230,11 @@ tr:hover td { background: var(--bg3); }
 </div><!-- /app -->
 
 <script>
-// Password gate
+// Password gate — DISABLED for v3.2 while editing (Izzy request 2026-07-15)
+document.getElementById('gate').style.display = 'none';
+document.getElementById('app').style.display = 'block';
+init();
+
 function checkPass() {
   const v = document.getElementById('gate-input').value.trim();
   if (v === 'flywheel2026' || v === 'FLYWHEEL2026') {
