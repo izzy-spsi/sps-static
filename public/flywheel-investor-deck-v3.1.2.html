@@ -1276,6 +1276,11 @@ tr:hover td { background: var(--bg3); }
 </div><!-- /app -->
 
 <script>
+const SLIDES = ["01 \u2014 The Future of Professional Transportation","02 \u2014 A Journey Built on the Industry","03 \u2014 Established Platform \u2014 Built Over 20 Years","04 \u2014 The Opportunity at a Glance","05 \u2014 Why Flywheel + Uber = Category Leader","06 \u2014 Every Point of Fill Rate We Add, Uber Earns More Too","07 \u2014 Uber's Return on Investment","08 \u2014 The Full Spectrum \u2014 One Platform, Every Driver","09 \u2014 $36B Market. 390,000 Taxis. We're Early.","10 \u2014 Contracts to Support Projections","11 \u2014 Revenue Per Driver \u2014 The Real Model","12 \u2014 2026\u20132029 Proforma","13 \u2014 Proof. Already Profitable.","14 \u2014 Uber Mexico \u2014 Non-Binding TS","15 \u2014 Capitalization &amp; Investor History","16 \u2014 The Team &amp; The Ask"];
+
+let current = 0;
+
+
 // Password gate — DISABLED for v3.2 while editing (Izzy request 2026-07-15)
 document.getElementById('gate').style.display = 'none';
 document.getElementById('app').style.display = 'block';
@@ -1292,10 +1297,6 @@ function checkPass() {
   }
 }
 document.getElementById('gate-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPass(); });
-
-const SLIDES = ["01 \u2014 The Future of Professional Transportation","02 \u2014 A Journey Built on the Industry","03 \u2014 Established Platform \u2014 Built Over 20 Years","04 \u2014 The Opportunity at a Glance","05 \u2014 Why Flywheel + Uber = Category Leader","06 \u2014 Every Point of Fill Rate We Add, Uber Earns More Too","07 \u2014 Uber's Return on Investment","08 \u2014 The Full Spectrum \u2014 One Platform, Every Driver","09 \u2014 $36B Market. 390,000 Taxis. We're Early.","10 \u2014 Contracts to Support Projections","11 \u2014 Revenue Per Driver \u2014 The Real Model","12 \u2014 2026\u20132029 Proforma","13 \u2014 Proof. Already Profitable.","14 \u2014 Uber Mexico \u2014 Non-Binding TS","15 \u2014 Capitalization &amp; Investor History","16 \u2014 The Team &amp; The Ask"];
-
-let current = 0;
 
 function init() {
   const sidebar = document.getElementById('sidebar-items');
