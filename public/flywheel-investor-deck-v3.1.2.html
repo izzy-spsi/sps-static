@@ -319,6 +319,17 @@ tr:hover td { background: var(--bg3); }
 
 
 /* v3 additions */
+.tlg-wrap { position: relative; padding: 24px 0 8px; }
+.tlg-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.tlg-card { background: var(--card, #1a1a1a); border: 1px solid var(--border, #2a2a2a); border-radius: 8px; padding: 10px 8px; min-height: 150px; }
+.tlg-card .tl-tag { display: inline-block; font-size: 8px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--red, #CC1A1A); border: 1px solid var(--red, #CC1A1A); border-radius: 3px; padding: 1px 5px; margin-bottom: 4px; }
+.tlg-card .tl-yr { font-size: 15px; font-weight: 700; color: var(--red, #CC1A1A); margin-bottom: 2px; }
+.tlg-card .tl-title { font-size: 11px; font-weight: 600; color: var(--text, #f0f0f0); margin-bottom: 4px; line-height: 1.25; }
+.tlg-card .tl-desc { font-size: 9px; color: var(--muted, #888); line-height: 1.4; }
+.tlg-line-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; height: 14px; position: relative; margin: 4px 0; }
+.tlg-line-row::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--red, #CC1A1A); opacity: 0.6; }
+.tlg-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red, #CC1A1A); justify-self: center; align-self: center; position: relative; z-index: 1; }
+
 .tl-wrap {
   position: relative;
   height: 260px;
@@ -507,166 +518,111 @@ tr:hover td { background: var(--bg3); }
   <div class="divider"></div>
   <p style="color:var(--muted);font-size:0.85rem;margin-bottom:4px;">20+ years of transportation technology expertise — every major industry disruption, navigated first-hand.</p>
 
-    <div class="tl-wrap">
-    <div class="tl-line"></div>
-
-    <!-- ABOVE nodes (v1.3 timeline, 8 nodes) -->
-    <div class="tl-node above" style="left:18%">
-      <div class="tl-card">
+      <div class="tlg-wrap">
+    <div class="tlg-row tlg-above">
+      <div class="tlg-card">
         <div class="tl-tag">Founded</div>
         <div class="tl-yr">2009</div>
         <div class="tl-title">Cabulous Founded</div>
         <div class="tl-desc">Hansu joins as key consultant integrating payments &amp; internet tech into taxi fleets.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:30%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Pivot</div>
         <div class="tl-yr">2012</div>
         <div class="tl-title">Industry Shift</div>
         <div class="tl-desc">Fee regulations trigger an industry-wide pivot from CC systems toward ride-hailing tech.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:44%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Paratransit</div>
         <div class="tl-yr">2013–16</div>
         <div class="tl-title">National Paratransit</div>
         <div class="tl-desc">Cabconnect expands paratransit programs across Chicago, San Francisco, New York &amp; Washington D.C.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:57%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Acquisition</div>
         <div class="tl-yr">2017</div>
         <div class="tl-title">Flywheel Technologies</div>
         <div class="tl-desc">Flywheel Software acquired by Hansu &amp; Izzy Aala — relaunched as a full e-hail technology platform.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:65%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Validation</div>
         <div class="tl-yr">2020</div>
         <div class="tl-title">Big Tech Interest</div>
         <div class="tl-desc">Google &amp; Amazon approach Flywheel to combine e-hail tech with their universal consumer platforms.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:73%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Partnership</div>
         <div class="tl-yr">2022</div>
         <div class="tl-title">Uber Live — SF</div>
         <div class="tl-desc">Contract signed. Successful pilot confirms the model — Flywheel live across all Uber SF riders.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:81%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Expansion</div>
         <div class="tl-yr">2023–24</div>
         <div class="tl-title">Domestic Rollout</div>
         <div class="tl-desc">Expanded to Reno, Palm Springs, and San Diego.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
-    </div>
-    <div class="tl-node above" style="left:90%">
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Scale</div>
         <div class="tl-yr">2025+</div>
         <div class="tl-title">Platform Scale</div>
         <div class="tl-desc">8,500+ taxis platform-ready. 50,000+ vehicles projected via Direct-to-Driver by 2029.</div>
       </div>
-      <div class="tl-stem"></div>
-      <div class="tl-dot"></div>
     </div>
-
-    <!-- BELOW nodes (v1.3 timeline, 8 nodes) -->
-    <div class="tl-node below" style="left:7%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+    <div class="tlg-line-row">
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+      <div class="tlg-dot"></div>
+    </div>
+    <div class="tlg-row tlg-below">
+      <div class="tlg-card">
         <div class="tl-tag">Founded</div>
         <div class="tl-yr">2002</div>
         <div class="tl-title">Cabconnect Founded</div>
         <div class="tl-desc">Izzy Aala launches Cabconnect — payment processing &amp; fleet management software for taxi operators.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:18%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Platform</div>
         <div class="tl-yr">2004–11</div>
         <div class="tl-title">Platform Built</div>
         <div class="tl-desc">Paratransit platform and taxi back office systems developed and deployed across operator networks.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:30%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Rebrand</div>
         <div class="tl-yr">2012</div>
         <div class="tl-title">Flywheel Software</div>
         <div class="tl-desc">Cabulous rebrands to Flywheel Software — strategic pivot to keep up with the changing payment landscape.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:44%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Operations</div>
         <div class="tl-yr">2011–16</div>
         <div class="tl-title">Flywheel Taxi Fleet</div>
         <div class="tl-desc">Hansu acquires DeSoto Cab in SF (2011). Fleet rebranded Flywheel Taxi in 2016, unifying the brand.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:57%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Challenge</div>
         <div class="tl-yr">2020</div>
         <div class="tl-title">COVID-19 Impact</div>
         <div class="tl-desc">Global pandemic forces sharp market contraction. Flywheel restructures and maintains operations.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:65%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Milestone</div>
         <div class="tl-yr">2021</div>
         <div class="tl-title">Uber Talks Begin</div>
         <div class="tl-desc">Strategic partnership discussions initiated — leading directly to a signed contract in 2022.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:81%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Expansion</div>
         <div class="tl-yr">2024–25</div>
         <div class="tl-title">Continued US Expansion</div>
         <div class="tl-desc">Houston, Fort Lauderdale, Las Vegas, NYC &amp; Sacramento. Domestic footprint continues to scale.</div>
       </div>
-    </div>
-    <div class="tl-node below" style="left:96%">
-      <div class="tl-dot"></div>
-      <div class="tl-stem"></div>
-      <div class="tl-card">
+      <div class="tlg-card">
         <div class="tl-tag">Global</div>
         <div class="tl-yr">2025–2026+</div>
         <div class="tl-title">Global Expansion</div>
