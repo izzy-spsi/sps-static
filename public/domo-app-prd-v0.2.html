@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe App & Chomps Loyalty — PRD v0.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;
+  --tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);
+  --bg:var(--dark);--text:var(--warm);--sub:var(--muted);
+}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.badge-date{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:560px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:132px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.mode-toggle:hover{color:var(--text)}
+.print-btn{position:fixed;top:24px;right:32px;background:var(--red);border:none;border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:#fff;cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.print-btn:hover{opacity:0.85}
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout.green{border-left-color:#16A34A;background:rgba(22,163,74,0.06)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout.green .callout-label{color:#16A34A}
+.callout p{margin:0;font-size:14px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brown);padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid rgba(212,165,116,0.07);color:var(--sub);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(139,69,19,0.12);padding:2px 6px;border-radius:3px;color:var(--tan)}
+pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:rgba(139,69,19,0.08);border:1px solid var(--border);border-radius:8px;padding:16px 18px;overflow-x:auto;margin:16px 0;color:var(--tan);line-height:1.6}
+ul,ol{padding-left:20px;margin:12px 0}
+li{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:4px}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.pill{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted)}
+.pill.red{background:rgba(204,34,34,0.1);border-color:rgba(204,34,34,0.3);color:var(--red)}
+.pill.brown{background:rgba(139,69,19,0.1);border-color:rgba(139,69,19,0.3);color:var(--tan)}
+.pill.green{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80}
+.phase-row{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start;padding:16px 0;border-bottom:1px solid var(--border)}
+.phase-row:last-child{border-bottom:none}
+.phase-label{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);white-space:nowrap}
+.phase-desc{font-size:13px;color:var(--sub)}
+.phase-status{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:3px;white-space:nowrap}
+.phase-status.planned{background:rgba(139,69,19,0.15);color:var(--tan)}
+.phase-status.done{background:rgba(34,197,94,0.15);color:#4ade80}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0}
+.toc-item{font-size:13px;color:var(--sub);padding:6px 0;border-bottom:1px solid rgba(212,165,116,0.06)}
+.chomps-hero{background:linear-gradient(135deg,rgba(139,69,19,0.15),rgba(204,34,34,0.08));border:1px solid var(--border);border-radius:12px;padding:28px;margin:24px 0;text-align:center}
+.chomps-icon{font-size:56px;margin-bottom:12px}
+.chomps-name{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:8px}
+.chomps-tagline{font-size:14px;color:var(--sub)}
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:20px 0}
+.tier-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px}
+.tier-card .tier-icon{font-size:28px;margin-bottom:8px}
+.tier-card .tier-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px}
+.tier-card .tier-range{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tan);margin-bottom:10px}
+.tier-card ul{padding-left:16px;margin:0}
+.tier-card li{font-size:12.5px;line-height:1.6;margin-bottom:3px}
+.wire-box{border:1.5px dashed var(--border);border-radius:10px;padding:20px;margin:16px 0;background:rgba(139,69,19,0.04)}
+.wire-box .wire-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tan);margin-bottom:10px}
+@media print{
+  .sidebar,.mode-toggle,.print-btn{display:none!important}
+  body{display:block!important;background:#FDF8F4!important;color:#1A0800!important}
+  .main{margin-left:0!important;padding:40px!important;max-width:100%!important}
+  .section{page-break-inside:avoid}
+  .section-num{display:none}
+  td,th,p,li{color:#4A2C0A!important}
+}
+</style>
+</head>
+<body>
+
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☀️ Dark Mode':'🌙 Light Mode'">🌙 Light Mode</button>
+<button class="print-btn" onclick="window.print()">🖨️ Print PDF</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">App & Chomps PRD</div>
+  </div>
+  <a href="#overview" class="nav-item active">Overview</a>
+  <div class="nav-section">Loyalty</div>
+  <a href="#domo-crew" class="nav-item">01 — Chomps Program</a>
+  <a href="#survey" class="nav-item">02 — Order Survey</a>
+  <div class="nav-section">Engagement</div>
+  <a href="#fan-engagement" class="nav-item">03 — Fan Engagement</a>
+  <a href="#merch-drops" class="nav-item">04 — Merch & Drops</a>
+  <a href="#events" class="nav-item">05 — Events & Waitlist</a>
+  <div class="nav-section">Platform</div>
+  <a href="#digital-menu" class="nav-item">06 — Digital Menu</a>
+  <a href="#intelligence" class="nav-item">07 — Intelligence Layer</a>
+  <a href="#toast" class="nav-item">08 — Toast Integration</a>
+  <a href="#tech-stack" class="nav-item">09 — Tech Stack</a>
+  <a href="#data-model" class="nav-item">10 — Data Model</a>
+  <div class="nav-section">Strategy</div>
+  <a href="#traffic" class="nav-item">11 — Traffic Generation</a>
+  <a href="#out-of-town" class="nav-item">12 — Out-of-Town Fans</a>
+  <a href="#legal-fraud" class="nav-item">13 — Legal & Anti-Fraud</a>
+  <div class="nav-section">Design</div>
+  <a href="#ux-design" class="nav-item">14 — UX/UI Design</a>
+  <div class="nav-section">Wrap-Up</div>
+  <a href="#open-items" class="nav-item">15 — Open Items</a>
+  <a href="#phases" class="nav-item">Build Phases</a>
+</nav>
+
+<main class="main">
+
+  <header class="doc-header" id="overview">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v0.2</span>
+      <span class="badge-date">July 19, 2026 · GFC BP LLC</span>
+    </div>
+    <h1 class="doc-title">Domo Cafe App<br><span>&amp; Chomps Loyalty</span></h1>
+    <p class="doc-sub">The fan-facing home base for everything Domo Cafe — loyalty, ordering, engagement, collectibles, and community. Connects Toast POS with the Domo Crew fan ecosystem and feeds real data into the Pro Forma intelligence platform.</p>
+
+    <div class="callout green" style="margin-top:24px">
+      <div class="callout-label">v0.2 — Merged Revision</div>
+      <p>Merges <code>domo-app-prd-v0.1</code> (this document's presentation/structure) with <code>chomps-prd-v0.2</code> (the deeper, more rigorous Chomps loyalty mechanic — Section 01, replacing v0.1's original thin draft). Adds new Section 14 — UX/UI Design Workflows to kick off the design phase.</p>
+    </div>
+
+    <div class="chomps-hero" style="margin-top:32px">
+      <div class="chomps-icon">🍡</div>
+      <div class="chomps-name">Chomps™</div>
+      <div class="chomps-tagline">Earn Chomps. Never spend them down. — Domo-kun's iconic open-mouth "chomp," your lifetime fan score.</div>
+    </div>
+
+    <div class="pill-row" style="margin-top:24px">
+      <span class="pill brown">React Native</span>
+      <span class="pill brown">Toast POS Integration</span>
+      <span class="pill brown">Stripe Payments</span>
+      <span class="pill brown">Firebase Push</span>
+      <span class="pill brown">WhoRiddle Partnership</span>
+      <span class="pill red">NHK License Required</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1 — MERGED FROM chomps-prd-v0.2 -->
+  <section class="section" id="domo-crew">
+    <div class="section-num">01</div>
+    <div class="section-label">Loyalty Program</div>
+    <h2 class="section-title">Chomps — Fan Membership, Not a Points Wallet</h2>
+    <p>Chomps is Domo Cafe's fan membership platform — <strong style="color:var(--text)">not a points-redemption program</strong>. There is no spendable balance and nothing to "cash in." Chomps is a <strong style="color:var(--text)">lifetime accumulation score</strong>, named after Domo-kun's iconic open-mouth "chomp," that never decreases. Crossing a threshold permanently unlocks a new membership tier with standing privileges — closer to airline elite status or a game rank than a punch card or rewards-points wallet.</p>
+    <p>Unlike traditional restaurant loyalty programs, Chomps works globally. A fan in Tokyo who can't visit Buena Park can still earn Chomps by following on Instagram, buying merch online, or completing digital challenges. When the online store launches, Chomps is the currency that connects the entire ecosystem.</p>
+
+    <div class="pill-row">
+      <span class="pill brown">🍽️ In-Cafe</span>
+      <span class="pill brown">📱 Social</span>
+      <span class="pill brown">🌐 Online</span>
+    </div>
+
+    <div class="callout brown">
+      <div class="callout-label">Strategic Purpose Beyond Loyalty</div>
+      <p>Chomps is the identity and data layer for the entire Domo Cafe intelligence system. Every member ties a real person to every purchase, social action, and visit — powering the forecasting model, measuring marketing impact, tracking return rates, and feeding the scenario engine.</p>
+    </div>
+
+    <h4>How Fans Earn Chomps</h4>
+    <p>10 Chomps per $1 spent. Every interaction earns. $1.99 = 19 Chomps (floor to nearest 10 cents). Bigger numbers create stronger emotional engagement — "You earned 347 Chomps tonight!" lands differently than "You earned 34."</p>
+    <table>
+      <tr><th>Action</th><th>Channel</th><th>Chomps</th><th>Limit</th></tr>
+      <tr><td colspan="4" style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tan)">🍽️ In-Cafe Purchases</td></tr>
+      <tr><td>F&B purchase</td><td>In-cafe · Toast</td><td>10 / $1</td><td>Unlimited</td></tr>
+      <tr><td>Merch purchase (in-cafe)</td><td>In-cafe · Toast</td><td>20 / $1</td><td>Unlimited</td></tr>
+      <tr><td>First visit ever</td><td>In-cafe</td><td>1,000</td><td>One-time</td></tr>
+      <tr><td>Survey completion (per visit)</td><td>Table QR</td><td>250</td><td>1 / visit</td></tr>
+      <tr><td>Birthday visit</td><td>In-cafe</td><td>2,000</td><td>1 / year</td></tr>
+      <tr><td colspan="4" style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tan)">📱 Social Engagement</td></tr>
+      <tr><td>Follow @domokuncafe on Instagram</td><td>Instagram OAuth</td><td>500</td><td>One-time</td></tr>
+      <tr><td>Follow @domokuncafe on TikTok</td><td>TikTok API</td><td>500</td><td>One-time</td></tr>
+      <tr><td>Tag us in an Instagram post</td><td>Instagram Webhook</td><td>250</td><td>1 / week</td></tr>
+      <tr><td>Tag us in an Instagram story</td><td>Instagram Webhook</td><td>150</td><td>3 / week</td></tr>
+      <tr><td>TikTok video featuring Domo Cafe</td><td>TikTok API</td><td>500</td><td>1 / week</td></tr>
+      <tr><td>Google or Yelp review</td><td>Manual verification</td><td>750</td><td>1 / platform</td></tr>
+      <tr><td>Repost our story with tag</td><td>Instagram Webhook</td><td>200</td><td>3 / week</td></tr>
+      <tr><td colspan="4" style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tan)">🌐 Online / Digital</td></tr>
+      <tr><td>Account sign-up</td><td>chomps.domokuncafe.com</td><td>500</td><td>One-time</td></tr>
+      <tr><td>Email newsletter signup</td><td>Web</td><td>250</td><td>One-time</td></tr>
+      <tr><td>Birthday registration</td><td>Web</td><td>500</td><td>One-time</td></tr>
+      <tr><td>Refer a friend (they sign up)</td><td>Web · Referral code</td><td>1,000</td><td>Unlimited</td></tr>
+      <tr><td>Friend redeems referral</td><td>Web</td><td>500</td><td>Per referral</td></tr>
+      <tr><td>Online merch store purchase</td><td>Online store</td><td>20 / $1</td><td>Unlimited</td></tr>
+      <tr><td>Digital challenge completion</td><td>Web</td><td>250–1,000</td><td>Per challenge</td></tr>
+      <tr><td colspan="4" style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tan)">🧩 WhoRiddle Partnership</td></tr>
+      <tr><td>Correct WhoRiddle answer</td><td>WhoRiddle × Chomps</td><td>100</td><td>Per riddle</td></tr>
+      <tr><td>Daily riddle streak (7 days)</td><td>WhoRiddle × Chomps</td><td>1,000 bonus</td><td>Per streak</td></tr>
+      <tr><td>Perfect week (all correct)</td><td>WhoRiddle × Chomps</td><td>2,500 bonus</td><td>Per week</td></tr>
+    </table>
+    <p>Users connect their WhoRiddle account to Chomps. Every correct riddle answer earns 100 Chomps. Daily streaks and perfect weeks trigger bonus multipliers. WhoRiddle fires a webhook → Chomps credits the linked account. No manual steps for the guest.</p>
+    <div class="callout brown">
+      <div class="callout-label">Dynamic Multipliers</div>
+      <p>Off-peak hours (weekday lunch, slow periods) automatically trigger bonus earn rates to drive traffic. Example: Monday 11am–2pm → 2x Chomps on all F&B. Triggered by Toast occupancy data — tables below 40% → multiplier activates.</p>
+    </div>
+
+    <h4>Milestone Unlocks + Standing Tier Perks — Nothing to Redeem</h4>
+    <p>Chomps is never spent and never decremented. There is no redemption menu and no "pay N Chomps for X" transaction of any kind. Instead, Chomps works two ways: <strong style="color:var(--text)">milestone unlocks</strong> (a one-time unlock the moment a member first crosses a threshold) and <strong style="color:var(--text)">standing tier perks</strong> (an ongoing privilege a member holds for as long as they remain in that tier). Both are permanent unlocks, not purchases against a balance — the Chomps number itself never goes down, no matter how many perks a member uses.</p>
+    <table>
+      <tr><th>🎉 Milestone Unlocks (One-Time, Automatic)</th><th></th></tr>
+      <tr><td>1,000 Chomps</td><td>Digital badge unlocked</td></tr>
+      <tr><td>5,000 Chomps</td><td>Domo Fan tier unlocked</td></tr>
+      <tr><td>10,000 Chomps</td><td>Exclusive pin shipped to you (once)</td></tr>
+      <tr><td>20,000 Chomps</td><td>Domo Obsessed tier unlocked</td></tr>
+      <tr><td>50,000 Chomps</td><td>Legend consideration (curated, see Tiers)</td></tr>
+    </table>
+    <p>Fires once, the moment lifetime Chomps first crosses the line. Does not repeat, does not cost anything to trigger.</p>
+    <table>
+      <tr><th>🍡 Standing Tier Perks (Ongoing, While Tier Held)</th><th></th></tr>
+      <tr><td>Domo Fan</td><td>Reservation access (2 seats, 48hr)</td></tr>
+      <tr><td>Domo Obsessed</td><td>Free item each visit</td></tr>
+      <tr><td>Domo Obsessed</td><td>BOGO drink</td></tr>
+      <tr><td>Domo Obsessed</td><td>Skip-the-line drops</td></tr>
+      <tr><td>Domo Legend</td><td>Priority table, always</td></tr>
+      <tr><td>Domo Legend</td><td>First pick on every drop</td></tr>
+    </table>
+    <p>No redemption menu, period. There is no equivalent of "Full Entrée = 8,000 Chomps" or "Any Drink = 4,000 Chomps." This intentionally removes any "Domo-branded item sold for points" mechanic from the model.</p>
+
+    <h4>The Domo Fan Journey — Four Tiers</h4>
+    <div class="callout brown">
+      <div class="callout-label">Two Different Numbers, On Purpose (decided 2026-07-14)</div>
+      <p><strong style="color:var(--text)">1. Lifetime Chomps</strong> (never resets, ever) — the permanent all-time score, gates the one-time milestone unlocks above.<br><strong style="color:var(--text)">2. Active Tier</strong> (rolling 12-month re-qualification, like airline status) — a member's current tier is based on Chomps earned in the trailing 12 months, reviewed on a fixed cadence. Going quiet for a year can soft-drop a member's active tier without touching their lifetime total. Scheduled review-point change, not month-to-month volatility — includes a grace/warning period before any downgrade.</p>
+    </div>
+    <p>Why: a pure lifetime-permanent top tier only ever grows and never has scarcity — within a couple years it stops meaning anything and becomes operationally unmanageable (e.g., "priority table always" and "direct line to Izzy" can't scale to an ever-growing, mostly-inactive list). Rolling re-qualification keeps every tier — especially Legend — meaningful, without needing a full annual reset of the whole program.</p>
+
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-icon">😊</div>
+        <div class="tier-name">Domo Friend</div>
+        <div class="tier-range">0 – 4,999 Chomps</div>
+        <ul>
+          <li>Base earn on all purchases</li>
+          <li>Birthday Chomps bonus</li>
+          <li>Newsletter access</li>
+          <li>Social earn enabled</li>
+          <li>Digital waitlist access</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-icon">⭐</div>
+        <div class="tier-name">Domo Fan</div>
+        <div class="tier-range">5,000 – 19,999 Chomps</div>
+        <ul>
+          <li>1.25x earn multiplier</li>
+          <li>Reserve up to 2 seats (48hr)</li>
+          <li>Early access to drops</li>
+          <li>Monthly bonus challenge</li>
+          <li>Fan-only digital badge</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-icon">🔥</div>
+        <div class="tier-name">Domo Obsessed</div>
+        <div class="tier-range">20,000 – 49,999 Chomps</div>
+        <ul>
+          <li>1.5x earn multiplier</li>
+          <li>Reserve up to 6 seats (72hr)</li>
+          <li>Exclusive monthly pin</li>
+          <li>Free item on each visit</li>
+          <li>Skip-the-line drops</li>
+          <li>Name in Domo Wall</li>
+        </ul>
+      </div>
+      <div class="tier-card" style="border-color:rgba(204,34,34,0.35)">
+        <div class="tier-icon">👑</div>
+        <div class="tier-name">Domo Legend</div>
+        <div class="tier-range">50,000+ · Curated, Izzy Approves</div>
+        <ul>
+          <li>2x earn multiplier</li>
+          <li>Priority table, always</li>
+          <li>Private Legends events</li>
+          <li>First pick on every drop</li>
+          <li>Custom named Domo pin</li>
+          <li>Co-create a menu item</li>
+          <li>Direct line to Izzy</li>
+        </ul>
+      </div>
+    </div>
+    <p>Domo Legend stays a curated, capped invite list. Crossing 50,000 lifetime Chomps qualifies a member for <em>consideration</em>, not automatic promotion. Izzy/the team review and issue invitations on an annual cadence — keeps the top tier scarce and meaningful independent of how the Chomps math scales over time.</p>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section" id="survey">
+    <div class="section-num">02</div>
+    <div class="section-label">Order Intelligence</div>
+    <h2 class="section-title">Order-Connected Survey</h2>
+    <p>Table tent QR codes encode the Toast check ID. The app detects if the user is logged in and auto-links the survey to their profile — pre-populated with their actual order items.</p>
+
+    <div class="callout brown">
+      <div class="callout-label">URL Format</div>
+      <p><code>domokuncafe.com/feedback?check=ABC123</code></p>
+    </div>
+
+    <h4>Survey Captures</h4>
+    <ul>
+      <li>Item-level ratings (only items they ordered)</li>
+      <li>Overall experience rating</li>
+      <li>Likelihood to return</li>
+      <li>How did you hear about us?</li>
+      <li>Optional: photo upload</li>
+      <li>Optional: email/phone capture (non-members)</li>
+    </ul>
+    <p>Completion earns bonus Chomps — incentivizing high survey completion rates and generating item-level performance data.</p>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section" id="fan-engagement">
+    <div class="section-num">03</div>
+    <div class="section-label">Community</div>
+    <h2 class="section-title">Fan Engagement</h2>
+
+    <h4>Digital Collectibles</h4>
+    <p>Monthly exclusive Domo digital collectibles for members only. Limited edition drops tied to events, seasons, and milestones. Full collectible gallery in each member's app profile.</p>
+    <div class="callout">
+      <div class="callout-label">NHK Required</div>
+      <p>Digital collectibles require NHK approval. Contact Russell Binder / Shiraya Tanaka before launch.</p>
+    </div>
+
+    <h4>Challenges & UGC</h4>
+    <ul>
+      <li>Monthly <code>#DomoCrew</code> challenges (photo, trivia, creative)</li>
+      <li>Winners featured in app + social</li>
+      <li>UGC earns Chomps and exposure</li>
+    </ul>
+
+    <h4>Content</h4>
+    <ul>
+      <li>Behind-the-scenes at Domo Cafe</li>
+      <li>Domo trivia & fun facts</li>
+      <li>NHK/Domo-kun lore and history</li>
+      <li>Exclusive content for higher tiers</li>
+    </ul>
+
+    <h4>Community</h4>
+    <ul>
+      <li>Fan feed — member posts, photos, check-ins</li>
+      <li>Leaderboard — top Domo Crew members</li>
+      <li>Virtual events — trivia nights, fan meetups</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section" id="merch-drops">
+    <div class="section-num">04</div>
+    <div class="section-label">Commerce</div>
+    <h2 class="section-title">Merch & Drops</h2>
+    <p>Members-only merch drops — limited, scarce, desirable. Higher tier members (Domo Obsessed / Legend) get early access windows before general release.</p>
+    <ul>
+      <li>In-app purchase with cafe pickup or shipping</li>
+      <li>Drop notifications via push</li>
+      <li>Tied to NHK licensed + house merch inventory</li>
+      <li>Lottery system for most desirable drops (SNKRS-style)</li>
+    </ul>
+
+    <h4>Pin Series — Domo Cafe Crew</h4>
+    <p>Monthly limited edition pins featuring Domo in cafe roles: Server, Barista, Runner, Busser, Line Cook, Expo, Head Chef. Each physical pin has a digital collectible twin in the app. Staff earn real pins as they master each role.</p>
+    <div class="callout">
+      <div class="callout-label">NHK Approval Required</div>
+      <p>Contact Russell Binder / Shiraya Tanaka for pin series licensing before production.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 5 — MERGED: adds Digital Waitlist + Chomps-gated Reservations from chomps-prd-v0.2 -->
+  <section class="section" id="events">
+    <div class="section-num">05</div>
+    <div class="section-label">Reservations</div>
+    <h2 class="section-title">Events, Waitlist & Reservations</h2>
+    <ul>
+      <li>Table reservations / waitlist management</li>
+      <li>Event ticketing — soft openings, fan nights, pop-ups</li>
+      <li>Private booking requests</li>
+      <li>Event calendar in app</li>
+      <li>Push notifications for upcoming events</li>
+      <li>Event attendance earns bonus Chomps</li>
+    </ul>
+
+    <h4>From Walk-In to Valued Guest</h4>
+    <p>Currently walk-in only with no waitlist. A digital waitlist solves three problems at once: guest experience, Chomps enrollment, and operational data.</p>
+    <div class="callout brown">
+      <div class="callout-label">The Enrollment Moment</div>
+      <p>A guest waiting for a table has their phone in hand, nothing to do, and high motivation — the highest-converting Chomps enrollment window you'll ever have. Guest scans door QR → joins waitlist with phone number → immediately offered Chomps signup → 500 Chomps on today's visit if they sign up now.</p>
+    </div>
+    <ul>
+      <li><strong style="color:var(--text)">Digital Waitlist (Phase 2):</strong> Guest scans QR at entrance → enters phone → joins waitlist → gets SMS when table is ready. Frees guests to browse merch or sit outside instead of standing in line.</li>
+    </ul>
+
+    <h4>Reservations — Chomps-Gated</h4>
+    <table>
+      <tr><th>Tier</th><th>Reservation Access</th></tr>
+      <tr><td>Domo Friend</td><td>Waitlist only</td></tr>
+      <tr><td>Domo Fan</td><td>Reserve 2 seats, 48hr advance</td></tr>
+      <tr><td>Domo Obsessed</td><td>Reserve 6 seats, 72hr advance</td></tr>
+      <tr><td>Domo Legend</td><td>Priority table, any time</td></tr>
+    </table>
+    <p>30% of tables reserved · 70% walk-in always protected.</p>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section class="section" id="digital-menu">
+    <div class="section-num">06</div>
+    <div class="section-label">Product</div>
+    <h2 class="section-title">Digital Menu</h2>
+    <ul>
+      <li>Real-time menu synced from Toast (Configuration API)</li>
+      <li>Item photos, descriptions, allergen info</li>
+      <li>"Fan favorites" — items with highest survey ratings</li>
+      <li>Limited time items flagged</li>
+      <li>Merch catalog integrated</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section class="section" id="intelligence">
+    <div class="section-num">07</div>
+    <div class="section-label">Data Layer</div>
+    <h2 class="section-title">Intelligence Layer</h2>
+    <p>Every app interaction feeds data back into the Pro Forma portal — closing the loop between fan behavior and business performance.</p>
+    <table>
+      <tr><th>App Action</th><th>Pro Forma Data</th></tr>
+      <tr><td>In-cafe purchase (via Toast)</td><td>Actual covers, attach rates, revenue per cover</td></tr>
+      <tr><td>Survey completion</td><td>Item ratings, NPS, return likelihood</td></tr>
+      <tr><td>Merch purchase</td><td>Merch revenue, attach rate, SKU performance</td></tr>
+      <tr><td>Event ticket</td><td>Event revenue tracking</td></tr>
+      <tr><td>Referral</td><td>Customer acquisition cost</td></tr>
+      <tr><td>Push notification open</td><td>Marketing campaign effectiveness</td></tr>
+    </table>
+  </section>
+
+  <!-- SECTION 8 -->
+  <section class="section" id="toast">
+    <div class="section-num">08</div>
+    <div class="section-label">POS Integration</div>
+    <h2 class="section-title">Toast API Integration</h2>
+    <table>
+      <tr><th>API</th><th>Use</th></tr>
+      <tr><td><code>Orders API</code></td><td>Check data, item-level sales</td></tr>
+      <tr><td><code>Analytics API</code></td><td>Revenue, covers, trends</td></tr>
+      <tr><td><code>Labor API</code></td><td>Staff performance correlation</td></tr>
+      <tr><td><code>Configuration API</code></td><td>Live menu sync</td></tr>
+      <tr><td><code>Payments API</code></td><td>Transaction data</td></tr>
+    </table>
+    <div class="callout brown">
+      <div class="callout-label">Credentials Available</div>
+      <p>Toast Standard API credentials acquired and stored in <code>/workspace/storage/credentials/toast-api.json</code>. Ready to build integration layer. Phase 1: read orders to match Chomps (Standard API). Phase 2: write loyalty to checks (Custom Integration — upgrade needed).</p>
+    </div>
+  </section>
+
+  <!-- SECTION 9 — MERGED: adds Redis/Twilio/Resend/Instagram/TikTok from chomps-prd-v0.2 -->
+  <section class="section" id="tech-stack">
+    <div class="section-num">09</div>
+    <div class="section-label">Engineering</div>
+    <h2 class="section-title">Tech Stack</h2>
+    <table>
+      <tr><th>Layer</th><th>Technology</th><th>Reasoning</th></tr>
+      <tr><td>Frontend</td><td>React Native (iOS + Android from one codebase)</td><td>Single codebase for both platforms</td></tr>
+      <tr><td>Backend</td><td>Node.js + PostgreSQL</td><td>Matches existing Domo/SPS stack</td></tr>
+      <tr><td>Cache</td><td>Redis — Upstash</td><td>Session mgmt, rate limiting on social earn, webhook job queues</td></tr>
+      <tr><td>Auth — Phone</td><td>Twilio Verify</td><td>SMS OTP, no passwords — critical for in-cafe order matching</td></tr>
+      <tr><td>Auth — Email</td><td>Resend + Magic Link</td><td>Email magic link for remote fans without US phone numbers</td></tr>
+      <tr><td>Push Notifications</td><td>Firebase Cloud Messaging</td><td>Waitlist + earn confirmations</td></tr>
+      <tr><td>Payments</td><td>Stripe</td><td>Merch + event tickets, already used in SPS platform</td></tr>
+      <tr><td>Social</td><td>Instagram Graph API + TikTok Creator API</td><td>OAuth follow verification + webhook @mention detection</td></tr>
+      <tr><td>Partner</td><td>WhoRiddle API</td><td>Webhook/OAuth callback on correct riddle answer</td></tr>
+      <tr><td>Analytics</td><td>Custom dashboard → Pro Forma portal</td><td>Closes the loop to forecasting</td></tr>
+      <tr><td>CMS</td><td>Headless (content, collectibles, challenges)</td><td></td></tr>
+      <tr><td>Hosting</td><td>Railway</td><td>All Domo systems already here — no new infrastructure</td></tr>
+    </table>
+  </section>
+
+  <!-- SECTION 10 — NEW: Data Model from chomps-prd-v0.2 -->
+  <section class="section" id="data-model">
+    <div class="section-num">10</div>
+    <div class="section-label">Schema</div>
+    <h2 class="section-title">Core Data Model</h2>
+    <p>PostgreSQL via Prisma. Every table feeds both the loyalty system and the forecasting engine.</p>
+    <pre>members {
+  id UUID PRIMARY KEY
+  phone VARCHAR UNIQUE
+  email VARCHAR UNIQUE
+  name VARCHAR
+  birthdate DATE
+  chomps_lifetime INTEGER DEFAULT 0
+  active_tier ENUM(friend, fan, obsessed, legend)
+  referral_code VARCHAR UNIQUE
+  referred_by UUID REFERENCES members
+  created_at TIMESTAMPTZ
+  last_activity TIMESTAMPTZ
+}
+
+transactions {
+  id UUID PRIMARY KEY
+  member_id UUID REFERENCES members
+  type ENUM(earn, milestone, adjust)
+  source ENUM(purchase_fb, purchase_merch, social_follow,
+      social_tag, social_tiktok, referral, signup,
+      survey, birthday, online_store, manual, milestone,
+      whoriddle)
+  chomps INTEGER
+  reference_id VARCHAR
+  metadata JSONB
+  created_at TIMESTAMPTZ
+}
+
+visits {
+  id UUID PRIMARY KEY
+  member_id UUID REFERENCES members
+  toast_order_id VARCHAR
+  date DATE
+  daypart ENUM(lunch, dinner)
+  fb_revenue DECIMAL(10,2)
+  merch_revenue DECIMAL(10,2)
+  covers INTEGER
+  chomps_earned INTEGER
+  multiplier DECIMAL(4,2) DEFAULT 1.0
+}
+
+social_connections {
+  id UUID PRIMARY KEY
+  member_id UUID REFERENCES members
+  platform ENUM(instagram, tiktok, yelp, google)
+  handle VARCHAR
+  platform_id VARCHAR
+  access_token TEXT ENCRYPTED
+  follows_domo BOOLEAN
+  verified_at TIMESTAMPTZ
+}
+
+waitlist {
+  id UUID PRIMARY KEY
+  phone VARCHAR
+  member_id UUID REFERENCES members NULLABLE
+  party_size INTEGER
+  position INTEGER
+  status ENUM(waiting, seated, left, no_show)
+  joined_at TIMESTAMPTZ
+  seated_at TIMESTAMPTZ
+  wait_minutes INTEGER
+}</pre>
+    <p>Forecasting bridge: the <code>visits</code> table links every Chomps member to real revenue, daypart, and covers. The <code>waitlist</code> table captures actual wait times and party sizes. Together they transform anonymous Toast data into attributed guest intelligence.</p>
+  </section>
+
+  <!-- SECTION 11 -->
+  <section class="section" id="traffic">
+    <div class="section-num">11</div>
+    <div class="section-label">Demand Lever</div>
+    <h2 class="section-title">Traffic Generation — Off-Peak Demand</h2>
+    <p>Use Chomps as a dynamic demand lever to fill slow periods automatically — no manual trigger required.</p>
+
+    <h4>Chomps Multiplier Hours</h4>
+    <p>e.g. 2× Chomps every Tuesday 2–4pm, push sent at 1pm to nearby members.</p>
+
+    <h4>Flash Offers</h4>
+    <p>"Next 30 people in earn a Rare Collectible" — urgency-driven, scarcity-aware.</p>
+
+    <h4>Slow Day Radar</h4>
+    <p>Toast detects low occupancy in real time → auto-triggers push offer to nearby members. Zero manual intervention required.</p>
+
+    <h4>Weekday Challenges</h4>
+    <p>"Visit Mon–Wed this week → unlock a Legend-only badge" — drives mid-week visits.</p>
+
+    <h4>Pre-Booking Incentive</h4>
+    <p>Reserve a weekday slot → earn bonus Chomps. Converts browsing intent into confirmed covers.</p>
+
+    <div class="callout brown">
+      <div class="callout-label">Toast Integration Required</div>
+      <p>Occupancy data from Toast drives push timing automatically. This feature requires the Toast Analytics API.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 12 -->
+  <section class="section" id="out-of-town">
+    <div class="section-num">12</div>
+    <div class="section-label">Global Fanbase</div>
+    <h2 class="section-title">Out-of-Town &amp; Online Fan Engagement</h2>
+
+    <div class="callout">
+      <div class="callout-label">Strategic Frame</div>
+      <p>The cafe is the mothership. The app keeps fans in orbit — whether they're 2 miles away or 2,000.</p>
+    </div>
+
+    <h4>Chomps From Anywhere</h4>
+    <ul>
+      <li>Monthly Chomps drops via online activities (trivia, challenges, content)</li>
+      <li>Digital collectibles claimable in-app regardless of location</li>
+      <li>Monthly exclusive drops tied to seasons, events, milestones</li>
+    </ul>
+
+    <h4>Online Revenue Streams</h4>
+    <ul>
+      <li><strong style="color:var(--text)">Online Merch Store</strong> — exclusive Domo Cafe items shippable anywhere (critical for Japan tourists going home)</li>
+      <li><strong style="color:var(--text)">Domo Subscription Box</strong> — monthly curated merch box ($29–49/mo) for superfans who can't visit. New recurring revenue stream.</li>
+      <li>Member-only merch drops available online before general public</li>
+    </ul>
+
+    <h4>Content & Connection</h4>
+    <ul>
+      <li><strong style="color:var(--text)">Live from Domo</strong> — occasional live streams (menu reveals, behind-the-scenes, events)</li>
+      <li><strong style="color:var(--text)">Wishlist + Return Anticipation</strong> — "Planning my next visit" feature → builds anticipation, notifies when new items drop</li>
+      <li>"Visited Domo Cafe" permanent profile badge — trophy for global fans</li>
+    </ul>
+
+    <table>
+      <tr><th>Fan Type</th><th>Engagement Loop</th></tr>
+      <tr><td>Local members</td><td>Repeat visits via dynamic Chomps → off-peak fill</td></tr>
+      <tr><td>Out-of-town fans</td><td>Online merch + subscription boxes + social amplification</td></tr>
+      <tr><td>Both</td><td>Feed each other → flywheel effect</td></tr>
+    </table>
+  </section>
+
+  <!-- SECTION 13 — NEW: Legal + Anti-Fraud from chomps-prd-v0.2 -->
+  <section class="section" id="legal-fraud">
+    <div class="section-num">13</div>
+    <div class="section-label">Protection</div>
+    <h2 class="section-title">Legal & Anti-Fraud</h2>
+    <p>Chomps points have no monetary value. GFC BP LLC is protected against system failures, fraud, and program changes.</p>
+    <ul>
+      <li><strong style="color:var(--text)">No Cash Value.</strong> Chomps cannot be exchanged for cash under any circumstances.</li>
+      <li><strong style="color:var(--text)">Program Modification.</strong> GFC BP LLC may modify, suspend, or terminate the program at any time without prior notice.</li>
+      <li><strong style="color:var(--text)">Non-Transferable.</strong> Chomps are not the member's property and are non-transferable/non-inheritable. Lifetime Chomps do not expire; an account may be marked dormant after 12 months inactivity per the Active Tier rules.</li>
+      <li><strong style="color:var(--text)">No Liability for Loss.</strong> Not liable for loss due to technical failure, system error, unauthorized access, or program termination.</li>
+      <li><strong style="color:var(--text)">Fraud & Abuse.</strong> Chomps obtained fraudulently will be forfeited and the account terminated.</li>
+      <li><strong style="color:var(--text)">Legend Tier.</strong> Crossing the threshold does not guarantee membership — invitations are curated, GFC BP LLC's sole discretion.</li>
+    </ul>
+
+    <h4>Every Earn Channel Must Be Automatic and Hard to Game</h4>
+    <p>Because Chomps only unlocks status and never decrements, a bad actor who games their way to a high tier holds something permanent and hard to revoke without an ugly public rollback. Fraud prevention has to be tighter than a normal spend-down points program.</p>
+    <ul>
+      <li><strong style="color:var(--text)">One Real Identity Per Member</strong> — phone number is the unique account anchor. Duplicate-account/multi-accounting checks run at signup and on suspicious earn patterns.</li>
+      <li><strong style="color:var(--text)">Verified-Event Earning Only</strong> — in-cafe purchase (Toast-tied, highest trust), social follow (OAuth), social tag (webhook-confirmed), referral (device fingerprint checked), WhoRiddle (inherits their anti-bot integrity, capped as lower-trust until proven).</li>
+      <li><strong style="color:var(--text)">System-Enforced Caps</strong> — high-risk channels (story tags, reviews) have hard caps enforced in code, not just written into the ToS.</li>
+      <li><strong style="color:var(--text)">Fraud-Review Gate Before Top-Tier Crossing</strong> — Domo Friend/Fan/Obsessed promote automatically; Legend consideration triggers a review step given the effectively-permanent nature of top-tier status.</li>
+    </ul>
+
+    <h4>Success Metrics</h4>
+    <table>
+      <tr><th>Metric</th><th>Target</th></tr>
+      <tr><td>Enrollment Rate (6 months)</td><td>30% of guests sign up</td></tr>
+      <tr><td>Visit Frequency Lift</td><td>+20% enrolled vs non-enrolled</td></tr>
+      <tr><td>Avg Check Lift</td><td>+15% enrolled vs non-members</td></tr>
+      <tr><td>Social Earn Participation</td><td>40% earning ≥1 social action/month</td></tr>
+      <tr><td>Perk Cost % of Revenue</td><td>&lt;8% of enrolled member revenue</td></tr>
+      <tr><td>90-Day Retention</td><td>60% return within 90 days</td></tr>
+    </table>
+  </section>
+
+  <!-- SECTION 14 — NEW: UX/UI Design Workflows -->
+  <section class="section" id="ux-design">
+    <div class="section-num">14</div>
+    <div class="section-label">Design</div>
+    <h2 class="section-title">UX/UI Design Workflows</h2>
+    <p>Design phase for the Domo Cafe App & Chomps loyalty experience. This section defines the screens, flows, and design-system decisions needed before build begins — using the Domo Cafe brand guide (brown/red/cream palette, Outfit + DM Sans + JetBrains Mono) as the visual foundation.</p>
+
+    <div class="callout brown">
+      <div class="callout-label">Design System Foundation</div>
+      <p>Reuses existing Domo Cafe brand assets: <code>domo-cafe-logo-transparent.png</code>, brand guide (<code>Domo-Cafe-Brand-Guide-v1.0.html</code>). Colors: Brown #8B4513 · Red #CC2222 · Warm White #FDF8F4 · Cream #F5EDD8 · Tan #D4A574 · Dark #1A0800. Fonts: Outfit (headings), DM Sans (body), JetBrains Mono (numbers/Chomps counters).</p>
+    </div>
+
+    <h4>Core Screen Inventory</h4>
+    <table>
+      <tr><th>Flow</th><th>Screens Needed</th></tr>
+      <tr><td>Onboarding</td><td>Splash → Sign-up (phone/email/Apple/Google) → OTP verify → Welcome + first-1,000-Chomps moment → Tier explainer</td></tr>
+      <tr><td>Home / Dashboard</td><td>Chomps counter (lifetime + tier progress bar) → Active tier badge → Quick actions (scan QR, view menu, waitlist) → Recent activity feed</td></tr>
+      <tr><td>Earn Flows</td><td>Order-linked survey → Social connect (IG/TikTok OAuth) → Referral share sheet → WhoRiddle daily riddle card → Birthday claim</td></tr>
+      <tr><td>Tiers & Perks</td><td>Tier ladder visual (4-tier progress) → Perk detail cards → Milestone unlock celebration (animated "chomp" moment) → Legend consideration status</td></tr>
+      <tr><td>Waitlist / Reservations</td><td>Door QR join flow → Live position + ETA → SMS-ready notification → Tier-gated reservation booker</td></tr>
+      <tr><td>Digital Menu</td><td>Category browse → Item detail (photo, allergens, fan-favorite badge) → "Order via Toast" or "View in cafe" state</td></tr>
+      <tr><td>Merch & Drops</td><td>Drop calendar → Early-access countdown (tier-gated) → Lottery entry → Product detail → Cart/checkout (Stripe)</td></tr>
+      <tr><td>Community</td><td>Fan feed → Leaderboard → Challenge detail + submission → Collectible gallery/profile</td></tr>
+      <tr><td>Profile / Account</td><td>Member profile (avatar, tier, lifetime Chomps, "member since") → Transaction history → Social connections → Settings/notifications</td></tr>
+    </table>
+
+    <h4>Key UX Moments to Design Carefully</h4>
+    <ul>
+      <li><strong style="color:var(--text)">The Chomps Earn Moment</strong> — every earn event (in-cafe, social, referral) needs a satisfying, consistent micro-animation/toast: "You earned 347 Chomps tonight! 🍡" This is the emotional core of the whole program — treat it like a game's XP-gain moment, not a receipt line.</li>
+      <li><strong style="color:var(--text)">Milestone Unlock Celebration</strong> — crossing 1,000 / 5,000 / 10,000 / 20,000 / 50,000 needs a full-screen, shareable moment (confetti, Domo-kun animation, "share to Instagram" prompt) — these are the highest-value organic marketing moments in the app.</li>
+      <li><strong style="color:var(--text)">Tier Progress Clarity</strong> — member should always be able to see (a) lifetime Chomps, (b) trailing-12mo Chomps driving their active tier, (c) how far to the next tier — without confusing the two numbers. This is the hardest UX problem in the whole app given the dual-number model in Section 01.</li>
+      <li><strong style="color:var(--text)">Waitlist Enrollment Moment</strong> — the highest-converting sign-up window (Section 05). Needs to be near-zero-friction: phone number → instant 500 Chomps offer → done in under 15 seconds.</li>
+      <li><strong style="color:var(--text)">Legend Consideration State</strong> — members who cross 50,000 need a distinct "under review" UI state, not silence and not a fake instant promotion — manage expectation without cheapening the curation.</li>
+    </ul>
+
+    <h4>Design Deliverables (Proposed)</h4>
+    <div class="phase-row">
+      <div class="phase-label">Wireframes</div>
+      <div class="phase-desc">Low-fi flow wireframes for all 8 screen groups above — Figma, mobile-first (iOS + Android parity)</div>
+      <div class="phase-status planned">🔲 Next</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">Design System</div>
+      <div class="phase-desc">Component library in Figma — buttons, tier badges, Chomps counter component, cards, nav — tokens pulled directly from brand guide</div>
+      <div class="phase-status planned">🔲 Next</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">Hi-Fi Mockups</div>
+      <div class="phase-desc">Full-color mockups of the 5 "key moments" above first, then remaining screens</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">Prototype</div>
+      <div class="phase-desc">Clickable Figma prototype of the full onboarding → first-earn → first-milestone loop for stakeholder review before dev handoff</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">Dev Handoff</div>
+      <div class="phase-desc">Figma → React Native spec (spacing, type scale, component states) handed to engineering alongside this PRD</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+
+    <div class="wire-box">
+      <div class="wire-label">Open Design Questions</div>
+      <ul style="margin:0">
+        <li>Figma workspace — new file under SPS/Domo design library, or existing?</li>
+        <li>Illustration style for Domo-kun in-app (flat/2D matching NHK guidelines vs. custom in-house style)?</li>
+        <li>Does the milestone-unlock celebration need custom Domo-kun animation assets from NHK, or can Phase 1 ship with generic confetti/motion?</li>
+        <li>Accessibility pass — contrast ratios on dark theme (brown/cream on dark background) need a WCAG AA check before dev handoff.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 15 -->
+  <section class="section" id="open-items">
+    <div class="section-num">15</div>
+    <div class="section-label">Decisions Needed</div>
+    <h2 class="section-title">Open Items</h2>
+    <table>
+      <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>App name — "Domo Cafe" or "Domo Crew"?</td><td><span style="color:var(--red)">Open</span></td><td></td></tr>
+      <tr><td>iOS + Android or web-first MVP?</td><td><span style="color:var(--red)">Open</span></td><td></td></tr>
+      <tr><td>NHK approval for digital collectibles?</td><td><span style="color:var(--red)">Open</span></td><td>Contact Russell Binder / Shiraya Tanaka</td></tr>
+      <tr><td>Points currency name</td><td><span style="color:#4ade80">✅ Chomps</span></td><td>Ties to Domo-kun's iconic open mouth</td></tr>
+      <tr><td>Redemption model</td><td><span style="color:#4ade80">✅ Decided</span></td><td>Lifetime score + milestone/tier perks, no redemption menu (Section 01)</td></tr>
+      <tr><td>Referral program mechanics</td><td><span style="color:var(--red)">Open</span></td><td>Rates decided (1,000/500), fraud-check implementation TBD</td></tr>
+      <tr><td>Legend tier — invite criteria?</td><td><span style="color:var(--tan)">Partially decided</span></td><td>50k threshold + annual curated review (Section 01) — final criteria TBD</td></tr>
+      <tr><td>Merch shipping / fulfillment partner</td><td><span style="color:var(--red)">Open</span></td><td></td></tr>
+      <tr><td>Push notification strategy (frequency, triggers)</td><td><span style="color:var(--red)">Open</span></td><td></td></tr>
+      <tr><td>Privacy policy / CA CCPA compliance</td><td><span style="color:var(--red)">Open</span></td><td></td></tr>
+      <tr><td>Figma workspace + illustration style</td><td><span style="color:var(--red)">Open</span></td><td>See Section 14 — Open Design Questions</td></tr>
+    </table>
+  </section>
+
+  <!-- BUILD PHASES -->
+  <section class="section" id="phases">
+    <div class="section-num">∞</div>
+    <div class="section-label">Roadmap</div>
+    <h2 class="section-title">Build Phases</h2>
+    <div class="phase-row">
+      <div class="phase-label">Design</div>
+      <div class="phase-desc">Wireframes, design system, hi-fi mockups, clickable prototype (Section 14)</div>
+      <div class="phase-status planned">🔲 Next</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">MVP v1.0</div>
+      <div class="phase-desc">Auth, Domo Crew signup, basic Chomps, survey QR, digital menu</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">v1.5</div>
+      <div class="phase-desc">Merch drops, push notifications, collectibles</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">v2.0</div>
+      <div class="phase-desc">Full fan engagement, challenges, community feed, events, digital waitlist</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+    <div class="phase-row">
+      <div class="phase-label">v3.0</div>
+      <div class="phase-desc">Toast full integration, Pro Forma live sync, AI recommendations, WhoRiddle partnership</div>
+      <div class="phase-status planned">🔲 Planned</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// Sidebar active state on scroll
+const sections = document.querySelectorAll('section[id], header[id]');
+const navLinks = document.querySelectorAll('.nav-item');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  navLinks.forEach(a => {
+    a.classList.remove('active');
+    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
