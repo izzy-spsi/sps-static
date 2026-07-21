@@ -329,6 +329,12 @@ tr:hover td { background: var(--bg3); }
   .hub-spoke-node.n1, .hub-spoke-node.n2, .hub-spoke-node.n3, .hub-spoke-node.n4, .hub-spoke-node.n5 { grid-column: 1; grid-row: auto; max-width: 100%; }
 }
 
+/* === PLACEHOLDER SLIDE (v4.0 outline slides 05-18, pending individual designs) === */
+.ph-wrap { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 60%; }
+.ph-num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 5rem; color: var(--border); line-height: 1; margin-bottom: 8px; }
+.ph-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 2rem; max-width: 900px; margin-bottom: 14px; }
+.ph-tag { color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.75rem; border: 1px solid var(--red); border-radius: 20px; padding: 5px 14px; display: inline-block; }
+
 /* === WHY UBER WINS (Slide 05, v4.0, 2026-07-20 -- rebuilt to match Izzy's exact final design) === */
 .wuw-grid { display: grid; grid-template-columns: 1.15fr auto 1fr auto 0.85fr; gap: 22px; margin-bottom: 20px; }
 .wuw-divider-red { width: 1px; background: var(--red); position: relative; margin-top: 8px; }
@@ -965,692 +971,128 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <div class="slide">
-  <div class="wuw-grid">
-    <div>
-      <div class="wuw-h1">Why Uber Wins</div>
-      <p class="wuw-sub">Uber has built the world's largest mobility marketplace. Flywheel adds the professional transportation infrastructure that accelerates its next phase of growth.</p>
-      <div class="wuw-wordmark">Uber</div>
-      <div class="wuw-wordmark-underline"></div>
-      <div class="wuw-eyebrow">Uber Brings</div>
-      <div class="wuw-list">
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M2 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/><circle cx="17.5" cy="9" r="2.3"/><path d="M17.5 13.6a4.6 4.6 0 0 1 4 4.5V19"/></svg></div>
-          <div><div class="wuw-row-title">Demand</div><div class="wuw-row-desc">Millions of riders</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V5.5z"/><path d="M4 4l16 16"/></svg></div>
-          <div><div class="wuw-row-title">Consumer Brand</div><div class="wuw-row-desc">Most recognized mobility platform</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 18h6"/></svg></div>
-          <div><div class="wuw-row-title">Marketplace</div><div class="wuw-row-desc">Trip generation, dynamic pricing, matching</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20"/></svg></div>
-          <div><div class="wuw-row-title">Payments</div><div class="wuw-row-desc">Global payment network</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3.5v5.5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg></div>
-          <div><div class="wuw-row-title">Trust &amp; Safety</div><div class="wuw-row-desc">Identity, fraud, support</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="wuw-divider-red"><div class="wuw-plus-circle">+</div></div>
-
-    <div class="wuw-col-flywheel">
-      <div class="wuw-fw-lockup">
-        <img src="/flywheel-icon-red-transparent.png" alt="Flywheel">
-        <div class="wuw-fw-lockup-text"><div class="wuw-fw-name">Flywheel</div><div class="wuw-fw-sub">TECHNOLOGIES</div></div>
-      </div>
-      <div class="wuw-eyebrow">Flywheel Brings</div>
-      <div class="wuw-list">
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <div><div class="wuw-row-title">TaxiOS™</div><div class="wuw-row-desc">Enterprise operating system built for professional fleets</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-1.5A5.5 5.5 0 0 1 10.5 14h3A5.5 5.5 0 0 1 19 19.5V21"/><path d="M9 7h6"/></svg></div>
-          <div><div class="wuw-row-title">Professional Drivers</div><div class="wuw-row-desc">Licensed, commercially insured, fingerprint background checked</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-7h6v7"/></svg></div>
-          <div><div class="wuw-row-title">Fleet Infrastructure</div><div class="wuw-row-desc">Dispatch, compliance, operations, payments</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/><path d="M9 12h.01M12 12h.01M15 12h.01"/></svg></div>
-          <div><div class="wuw-row-title">Government Mobility</div><div class="wuw-row-desc">Paratransit, transit, healthcare, public agencies</div></div>
-        </div>
-        <div class="wuw-row">
-          <div class="wuw-row-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7" cy="18" r="1.4"/><circle cx="17" cy="18" r="1.4"/></svg></div>
-          <div><div class="wuw-row-title">Fleet Supply</div><div class="wuw-row-desc">16,000+ platform vehicles<br>23 government programs</div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="wuw-divider-dashed"></div>
-
-    <div>
-      <div class="wuw-together-head">The Power of Together</div>
-      <div class="wuw-flow">
-        <div class="wuw-flow-label">UBER</div>
-        <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg></div>
-        <div class="wuw-flow-sub">Riders</div>
-        <div class="wuw-flow-arrow">&#8595;</div>
-        <img class="wuw-flow-logo" src="/flywheel-icon-red-transparent.png" alt="">
-        <div class="wuw-flow-label">TaxiOS™</div>
-        <div class="wuw-flow-arrow">&#8595;</div>
-        <div class="wuw-flow-branches">
-          <div class="wuw-flow-branch-item">
-            <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><path d="M3 13h18v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H6v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4z"/><circle cx="7" cy="18" r="1.4"/><circle cx="17" cy="18" r="1.4"/></svg></div>
-            <div class="wuw-flow-sub">Fleets</div>
-          </div>
-          <div class="wuw-flow-branch-item">
-            <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 21V10l8-6 8 6v11"/><path d="M9 21v-6h6v6"/></svg></div>
-            <div class="wuw-flow-sub">Government</div>
-          </div>
-          <div class="wuw-flow-branch-item">
-            <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg></div>
-            <div class="wuw-flow-sub">Drivers</div>
-          </div>
-        </div>
-        <div class="wuw-flow-arrow">&#8595;</div>
-        <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 21v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M13 21v-1a5 5 0 0 1 5-5h1"/></svg></div>
-        <div class="wuw-flow-sub">Professional Trips</div>
-        <div class="wuw-flow-arrow">&#8595;</div>
-        <div class="wuw-flow-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><path d="M15 7h4v4"/></svg></div>
-        <div class="wuw-flow-label" style="font-size:0.75rem;">More Uber Revenue</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="wuw-shared">
-    <div class="wuw-shared-head">Shared Success</div>
-    <div class="wuw-shared-row">
-      <div class="wuw-shared-item">
-        <div class="wuw-shared-icon"></div>
-        <div>
-          <div class="wuw-shared-name-row"><span class="wuw-shared-name">Uber</span><span class="wuw-shared-arrow">&#8599;</span></div>
-          <div class="wuw-shared-sub">More Revenue</div>
-        </div>
-      </div>
-      <div class="wuw-shared-item">
-        <div class="wuw-shared-icon"><img src="/flywheel-icon-red-transparent.png" alt=""></div>
-        <div>
-          <div class="wuw-shared-name-row"><span class="wuw-shared-name">Flywheel</span><span class="wuw-shared-arrow">&#8599;</span></div>
-          <div class="wuw-shared-sub">More Platform Revenue</div>
-        </div>
-      </div>
-      <div class="wuw-shared-item">
-        <div class="wuw-shared-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg></div>
-        <div>
-          <div class="wuw-shared-name-row"><span class="wuw-shared-name">Drivers</span><span class="wuw-shared-arrow">&#8599;</span></div>
-          <div class="wuw-shared-sub">Higher Earnings</div>
-        </div>
-      </div>
-      <div class="wuw-shared-item">
-        <div class="wuw-shared-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 21v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M13 21v-1a5 5 0 0 1 5-5h1"/></svg></div>
-        <div>
-          <div class="wuw-shared-name-row"><span class="wuw-shared-name">Riders</span><span class="wuw-shared-arrow">&#8599;</span></div>
-          <div class="wuw-shared-sub">Better Experience</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="wuw-callout">
-    <div class="wuw-callout-icon"><svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.2"/><circle cx="12" cy="12" r="1.4" fill="var(--red)"/><path d="M17 3l1 4-4 1"/><path d="M13.2 10.8L18 4"/></svg></div>
-    <div>
-      <div class="wuw-callout-eyebrow">The Strategic Opportunity</div>
-      <div class="wuw-callout-head">TaxiOS™ transforms professional transportation into a scalable extension of <span class="red">Uber's global marketplace.</span></div>
-      <div class="wuw-callout-body">Enabling Uber to scale faster, serve more riders, and create more value for drivers, fleets, and public agencies.</div>
-    </div>
-  </div>
-</div>
-
-<div class="slide">
   <div class="label">The Partnership</div>
-  <h2>Why Flywheel + Uber = Category Leader</h2>
-  <div class="divider"></div>
-  <p style="color:var(--muted);margin-bottom:20px;">Professional drivers. Verified network. Uber demand. Perfect complement.</p>
-
-  <div class="three-col" style="margin-bottom:20px;">
-    <div class="card"><div class="stat-val red">2022</div><div class="stat-label">Uber Technology Partner Since</div></div>
-    <div class="card"><div class="stat-val">2.5→4.0%</div><div class="stat-label">Take rate (unlocks at AR ≥30%)</div></div>
-    <div class="card"><div class="stat-val">$0.30→$0.48</div><div class="stat-label">Per Uber trip (12× uplift at 30% AR)</div></div>
-  </div>
-
-  <div class="callout" style="margin-bottom:20px;">
-    "Uber's two most profitable divisions in 2025: <strong>Groceries</strong> and <strong>Taxis</strong>. Flywheel is their #1 taxi technology partner globally." — Uber Global Head Meeting, 2025
-  </div>
-
-  <div class="two-col">
-    <div>
-      <h3>Professional Driver Advantage</h3>
-      <table>
-        <thead><tr><th></th><th>UberX Driver</th><th>Flywheel Taxi Driver</th></tr></thead>
-        <tbody>
-          <tr><td>Vetting</td><td style="color:var(--muted)">Background check</td><td class="red">FBI fingerprint</td></tr>
-          <tr><td>Insurance</td><td style="color:var(--muted)">Personal + ride</td><td class="red">24hr commercial</td></tr>
-          <tr><td>Training</td><td style="color:var(--muted)">Video course</td><td class="red">City-certified</td></tr>
-          <tr><td>Network</td><td style="color:var(--muted)">Lone wolf</td><td class="red">Fleet community</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="callout amber">
-      <strong>AR Incentive Structure</strong><br><br>
-      Current LV AR: <strong style="color:var(--red)">4%</strong> → $80/day<br>
-      Target AR: <strong>30%</strong> → $960/day<br>
-      Rate tier upgrade: 2.5% → <strong style="color:#22C55E">4.0%</strong><br><br>
-      <strong>12× revenue uplift</strong> from same driver pool when AR crosses 30%.
-    </div>
+  <div class="ph-wrap">
+    <div class="ph-num">05</div>
+    <div class="ph-title">Why Uber Wins</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">The Investment Case</div>
-  <h2>Every Point of Fill Rate We Add, Uber Earns More Too</h2>
-  <div class="divider"></div>
-  <p style="color:var(--muted);margin-bottom:16px;font-size:0.85rem;">Flywheel is paid 2.5%&ndash;4% of rider payment as a 3P referral fee. Uber takes 15%&ndash;25% of the same trip. Because Driver Earnings <strong style="color:var(--text);">are</strong> our GMV, every completed trip pays both parties &mdash; our investment in driver conversion is disproportionately an investment in Uber's revenue.</p>
-
-  <div class="five-col" style="margin-bottom:20px;">
-    <div class="tier-card">
-      <div class="tier-title" style="font-size:0.7rem;">Acceptance Rate</div>
-      <div class="stat-val" style="font-size:1.1rem;">4% → 12%</div>
-    </div>
-    <div class="tier-card">
-      <div class="tier-title" style="font-size:0.7rem;">Cancellation Rate</div>
-      <div class="stat-val" style="font-size:1.1rem;">↓ Improves</div>
-    </div>
-    <div class="tier-card" style="border-top-color:var(--red);">
-      <div class="tier-title" style="font-size:0.7rem;">Fill Rate (FR)</div>
-      <div class="stat-val red" style="font-size:1.1rem;">3% → 9%</div>
-    </div>
-    <div class="tier-card" style="border-top-color:var(--red);">
-      <div class="tier-title" style="font-size:0.7rem;">Driver Earnings = GMV</div>
-      <div class="stat-val red" style="font-size:1.1rem;">3× Trips</div>
-    </div>
-    <div class="tier-card" style="border-top-color:var(--red);">
-      <div class="tier-title" style="font-size:0.7rem;">Referral Fee + Uber Take</div>
-      <div class="stat-val red" style="font-size:1.1rem;">Both ↑ Together</div>
-    </div>
-  </div>
-
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:10px;font-size:0.95rem;">Fill Rate Today — Live Markets (L7D, Uber 3P Dashboard)</h3>
-      <table>
-        <thead><tr><th>Market</th><th>Offers Sent</th><th>Accept Rate</th><th>Fill Rate</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="highlight-row"><td>Las Vegas</td><td>60,950</td><td>4%</td><td class="red">3%</td><td><span class="badge-pipe">Worst</span></td></tr>
-          <tr><td>San Francisco</td><td style="color:var(--muted)">n/a</td><td style="color:var(--muted)">n/a</td><td>4%</td><td><span class="badge-pipe">Low</span></td></tr>
-          <tr><td>San Diego</td><td style="color:var(--muted)">n/a</td><td style="color:var(--muted)">n/a</td><td>5%</td><td><span class="badge-pipe">Below Avg</span></td></tr>
-          <tr><td>Houston</td><td style="color:var(--muted)">n/a</td><td style="color:var(--muted)">n/a</td><td>7%</td><td><span class="badge-soon">Average</span></td></tr>
-          <tr><td>Fort Lauderdale</td><td style="color:var(--muted)">n/a</td><td style="color:var(--muted)">n/a</td><td>7%</td><td><span class="badge-soon">Average</span></td></tr>
-          <tr class="highlight-row"><td>Palm Springs</td><td style="color:var(--muted)">n/a</td><td style="color:var(--muted)">n/a</td><td class="red">16%</td><td><span class="badge-live">Best</span></td></tr>
-        </tbody>
-      </table>
-      <div class="callout" style="margin-top:14px;font-size:0.82rem;">
-        Same platform, same demand pool, same rate card &mdash; a <strong style="color:var(--text);">5× spread in Fill Rate</strong> between our worst and best live markets. Closing that spread market-by-market is the entire investment thesis: it's not a new bet, it's <strong style="color:var(--text);">replicating what already works in Palm Springs.</strong>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card" style="border-top:3px solid var(--red);">
-        <h3 style="margin-bottom:10px;">Who Gets Paid, Per Trip</h3>
-        <div style="font-size:0.85rem;line-height:2;">
-          Uber take rate: <strong>15&ndash;25%</strong><br>
-          Flywheel referral fee: <strong class="red">2.5&ndash;4%</strong><br>
-          On a <strong>$17 avg Uber 3P fare</strong>: Uber nets ~$3.40, Flywheel nets ~$0.55/trip
-        </div>
-      </div>
-      <div class="callout amber" style="font-size:0.85rem;">
-        <strong>~6× gap</strong> — Uber earns ~6× more than Flywheel on every ride we fill. We only get paid when the trip completes, so we're economically aligned to push Fill Rate — and Uber's revenue rides on our success.
-      </div>
-      <div class="callout green" style="font-size:0.85rem;">
-        <strong>Illustrative Las Vegas payback:</strong> 3%→9% Fill Rate over 6 months → 3× completed trips → Flywheel fee and Uber take climb <strong>together</strong> → <strong>&lt;90-day illustrative Uber payback window</strong>, scaled to the 32-market plan.
-      </div>
-      <div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:center;">
-        <div class="label" style="margin-bottom:6px;">The Ask, Restated</div>
-        <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;">This isn't a demand-generation bet — it's a <strong style="color:var(--text);">conversion-rate fix</strong> with proof already live in-market. Every dollar of Flywheel investment compounds into Uber's own take rate on the same GMV.</p>
-      </div>
-    </div>
+  <div class="label">The Growth Engine</div>
+  <div class="ph-wrap">
+    <div class="ph-num">06</div>
+    <div class="ph-title">The Uber Growth Flywheel</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">The Investment Case</div>
-  <h2>Uber's Return on Investment</h2>
-  <div class="divider"></div>
-  <p style="color:var(--muted);font-size:0.85rem;margin-bottom:14px;">A $26.5M investment, paid back within the existing US fleet alone -- no new markets, no international growth required.</p>
-
-  <div class="card" style="border-top:3px solid var(--red); margin-bottom:16px;">
-    <h3>Breakeven Math -- USA Only</h3>
-    <div class="label" style="margin-bottom:12px;">$26.5M Investment &middot; $17 Avg. Rider Fare &middot; 9,937 Active US Vehicles Today</div>
-    <div class="card-grid" style="margin-bottom:14px; grid-template-columns:repeat(3,1fr);">
-      <div><div class="stat-val">2,598</div><div class="stat-label">Vehicles Needed @ 10% Take Rate</div></div>
-      <div><div class="stat-val">2,078</div><div class="stat-label">Vehicles Needed @ 12.5% Take Rate</div></div>
-      <div><div class="stat-val red">1,732</div><div class="stat-label">Vehicles Needed @ 15% Take Rate</div></div>
-    </div>
-    <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">At 2 rides/vehicle/hour, 10 hours/day, 300 working days/year -- Uber's full $26.5M investment breaks even using only <strong style="color:var(--text);">17-26% of Flywheel's existing active US fleet</strong>. Every one of these vehicles is already on the platform today.</p>
-  </div>
-
-  <div class="two-col">
-    <div class="card" style="border-top:3px solid var(--red);">
-      <h3>Flywheel's Revenue, Same Window</h3>
-      <div class="label" style="margin-bottom:12px;">Platform Service Fee &middot; ~2.5% of Rider Fare</div>
-      <div class="card-grid cols-2" style="margin-bottom:14px;">
-        <div><div class="stat-val">$4.4M-$6.6M</div><div class="stat-label">Flywheel Revenue During Uber Breakeven</div></div>
-        <div><div class="stat-val">17-25%</div><div class="stat-label">of Investment, Earned Alongside Uber</div></div>
-      </div>
-      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Flywheel earns meaningfully across the same ride volume Uber needs to break even -- proof the unit economics work for both sides, not just Uber.</p>
-    </div>
-    <div class="card" style="border-top:3px solid var(--red);">
-      <h3>Platform Service Fee</h3>
-      <div class="label" style="margin-bottom:12px;">Disclosed in Every Driver Contract</div>
-      <div class="card-grid cols-2" style="margin-bottom:14px;">
-        <div><div class="stat-val">~$20M</div><div class="stat-label">Annual Platform Fee Revenue, US Fleet</div></div>
-        <div><div class="stat-val">2-2.1%</div><div class="stat-label">of Rider Fare, Platform-Wide</div></div>
-      </div>
-      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">Flywheel's platform service fee -- covering dispatch, technology, and platform access -- is disclosed in every driver contract as a percentage of dispatch trips, funding continued platform growth and reliability.</p>
-    </div>
-  </div>
-
-  <div class="callout" style="margin-top:20px;">
-    <strong>The Investor Story:</strong> Uber's $26.5M investment is paid back within one year, using less than 1 in 4 taxis already active on Flywheel's US platform today -- a domestically-contained, low-risk return that doesn't depend on new market expansion or speculative growth.
+  <div class="label">The Marketplace Effect</div>
+  <div class="ph-wrap">
+    <div class="ph-num">07</div>
+    <div class="ph-title">Every Point of Fill Rate Creates Value</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">TaxiOS Platform</div>
-  <h2>The Full Spectrum — One Platform, Every Driver</h2>
-  <div class="divider"></div>
-
-  <div class="five-col" style="margin-bottom:20px;">
-    <div class="tier-card">
-      <div class="tier-title">Heavy Asset</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Tablet + Rider Screen + OBD2 + Camera + POS + Printer + Toplight</div>
-      <span class="badge-live">✅ Live</span>
-    </div>
-    <div class="tier-card">
-      <div class="tier-title">Standard</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Driver Tablet + Camera + POS device</div>
-      <span class="badge-live">✅ Live</span>
-    </div>
-    <div class="tier-card">
-      <div class="tier-title">Light Asset</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Driver phone · CC processing only</div>
-      <span class="badge-live">✅ Live</span>
-    </div>
-    <div class="tier-card" style="border-top-color:#3B82F6;">
-      <div class="tier-title">Direct-to-Driver</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">App only · Any licensed taxi driver · Fast scale</div>
-      <span class="badge-soon">🔵 2027</span>
-    </div>
-    <div class="tier-card" style="border-top-color:#A855F7;">
-      <div class="tier-title">Flywheel Connect</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">No asset · Dispatch integration · 2,000+ live (Kaptyn LV)</div>
-      <span class="badge-live">✅ Live</span>
-    </div>
-  </div>
-
-  <div class="three-col">
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Platform Infrastructure</div>
-      <h3>CabMaestro</h3>
-      <div class="stat-val">35K</div>
-      <div class="stat-label">vehicles · Fleet SaaS · 4 countries</div>
-    </div>
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Government Platform</div>
-      <h3>CardONE</h3>
-      <div class="stat-val">1.5M</div>
-      <div class="stat-label">rides/yr · Paratransit · 18 cities</div>
-    </div>
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Uber Integration</div>
-      <h3>Flywheel × Uber</h3>
-      <div class="stat-val red">3,500+</div>
-      <div class="stat-label">live drivers · Uber Tech Partner</div>
-    </div>
+  <div class="label">The Return</div>
+  <div class="ph-wrap">
+    <div class="ph-num">08</div>
+    <div class="ph-title">Uber's Return on Investment</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Market Opportunity</div>
-  <h2>$36B Market. 390,000 Taxis. We're Early.</h2>
-  <div class="divider"></div>
-
-  <div class="three-col" style="margin-bottom:20px;">
-    <div class="card"><div class="stat-val">390,000+</div><div class="stat-label">Addressable taxis globally</div></div>
-    <div class="card"><div class="stat-val red">$36B</div><div class="stat-label">Total Addressable Market</div></div>
-    <div class="card"><div class="stat-val">32</div><div class="stat-label">Targeted markets across 3 regions</div></div>
-  </div>
-
-  <div class="two-col">
-    <div>
-      <h3>🇺🇸 United States</h3>
-      <table>
-        <thead><tr><th>Region</th><th>Markets</th><th>Vehicles</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>West Coast</td><td>7</td><td>4,990</td><td><span class="badge-live">Active</span></td></tr>
-          <tr><td>Southern Belt</td><td>6</td><td>2,307</td><td><span class="badge-live">Active</span></td></tr>
-          <tr><td>East Coast</td><td>5</td><td>4,153</td><td><span class="badge-pipe">Pipeline</span></td></tr>
-          <tr><td>Midwest</td><td>3</td><td>2,050</td><td><span class="badge-soon">Future</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div>
-      <h3>🇲🇽 Mexico &amp; 🌎 LatAm</h3>
-      <table>
-        <thead><tr><th>Region</th><th>Vehicles</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Quintana Roo</td><td>925</td><td><span class="badge-live">Jun 28 ✅</span></td></tr>
-          <tr><td>Yucatán</td><td>500</td><td><span class="badge-pipe">Pipeline</span></td></tr>
-          <tr><td>CDMX + Puebla</td><td>5,800</td><td><span class="badge-soon">Future</span></td></tr>
-          <tr><td>LatAm (4 markets)</td><td>5,000</td><td><span class="badge-soon">Future</span></td></tr>
-        </tbody>
-      </table>
-      <div class="callout green" style="margin-top:12px;font-size:0.82rem;">
-        <strong>Mexico:</strong> Uber invited Flywheel to fix the reputation of Mexican taxis. June 28 2026 — Cancún launches. 6,000 cars secured in Quintana Roo + Yucatán.
-      </div>
-    </div>
+  <div class="label">The Platform</div>
+  <div class="ph-wrap">
+    <div class="ph-num">09</div>
+    <div class="ph-title">The Full Spectrum — One Platform. Every Driver.</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Sales Pipeline</div>
-  <h2>Contracts to Support Projections</h2>
-  <div class="divider"></div>
-
-  <div class="three-col" style="margin-bottom:16px;">
-    <div class="card"><div class="stat-val red">12</div><div class="stat-label">Active Markets</div></div>
-    <div class="card"><div class="stat-val">12</div><div class="stat-label">Pipeline Markets</div></div>
-    <div class="card"><div class="stat-val" style="color:var(--muted)">8</div><div class="stat-label">Future Markets</div></div>
-  </div>
-
-  <table style="margin-bottom:16px;">
-    <thead>
-      <tr><th>Market</th><th>Type</th><th>Contracted</th><th>Active</th><th>Status</th><th>Ann. Rev Est.</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>San Francisco</td><td>FA Heavy</td><td>500</td><td>425</td><td><span class="badge-live">✅ Live</span></td><td class="red">$892K</td></tr>
-      <tr><td>Las Vegas (Kaptyn)</td><td>FC</td><td>2,500+</td><td>2,000+</td><td><span class="badge-live">✅ Live</span></td><td>$87K*</td></tr>
-      <tr><td>San Diego</td><td>FA Light</td><td>350</td><td>245</td><td><span class="badge-live">✅ Live</span></td><td>$381K</td></tr>
-      <tr><td>Houston</td><td>FA Heavy</td><td>450</td><td>198</td><td><span class="badge-live">✅ Live</span></td><td>$289K</td></tr>
-      <tr><td>Miami</td><td>FA Standard</td><td>457</td><td>50</td><td><span class="badge-pipe">🟡 Activating</span></td><td>$124K</td></tr>
-      <tr><td>Fort Lauderdale</td><td>FA Light</td><td>200</td><td>120</td><td><span class="badge-live">✅ Live</span></td><td>$250K</td></tr>
-      <tr><td>Baltimore</td><td>FA Heavy</td><td>103</td><td>13</td><td><span class="badge-live">✅ Live</span></td><td>$52K</td></tr>
-      <tr class="highlight-row"><td>Cancún</td><td>FA + FC</td><td>325</td><td>—</td><td><span class="badge-pipe">🟡 Jun 28</span></td><td>$1.2M proj</td></tr>
-    </tbody>
-  </table>
-
-  <div class="two-col" style="gap:12px;">
-    <div style="font-size:0.78rem;color:var(--muted);padding:8px 0;">*LV FC at current 4% AR. Target 30%+ AR = <strong style="color:var(--text);">$146K+/yr</strong>. Rate tier upgrade to 4.0% at 30% AR.</div>
-    <div class="callout" style="font-size:0.82rem;">
-      <strong>iCabbi Pipeline:</strong> 100,000 vehicles globally · 10,000 vehicle target · Q4 2026 integration start. One contract = entire dispatch network activated overnight.
-    </div>
+  <div class="label">The Market</div>
+  <div class="ph-wrap">
+    <div class="ph-num">10</div>
+    <div class="ph-title">$36B Market. 390,000 Taxis. We're Early.</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Unit Economics</div>
-  <h2>Revenue Per Driver — The Real Model</h2>
-  <div class="divider"></div>
-  <p style="color:var(--muted);margin-bottom:16px;font-size:0.88rem;">Driver = unit of economics. Vehicle = capital asset. 1 vehicle × 1.3 shifts = active driver revenue.</p>
-
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:12px;">Revenue by Channel</h3>
-      <table>
-        <thead><tr><th>Channel</th><th>Mix</th><th>How Charged</th><th>Net/Trip</th></tr></thead>
-        <tbody>
-          <tr><td>Street Hail</td><td>30%</td><td>CC 4.5% − 2.4% processing</td><td>$0.15</td></tr>
-          <tr><td>WebHail</td><td>10%</td><td>CC 4.5% − 2.4% processing</td><td>$0.15</td></tr>
-          <tr><td>eHail</td><td>10%</td><td>19.1% of fare (all-in)</td><td class="red">$2.29</td></tr>
-          <tr><td>Uber 3P</td><td>50%</td><td>2.5% → 4.0% at AR≥30%</td><td>$0.30→$0.48</td></tr>
-          <tr class="highlight-row"><td><strong>Blended</strong></td><td>100%</td><td>—</td><td><strong>$0.44/trip</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="callout">
-        <strong>Volume Model:</strong><br>
-        1 vehicle × 1.3 shifts × 65% utilization × 6 trips/hr × 8hrs = <strong>40 trips/vehicle/day</strong><br><br>
-        With Uber demand: <strong class="red">80% utilization</strong> (+78% vs without Uber)
-      </div>
-      <div class="callout amber">
-        <strong>AR Unlock:</strong> LV at 4% AR = <strong>$80/day</strong> · Target 30% = <strong>$960/day</strong> (12× uplift). Rate tier also upgrades from 2.5% → 4.0%.
-      </div>
-      <div class="card">
-        <div class="label" style="margin-bottom:6px;">Avg Taxi Fares</div>
-        <div style="font-size:0.82rem;line-height:1.8;">
-          Mexico Hotel: <strong class="red">$50</strong> &nbsp;·&nbsp; Mexico Local: <strong>$8</strong><br>
-          US Urban/Suburban: <strong>$25</strong> &nbsp;·&nbsp; LatAm: <strong>$10</strong><br>
-          Uber avg rider payment: <strong>$12</strong>
-        </div>
-      </div>
-    </div>
+  <div class="label">The Pipeline</div>
+  <div class="ph-wrap">
+    <div class="ph-num">11</div>
+    <div class="ph-title">Proven Demand Pipeline</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Financial Projections</div>
-  <h2>2026–2029 Proforma</h2>
-  <div class="divider"></div>
-
-  <div class="card-grid cols-4" style="margin-bottom:20px;">
-    <div class="card"><div class="stat-val">$4.1M</div><div class="stat-label">2026 Net Revenue</div></div>
-    <div class="card"><div class="stat-val">$12M</div><div class="stat-label">2027 Net Revenue</div></div>
-    <div class="card"><div class="stat-val">$28M</div><div class="stat-label">2028 Net Revenue</div></div>
-    <div class="card"><div class="stat-val red">$45M</div><div class="stat-label">2029 Net Revenue</div></div>
-  </div>
-
-  <div class="chart-wrap" style="height:200px;margin-bottom:20px;">
-    <canvas id="finChart"></canvas>
-  </div>
-
-  <div class="three-col">
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Financial Exit</div>
-      <h3>$375M–$500M</h3>
-      <p style="font-size:0.82rem;color:var(--muted);">$25M EBITDA × 15–20× multiple. Comparable SaaS + marketplace exits.</p>
-    </div>
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Strategic (Uber)</div>
-      <h3 class="red">$750M–$1B</h3>
-      <p style="font-size:0.82rem;color:var(--muted);">Deep Uber technology partnership + global taxi platform.. Acquisition accelerates Uber's taxi expansion.</p>
-    </div>
-    <div class="card">
-      <div class="label" style="margin-bottom:6px;">Partnership Status</div>
-      <h3>#1 Globally</h3>
-      <p style="font-size:0.82rem;color:var(--muted);">Flywheel is Uber's highest-classified taxi technology partner. Accelerating path to strategic acquisition.</p>
-    </div>
+  <div class="label">The Economics</div>
+  <div class="ph-wrap">
+    <div class="ph-num">12</div>
+    <div class="ph-title">The Revenue Engine</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Traction</div>
-  <h2>Proof. Already Profitable.</h2>
-  <div class="divider"></div>
-
-  <div class="stat-grid-6" style="margin-bottom:20px;">
-    <div class="card"><div class="stat-val">$25.3M</div><div class="stat-label">Gross Revenue TTM</div></div>
-    <div class="card"><div class="stat-val">$4.14M</div><div class="stat-label">Net Revenue TTM</div></div>
-    <div class="card"><div class="stat-val red">$1.13M</div><div class="stat-label">EBITDA — Profitable</div></div>
-    <div class="card"><div class="stat-val">35,000+</div><div class="stat-label">Platform Vehicles</div></div>
-    <div class="card"><div class="stat-val">3,500+</div><div class="stat-label">Live on Uber</div></div>
-    <div class="card"><div class="stat-val red">2022</div><div class="stat-label">Uber Technology Partner Since</div></div>
-  </div>
-
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:12px;">Milestone Timeline</h3>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Apr 2022</div><div>Contract signed with Uber · $1.2M engineering investment</div></div>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Nov 2022</div><div>First Uber integration live — San Francisco</div></div>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Apr 2023</div><div>Hockey stick — drivers making $5–6K/week in SF</div></div>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">2024</div><div>Expanded to Reno, Palm Springs, San Diego, Las Vegas</div></div>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">2025</div><div>Houston, Miami, FLL, Baltimore · iCabbi partnership</div></div>
-      <div class="milestone"><div class="milestone-dot"></div><div class="milestone-yr">Jun 2026</div><div>Flywheel Connect: 2,000+ drivers live via Kaptyn LV</div></div>
-      <div class="milestone" style="border-bottom:none;"><div class="milestone-dot"></div><div class="milestone-yr">Jun 28 2026</div><div><strong class="red">Cancún Mexico launch ✅</strong></div></div>
-    </div>
-    <div class="callout" style="height:fit-content;">
-      <strong>"Uber's two most profitable divisions in 2025: Groceries and Taxis."</strong><br><br>
-      — Uber Global Head Meeting, 2025<br><br>
-      Flywheel is the #1 partner in the most profitable category Uber operates.
-    </div>
+  <div class="label">The Model</div>
+  <div class="ph-wrap">
+    <div class="ph-num">13</div>
+    <div class="ph-title">Growth Model</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Existing Term Sheet</div>
-  <h2>Uber Mexico — Non-Binding TS</h2>
-  <div class="divider"></div>
-  <p style="color:var(--muted);font-size:0.85rem;margin-bottom:20px;">Received June 16, 2026 from Shilpa Rathi, Global Program Head, Taxi/Auto/Moto Partnerships, Uber</p>
-
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:12px;">Phase 1 Markets</h3>
-      <table>
-        <thead><tr><th>Market</th><th>Vehicles</th><th>Launch</th></tr></thead>
-        <tbody>
-          <tr><td>Cancún</td><td>325</td><td><span class="badge-live">Jun 28 ✅</span></td></tr>
-          <tr><td>Tulum</td><td>1,200</td><td><span class="badge-pipe">Q3 2026</span></td></tr>
-          <tr><td>Playa del Carmen</td><td>300</td><td><span class="badge-pipe">Q3 2026</span></td></tr>
-          <tr class="highlight-row"><td><strong>Total Phase 1</strong></td><td><strong>1,825</strong></td><td>—</td></tr>
-        </tbody>
-      </table>
-      <div class="callout" style="margin-top:14px;font-size:0.82rem;">
-        <strong>Phase 2 Pipeline:</strong> CDMX · Guadalajara · Toluca<br>
-        <strong>Beyond Mexico:</strong> LatAm expansion in discussion
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card" style="border-top:3px solid var(--red);">
-        <h3>Fee Structure</h3>
-        <div style="font-size:0.88rem;line-height:2;">
-          Base fee: <strong>2.0%</strong><br>
-          With targets: <strong>2.5%</strong><br>
-          Performance bonus: <strong class="red">up to 4.0%</strong><br>
-          Settlement: <strong>Daily ✅</strong>
-        </div>
-      </div>
-      <div class="callout green" style="font-size:0.82rem;">
-        Flywheel has been Uber's technology partner since 2022.. This TS is the entry point; the full relationship spans US + Mexico + LatAm.
-      </div>
-      <div style="font-size:0.75rem;color:var(--muted);padding:8px 0;border-top:1px solid var(--border);">
-        ⚠️ Risk flags (open items): Base fee negotiation ongoing · Exclusivity window: 24 months · SLA: 99.99% uptime · Competitor definition TBD
-      </div>
-    </div>
+  <div class="label">The Proof</div>
+  <div class="ph-wrap">
+    <div class="ph-num">14</div>
+    <div class="ph-title">Proof. Already Working.</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Historical Funding</div>
-  <h2>Capitalization &amp; Investor History</h2>
-  <div class="divider"></div>
-
-  <div class="three-col" style="margin-bottom:20px;">
-    <div class="card"><div class="stat-val red">$4.9M</div><div class="stat-label">Outside investment to date</div></div>
-    <div class="card"><div class="stat-val">$2.85M</div><div class="stat-label">KISS Convertible Notes (Mar-25A)</div></div>
-    <div class="card"><div class="stat-val">$5.87M</div><div class="stat-label">Total Equity (Mar-25A)</div></div>
-  </div>
-
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:12px;">Balance Sheet Snapshot</h3>
-      <table>
-        <thead><tr><th>Line Item</th><th>Mar-25A</th></tr></thead>
-        <tbody>
-          <tr><td>Total Assets</td><td>$9.85M</td></tr>
-          <tr><td>KISS Convertible Notes</td><td>$2.85M</td></tr>
-          <tr class="highlight-row"><td><strong>Total Equity</strong></td><td><strong>$5.87M</strong></td></tr>
-        </tbody>
-      </table>
-      <div class="callout amber" style="margin-top:14px;font-size:0.82rem;">
-        <strong>⚠️ Full itemized cap table (individual investor list, share classes, ownership %) is being finalized</strong> — available prior to close as part of definitive diligence. This slide reflects consolidated balance sheet position as of the most recent audited/reviewed period.
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card" style="border-top:3px solid var(--red);">
-        <h3 style="margin-bottom:8px;">2026 KISS Notes (Active Bridge)</h3>
-        <div style="font-size:0.85rem;line-height:1.9;">
-          Structure: <strong>KISS convertible notes</strong>, multiple investors<br>
-          Terms: <strong>15%/yr PIK</strong> · valuation cap · conversion discount<br>
-          Purpose: Bridge financing ahead of this raise
-        </div>
-      </div>
-      <div class="callout" style="font-size:0.82rem;flex:1;">
-        <strong>Prior raises:</strong> Flywheel platform funded through founder capital, strategic KISS notes, and reinvested operating cash flow since 2017 acquisition — no institutional priced round to date. This is the company's first institutional Series A.
-      </div>
-    </div>
-  </div>
-
-  <div class="callout green" style="margin-top:16px;">
-    <strong>Why this matters to investors:</strong> Clean history, no priced-round overhang, no down-round risk. Every prior dollar in the business was founder or bridge capital — this $15M Series A sets the company's first true institutional valuation mark, with the KISS notes converting in at this round's terms.
+  <div class="label">The Expansion</div>
+  <div class="ph-wrap">
+    <div class="ph-num">15</div>
+    <div class="ph-title">Global Expansion</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">Leadership &amp; Investment</div>
-  <h2>The Team &amp; The Ask</h2>
-  <div class="divider"></div>
-
-  <div class="two-col" style="margin-bottom:20px;">
-    <div class="team-card">
-      <div class="team-avatar">IA</div>
-      <div>
-        <div class="team-name">Izzy Aala</div>
-        <div class="team-title">Founder &amp; CEO</div>
-        <div class="team-bio">35+ years transportation technology. Founded Cabconnect 2002, CardONE 2007, acquired Flywheel 2017. Negotiated SF regulatory change enabling Uber × taxi integration. Signed Uber contract April 5, 2022. DOT Innovation Award recipient (Obama administration, Secretary Fox of Transportation).</div>
-      </div>
-    </div>
-    <div class="team-card">
-      <div class="team-avatar">HK</div>
-      <div>
-        <div class="team-name">Hansu Kim</div>
-        <div class="team-title">Co-Founder &amp; CTO</div>
-        <div class="team-bio">Co-built original Flywheel platform (Cabulous). Acquired DeSoto Cab San Francisco 2011. Rebranded as Flywheel Taxi 2016. Deep Uber integration expertise. Platform architect behind the TaxiOS technology stack.</div>
-      </div>
-    </div>
+  <div class="label">The Raise</div>
+  <div class="ph-wrap">
+    <div class="ph-num">16</div>
+    <div class="ph-title">Investment Structure</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
+</div>
 
-  <div class="two-col">
-    <div>
-      <h3 style="margin-bottom:14px;">The Ask</h3>
-      <div class="three-col" style="margin-bottom:14px;gap:10px;">
-        <div class="card"><div class="stat-val red">$15M</div><div class="stat-label">Series A</div></div>
-        <div class="card"><div class="stat-val">$265M</div><div class="stat-label">Pre-Money</div></div>
-        <div class="card"><div class="stat-val">$280M</div><div class="stat-label">Post-Money</div></div>
-      </div>
-      <h3 style="margin-bottom:10px;font-size:0.95rem;">Use of Proceeds</h3>
-      <div class="proceed-row"><div class="proceed-label">Engineering &amp; Product</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:40%"></div></div><div class="proceed-pct">40% · $6M</div></div>
-      <div class="proceed-row"><div class="proceed-label">Market Expansion</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:30%"></div></div><div class="proceed-pct">30% · $4.5M</div></div>
-      <div class="proceed-row"><div class="proceed-label">Working Capital</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:20%"></div></div><div class="proceed-pct">20% · $3M</div></div>
-      <div class="proceed-row" style="border-bottom:none;"><div class="proceed-label">G&amp;A</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:10%"></div></div><div class="proceed-pct">10% · $1.5M</div></div>
-    </div>
-    <div>
-      <h3 style="margin-bottom:14px;">Return Scenarios</h3>
-      <div class="card" style="margin-bottom:10px;">
-        <div class="label" style="margin-bottom:4px;">Conservative 4×</div>
-        <div class="stat-val">$1.1B</div>
-        <div class="stat-label">$280M post → 4× = $1.1B exit</div>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div class="label" style="margin-bottom:4px;">Base 10×</div>
-        <div class="stat-val">$2.65B</div>
-        <div class="stat-label">$265M pre × 10× multiple</div>
-      </div>
-      <div class="card" style="border-top:3px solid var(--red);">
-        <div class="label" style="margin-bottom:4px;">Strategic (Uber Acquisition)</div>
-        <div class="stat-val red">$750M–$1B</div>
-        <div class="stat-label">Uber Technology Partner — accelerating acquisition path</div>
-      </div>
-      <div class="cta-block" style="margin-top:14px;padding:16px;">
-        <p style="font-size:0.88rem;margin-bottom:6px;">Ready to partner?</p>
-        <strong>izzy@flywheel.com</strong><br>
-        <span style="color:var(--muted);font-size:0.8rem;">meet.google.com/ihk-pfrx-cea</span>
-      </div>
-    </div>
+<div class="slide">
+  <div class="label">The People</div>
+  <div class="ph-wrap">
+    <div class="ph-num">17</div>
+    <div class="ph-title">Leadership</div>
+    <div class="ph-tag">Content Pending</div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="label">The Vision</div>
+  <div class="ph-wrap">
+    <div class="ph-num">18</div>
+    <div class="ph-title">Together, We Build the Future of Professional Transportation</div>
+    <div class="ph-tag">Content Pending</div>
   </div>
 </div>
 
@@ -1666,7 +1108,7 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <script>
-const SLIDES = ["01 — The Future of Professional Transportation", "02 — Flywheel at a Glance", "03 — Established Platform — Built Over 20 Years", "04 — A Journey Built on the Industry", "05 — Why Uber Wins", "06 — Why Flywheel + Uber = Category Leader", "07 — Every Point of Fill Rate We Add, Uber Earns More Too", "08 — Uber's Return on Investment", "09 — The Full Spectrum — One Platform, Every Driver", "10 — $36B Market. 390,000 Taxis. We're Early.", "11 — Contracts to Support Projections", "12 — Revenue Per Driver — The Real Model", "13 — 2026–2029 Proforma", "14 — Proof. Already Profitable.", "15 — Uber Mexico — Non-Binding TS", "16 — Capitalization &amp; Investor History", "17 — The Team &amp; The Ask"];
+const SLIDES = ["01 — The Future of Professional Transportation", "02 — Flywheel at a Glance", "03 — TaxiOS™ — Enterprise Infrastructure for Professional Transportation", "04 — A Journey Built on the Industry", "05 — Why Uber Wins", "06 — The Uber Growth Flywheel", "07 — Every Point of Fill Rate Creates Value", "08 — Uber's Return on Investment", "09 — The Full Spectrum — One Platform. Every Driver.", "10 — $36B Market. 390,000 Taxis. We're Early.", "11 — Proven Demand Pipeline", "12 — The Revenue Engine", "13 — Growth Model", "14 — Proof. Already Working.", "15 — Global Expansion", "16 — Investment Structure", "17 — Leadership", "18 — Together, We Build the Future of Professional Transportation"];
 
 let current = 0;
 
