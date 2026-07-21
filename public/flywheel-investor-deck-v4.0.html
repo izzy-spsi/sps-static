@@ -414,6 +414,7 @@ tr:hover td { background: var(--bg3); }
 
 /* === THE UBER GROWTH FLYWHEEL (Slide 06, v4.0, 2026-07-20 -- exact port of Izzy's design, do not alter) === */
 .ugf-topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.ugf-slide-num { color: var(--red); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; }
 .ugf-h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 2.1rem; line-height: 1.15; max-width: 360px; margin-bottom: 10px; }
 .ugf-fw-lockup { display: flex; align-items: center; gap: 10px; }
 .ugf-fw-lockup img { height: 34px; width: auto; }
@@ -440,7 +441,8 @@ tr:hover td { background: var(--bg3); }
 .ugf-hub { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 250px; height: 250px; border: 1.5px solid var(--red); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 6px; background: var(--bg); }
 .ugf-hub-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 2rem; }
 .ugf-hub-sub { font-size: 0.72rem; color: var(--muted); line-height: 1.3; max-width: 160px; }
-.ugf-node { position: absolute; width: 90px; margin-left: -45px; margin-top: -45px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ugf-node { position: absolute; width: 90px; margin-left: -45px; margin-top: -45px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 2; }
+.ugf-arcs { z-index: 1; }
 .ugf-node-num { color: var(--red); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; }
 .ugf-node-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
 .ugf-node-icon svg { width: 26px; height: 26px; stroke: var(--text); fill: none; }
@@ -1173,6 +1175,7 @@ tr:hover td { background: var(--bg3); }
 <div class="slide">
   <div class="ugf-topbar">
     <div>
+      <div class="ugf-slide-num">06</div>
       <div class="ugf-h1">The Uber Growth Flywheel</div>
     </div>
     <div class="ugf-fw-lockup">
@@ -1233,12 +1236,12 @@ tr:hover td { background: var(--bg3); }
       </div>
       <div class="ugf-node" style="left:572px; top:402px;">
         <div class="ugf-node-num">04</div>
-        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg></div>
+        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V13M10 20V9M16 20v-7"/><path d="M14 7l2-2 4 4"/></svg></div>
         <div class="ugf-node-label">Higher Fill Rate</div>
       </div>
       <div class="ugf-node" style="left:476px; top:534px;">
         <div class="ugf-node-num">05</div>
-        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.2-6-10a6 6 0 0 1 12 0c0 4.8-6 10-6 10z"/><circle cx="12" cy="11" r="2"/><path d="M4 17l3-1M20 17l-3-1" stroke-dasharray="2 2"/></svg></div>
+        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.2"/><path d="M8 12h9" stroke-dasharray="2.2 2.2"/><path d="M16 8l4 4-4 4"/></svg></div>
         <div class="ugf-node-label">More Completed Trips</div>
       </div>
       <div class="ugf-node" style="left:320px; top:585px;">
@@ -1253,12 +1256,12 @@ tr:hover td { background: var(--bg3); }
       </div>
       <div class="ugf-node" style="left:68px; top:402px;">
         <div class="ugf-node-num">08</div>
-        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M6 21v-1a6 6 0 0 1 6-6h0a6 6 0 0 1 6 6v1"/><path d="M9.5 2.2l0.6 1.9-1.6-1.2h2l-1.6 1.2z"/><path d="M14.5 2.2l0.6 1.9-1.6-1.2h2l-1.6 1.2z"/></svg></div>
+        <div class="ugf-node-icon"><svg viewBox="0 0 34 34" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="8.5" r="3.2"/><path d="M10.8 19.5v-0.8a6.2 6.2 0 0 1 12.4 0v0.8"/><g stroke-width="1"><path d="M4.5 25l0.6 1.8-1.4-1.05h1.6l-1.4 1.05z"/><path d="M10 25l0.6 1.8-1.4-1.05h1.6l-1.4 1.05z"/><path d="M15.5 25l0.6 1.8-1.4-1.05h1.6l-1.4 1.05z"/><path d="M21 25l0.6 1.8-1.4-1.05h1.6l-1.4 1.05z"/><path d="M26.5 25l0.6 1.8-1.4-1.05h1.6l-1.4 1.05z"/></g></svg></div>
         <div class="ugf-node-label">Better Rider Experience</div>
       </div>
       <div class="ugf-node" style="left:68px; top:238px;">
         <div class="ugf-node-num">09</div>
-        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+        <div class="ugf-node-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-6 3 3 5-8 6 4"/><path d="M17 8l4 2-1 4.3"/></svg></div>
         <div class="ugf-node-label">More Uber Demand</div>
       </div>
       <div class="ugf-node" style="left:164px; top:106px;">
@@ -1267,16 +1270,23 @@ tr:hover td { background: var(--bg3); }
         <div class="ugf-node-label">More Uber Revenue</div>
       </div>
 
-      <div class="ugf-arrow" style="left:402px; top:68px; transform:translate(-50%,-50%) rotate(18deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:534px; top:164px; transform:translate(-50%,-50%) rotate(54deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:585px; top:320px; transform:translate(-50%,-50%) rotate(90deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:534px; top:476px; transform:translate(-50%,-50%) rotate(126deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:402px; top:572px; transform:translate(-50%,-50%) rotate(162deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:238px; top:572px; transform:translate(-50%,-50%) rotate(198deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:106px; top:476px; transform:translate(-50%,-50%) rotate(234deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:55px; top:320px; transform:translate(-50%,-50%) rotate(270deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:106px; top:164px; transform:translate(-50%,-50%) rotate(306deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
-      <div class="ugf-arrow" style="left:238px; top:68px; transform:translate(-50%,-50%) rotate(342deg);"><svg viewBox="0 0 24 24" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg></div>
+      <svg class="ugf-arcs" viewBox="0 0 640 640" style="position:absolute; inset:0; width:100%; height:100%;">
+        <defs>
+          <marker id="ugf-arrowhead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse">
+            <path d="M0.5 0.5L9 5L0.5 9.5" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <path d="M 370.6 59.9 A 265 265 0 0 1 432.0 79.8" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 513.8 139.3 A 265 265 0 0 1 551.8 191.5" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 583.0 287.7 A 265 265 0 0 1 583.0 352.3" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 551.8 448.5 A 265 265 0 0 1 513.8 500.7" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 432.0 560.2 A 265 265 0 0 1 370.6 580.1" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 269.4 580.1 A 265 265 0 0 1 208.0 560.2" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 126.2 500.7 A 265 265 0 0 1 88.2 448.5" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 57.0 352.3 A 265 265 0 0 1 57.0 287.7" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 88.2 191.5 A 265 265 0 0 1 126.2 139.3" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+        <path d="M 208.0 79.8 A 265 265 0 0 1 269.4 59.9" fill="none" stroke="var(--red)" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ugf-arrowhead)"/>
+      </svg>
     </div>
 
     <div class="ugf-powered">
