@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "generatedAt": "2026-07-22T06:05:10.392Z",
+    "source": "sps-api /api/v2/portfolio-forward (live, DB-driven) + FYE2025 real actuals from memory/2026-07-16-flywheel-deck-v4-valuation.md",
+    "scenario": "Conservative (D2D Nationwide: 90-day tranche cadence, starting Apr 1 2027)",
+    "note": "2026 is a partial year in the model (6mo captured from a mid-2026 simStart) -- excluded from year-over-year charts to avoid a misleading partial-year dip. FYE2025 (full year, real) used as the historical anchor instead."
+  },
+  "revenueAndCagr": {
+    "labels": [
+      "FYE2025 (Actual)",
+      "2027F",
+      "2028F",
+      "2029F"
+    ],
+    "revenue": [
+      31389867,
+      119022796.06533568,
+      226195181.5509801,
+      288623111.47738975
+    ],
+    "cagrForwardPct": 74.13473412983451
+  },
+  "ebitdaAndMargin": {
+    "labels": [
+      "FYE2025 (Actual)",
+      "2027F",
+      "2028F",
+      "2029F"
+    ],
+    "ebitda": [
+      4187166,
+      23854443.795828275,
+      47840600.529639624,
+      61814570.46870658
+    ],
+    "ebitdaMarginPct": [
+      13.339228229288134,
+      20.041911788674295,
+      21.150141307876297,
+      21.417054979517474
+    ]
+  },
+  "revenueMixByProduct": {
+    "labels": [
+      "2027F",
+      "2028F",
+      "2029F"
+    ],
+    "fa": [
+      29293470,
+      39062970,
+      45074970
+    ],
+    "connect": [
+      37576875,
+      43262100,
+      47672100
+    ],
+    "d2d": [
+      52152451.065335676,
+      143870111.55098003,
+      195876041.4773897
+    ]
+  },
+  "revenuePerVehicle": {
+    "labels": [
+      "2027F",
+      "2028F",
+      "2029F"
+    ],
+    "totalVehicles": [
+      39527,
+      62289,
+      65903
+    ],
+    "revenuePerVehicleAnnual": [
+      3011.1770704919595,
+      3631.382451973544,
+      4379.514005089142
+    ]
+  },
+  "revenueVsOpex": {
+    "labels": [
+      "FYE2025 (Actual)",
+      "2027F",
+      "2028F",
+      "2029F"
+    ],
+    "revenue": [
+      31389867,
+      119022796.06533568,
+      226195181.5509801,
+      288623111.47738975
+    ],
+    "operatingCosts": [
+      24524441,
+      95168352.26950741,
+      178354581.02134046,
+      226808541.00868317
+    ]
+  }
+}

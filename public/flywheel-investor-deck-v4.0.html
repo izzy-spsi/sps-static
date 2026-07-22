@@ -528,6 +528,20 @@ tr:hover td { background: var(--bg3); }
 .roi-hubcompare-foot { font-size: 0.72rem; text-align: center; line-height: 1.4; border-top: 1px solid var(--border); padding-top: 8px; }
 .roi-hubcompare-foot .red { color: var(--red); font-weight: 700; }
 
+/* === SLIDE 12: THE REVENUE ENGINE === */
+.eng-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 6px; }
+.eng-chart-card { border: 1px solid var(--border); border-radius: 10px; background: var(--bg2); padding: 12px 16px 14px; }
+.eng-chart-head { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem; text-align: center; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.eng-cagr-pill { background: rgba(204,26,26,0.12); color: var(--red); border: 1px solid rgba(204,26,26,0.35); border-radius: 20px; padding: 2px 10px; font-size: 0.68rem; font-weight: 700; }
+.eng-legend-dot { color: var(--muted); font-size: 0.65rem; font-weight: 500; }
+.eng-chart-canvas-wrap { position: relative; height: 210px; }
+.eng-bullets { margin-top: 10px; padding-left: 16px; font-size: 0.68rem; line-height: 1.45; color: var(--muted); }
+.eng-bullets li { margin-bottom: 4px; }
+.eng-mix-row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: center; }
+.eng-mix-canvas-wrap { position: relative; height: 170px; }
+.eng-mix-stats { display: flex; flex-direction: column; gap: 10px; }
+.eng-mix-stats .roi-hubcompare-num { font-size: 1.5rem; }
+
 .roi-main { display: grid; grid-template-columns: 1.35fr 0.9fr; gap: 14px; margin-bottom: 10px; }
 
 .roi-engines { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -1570,11 +1584,41 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <div class="slide">
-  <div class="label">The Economics</div>
-  <div class="ph-wrap">
-    <div class="ph-num">12</div>
-    <div class="ph-title">The Revenue Engine</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">12</div>
+  <div class="roi-h1">The Revenue Engine</div>
+  <div class="roi-sub">Revenue and EBITDA growth from FYE2025 actuals through 2029F — driven by three product engines (Flywheel Advantage, Connect, D2D), real named fleet contracts, and the D2D Nationwide rollout. Conservative scenario.</div>
+
+  <div class="eng-chart-row">
+    <div class="eng-chart-card">
+      <div class="eng-chart-head">Net Revenue ($M) <span class="eng-cagr-pill" id="eng-rev-cagr">CAGR --</span></div>
+      <div class="eng-chart-canvas-wrap"><canvas id="engRevChart"></canvas></div>
+      <ul class="eng-bullets">
+        <li>FYE2025 actual ($31.4M) is the real, audited starting point — not a projection.</li>
+        <li>Growth driven by three confirmed product engines: Flywheel Advantage (hardware-installed), Connect (3rd-party fleet dispatch), and D2D (driver app) — not one single lever.</li>
+        <li>D2D Nationwide rollout (40,000 vehicles, 8 tranches of 5,000 every 90 days from Apr 2027) is the single largest contributor from 2027 onward.</li>
+      </ul>
+    </div>
+    <div class="eng-chart-card">
+      <div class="eng-chart-head">EBITDA ($M) <span class="eng-cagr-pill" id="eng-ebitda-cagr">CAGR --</span> <span class="eng-legend-dot">○ Margin %</span></div>
+      <div class="eng-chart-canvas-wrap"><canvas id="engEbitdaChart"></canvas></div>
+      <ul class="eng-bullets">
+        <li>EBITDA margin expands from 13.3% (FYE2025) to 21.4% (2029F) as fixed Payroll/Opex costs are spread across a fast-growing revenue base.</li>
+        <li>Hardware CapEx (Flywheel Advantage only — Connect/D2D require no in-vehicle equipment) is capitalized and depreciated over 24 months, not expensed against EBITDA in the month of purchase.</li>
+        <li>Payroll scales at roughly half the rate of fleet growth — real operating leverage, not a flat-cost assumption.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="roi-hubcompare" style="margin-top:10px;">
+    <div class="roi-hubcompare-head">Revenue Mix by Product — 2027F → 2029F</div>
+    <div class="eng-mix-row">
+      <div class="eng-mix-canvas-wrap"><canvas id="engMixChart"></canvas></div>
+      <div class="eng-mix-stats">
+        <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$3,011</div><div class="roi-hubcompare-label">Revenue per active vehicle, 2027F</div></div>
+        <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$4,380</div><div class="roi-hubcompare-label">Revenue per active vehicle, 2029F — multiple products, same driver base</div></div>
+      </div>
+    </div>
+    <div class="roi-hubcompare-foot">Source: live Flywheel Pro Forma Hub (<span class="red">/api/v2/portfolio-forward</span>), reconciled to real FYE2025 actuals (Total Revenue $31.39M, EBITDA $4.19M). Conservative scenario — D2D Nationwide tranches (90-day cadence) starting Apr 1, 2027. Full assumptions: memory/2026-07-21-slide12-model-defensibility.md.</div>
   </div>
 </div>
 
@@ -1688,7 +1732,24 @@ tr:hover td { background: var(--bg3); }
 <script>
 const SLIDES = ["01 — The Future of Professional Transportation", "02 — Flywheel at a Glance", "03 — TaxiOS™ — Enterprise Infrastructure for Professional Transportation", "04 — A Journey Built on the Industry", "05 — Why Uber Wins", "06 — The Uber Growth Flywheel", "07 — Every Point of Fill Rate Creates Value", "08 — Uber's Return on Investment", "09 — The Full Spectrum — One Platform. Every Driver.", "10 — $36B Market. 390,000 Taxis. We're Early.", "11 — Proven Demand Pipeline", "12 — The Revenue Engine", "13 — Growth Model", "14 — Proof. Already Working.", "15 — Global Expansion", "16 — Investment Structure", "17 — Leadership", "18 — Together, We Build the Future of Professional Transportation"];
 
+// SLIDE 12 chart data -- declared here (before init()/initChart() run) to
+// avoid a temporal-dead-zone ReferenceError; a const declared further down
+// the script is NOT available yet when init() calls initChart()
+// synchronously at load time, even though function declarations are
+// hoisted. Sourced from the live Flywheel Pro Forma Hub
+// (/api/v2/portfolio-forward), reconciled to real FYE2025 actuals. See
+// ~/Documents/sps-static/data/slide12-chart-data.json and
+// memory/2026-07-21-slide12-model-defensibility.md for full sourcing.
+// Conservative scenario: D2D Nationwide (40,000 vehicles, 8x5,000 tranches,
+// 90-day cadence) starting Apr 1, 2027.
+const ENGINE_DATA = {
+  revenue: { labels: ['FYE2025', "'27F", "'28F", "'29F"], values: [31.39, 119.02, 226.20, 288.62], cagrPct: 74.1 },
+  ebitda: { labels: ['FYE2025', "'27F", "'28F", "'29F"], values: [4.19, 23.85, 47.84, 61.81], marginPct: [13.3, 20.0, 21.2, 21.4], cagrPct: 96.0 },
+  mix: { labels: ["'27F", "'28F", "'29F"], fa: [29.29, 39.06, 45.07], connect: [37.58, 43.26, 47.67], d2d: [52.15, 143.87, 195.88] },
+};
+
 let current = 0;
+let lightMode = false; // hoisted here (was declared later in the script) -- initChart() reads this via tickColor() and is called synchronously by init() before a later declaration would be initialized
 
 // Password gate — DISABLED for v3.2 while editing (Izzy request 2026-07-15)
 document.getElementById('gate').style.display = 'none';
@@ -1743,43 +1804,85 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') prev();
 });
 
-let lightMode = false;
 function toggleMode() {
   lightMode = !lightMode;
   document.body.classList.toggle('light-mode', lightMode);
   document.querySelector('.topbar button').textContent = lightMode ? '🌙 Dark' : '☀ Light';
-  if (window._finChart) {
-    window._finChart.options.scales.x.ticks.color = lightMode ? '#666' : '#888';
-    window._finChart.options.scales.y.ticks.color = lightMode ? '#666' : '#888';
-    window._finChart.options.scales.y2.ticks.color = lightMode ? '#666' : '#888';
-    window._finChart.update();
-  }
+  [window._engRevChart, window._engEbitdaChart, window._engMixChart].forEach(c => {
+    if (!c) return;
+    Object.values(c.options.scales).forEach(s => { if (s.ticks) s.ticks.color = lightMode ? '#666' : '#888'; });
+    c.update();
+  });
 }
 
+// SLIDE 12 chart-rendering logic. ENGINE_DATA is declared near the top of
+// this script (with SLIDES) to avoid the temporal-dead-zone bug hit during
+// build/QA (2026-07-21) -- init() calls initChart() synchronously at load
+// time, before a const declared this far down the script would be
+// initialized yet.
 function initChart() {
-  const ctx = document.getElementById('finChart');
-  if (!ctx) return;
-  window._finChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['2026','2027','2028','2029'],
-      datasets: [
-        { label:'GMV ($M)', data:[51,150,350,562], backgroundColor:'rgba(59,130,246,0.5)', borderColor:'#3B82F6', borderWidth:1, borderRadius:4, yAxisID:'y2', order:2 },
-        { label:'Net Revenue ($M)', data:[4.1,12,28,45], backgroundColor:'#CC1A1A', borderColor:'#e01c1c', borderWidth:1, borderRadius:4, yAxisID:'y', order:1 },
-        { label:'EBITDA ($M)', data:[1.1,4.2,14,25], backgroundColor:'rgba(34,197,94,0.8)', borderColor:'#16A34A', borderWidth:1, borderRadius:4, yAxisID:'y', order:0 },
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      interaction:{mode:'index'},
-      plugins:{ legend:{labels:{color:'#888',font:{size:11}}}, tooltip:{backgroundColor:'#1a1a1a',borderColor:'rgba(204,26,26,0.4)',borderWidth:1,callbacks:{label:ctx=>' '+ctx.dataset.label+': $'+ctx.parsed.y+'M'}} },
-      scales:{
-        y:{ position:'left', grid:{color:'rgba(255,255,255,0.06)'}, ticks:{color:'#888',callback:v=>'$'+v+'M'} },
-        y2:{ position:'right', grid:{display:false}, ticks:{color:'#888',callback:v=>'$'+v+'M'} },
-        x:{ grid:{display:false}, ticks:{color:'#888'} }
-      }
-    }
-  });
+  const tickColor = () => lightMode ? '#666' : '#888';
+  const gridColor = 'rgba(255,255,255,0.06)';
+
+  const revCtx = document.getElementById('engRevChart');
+  if (revCtx) {
+    document.getElementById('eng-rev-cagr').textContent = 'CAGR ' + ENGINE_DATA.revenue.cagrPct.toFixed(0) + '%';
+    window._engRevChart = new Chart(revCtx, {
+      type: 'bar',
+      data: { labels: ENGINE_DATA.revenue.labels, datasets: [
+        { label: 'Net Revenue ($M)', data: ENGINE_DATA.revenue.values, backgroundColor: (c) => c.dataIndex === 0 ? 'rgba(136,136,136,0.5)' : '#CC1A1A', borderColor: (c) => c.dataIndex === 0 ? '#888' : '#e01c1c', borderWidth: 1, borderRadius: 4 },
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1a1a', borderColor: 'rgba(204,26,26,0.4)', borderWidth: 1, callbacks: { label: (c) => ' $' + c.parsed.y.toFixed(1) + 'M' } } },
+        scales: {
+          y: { grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
+          x: { grid: { display: false }, ticks: { color: tickColor() } },
+        },
+      },
+    });
+  }
+
+  const ebitdaCtx = document.getElementById('engEbitdaChart');
+  if (ebitdaCtx) {
+    document.getElementById('eng-ebitda-cagr').textContent = 'CAGR ' + ENGINE_DATA.ebitda.cagrPct.toFixed(0) + '%';
+    window._engEbitdaChart = new Chart(ebitdaCtx, {
+      data: { labels: ENGINE_DATA.ebitda.labels, datasets: [
+        { type: 'bar', label: 'EBITDA ($M)', data: ENGINE_DATA.ebitda.values, backgroundColor: (c) => c.dataIndex === 0 ? 'rgba(136,136,136,0.5)' : 'rgba(34,197,94,0.8)', borderColor: (c) => c.dataIndex === 0 ? '#888' : '#16A34A', borderWidth: 1, borderRadius: 4, yAxisID: 'y' },
+        { type: 'line', label: 'EBITDA Margin %', data: ENGINE_DATA.ebitda.marginPct, borderColor: '#CC1A1A', backgroundColor: '#CC1A1A', pointRadius: 3, pointBackgroundColor: '#CC1A1A', borderWidth: 2, tension: 0.3, yAxisID: 'y2' },
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index' },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1a1a', borderColor: 'rgba(204,26,26,0.4)', borderWidth: 1, callbacks: { label: (c) => c.dataset.type === 'line' ? ' Margin: ' + c.parsed.y.toFixed(1) + '%' : ' $' + c.parsed.y.toFixed(1) + 'M' } } },
+        scales: {
+          y: { position: 'left', grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
+          y2: { position: 'right', grid: { display: false }, ticks: { color: tickColor(), callback: (v) => v + '%' }, min: 0, max: 30 },
+          x: { grid: { display: false }, ticks: { color: tickColor() } },
+        },
+      },
+    });
+  }
+
+  const mixCtx = document.getElementById('engMixChart');
+  if (mixCtx) {
+    window._engMixChart = new Chart(mixCtx, {
+      type: 'bar',
+      data: { labels: ENGINE_DATA.mix.labels, datasets: [
+        { label: 'Flywheel Advantage', data: ENGINE_DATA.mix.fa, backgroundColor: 'rgba(59,130,246,0.75)', borderRadius: 3 },
+        { label: 'Connect', data: ENGINE_DATA.mix.connect, backgroundColor: 'rgba(234,179,8,0.75)', borderRadius: 3 },
+        { label: 'D2D', data: ENGINE_DATA.mix.d2d, backgroundColor: '#CC1A1A', borderRadius: 3 },
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { color: tickColor(), font: { size: 10 }, boxWidth: 10, padding: 8 } }, tooltip: { backgroundColor: '#1a1a1a', borderColor: 'rgba(204,26,26,0.4)', borderWidth: 1, callbacks: { label: (c) => ' ' + c.dataset.label + ': $' + c.parsed.y.toFixed(1) + 'M' } } },
+        scales: {
+          y: { stacked: true, grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
+          x: { stacked: true, grid: { display: false }, ticks: { color: tickColor() } },
+        },
+      },
+    });
+  }
 }
 </script>
 </body>
