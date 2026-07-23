@@ -1623,11 +1623,40 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <div class="slide">
-  <div class="label">The Model</div>
-  <div class="ph-wrap">
-    <div class="ph-num">13</div>
-    <div class="ph-title">Growth Model</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">13</div>
+  <div class="roi-h1">Growth Model</div>
+  <div class="roi-sub">Net Revenue (Gross Profit, not GMV) and EBITDA — real FYE2025 and FY2026E actuals, modeled 2027F-2029F growth from the three product engines. Corrected basis, 2026-07-22.</div>
+
+  <div class="eng-chart-row">
+    <div class="eng-chart-card">
+      <div class="eng-chart-head">Net Revenue ($M) <span class="eng-cagr-pill" id="gm-rev-cagr">CAGR --</span></div>
+      <div class="eng-chart-canvas-wrap"><canvas id="gmRevChart"></canvas></div>
+      <ul class="eng-bullets">
+        <li>Net Revenue = Gross Profit (GMV minus Cost of Services) — what Flywheel actually retains, not gross fare pass-through.</li>
+        <li>FYE2025 ($8.24M) and FY2026E ($16.97M) are real/estimated income-statement actuals — not modeled.</li>
+        <li>2027F–2029F are modeled from the same three product engines (FA, Connect, D2D) as the live Pro Forma Hub, re-expressed on a Net Revenue basis.</li>
+      </ul>
+    </div>
+    <div class="eng-chart-card">
+      <div class="eng-chart-head">EBITDA ($M) <span class="eng-cagr-pill" id="gm-ebitda-cagr">CAGR --</span> <span class="eng-legend-dot">○ Margin % of Net Rev</span></div>
+      <div class="eng-chart-canvas-wrap"><canvas id="gmEbitdaChart"></canvas></div>
+      <ul class="eng-bullets">
+        <li>FYE2025 EBITDA ($1.11M, 13.5% margin) is the real P&amp;L actual.</li>
+        <li>FY2026E EBITDA ($3.05M, 18.0% margin) uses an assumed 18% margin — not yet itemized on the source income statement; pending finance confirmation.</li>
+        <li>EBITDA margin on Net Revenue expands sharply in 2027F+ as fixed Payroll/Opex are spread across fast-growing Gross Profit — this discontinuity (18%→73%) needs further validation before external use.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="roi-hubcompare" style="margin-top:10px;">
+    <div class="roi-hubcompare-head">GMV vs. Net Revenue — Why Both Numbers Matter</div>
+    <div class="roi-hubcompare-row">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$31.4M</div><div class="roi-hubcompare-label">FYE2025 GMV (gross fare volume, incl. driver pass-through)</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$8.24M</div><div class="roi-hubcompare-label">FYE2025 Net Revenue (Gross Profit) — what Flywheel retains</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$81.9M</div><div class="roi-hubcompare-label">FY2026E GMV</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$16.97M</div><div class="roi-hubcompare-label">FY2026E Net Revenue — 106% YoY growth on a real basis</div></div>
+    </div>
+    <div class="roi-hubcompare-foot">Source: FYE2025 and FY2026E figures from Flywheel Technologies Inc. income statements (Izzy-provided, 2026-07-22). 2027F–2029F modeled from live Flywheel Pro Forma Hub (<span class="red">/api/v2/portfolio-forward</span>), Net Revenue = Gross Profit basis. <strong>OPEN ITEM:</strong> FYE2025 EBITDA shown here ($1.11M) differs from an earlier unreconciled Slide 12 draft figure ($4.19M) — the earlier figure should not be used until the gap is explained.</div>
   </div>
 </div>
 
@@ -1683,38 +1712,191 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <div class="slide">
-  <div class="label">The Expansion</div>
-  <div class="ph-wrap">
-    <div class="ph-num">15</div>
-    <div class="ph-title">Global Expansion</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">15</div>
+  <div class="roi-h1">Global Expansion</div>
+  <div class="roi-sub">Mexico is signed and live today — not a future bet. Government mobility contracts (CardONE) add a recurring, non-Uber-dependent revenue layer across the U.S.</div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">Mexico — Signed, Committed Contracts (Cancún, Tulum, Playa del Carmen)</div>
+    <div class="roi-hubcompare-row">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">6,350</div><div class="roi-hubcompare-label">FA vehicles under contract, Cancún + Tulum</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">120</div><div class="roi-hubcompare-label">Taxis branded and live today, Quintana Roo</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">80%</div><div class="roi-hubcompare-label">Driver onboarding completed on installed equipment</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">4</div><div class="roi-hubcompare-label">Countries served — U.S., Canada, Mexico, expanding LatAm</div></div>
+    </div>
+    <div class="roi-hubcompare-foot">Nexar AI dashcams provide the trust/safety compliance layer required by Mexican regulators — Flywheel earns a recurring revenue share on Nexar subscription fees. Phase 2 targets CDMX, Guadalajara, and Toluca.</div>
+  </div>
+
+  <div class="roi-main2">
+    <div class="roi-takerate">
+      <div class="roi-tr-head">Government Mobility — CardONE / Paratransit (Live Today)</div>
+      <table class="roi-scenario-table">
+        <tr><th>Program</th><th>Market</th><th>Mechanic</th></tr>
+        <tr><td>PACE / SF Paratransit</td><td>Chicago + SF</td><td>Copay + hosting fee</td></tr>
+        <tr><td>Broward County</td><td>South Florida</td><td>GMV wallet take-rate</td></tr>
+        <tr><td>NYC WAV Broker</td><td>New York City</td><td>Per-vehicle fee, 6,500+ WAVs</td></tr>
+      </table>
+      <div class="roi-tr-foot">23 government mobility programs total. Recurring, contracted ridership — not dependent on Uber demand, and not exposed to rideshare competitive dynamics.</div>
+    </div>
+    <div class="roi-payback">
+      <div class="roi-payback-head">Why Government Mobility Compounds the Model</div>
+      <div class="roi-payback-row">
+        <div class="roi-payback-item"><div class="roi-payback-num red-big">$638.6K</div><div class="roi-payback-label">CardONE / Paratransit revenue per month, live</div></div>
+        <div class="roi-payback-item"><div class="roi-payback-num">1.5M+</div><div class="roi-payback-label">Annual trips processed by CardONE alone</div></div>
+        <div class="roi-payback-item"><div class="roi-payback-num">18+ yrs</div><div class="roi-payback-label">Track record across ADA/Medicaid transportation programs</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roi-closing">
+    <div class="roi-closing-line"><span class="red">Global expansion isn't speculative.</span><br>Mexico is signed and onboarding today; government contracts are recurring and already live — both extend the platform beyond a single market or single partner.</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">The Raise</div>
-  <div class="ph-wrap">
-    <div class="ph-num">16</div>
-    <div class="ph-title">Investment Structure</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">16</div>
+  <div class="roi-h1">Investment Structure</div>
+  <div class="roi-sub">A minority strategic investment, not a control transaction — structured for Uber to fund the growth engine it directly benefits from.</div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">The Ask</div>
+    <div class="roi-hubcompare-row">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$26.5M</div><div class="roi-hubcompare-label">Investment amount</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$265M</div><div class="roi-hubcompare-label">Pre-money valuation</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">10%</div><div class="roi-hubcompare-label">Equity offered (post-money ~$291.5M)</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">12 mo</div><div class="roi-hubcompare-label">Target payback period (Slide 08 math)</div></div>
+    </div>
+    <div class="roi-hubcompare-foot">Minority strategic investment — no change of control. All proceeds fund growth infrastructure (FA hardware, Connect/D2D integration, government mobility expansion); no secondary/founder liquidity as part of this round.</div>
+  </div>
+
+  <div class="roi-main2">
+    <div class="roi-takerate">
+      <div class="roi-tr-head">Use of Proceeds — Best Estimate, Pending Final Allocation</div>
+      <div class="proceed-item"><div class="proceed-label">Flywheel Advantage hardware rollout</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:40%;"></div></div><div class="proceed-pct">40%</div></div>
+      <div class="proceed-item"><div class="proceed-label">Connect + D2D integration &amp; support</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:25%;"></div></div><div class="proceed-pct">25%</div></div>
+      <div class="proceed-item"><div class="proceed-label">Government mobility &amp; Mexico expansion</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:15%;"></div></div><div class="proceed-pct">15%</div></div>
+      <div class="proceed-item"><div class="proceed-label">Engineering &amp; platform (TaxiOS™)</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:12%;"></div></div><div class="proceed-pct">12%</div></div>
+      <div class="proceed-item"><div class="proceed-label">Working capital &amp; G&amp;A</div><div class="proceed-bar-wrap"><div class="proceed-bar" style="width:8%;"></div></div><div class="proceed-pct">8%</div></div>
+      <div class="roi-tr-foot"><strong>NOTE:</strong> allocation percentages are Jarvis' best estimate based on the Use-of-Funds engines described on Slide 08 — not yet confirmed by Izzy/finance. Replace with final board-approved allocation before external use.</div>
+    </div>
+    <div class="roi-payback">
+      <div class="roi-payback-head">Capital Structure Snapshot</div>
+      <div class="roi-payback-row">
+        <div class="roi-payback-item"><div class="roi-payback-num red-big">2</div><div class="roi-payback-label">Founders / co-CEOs — Hansu Kim (Chairman), Izzy Aala (CEO)</div></div>
+        <div class="roi-payback-item"><div class="roi-payback-num">2017</div><div class="roi-payback-label">Flywheel Technologies Inc. founded, building on Cabconnect (est. 2002)</div></div>
+        <div class="roi-payback-item"><div class="roi-payback-num">TBD</div><div class="roi-payback-label">Full cap table &amp; funding history — to be provided as diligence deliverable</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roi-closing">
+    <div class="roi-closing-line"><span class="red">This isn't a rescue raise.</span><br>It's Uber funding the specific infrastructure that expands Uber's own supply, revenue, and market reach — with a defined, math-backed payback period.</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">The People</div>
-  <div class="ph-wrap">
-    <div class="ph-num">17</div>
-    <div class="ph-title">Leadership</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">17</div>
+  <div class="roi-h1">Leadership</div>
+  <div class="roi-sub">Two decades of first-hand experience navigating every major transportation industry disruption — from GPS taxi meters to the Uber partnership itself.</div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
+    <div class="team-card">
+      <div class="team-avatar">IA</div>
+      <div>
+        <div class="team-name">Isabelo "Izzy" Aala</div>
+        <div class="team-title">Co-Founder &amp; CEO</div>
+        <div class="team-bio">35+ years in transportation technology. Founded Cabconnect (2002), building payment processing and fleet management software for taxi operators from a standing start after a 9/11-driven career pivot. Built CardONE into an 18-city paratransit platform serving riders with disabilities. Co-founded Flywheel Technologies in 2017 and led the multi-year regulatory and technical effort that produced the 2022 Uber partnership — including personally negotiating the SF meter-law change that made it possible.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">HK</div>
+      <div>
+        <div class="team-name">Hansu Kim</div>
+        <div class="team-title">Co-Founder &amp; Chairman</div>
+        <div class="team-bio">Joined the taxi technology industry in 2009 as a key consultant integrating payments and internet technology into fleets (Cabulous). Acquired DeSoto Cab in San Francisco (2011), rebranded as Flywheel Taxi (2016). Co-founded Flywheel Technologies with Izzy in 2017, combining fleet operations expertise with the modern TaxiOS™ platform.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:14px;">
+    <div class="team-card">
+      <div class="team-avatar">MG</div>
+      <div>
+        <div class="team-name">Matt Gonzalez</div>
+        <div class="team-title">Board Member</div>
+        <div class="team-bio">Former President, San Francisco Board of Supervisors. Co-owner of DeSoto Cab / Flywheel Taxi alongside Hansu Kim since 2011. Brings deep regulatory and municipal government relationships directly relevant to Flywheel's government mobility and taxi-regulatory work across every market.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">Team &amp; Governance</div>
+    <div class="roi-hubcompare-row">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">48</div><div class="roi-hubcompare-label">Employees &amp; contractors, up from 20 a year prior</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">2</div><div class="roi-hubcompare-label">Board directors currently — Hansu Kim, Izzy Aala, plus Matt Gonzalez</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">2002</div><div class="roi-hubcompare-label">Combined leadership experience traces to the founding of Cabconnect</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">TBD</div><div class="roi-hubcompare-label">Formal governance/board structure post-investment — to be defined in definitive documents</div></div>
+    </div>
+    <div class="roi-hubcompare-foot"><strong>NOTE:</strong> team headcount and board composition are the most recently confirmed figures on file; additional engineering/ops leadership bios can be added here once provided.</div>
   </div>
 </div>
 
 <div class="slide">
-  <div class="label">The Vision</div>
-  <div class="ph-wrap">
-    <div class="ph-num">18</div>
-    <div class="ph-title">Together, We Build the Future of Professional Transportation</div>
-    <div class="ph-tag">Content Pending</div>
+  <div class="roi-slide-num">18</div>
+  <div class="roi-h1">Together, We Build the Future of Professional Transportation</div>
+  <div class="roi-sub">Twenty years of infrastructure. One partnership already proving the model. A clear path to the next phase.</div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">What $26.5M Unlocks</div>
+    <div class="roi-hubcompare-row">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">9,262</div><div class="roi-hubcompare-label">Vehicles converted from the existing CC Back-Office base</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">45,000+</div><div class="roi-hubcompare-label">Vehicles on-platform by 2029F via the D2D Nationwide rollout</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">$16.97M</div><div class="roi-hubcompare-label">FY2026E Net Revenue — 106% real YoY growth, before this investment</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">4</div><div class="roi-hubcompare-label">Countries — U.S., Canada, Mexico, expanding LatAm</div></div>
+    </div>
+  </div>
+
+  <div class="cta-block">
+    <h3>One Platform. Every Driver. One Partnership, Scaling Together.</h3>
+    <div class="roi-sub" style="max-width:640px; margin:12px auto 0;">TaxiOS™ turns Flywheel's 20+ years of professional transportation infrastructure into Uber's next growth engine — more supply, more trips, more markets, and a recurring revenue base that compounds with every vehicle onboarded.</div>
+  </div>
+
+  <div class="roi-hubcompare" style="margin-top:14px;">
+    <div class="roi-hubcompare-head">Next Steps</div>
+    <div class="roi-hubcompare-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">1</div><div class="roi-hubcompare-label">Finalize diligence materials — cap table, audited financials, definitive term sheet</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">2</div><div class="roi-hubcompare-label">Align on investment structure and governance terms</div></div>
+      <div class="roi-hubcompare-item"><div class="roi-hubcompare-num">3</div><div class="roi-hubcompare-label">Close and begin FA/Connect/D2D conversion of the 20,535-vehicle base</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="roi-slide-num">19</div>
+  <div class="roi-h1">Appendix: How to Read These Numbers</div>
+  <div class="roi-sub">Definitions and reconciliation notes — added 2026-07-22 following a full financial-basis review. Use this page to answer any question about which revenue figure is being shown and why.</div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">Definitions</div>
+    <table class="roi-scenario-table">
+      <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td>GMV / Total Revenue</td><td>Gross fare volume across all channels (Ehail/Deliveries + Uber Ride Hails + Uber Referral + Service/Fee Income), including driver pass-through. NOT what Flywheel retains.</td></tr>
+      <tr><td>Net Revenue (= Gross Profit)</td><td>GMV minus Cost of Services. This is what Flywheel actually earns and keeps — the correct basis for growth/margin narratives.</td></tr>
+      <tr><td>EBITDA</td><td>Earnings before interest, tax, depreciation &amp; amortization, computed directly from the model/P&amp;L. This is plain EBITDA, not "Adjusted EBITDA" — no non-GAAP adjustments have been applied or documented.</td></tr>
+    </table>
+  </div>
+
+  <div class="roi-hubcompare">
+    <div class="roi-hubcompare-head">Known Open Items — Do Not Present as Resolved</div>
+    <table class="roi-scenario-table">
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>FYE2025 EBITDA</td><td class="red">Real P&amp;L shows $1.11M (13.5% margin); an earlier unreconciled draft used $4.19M (13.3% margin). Gap not yet explained.</td></tr>
+      <tr><td>FY2026E EBITDA</td><td class="red">Not itemized on the source income statement; $3.05M (18% margin) is Izzy's placeholder assumption pending finance confirmation.</td></tr>
+      <tr><td>2027F–2029F EBITDA margin jump</td><td class="red">Model shows margin expanding from 18% (2026E) to ~73% (2027F) in one year — large discontinuity, not yet independently validated.</td></tr>
+      <tr><td>Revenue per vehicle</td><td class="red">Flat under the base model (no fare/rate escalation assumed). A +10%/yr average-rate growth scenario exists as an illustration only — not sourced from confirmed historical data.</td></tr>
+      <tr><td>Demand Channel Hub vs. Pro Forma Hub</td><td class="red">Different live dashboards can show different "active vehicle" and revenue figures depending on snapshot timing and market coverage — always confirm which live source and which date underlies any number before external use.</td></tr>
+    </table>
+    <div class="roi-tr-foot" style="margin-top:10px;">Full reconciliation trail: memory/2026-07-21-slide12-model-defensibility.md, memory/2026-07-16-flywheel-deck-v4-valuation.md, and the "CORRECTED - GMV vs Net Rev" tab of the live Google Sheet. This appendix exists so any reviewer — Uber Corp Dev, outside counsel, or a banker — can trace every number back to its real source.</div>
   </div>
 </div>
 
@@ -1730,7 +1912,16 @@ tr:hover td { background: var(--bg3); }
 </div>
 
 <script>
-const SLIDES = ["01 — The Future of Professional Transportation", "02 — Flywheel at a Glance", "03 — TaxiOS™ — Enterprise Infrastructure for Professional Transportation", "04 — A Journey Built on the Industry", "05 — Why Uber Wins", "06 — The Uber Growth Flywheel", "07 — Every Point of Fill Rate Creates Value", "08 — Uber's Return on Investment", "09 — The Full Spectrum — One Platform. Every Driver.", "10 — $36B Market. 390,000 Taxis. We're Early.", "11 — Proven Demand Pipeline", "12 — The Revenue Engine", "13 — Growth Model", "14 — Proof. Already Working.", "15 — Global Expansion", "16 — Investment Structure", "17 — Leadership", "18 — Together, We Build the Future of Professional Transportation"];
+const SLIDES = ["01 — The Future of Professional Transportation", "02 — Flywheel at a Glance", "03 — TaxiOS™ — Enterprise Infrastructure for Professional Transportation", "04 — A Journey Built on the Industry", "05 — Why Uber Wins", "06 — The Uber Growth Flywheel", "07 — Every Point of Fill Rate Creates Value", "08 — Uber's Return on Investment", "09 — The Full Spectrum — One Platform. Every Driver.", "10 — $36B Market. 390,000 Taxis. We're Early.", "11 — Proven Demand Pipeline", "12 — The Revenue Engine", "13 — Growth Model", "14 — Proof. Already Working.", "15 — Global Expansion", "16 — Investment Structure", "17 — Leadership", "18 — Together, We Build the Future of Professional Transportation", "19 — Appendix: How to Read These Numbers"];
+
+// SLIDE 13 chart data -- Net Revenue (Gross Profit) basis, corrected 2026-07-22.
+// FYE2025 + FY2026E are REAL income-statement actuals; 2027F-2029F modeled from
+// the same portfolio-forward engines, re-expressed as Gross Profit instead of GMV.
+// See memory/2026-07-22 session notes + "CORRECTED - GMV vs Net Rev" Google Sheet tab.
+const GROWTH_MODEL_DATA = {
+  revenue: { labels: ['FYE2025', "'26E", "'27F", "'28F", "'29F"], values: [8.24, 16.97, 35.29, 63.67, 79.89], cagrPct: 76.2 },
+  ebitda: { labels: ['FYE2025', "'26E", "'27F", "'28F", "'29F"], values: [1.11, 3.05, 25.84, 48.84, 62.00], marginPct: [13.5, 18.0, 73.2, 76.7, 77.6], cagrPct: 152.6 },
+};
 
 // SLIDE 12 chart data -- declared here (before init()/initChart() run) to
 // avoid a temporal-dead-zone ReferenceError; a const declared further down
@@ -1808,7 +1999,7 @@ function toggleMode() {
   lightMode = !lightMode;
   document.body.classList.toggle('light-mode', lightMode);
   document.querySelector('.topbar button').textContent = lightMode ? '🌙 Dark' : '☀ Light';
-  [window._engRevChart, window._engEbitdaChart, window._engMixChart].forEach(c => {
+  [window._engRevChart, window._engEbitdaChart, window._engMixChart, window._gmRevChart, window._gmEbitdaChart].forEach(c => {
     if (!c) return;
     Object.values(c.options.scales).forEach(s => { if (s.ticks) s.ticks.color = lightMode ? '#666' : '#888'; });
     c.update();
@@ -1858,6 +2049,47 @@ function initChart() {
         scales: {
           y: { position: 'left', grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
           y2: { position: 'right', grid: { display: false }, ticks: { color: tickColor(), callback: (v) => v + '%' }, min: 0, max: 30 },
+          x: { grid: { display: false }, ticks: { color: tickColor() } },
+        },
+      },
+    });
+  }
+
+  // SLIDE 13 (Growth Model) charts -- Net Revenue (Gross Profit) basis, corrected 2026-07-22
+  const gmRevCtx = document.getElementById('gmRevChart');
+  if (gmRevCtx) {
+    document.getElementById('gm-rev-cagr').textContent = 'CAGR ' + GROWTH_MODEL_DATA.revenue.cagrPct.toFixed(0) + '%';
+    window._gmRevChart = new Chart(gmRevCtx, {
+      type: 'bar',
+      data: { labels: GROWTH_MODEL_DATA.revenue.labels, datasets: [
+        { label: 'Net Revenue ($M)', data: GROWTH_MODEL_DATA.revenue.values, backgroundColor: (c) => c.dataIndex <= 1 ? 'rgba(136,136,136,0.5)' : '#CC1A1A', borderColor: (c) => c.dataIndex <= 1 ? '#888' : '#e01c1c', borderWidth: 1, borderRadius: 4 },
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1a1a', borderColor: 'rgba(204,26,26,0.4)', borderWidth: 1, callbacks: { label: (c) => ' $' + c.parsed.y.toFixed(2) + 'M' } } },
+        scales: {
+          y: { grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
+          x: { grid: { display: false }, ticks: { color: tickColor() } },
+        },
+      },
+    });
+  }
+
+  const gmEbitdaCtx = document.getElementById('gmEbitdaChart');
+  if (gmEbitdaCtx) {
+    document.getElementById('gm-ebitda-cagr').textContent = 'CAGR ' + GROWTH_MODEL_DATA.ebitda.cagrPct.toFixed(0) + '%';
+    window._gmEbitdaChart = new Chart(gmEbitdaCtx, {
+      data: { labels: GROWTH_MODEL_DATA.ebitda.labels, datasets: [
+        { type: 'bar', label: 'EBITDA ($M)', data: GROWTH_MODEL_DATA.ebitda.values, backgroundColor: (c) => c.dataIndex <= 1 ? 'rgba(136,136,136,0.5)' : 'rgba(34,197,94,0.8)', borderColor: (c) => c.dataIndex <= 1 ? '#888' : '#16A34A', borderWidth: 1, borderRadius: 4, yAxisID: 'y' },
+        { type: 'line', label: 'EBITDA Margin %', data: GROWTH_MODEL_DATA.ebitda.marginPct, borderColor: '#CC1A1A', backgroundColor: '#CC1A1A', pointRadius: 3, pointBackgroundColor: '#CC1A1A', borderWidth: 2, tension: 0.3, yAxisID: 'y2' },
+      ] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index' },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a1a1a', borderColor: 'rgba(204,26,26,0.4)', borderWidth: 1, callbacks: { label: (c) => c.dataset.type === 'line' ? ' Margin: ' + c.parsed.y.toFixed(1) + '%' : ' $' + c.parsed.y.toFixed(2) + 'M' } } },
+        scales: {
+          y: { position: 'left', grid: { color: gridColor }, ticks: { color: tickColor(), callback: (v) => '$' + v + 'M' } },
+          y2: { position: 'right', grid: { display: false }, ticks: { color: tickColor(), callback: (v) => v + '%' }, min: 0, max: 100 },
           x: { grid: { display: false }, ticks: { color: tickColor() } },
         },
       },
