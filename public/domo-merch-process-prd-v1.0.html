@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe — Merch Process PRD v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@300;400;500&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1A0800;--brown:#8B4513;--red:#CC2222;--warm:#FDF8F4;--cream:#F5EDD8;
+  --tan:#D4A574;--muted:#9E7A60;--surface:#2C1A0E;--border:rgba(212,165,116,0.15);
+  --bg:var(--dark);--text:var(--warm);--sub:var(--muted);
+}
+body.light{--bg:var(--warm);--text:var(--dark);--sub:#6B4A35;--surface:#F5EDD8;--border:rgba(139,69,19,0.15)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh;transition:background .3s,color .3s}
+
+/* SIDEBAR */
+.sidebar{width:240px;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;background:rgba(26,8,0,0.95);border-right:1px solid var(--border);padding:28px 0;z-index:100}
+body.light .sidebar{background:rgba(245,237,216,0.98)}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.sidebar-brand{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--red);letter-spacing:1px}
+.sidebar-doc{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.nav-item{display:block;padding:8px 24px;font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .2s}
+.nav-item:hover,.nav-item.active{color:var(--warm);border-left-color:var(--red);background:rgba(204,34,34,0.06)}
+body.light .nav-item:hover,body.light .nav-item.active{color:var(--dark)}
+.nav-section{padding:12px 24px 4px;font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(158,122,96,0.6)}
+
+/* MAIN */
+.main{margin-left:240px;flex:1;max-width:900px;padding:60px 64px}
+
+/* HEADER */
+.doc-header{margin-bottom:72px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.badge-prd{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px;border-radius:3px}
+.badge-v{font-family:'Outfit',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--muted);border:1px solid var(--border);padding:4px 10px;border-radius:3px}
+.badge-date{font-family:'Outfit',sans-serif;font-size:10px;color:var(--muted)}
+.doc-title{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px}
+.doc-title span{color:var(--red)}
+.doc-sub{font-size:16px;color:var(--sub);max-width:560px;line-height:1.7}
+.mode-toggle{position:fixed;top:24px;right:32px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;letter-spacing:1px;z-index:200;transition:all .2s}
+.mode-toggle:hover{color:var(--text)}
+
+/* SECTIONS */
+.section{padding:56px 0;border-bottom:1px solid var(--border);position:relative}
+.section:last-child{border-bottom:none}
+.section-num{position:absolute;top:48px;right:0;font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:rgba(139,69,19,0.07);line-height:1;pointer-events:none;user-select:none}
+.section-label{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--brown);margin-bottom:12px}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;line-height:1.1;margin-bottom:24px}
+p{font-size:15px;color:var(--sub);line-height:1.8;margin-bottom:16px}
+p:last-child{margin-bottom:0}
+h4{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:28px 0 10px}
+h4:first-child{margin-top:0}
+
+/* CALLOUT */
+.callout{border-left:3px solid var(--red);background:rgba(204,34,34,0.06);border-radius:0 6px 6px 0;padding:16px 20px;margin:20px 0}
+.callout.brown{border-left-color:var(--brown);background:rgba(139,69,19,0.06)}
+.callout-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.callout.brown .callout-label{color:var(--brown)}
+.callout p{font-size:13.5px;margin:0;color:var(--sub)}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+body.light .card{background:#fff}
+.card-icon{font-size:22px;margin-bottom:10px}
+.card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-body{font-size:12.5px;color:var(--sub);line-height:1.6}
+
+/* PHASE PILLS */
+.phase{display:inline-flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.p0{background:rgba(204,34,34,0.15);color:#ff6b6b}
+.p1{background:rgba(139,69,19,0.15);color:var(--tan)}
+.p2{background:rgba(212,165,116,0.12);color:var(--muted)}
+
+/* WORKFLOW */
+.workflow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:20px 0}
+.wf-step{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:6px 12px;color:var(--text)}
+body.light .wf-step{background:#fff}
+.wf-arrow{color:var(--muted);font-size:14px}
+.wf-step.nhk{border-color:var(--red);color:var(--red)}
+.wf-step.gate{border-color:var(--brown);color:var(--tan)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+th{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--border);text-align:left}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--sub);line-height:1.5}
+tr:last-child td{border-bottom:none}
+
+/* ROLE CARDS */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.role-card{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px}
+body.light .role-card{background:#fff}
+.role-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.role-perms{font-size:12px;color:var(--sub);line-height:1.6}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:16px;text-align:center}
+body.light .kpi{background:#fff}
+.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--red);margin-bottom:4px}
+.kpi-label{font-size:11px;color:var(--sub)}
+
+/* PHASE STAGE HEADER */
+.stage-head{display:flex;align-items:center;gap:12px;margin:36px 0 16px}
+.stage-num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--red);width:44px;height:44px;border:2px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stage-title{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--text)}
+.stage-sub{font-size:12.5px;color:var(--sub);margin-top:2px}
+
+/* CHECKLIST */
+.step-list{list-style:none;margin:16px 0}
+.step-list li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.step-list li:last-child{border-bottom:none}
+.step-letter{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--red);flex-shrink:0;width:22px}
+.step-body strong{color:var(--text)}
+.step-body{font-size:13.5px;color:var(--sub);line-height:1.7}
+
+/* OPEN Q */
+.oq{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--tan);border-radius:0 7px 7px 0;padding:14px 18px;margin:12px 0}
+body.light .oq{background:#fff}
+.oq-title{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:4px}
+.oq-body{font-size:12.5px;color:var(--sub)}
+</style>
+</head>
+<body>
+<button class="mode-toggle" onclick="document.body.classList.toggle('light');this.textContent=document.body.classList.contains('light')?'☾ DARK':'☀ LIGHT'">☀ LIGHT</button>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-brand">DOMO CAFE</div>
+    <div class="sidebar-doc">Merch Process · PRD v1.0</div>
+  </div>
+  <span class="nav-section">Overview</span>
+  <a class="nav-item" href="#s1">01 · Executive Summary</a>
+  <a class="nav-item" href="#s2">02 · Problem Statement</a>
+  <a class="nav-item" href="#s3">03 · Goals & Metrics</a>
+  <a class="nav-item" href="#s4">04 · Roles</a>
+  <span class="nav-section">The Process</span>
+  <a class="nav-item" href="#s5">05 · Phase 1 — Concept</a>
+  <a class="nav-item" href="#s6">06 · Phase 2 — Pre-Production</a>
+  <a class="nav-item" href="#s7">07 · Phase 3 — Production</a>
+  <a class="nav-item" href="#s8">08 · Full Workflow Diagram</a>
+  <span class="nav-section">Requirements</span>
+  <a class="nav-item" href="#s9">09 · Functional Requirements</a>
+  <a class="nav-item" href="#s10">10 · Data Fields Tracked</a>
+  <a class="nav-item" href="#s11">11 · Open Questions</a>
+  <a class="nav-item" href="#s12">12 · Appendix</a>
+</nav>
+
+<main class="main">
+  <div class="doc-header">
+    <div class="doc-eyebrow">
+      <span class="badge-prd">PRD</span>
+      <span class="badge-v">v1.0</span>
+      <span class="badge-date">July 26, 2026 · GFC BP LLC</span>
+    </div>
+    <div class="doc-title">Merch<br>Process<span> Playbook</span></div>
+    <div class="doc-sub">Product Requirements Document for the Domo Cafe Merchandise Development Process — the 3-phase path every item takes from concept to shelf, with hard NHK/Striker ("Flow Haven") approval gates.</div>
+  </div>
+
+  <!-- 01 -->
+  <section class="section" id="s1">
+    <div class="section-num">01</div>
+    <div class="section-label">Executive Summary</div>
+    <div class="section-title">What This Process Governs</div>
+    <p>Every piece of Domo Cafe merchandise — house or licensed — moves through the same 3-phase development process before it can be sold: <strong>Concept → Pre-Production → Production</strong>. This PRD formalizes that process as a repeatable playbook, derived directly from Izzy + Amy's working session on July 26, 2026.</p>
+    <p>The core purpose of this process is twofold: (1) make sure every product idea is fully vetted and licensor-approved before real money is spent on samples or tooling, and (2) create a consistent, auditable trail that ties every SKU back to a Flow Haven (NHK/Striker) approval record.</p>
+    <div class="callout">
+      <div class="callout-label">⚠️ NHK Compliance</div>
+      <p>Any merchandise using Domo-kun IP must pass Flow Haven (Striker Entertainment / NHK) approval at two separate checkpoints — the concept mock image (Phase 1C) and the physical sample (Phase 2B) — before final production (Phase 3) begins. Skipping either gate risks breaching the NHK Merchandising License Agreement.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">💡</div><div class="card-title">Phase 1 — Concept</div><div class="card-body">Idea → manufacturer sourced → mock image submitted to Flow Haven for concept approval.</div></div>
+      <div class="card"><div class="card-icon">🧪</div><div class="card-title">Phase 2 — Pre-Production</div><div class="card-body">Physical sample built, documented, and submitted to Flow Haven for sign-off.</div></div>
+      <div class="card"><div class="card-icon">🚀</div><div class="card-title">Phase 3 — Production</div><div class="card-body">Timeline locked, final product + samples mailed to licensor, priced, loaded into POS, promoted.</div></div>
+    </div>
+    <p><strong>This PRD relates to, but is distinct from,</strong> the broader Domo Cafe Merchandise Portal PRD (v1.0, June 2026), which covers the software system for catalog/inventory/vendor/royalty management. This document defines the <em>process</em> that system will eventually need to enforce.</p>
+  </section>
+
+  <!-- 02 -->
+  <section class="section" id="s2">
+    <div class="section-num">02</div>
+    <div class="section-label">Problem Statement</div>
+    <div class="section-title">Why We Need a Formal Playbook</div>
+    <p>Today, the merch development process lives entirely in Izzy and Amy's heads and in scattered conversations. There is no written reference for what phase a product is in, what's required to move to the next phase, or who owns each step.</p>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">No Shared Reference</div><div class="card-body">New team members or vendors have no single doc explaining "how a Domo product gets made" from idea to shelf.</div></div>
+      <div class="card"><div class="card-title">Approval Gate Risk</div><div class="card-body">Without an explicit gate, a product could accidentally move to physical sampling or production before Flow Haven signs off.</div></div>
+      <div class="card"><div class="card-title">Inconsistent Extras/Sample Ordering</div><div class="card-body">Licensor sample-unit quantities (the "+20 extra" rule) and mailing destination (Striker vs. NHK Japan) aren't written down anywhere and rely on memory.</div></div>
+      <div class="card"><div class="card-title">SKU/Barcode Ambiguity</div><div class="card-body">No documented policy on when an item needs a real SKU/barcode vs. a simple internal Toast item number.</div></div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="section" id="s3">
+    <div class="section-num">03</div>
+    <div class="section-label">Goals & Metrics</div>
+    <div class="section-title">What Success Looks Like</div>
+    <h4>P0 — Must Have (Documented Now)</h4>
+    <p><span class="phase p0">P0</span> Written 3-phase process with clear owner + gate per step<br>
+    <span class="phase p0">P0</span> Explicit Flow Haven approval checkpoints (concept + physical sample) called out as hard gates<br>
+    <span class="phase p0">P0</span> Standard rule for licensor sample-unit overage (+20 units) captured<br>
+    <span class="phase p0">P0</span> Clear SKU vs. Toast-item-number policy documented</p>
+    <h4>P1 — Confirm & Close Gaps (Next)</h4>
+    <p><span class="phase p1">P1</span> Confirm licensor mailing destination: Striker (retained) vs. NHK Japan (forwarded)<br>
+    <span class="phase p1">P1</span> Define what "not approved" resolution actually looks like per rejection reason (IP conflict / duplicate / off-brand)<br>
+    <span class="phase p1">P1</span> Define who signs off at each Flow Haven gate (Izzy only, or Izzy + Amy)</p>
+    <h4>P2 — System Integration (Later)</h4>
+    <p><span class="phase p2">P2</span> Enforce this process inside the Merch Portal (see Merch Portal PRD v1.0, Section 06 — Design & Approval Workflow) so Phase 1C / Phase 2B gates hard-block progression without recorded approval<br>
+    <span class="phase p2">P2</span> Auto-apply formal SKU/barcode generation once drop-ship/wholesale expansion is greenlit</p>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-val">2</div><div class="kpi-label">Hard Flow Haven Gates per Item</div></div>
+      <div class="kpi"><div class="kpi-val">+20</div><div class="kpi-label">Extra Units Ordered per Variant for Licensor</div></div>
+      <div class="kpi"><div class="kpi-val">0</div><div class="kpi-label">Items Reaching Production Without Approval</div></div>
+      <div class="kpi"><div class="kpi-val">3</div><div class="kpi-label">Phases from Idea to Shelf</div></div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="section" id="s4">
+    <div class="section-num">04</div>
+    <div class="section-label">Roles</div>
+    <div class="section-title">Who Does What</div>
+    <div class="role-grid">
+      <div class="role-card"><div class="role-name">👑 Izzy</div><div class="role-perms">Final concept consensus. Approves/coordinates Flow Haven submissions. Owns production timeline, freight, and licensor mailing logistics. Final say on pricing.</div></div>
+      <div class="role-card"><div class="role-name">🎨 Amy</div><div class="role-perms">Sources manufacturer + MOQ. Coordinates mock image and physical sample creation. Prepares Flow Haven submission packages. Handles pricing/POS entry.</div></div>
+      <div class="role-card"><div class="role-name">🏭 Manufacturer (External)</div><div class="role-perms">Produces mock images, physical samples (with video/photo documentation), and final production run.</div></div>
+      <div class="role-card"><div class="role-name">📋 Flow Haven (Striker / NHK)</div><div class="role-perms">Reviews and approves/rejects concept images and physical samples. Receives final product + licensor sample units.</div></div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="section" id="s5">
+    <div class="section-num">05</div>
+    <div class="section-label">Phase 1</div>
+    <div class="section-title">Concept</div>
+    <div class="stage-head">
+      <div class="stage-num">1</div>
+      <div>
+        <div class="stage-title">Land on an approved concept before spending on samples or tooling</div>
+        <div class="stage-sub">Owner: Team (consensus) → Amy (sourcing) → Amy/Izzy (submission)</div>
+      </div>
+    </div>
+    <ul class="step-list">
+      <li><span class="step-letter">A</span><div class="step-body"><strong>Conceptualize the product.</strong> Team reaches consensus on the product idea before moving forward. No solo decisions — must be a shared "yes."</div></li>
+      <li><span class="step-letter">B</span><div class="step-body"><strong>Find a manufacturer.</strong> Amy sources a manufacturer capable of producing the concept and confirms the MOQ (minimum order quantity).</div></li>
+      <li><span class="step-letter">C</span><div class="step-body"><strong>Create a mock digital image and submit to Flow Haven.</strong> A mock/rendered image representing the final look of the product is built and submitted to Flow Haven (Striker/NHK) for concept-level approval.</div></li>
+    </ul>
+    <div class="callout">
+      <div class="callout-label">⚠️ Hard Gate</div>
+      <p>Do not proceed to Phase 2 until Flow Haven approval is received on the concept image. If rejected, diagnose which applies: (a) conflicts with official Domo licensing guidelines, (b) concept already exists elsewhere, or (c) concept is not on-brand — then revise and resubmit.</p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section class="section" id="s6">
+    <div class="section-num">06</div>
+    <div class="section-label">Phase 2</div>
+    <div class="section-title">Pre-Production</div>
+    <div class="stage-head">
+      <div class="stage-num">2</div>
+      <div>
+        <div class="stage-title">Turn an approved concept into a physical, licensor-approved sample</div>
+        <div class="stage-sub">Owner: Manufacturer (build) → Amy/Izzy (submission)</div>
+      </div>
+    </div>
+    <ul class="step-list">
+      <li><span class="step-letter">A</span><div class="step-body"><strong>Create a physical sample.</strong> Once the concept is approved, the manufacturer produces a physical sample. Video and image documentation of the physical sample is captured.</div></li>
+      <li><span class="step-letter">B</span><div class="step-body"><strong>Submit sample documentation to Flow Haven.</strong> The physical sample's videos/images are submitted to Flow Haven for pre-production sign-off — the final checkpoint before committing to a full production run.</div></li>
+    </ul>
+    <div class="callout">
+      <div class="callout-label">⚠️ Hard Gate</div>
+      <p>Do not proceed to Phase 3 until Flow Haven signs off on the physical sample. This is the last opportunity to catch quality, licensing, or brand issues before committing to bulk production.</p>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section class="section" id="s7">
+    <div class="section-num">07</div>
+    <div class="section-label">Phase 3</div>
+    <div class="section-title">Production</div>
+    <div class="stage-head">
+      <div class="stage-num">3</div>
+      <div>
+        <div class="stage-title">Finalize timeline, licensing compliance, pricing/POS, and go-to-market</div>
+        <div class="stage-sub">Owner: Izzy (timeline, licensing, mailing) → Amy (pricing, POS) → Marketing (promotion)</div>
+      </div>
+    </div>
+    <ul class="step-list">
+      <li><span class="step-letter">A</span><div class="step-body"><strong>Confirm production timeline.</strong> Confirm readiness to move to production. Lock in freight cost and timeline. Determine the target shelf date.</div></li>
+      <li><span class="step-letter">B</span><div class="step-body"><strong>Submit final product to Flow Haven + mail licensor sample units.</strong> Submit the final product — with licensing mark and final packaging — to Flow Haven as the definitive sellable format. Mail physical sample units to Striker/NHK per the licensing agreement. Order <strong>20 extra units per variant</strong> beyond the production run for licensor stock (e.g., a 1,000-unit run split 500/500 becomes 520/520).</div></li>
+      <li><span class="step-letter">C</span><div class="step-body"><strong>Price, and load into POS.</strong> Price out the item. Assign a Toast item number (not a formal SKU/barcode) for now — see Section 10 for the SKU policy.</div></li>
+      <li><span class="step-letter">D</span><div class="step-body"><strong>Promote.</strong> Get an influencer to promote the item on social media, or at minimum produce a promotional photo/post.</div></li>
+    </ul>
+  </section>
+
+  <!-- 08 -->
+  <section class="section" id="s8">
+    <div class="section-num">08</div>
+    <div class="section-label">Full Workflow Diagram</div>
+    <div class="section-title">Concept to Shelf</div>
+    <div class="workflow">
+      <div class="wf-step">Conceptualize (1A)</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Find Manufacturer + MOQ (1B)</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">Mock Image → Flow Haven (1C)</div><div class="wf-arrow">→</div>
+      <div class="wf-step gate">Concept Approved ✓</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Physical Sample + Video/Photos (2A)</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">Sample → Flow Haven (2B)</div><div class="wf-arrow">→</div>
+      <div class="wf-step gate">Sample Approved ✓</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Timeline + Freight + Shelf Date (3A)</div><div class="wf-arrow">→</div>
+      <div class="wf-step nhk">Final Product → Flow Haven + Mail (+20 units) (3B)</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Price + Toast Item # (3C)</div><div class="wf-arrow">→</div>
+      <div class="wf-step">Influencer / Social Promo (3D)</div>
+    </div>
+    <table>
+      <tr><th>Phase</th><th>Step</th><th>Owner</th><th>Gate</th></tr>
+      <tr><td>1. Concept</td><td>A. Conceptualize product</td><td>Team</td><td>Consensus reached</td></tr>
+      <tr><td>1. Concept</td><td>B. Find manufacturer + MOQ</td><td>Amy</td><td>—</td></tr>
+      <tr><td>1. Concept</td><td>C. Mock image → Flow Haven</td><td>Amy/Izzy</td><td><strong>Flow Haven approval required</strong></td></tr>
+      <tr><td>2. Pre-Production</td><td>A. Physical sample + video/images</td><td>Manufacturer</td><td>Concept approved</td></tr>
+      <tr><td>2. Pre-Production</td><td>B. Sample docs → Flow Haven</td><td>Amy/Izzy</td><td><strong>Flow Haven approval required</strong></td></tr>
+      <tr><td>3. Production</td><td>A. Timeline + freight + shelf date</td><td>Izzy</td><td>Sample approved</td></tr>
+      <tr><td>3. Production</td><td>B. Final product → Flow Haven + mail (+20 units)</td><td>Izzy</td><td>Licensing compliance</td></tr>
+      <tr><td>3. Production</td><td>C. Price + Toast item number</td><td>Amy</td><td>—</td></tr>
+      <tr><td>3. Production</td><td>D. Influencer/social promotion</td><td>Marketing</td><td>—</td></tr>
+    </table>
+  </section>
+
+  <!-- 09 -->
+  <section class="section" id="s9">
+    <div class="section-num">09</div>
+    <div class="section-label">Functional Requirements</div>
+    <div class="section-title">What the Process (and Future System) Must Enforce</div>
+    <p><span class="phase p0">P0</span> No item may move from Phase 1 to Phase 2 without a recorded Flow Haven approval on the concept image<br>
+    <span class="phase p0">P0</span> No item may move from Phase 2 to Phase 3 without a recorded Flow Haven approval on the physical sample<br>
+    <span class="phase p0">P0</span> Every production run must include +20 extra units per variant earmarked for licensor sample stock<br>
+    <span class="phase p0">P0</span> Every rejected concept must be tagged with a rejection reason: IP conflict, duplicate concept, or off-brand</p>
+    <p><span class="phase p1">P1</span> Track and confirm the licensor mailing destination per item (Striker-retained vs. forwarded to NHK Japan)<br>
+    <span class="phase p1">P1</span> Track Toast item number assigned per SKU at Phase 3C<br>
+    <span class="phase p1">P1</span> Flag items for future formal SKU/barcode assignment once drop-ship/wholesale is greenlit</p>
+  </section>
+
+  <!-- 10 -->
+  <section class="section" id="s10">
+    <div class="section-num">10</div>
+    <div class="section-label">Data Fields Tracked</div>
+    <div class="section-title">Per-Item Record</div>
+    <table>
+      <tr><th>Field</th><th>Captured At</th><th>Notes</th></tr>
+      <tr><td>Product Concept Name/Description</td><td>Phase 1A</td><td></td></tr>
+      <tr><td>Manufacturer + MOQ</td><td>Phase 1B</td><td></td></tr>
+      <tr><td>Mock Image Asset</td><td>Phase 1C</td><td>Submitted to Flow Haven</td></tr>
+      <tr><td>Concept Approval Status</td><td>Phase 1C</td><td>Approved / Rejected + reason</td></tr>
+      <tr><td>Physical Sample Video/Images</td><td>Phase 2A</td><td></td></tr>
+      <tr><td>Sample Approval Status</td><td>Phase 2B</td><td>Approved / Rejected</td></tr>
+      <tr><td>Production Timeline + Freight Cost</td><td>Phase 3A</td><td></td></tr>
+      <tr><td>Target Shelf Date</td><td>Phase 3A</td><td></td></tr>
+      <tr><td>Final Product Submission (Flow Haven)</td><td>Phase 3B</td><td>Licensing mark + packaging confirmed</td></tr>
+      <tr><td>Licensor Sample Units Mailed (+20/variant)</td><td>Phase 3B</td><td>Destination: TBD (Striker vs. NHK)</td></tr>
+      <tr><td>Retail Price</td><td>Phase 3C</td><td></td></tr>
+      <tr><td>Toast Item Number</td><td>Phase 3C</td><td>Formal SKU/barcode deferred</td></tr>
+      <tr><td>Promotion / Influencer Assigned</td><td>Phase 3D</td><td></td></tr>
+    </table>
+  </section>
+
+  <!-- 11 -->
+  <section class="section" id="s11">
+    <div class="section-num">11</div>
+    <div class="section-label">Open Questions</div>
+    <div class="section-title">Not Yet Resolved</div>
+    <div class="oq">
+      <div class="oq-title">1. Licensor mailing destination</div>
+      <div class="oq-body">Do licensor sample units get mailed directly to NHK in Japan, or retained by Striker Entertainment on NHK's behalf per the executed MLA? Izzy indicated he "already knows" the answer but it was not stated explicitly on the source recording — needs written confirmation for this playbook.</div>
+    </div>
+    <div class="oq">
+      <div class="oq-title">2. SKU/barcode formalization trigger</div>
+      <div class="oq-body">Confirmed: deferred until Domo Cafe expands into drop-ship/wholesale. Toast item number is sufficient for now — proof of concept validated as working. No further action needed until expansion decision is made.</div>
+    </div>
+    <div class="oq">
+      <div class="oq-title">3. Rejection resolution ownership</div>
+      <div class="oq-body">When Flow Haven rejects a concept or sample, who owns revising and resubmitting — Amy, Izzy, or the manufacturer? Not explicitly assigned in the source discussion.</div>
+    </div>
+    <div class="oq">
+      <div class="oq-title">4. Approval SLA</div>
+      <div class="oq-body">No turnaround time was specified for Flow Haven's review of either the concept image or the physical sample. The broader Merch Portal PRD assumes a 7-business-day target — should this playbook adopt the same SLA?</div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="section" id="s12">
+    <div class="section-num">12</div>
+    <div class="section-label">Appendix</div>
+    <div class="section-title">Related Documents</div>
+    <table>
+      <tr><th>Document</th><th>Relationship</th></tr>
+      <tr><td>Domo_Cafe_Merch_Process_Playbook_v1.0.md</td><td>Source markdown playbook this PRD is built from</td></tr>
+      <tr><td>Domo Cafe Merchandise Portal PRD v1.0 (June 2026)</td><td>Broader system PRD — this process should eventually be enforced inside that portal's Design & Approval Workflow (Section 06)</td></tr>
+      <tr><td>NHK Merchandising License Agreement (executed May 19, 2026)</td><td>Underlying legal agreement this process exists to comply with</td></tr>
+    </table>
+    <div class="callout brown">
+      <div class="callout-label">Note</div>
+      <p>This is a living process document. Update this PRD whenever the licensing agreement terms change, ownership shifts, or the process itself evolves through practice.</p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
