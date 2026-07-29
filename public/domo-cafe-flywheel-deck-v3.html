@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe's Flywheel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --dark: #1A0800;
+    --warm-white: #FDF8F4;
+    --cream: #F5EDD8;
+    --tan: #D4A574;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+  .deck { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+  .slide {
+    scroll-snap-align: start;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5vh 7vw;
+    overflow: hidden;
+  }
+  .slide-num {
+    position: absolute;
+    bottom: 28px; right: 34px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(253,248,244,0.35);
+    letter-spacing: 1px;
+  }
+  .kicker {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--tan);
+    margin-bottom: 18px;
+  }
+  h1 { font-family: 'Outfit', sans-serif; font-weight: 800; letter-spacing: -1px; }
+  .speaker-note {
+    position: absolute;
+    left: 7vw; right: 7vw; bottom: 56px;
+    font-family: 'DM Sans', sans-serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(253,248,244,0.55);
+    border-left: 3px solid var(--red);
+    padding-left: 18px;
+    max-width: 900px;
+  }
+  .logo-mark {
+    position: absolute;
+    top: 34px; left: 7vw;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--tan);
+    opacity: 0.7;
+  }
+  .logo-mark span { color: var(--red); }
+  .section-title { font-size: clamp(34px, 4.5vw, 56px); max-width: 950px; line-height: 1.15; }
+
+  /* ── TITLE ── */
+  .slide-title {
+    background: radial-gradient(ellipse at 30% 20%, rgba(212,165,116,0.14), transparent 55%),
+                radial-gradient(ellipse at 80% 85%, rgba(204,34,34,0.12), transparent 50%),
+                var(--dark);
+    align-items: flex-start;
+  }
+  .slide-title .cafe-name { font-size: clamp(46px, 6.4vw, 84px); line-height: 1.05; color: var(--warm-white); }
+  .slide-title .cafe-name span { color: var(--red); }
+  .slide-title .headline { font-size: clamp(20px, 2.4vw, 30px); font-weight: 600; color: var(--tan); margin-top: 20px; max-width: 760px; line-height: 1.4; }
+
+  /* ── QUOTE ── */
+  .slide-quote { background: var(--dark); align-items: center; text-align: center; }
+  .slide-quote .big-quote {
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(26px, 3.6vw, 46px);
+    line-height: 1.4; max-width: 1020px; margin: 0 auto; color: var(--warm-white);
+  }
+  .slide-quote .big-quote em { color: var(--tan); font-style: normal; }
+  .slide-quote .sub-quote { margin-top: 26px; font-size: 17px; color: rgba(253,248,244,0.55); max-width: 760px; margin-left:auto; margin-right:auto; line-height:1.6; }
+
+  /* ── FLYWHEEL DIAGRAM (SVG circular) ── */
+  .flywheel-wrap { display:flex; justify-content:center; align-items:center; margin-top: 30px; }
+  .fw-part-label { font-family:'Outfit', sans-serif; font-weight:700; font-size: 15px; fill: var(--warm-white); }
+  .fw-part-icon { font-size: 26px; }
+
+  /* ── PARTS GRID ── */
+  .parts-grid { display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-top:44px; width:100%; max-width:1200px; }
+  .part-card {
+    background: rgba(253,248,244,0.04); border:1.5px solid rgba(212,165,116,0.25); border-radius:14px;
+    padding: 22px 16px; text-align:center;
+  }
+  .part-card.active { border-color: var(--red); background: rgba(204,34,34,0.1); }
+  .part-card .p-icon { font-size: 30px; margin-bottom: 10px; }
+  .part-card .p-name { font-family:'Outfit',sans-serif; font-weight:700; font-size:15px; color:var(--tan); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; }
+  .part-card.active .p-name { color: var(--red); }
+  .part-card .p-desc { font-size: 12.5px; color: rgba(253,248,244,0.65); line-height:1.5; }
+
+  /* ── FLYWHEEL PART DETAIL SLIDE ── */
+  .part-detail { display:flex; align-items:center; gap:56px; margin-top: 20px; }
+  .part-detail .p-num { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:120px; color:rgba(212,165,116,0.18); line-height:1; }
+  .part-detail .p-icon-big { font-size: 74px; margin-bottom: 14px; }
+  .part-detail h2 { font-family:'Outfit',sans-serif; font-weight:800; font-size:clamp(30px,4vw,48px); color:var(--warm-white); }
+  .part-detail p { font-size: 19px; color: rgba(253,248,244,0.7); line-height:1.6; max-width:600px; margin-top:14px; }
+
+  /* ── LOOP FLOW DIAGRAM ── */
+  .loop-flow { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top: 44px; max-width: 1100px; }
+  .loop-node {
+    background: rgba(253,248,244,0.05); border:1px solid rgba(212,165,116,0.3); border-radius: 10px;
+    padding: 14px 18px; font-family:'Outfit',sans-serif; font-weight:600; font-size: 14.5px; color: var(--warm-white);
+  }
+  .loop-node.highlight { border-color: var(--red); background: rgba(204,34,34,0.12); color: var(--red); font-weight:700; }
+  .loop-arrow { color: var(--tan); font-size: 20px; }
+
+  /* ── CLOSING ── */
+  .slide-closing {
+    background: radial-gradient(ellipse at 50% 50%, rgba(212,165,116,0.14), transparent 60%), var(--dark);
+    align-items: center; text-align:center;
+  }
+  .slide-closing h1 { font-size: clamp(32px,4.6vw,54px); max-width: 1050px; line-height:1.25; }
+  .slide-closing .sign { margin-top: 30px; color: var(--tan); font-family:'JetBrains Mono', monospace; font-size:15px; letter-spacing:1px; max-width: 800px; }
+
+  @media print {
+    .deck { overflow: visible; height: auto; }
+    .slide { page-break-after: always; height: 100vh; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ═══════════ SLIDE 1 — TITLE ═══════════ -->
+  <section class="slide slide-title">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Team Meeting &middot; How We Win, Together</div>
+    <div class="cafe-name">Domo Cafe's <span>Flywheel</span></div>
+    <div class="headline">Why we succeed as one complete experience &mdash; not as separate departments.</div>
+    <div class="slide-num">01</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 2 — WHAT IS A FLYWHEEL ═══════════ -->
+  <section class="slide slide-quote">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">The Concept</div>
+    <div class="big-quote">In business, a flywheel is a system where several connected parts <em>continuously reinforce one another.</em></div>
+    <div class="sub-quote">When each part works well, the entire business gains momentum. The stronger the momentum becomes, the easier it is to attract guests, create loyalty, and grow.</div>
+    <div class="slide-num">02</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 3 — THE FIVE PARTS (OVERVIEW GRID) ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:flex-start;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Five Parts, One System</div>
+    <h1 class="section-title">The Five Parts of Our Flywheel</h1>
+    <div class="parts-grid">
+      <div class="part-card"><div class="p-icon">🍔</div><div class="p-name">Food</div><div class="p-desc">Tastes great, arrives consistently, worth coming back for.</div></div>
+      <div class="part-card"><div class="p-icon">🥤</div><div class="p-name">Drinks</div><div class="p-desc">Creativity, energy, another memorable part of the visit.</div></div>
+      <div class="part-card"><div class="p-icon">🛍️</div><div class="p-name">Merchandise</div><div class="p-desc">A piece of Domo Cafe guests take home with them.</div></div>
+      <div class="part-card"><div class="p-icon">✨</div><div class="p-name">Experiences</div><div class="p-desc">Atmosphere, music, characters, photo moments, surprises.</div></div>
+      <div class="part-card"><div class="p-icon">🤝</div><div class="p-name">Hospitality</div><div class="p-desc">How we greet, communicate, solve problems, and connect.</div></div>
+    </div>
+    <div class="slide-num">03</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 4 — FOOD DETAIL ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Part 1 of 5</div>
+    <div class="part-detail">
+      <div class="p-num">01</div>
+      <div>
+        <div class="p-icon-big">🍔</div>
+        <h2>Food</h2>
+        <p>The food must taste great, arrive consistently, and give guests something worth coming back for.</p>
+      </div>
+    </div>
+    <div class="slide-num">04</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 5 — DRINKS DETAIL ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Part 2 of 5</div>
+    <div class="part-detail">
+      <div class="p-num">02</div>
+      <div>
+        <div class="p-icon-big">🥤</div>
+        <h2>Drinks</h2>
+        <p>Our drinks add creativity, energy, and another memorable part of the visit.</p>
+      </div>
+    </div>
+    <div class="slide-num">05</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 6 — MERCHANDISE DETAIL ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Part 3 of 5</div>
+    <div class="part-detail">
+      <div class="p-num">03</div>
+      <div>
+        <div class="p-icon-big">🛍️</div>
+        <h2>Merchandise</h2>
+        <p>Merch allows guests to take a piece of Domo Cafe home with them and continue their connection to the brand.</p>
+      </div>
+    </div>
+    <div class="slide-num">06</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 7 — EXPERIENCES DETAIL ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Part 4 of 5</div>
+    <div class="part-detail">
+      <div class="p-num">04</div>
+      <div>
+        <div class="p-icon-big">✨</div>
+        <h2>Experiences</h2>
+        <p>The atmosphere, music, characters, presentation, photo moments, and small surprises turn a meal into a destination.</p>
+      </div>
+    </div>
+    <div class="slide-num">07</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 8 — HOSPITALITY DETAIL ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Part 5 of 5</div>
+    <div class="part-detail">
+      <div class="p-num">05</div>
+      <div>
+        <div class="p-icon-big">🤝</div>
+        <h2>Hospitality</h2>
+        <p>Hospitality connects everything. It is how we greet people, communicate, solve problems, support each other, and make every guest feel welcome.</p>
+      </div>
+    </div>
+    <div class="slide-num">08</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 9 — WHAT THE FLYWHEEL PRODUCES ═══════════ -->
+  <section class="slide slide-quote">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">What The Flywheel Produces</div>
+    <div class="big-quote">When all five parts work together, we create more than a transaction.<br>We create an <em>amazing guest experience.</em></div>
+    <div class="sub-quote">That experience creates happy guests. Happy guests stay longer, purchase across more parts of the cafe, share photos, tell their friends, leave positive reviews, and come back again.</div>
+    <div class="slide-num">09</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 10 — THE MOMENTUM LOOP (VISUAL FLOW) ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:flex-start;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">The Momentum Loop</div>
+    <h1 class="section-title" style="font-size:clamp(28px,3.6vw,42px);">That Is Our Flywheel</h1>
+    <div class="loop-flow">
+      <div class="loop-node highlight">Food + Drinks + Merch<br>+ Experiences + Hospitality</div>
+      <div class="loop-arrow">&#8594;</div>
+      <div class="loop-node">Amazing Guest<br>Experiences</div>
+      <div class="loop-arrow">&#8594;</div>
+      <div class="loop-node">Sharing, Reviews &amp;<br>Word of Mouth</div>
+      <div class="loop-arrow">&#8594;</div>
+      <div class="loop-node">New &amp; Returning<br>Guests</div>
+      <div class="loop-arrow">&#8594;</div>
+      <div class="loop-node">More Energy &amp;<br>Momentum</div>
+      <div class="loop-arrow">&#8594;</div>
+      <div class="loop-node highlight">An Even Better<br>Domo Cafe</div>
+      <div class="loop-arrow" style="transform:rotate(90deg) scaleX(-1); opacity:0.5;">&#8594;</div>
+    </div>
+    <div class="speaker-note">"Their excitement brings in more guests. More guests create more energy. That energy creates more opportunities for our team and gives us the ability to keep improving the food, drinks, merchandise, experiences, and hospitality. That is our flywheel &mdash; and it keeps turning back on itself."</div>
+    <div class="slide-num">10</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 11 — CIRCULAR FLYWHEEL DIAGRAM ═══════════ -->
+  <section class="slide" style="background: var(--dark); align-items:center; text-align:center;">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">One System, Always Turning</div>
+    <h1 class="section-title" style="text-align:center; margin:0 auto;">The Flywheel in Motion</h1>
+    <div class="flywheel-wrap">
+      <svg width="560" height="560" viewBox="0 0 560 560">
+        <defs>
+          <path id="circlePath" d="M 280,280 m -200,0 a 200,200 0 1,1 400,0 a 200,200 0 1,1 -400,0" fill="none"/>
+        </defs>
+        <!-- outer momentum ring -->
+        <circle cx="280" cy="280" r="240" fill="none" stroke="rgba(212,165,116,0.15)" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <!-- five segment arcs -->
+        <circle cx="280" cy="280" r="200" fill="none" stroke="rgba(253,248,244,0.08)" stroke-width="46"/>
+        <circle cx="280" cy="280" r="200" fill="none" stroke="#CC2222" stroke-width="46" stroke-dasharray="62.8 188.5" stroke-dashoffset="0" transform="rotate(-90 280 280)"/>
+        <circle cx="280" cy="280" r="200" fill="none" stroke="#D4A574" stroke-width="46" stroke-dasharray="62.8 188.5" stroke-dashoffset="-62.8" transform="rotate(-90 280 280)"/>
+        <circle cx="280" cy="280" r="200" fill="none" stroke="#8B4513" stroke-width="46" stroke-dasharray="62.8 188.5" stroke-dashoffset="-125.6" transform="rotate(-90 280 280)"/>
+        <circle cx="280" cy="280" r="200" fill="none" stroke="#9E7A60" stroke-width="46" stroke-dasharray="62.8 188.5" stroke-dashoffset="-188.4" transform="rotate(-90 280 280)"/>
+        <circle cx="280" cy="280" r="200" fill="none" stroke="#FDF8F4" stroke-width="46" stroke-opacity="0.9" stroke-dasharray="62.8 188.5" stroke-dashoffset="-251.2" transform="rotate(-90 280 280)"/>
+
+        <!-- labels around ring -->
+        <text x="280" y="68" text-anchor="middle" class="fw-part-label" fill="#FDF8F4">🍔 FOOD</text>
+        <text x="480" y="200" text-anchor="middle" class="fw-part-label" fill="#1A0800">🥤 DRINKS</text>
+        <text x="440" y="450" text-anchor="middle" class="fw-part-label" fill="#FDF8F4">🛍️ MERCH</text>
+        <text x="120" y="450" text-anchor="middle" class="fw-part-label" fill="#FDF8F4">✨ EXPERIENCES</text>
+        <text x="78" y="200" text-anchor="middle" class="fw-part-label" fill="#1A0800">🤝 HOSPITALITY</text>
+
+        <!-- center hub -->
+        <circle cx="280" cy="280" r="110" fill="#1A0800" stroke="rgba(212,165,116,0.4)" stroke-width="2"/>
+        <text x="280" y="270" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="22" fill="#FDF8F4">AMAZING</text>
+        <text x="280" y="298" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="22" fill="#D4A574">GUEST</text>
+        <text x="280" y="326" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="22" fill="#FDF8F4">EXPERIENCE</text>
+      </svg>
+    </div>
+    <div class="slide-num">11</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 12 — IMPORTANT MESSAGE TO THE TEAM ═══════════ -->
+  <section class="slide slide-quote">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">The Most Important Part</div>
+    <div class="big-quote">No single part of the flywheel can carry the cafe by itself.</div>
+    <div class="sub-quote" style="font-size:19px; line-height:1.8; margin-top:32px;">
+      Amazing food cannot overcome poor hospitality.<br>
+      Great service cannot overcome inconsistent drinks.<br>
+      Beautiful merchandise cannot replace a memorable experience.
+    </div>
+    <div class="slide-num">12</div>
+  </section>
+
+  <!-- ═══════════ SLIDE 13 — CLOSING ═══════════ -->
+  <section class="slide slide-closing">
+    <div class="logo-mark">DOMO <span>CAFE</span></div>
+    <div class="kicker">Remember This</div>
+    <h1>Every station matters.<br>Every role matters.<br><span style="color:var(--red);">Every person in this room helps keep the flywheel moving.</span></h1>
+    <div class="slide-num">13</div>
+  </section>
+
+</div>
+</body>
+</html>
