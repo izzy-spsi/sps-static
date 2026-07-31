@@ -277,11 +277,12 @@
 
  /* HIMA BRAND RECAP SLIDE */
  .hima-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:stretch}
- .hima-gallery{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:12px}
- .hima-gallery img{width:100%;height:100%;object-fit:cover;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);display:block}
- .hima-gallery .hg-wide{grid-column:span 2}
- .hima-gallery .hg-wide img{height:210px;object-position:center 30%}
- .hima-gallery .hg-cell img{height:100%;min-height:220px}
+ .hima-gallery{display:flex;flex-direction:column;gap:12px}
+ .hima-gallery img{border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);display:block}
+ .hima-gallery .hg-wide img{width:100%;height:210px;object-fit:cover;object-position:center 30%}
+ .hima-gallery .hg-row{display:flex;gap:12px}
+ .hima-gallery .hg-cell{flex:1;aspect-ratio:3/4;background:var(--surface-2);border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;overflow:hidden}
+ .hima-gallery .hg-cell img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border:none;box-shadow:none}
  .hima-side{display:grid;grid-template-rows:repeat(3,1fr);gap:12px}
  .hima-side .hima-fact{display:flex;flex-direction:column;justify-content:center}
  .hima-fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
@@ -561,8 +562,10 @@
  <div class="hima-wrap">
  <div class="hima-gallery">
  <div class="hg-wide"><img src="assets/hima-2026/hima-venue-stage.jpg" alt="Hollywood Independent Music Awards stage at the Avalon"></div>
- <div class="hg-cell"><img src="assets/hima-2026/hima-trio-wide.jpg" alt="Flywheel team on the HIMA step-and-repeat"></div>
+ <div class="hg-row">
+ <div class="hg-cell"><img src="assets/hima-2026/hima-trio-vertical.jpg" alt="Flywheel team on the HIMA step-and-repeat"></div>
  <div class="hg-cell"><img src="assets/hima-2026/hima-izzy-solo.jpg" alt="Izzy Aala at HIMA step-and-repeat"></div>
+ </div>
  </div>
  <div class="hima-side">
  <div class="hima-fact">
