@@ -245,6 +245,31 @@
  .nextsteps .ns .n{font-family:var(--mono);color:var(--brand);font-weight:800;flex:0 0 22px}
  .nextsteps .ns b{color:var(--ink);font-weight:650}
 
+ /* GROWTH FLYWHEEL RING SLIDE */
+ .fwring-wrap{display:grid;grid-template-columns:.95fr 2fr .85fr;gap:16px;align-items:stretch}
+ .fwring-left{display:flex;flex-direction:column;gap:16px;justify-content:center}
+ .fwring-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+ .fwring-stat .fn{font-family:var(--mono);font-size:1.7rem;font-weight:800;color:var(--brand);display:block;line-height:1.1;margin-bottom:4px}
+ .fwring-stat .fl{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+ .fwring-stat b{color:var(--ink)}
+ .fwring-mid{position:relative;display:flex;align-items:center;justify-content:center;min-height:440px;padding:0 8px 14px}
+ .fwring-svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:88%;height:88%;max-width:420px;max-height:420px}
+ .fwring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--brand-ink),var(--ink) 78%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.25);border:2px solid var(--brand)}
+ .fwring-center .fu{font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+ .fwring-center .fd{font-size:9.5px;color:var(--neutral-2);margin-top:4px;max-width:16ch;line-height:1.3}
+ .fwring-node{position:absolute;width:100px;transform:translate(-50%,-50%);text-align:center}
+ .fwring-node .fno{font-family:var(--mono);font-weight:800;color:var(--brand);font-size:11px;letter-spacing:.05em}
+ .fwring-node .fic{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1.5px solid var(--line-2);display:flex;align-items:center;justify-content:center;margin:3px auto 5px;font-size:15px;box-shadow:var(--shadow)}
+ .fwring-node .flb{font-size:10.5px;font-weight:680;color:var(--ink);line-height:1.25}
+ .fwring-right{display:flex;flex-direction:column;gap:10px;justify-content:center}
+ .fwring-right .frh{font-size:11.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);margin-bottom:2px}
+ .fwring-item{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.4;color:var(--ink-2)}
+ .fwring-item .fico{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:1.5px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:12px}
+ .fwring-item b{color:var(--ink)}
+ .fwring-banner{margin-top:20px;border:1px solid var(--line-2);background:var(--surface-2);border-radius:12px;padding:12px 18px;font-size:13.5px;color:var(--ink-2);display:flex;gap:10px;align-items:center}
+ .fwring-banner b{color:var(--ink)}
+ @media (max-width:900px){ .fwring-wrap{grid-template-columns:1fr} .fwring-mid{min-height:360px} }
+
  @media (max-width:900px){
  .g-6,.g-4,.g-3,.smap,.g3,.mdgrid{grid-template-columns:repeat(2,1fr)}
  .g-2,.two-col{grid-template-columns:1fr !important}
@@ -597,6 +622,65 @@
  <div class="prow"><span class="pw">Ops &amp; Support</span><div class="arc"><span class="q3">See everything across every market</span><span class="arr">→</span><span class="h2s">A permission-gated portal that also <b>acts</b> — issuing refunds, triggering payouts, and pushing OTA driver-app updates</span></div></div>
  </div>
  <p class="note">Next: sequencing, dependencies, and resourcing — the timeline for the rest of the year.</p>
+ </div>
+ </section>
+
+ <!-- 12B THE UBER GROWTH FLYWHEEL -->
+ <section class="slide" aria-label="The Uber Growth Flywheel">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>Powered By Flywheel™</div>
+ <h1 class="head">The Uber Growth Flywheel.</h1>
+ <p class="dek">Flywheel™ powers the growth engine that creates more supply, more trips, and more value for Uber and every participant in the ecosystem — a self-reinforcing cycle of sustainable growth.</p>
+ <div class="fwring-wrap">
+ <div class="fwring-left">
+ <div class="fwring-stat"><span class="fn">1%</span><span class="fl">Increase in <b>Fill Rate</b> across the platform = <b>Millions</b> in incremental Uber revenue.</span></div>
+ <div class="fwring-stat"><span class="fn">More Supply</span><span class="fl"><b>Better experience, stronger marketplace</b> — a self-reinforcing cycle of sustainable growth.</span></div>
+ </div>
+ <div class="fwring-mid">
+ <svg class="fwring-svg" viewBox="0 0 400 400" aria-hidden="true">
+              <defs>
+                <marker id="fwArrow" markerWidth="9" markerHeight="9" refX="5" refY="4" orient="auto">
+                  <path d="M0,0 L9,4 L0,8 Z" fill="var(--brand)"></path>
+                </marker>
+              </defs>
+              <circle cx="200" cy="200" r="176" fill="none" stroke="var(--line-2)" stroke-width="2"></circle>
+              <g fill="none" stroke="var(--brand)" stroke-width="3" stroke-linecap="round">
+                <path d="M 200 24 A 176 176 0 0 1 340 89" marker-end="url(#fwArrow)"></path>
+                <path d="M 351 111 A 176 176 0 0 1 375 200" marker-end="url(#fwArrow)"></path>
+                <path d="M 375 200 A 176 176 0 0 1 351 289" marker-end="url(#fwArrow)"></path>
+                <path d="M 340 311 A 176 176 0 0 1 260 366" marker-end="url(#fwArrow)"></path>
+                <path d="M 245 372 A 176 176 0 0 1 155 372" marker-end="url(#fwArrow)"></path>
+                <path d="M 140 366 A 176 176 0 0 1 60 311" marker-end="url(#fwArrow)"></path>
+                <path d="M 49 289 A 176 176 0 0 1 25 200" marker-end="url(#fwArrow)"></path>
+                <path d="M 25 200 A 176 176 0 0 1 49 111" marker-end="url(#fwArrow)"></path>
+                <path d="M 60 89 A 176 176 0 0 1 140 34" marker-end="url(#fwArrow)"></path>
+                <path d="M 155 28 A 176 176 0 0 1 200 24" marker-end="url(#fwArrow)"></path>
+              </g>
+            </svg>
+            <div class="fwring-center"><div class="fu">Uber</div><div class="fd">The world's largest mobility marketplace</div></div>
+ <div class="fwring-node" style="top:4.0%;left:50.0%"><div class="fno">01</div><div class="fic">🚗</div><div class="flb">More Platform Vehicles</div></div>
+ <div class="fwring-node" style="top:12.8%;left:77.0%"><div class="fno">02</div><div class="fic">🚕</div><div class="flb">More Available Supply</div></div>
+ <div class="fwring-node" style="top:35.8%;left:93.7%"><div class="fno">03</div><div class="fic">✓</div><div class="flb">Higher Acceptance Rate</div></div>
+ <div class="fwring-node" style="top:64.2%;left:93.7%"><div class="fno">04</div><div class="fic">📈</div><div class="flb">Higher Fill Rate</div></div>
+ <div class="fwring-node" style="top:87.2%;left:77.0%"><div class="fno">05</div><div class="fic">📍</div><div class="flb">More Completed Trips</div></div>
+ <div class="fwring-node" style="top:96.0%;left:50.0%"><div class="fno">06</div><div class="fic">💰</div><div class="flb">Higher Driver Earnings</div></div>
+ <div class="fwring-node" style="top:87.2%;left:23.0%"><div class="fno">07</div><div class="fic">★</div><div class="flb">Drivers Stay Online Longer</div></div>
+ <div class="fwring-node" style="top:64.2%;left:6.3%"><div class="fno">08</div><div class="fic">😊</div><div class="flb">Better Rider Experience</div></div>
+ <div class="fwring-node" style="top:35.8%;left:6.3%"><div class="fno">09</div><div class="fic">📊</div><div class="flb">More Uber Demand</div></div>
+ <div class="fwring-node" style="top:12.8%;left:23.0%"><div class="fno">10</div><div class="fic">$</div><div class="flb">More Uber Revenue</div></div>
+ </div>
+ <div class="fwring-right">
+ <div class="frh">What Powers Each Step</div>
+ <div class="fwring-item"><span class="fico">📍</span><span><b>Pair &amp; Pay</b><br>Seamless taxi pickup at airports, hotels, stands &amp; venues</span></div>
+ <div class="fwring-item"><span class="fico">🔗</span><span><b>Connect</b><br>Digitally connect fleet systems to the Uber marketplace</span></div>
+ <div class="fwring-item"><span class="fico">🚕</span><span><b>Direct-to-Driver (D2D)</b><br>More earnings. Less reliance on traditional dispatch</span></div>
+ <div class="fwring-item"><span class="fico">🏛️</span><span><b>Government Programs</b><br>Long-term contracts. Consistent ridership</span></div>
+ <div class="fwring-item"><span class="fico">⚙️</span><span><b>AI-Powered Dispatch</b><br>Smarter matching. Higher efficiency</span></div>
+ <div class="fwring-item"><span class="fico">📈</span><span><b>Dynamic Incentives</b><br>Optimize supply. Maximize Fill Rate</span></div>
+ <div class="fwring-item"><span class="fico">🛡️</span><span><b>Compliance &amp; Safety</b><br>Enterprise-grade standards</span></div>
+ </div>
+ </div>
+ <div class="fwring-banner">🏆&nbsp; This is the flywheel that drives <b>more trips, more revenue, and long-term value</b> for Uber, drivers, fleets, and riders.</div>
  </div>
  </section>
 
