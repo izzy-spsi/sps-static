@@ -201,6 +201,11 @@
  .gcard .gk{width:26px;height:3px;border-radius:2px;background:var(--brand);opacity:.85}
  .gcard h3{margin:0;font-size:1.1rem;font-weight:780;letter-spacing:-.015em}
  .gcard p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+ .bgt{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:2px 0 2px}
+ .bgt-base,.bgt-goal{font-size:10.5px;color:var(--muted);line-height:1.35;flex:1}
+ .bgt-base b,.bgt-goal b{display:block;font-family:var(--mono);font-size:15px;color:var(--ink);font-weight:800;margin-top:2px}
+ .bgt-goal b{color:var(--brand)}
+ .bgt-arr{color:var(--brand);font-weight:800;font-size:14px;flex:0 0 auto}
 
  .proghead{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:0 20px;margin-bottom:4px}
  .proghead .hh{display:grid;grid-template-columns:1fr 26px 1.35fr;gap:14px;align-items:center}
@@ -550,11 +555,13 @@
  <div class="gcard">
  <span class="gk"></span>
  <h3>Grow Total GMV +25%</h3>
+ <div class="bgt"><span class="bgt-base">June baseline<br><b>~$2.28M/mo</b></span><span class="bgt-arr">→</span><span class="bgt-goal">Year-end 2026 target<br><b>~$2.85M/mo</b></span></div>
  <p>Grow platform GMV <b>25%</b> by putting more vehicles on the road — both by growing our existing markets and by launching new markets. Not either/or: we're doing both at once.</p>
  </div>
  <div class="gcard">
  <span class="gk"></span>
  <h3>Increase Fill Rate +50%</h3>
+ <div class="bgt"><span class="bgt-base">June baseline<br><b>4.2%</b></span><span class="bgt-arr">→</span><span class="bgt-goal">Year-end 2026 target<br><b>~6.3%</b></span></div>
  <p>Grow fill rate <b>50% across every market</b> — through clever UX/UI in the driver and dispatch experience, and by working with Uber on better pricing to convert more offers into completed trips.</p>
  </div>
  <div class="gcard">
@@ -569,6 +576,7 @@
  </div>
  </div>
  <p class="note">These four goals are the business scorecard for H2. The strategy map and product roadmap that follow are how we get there.</p>
+ <p class="note" style="margin-top:6px;font-size:11px">GMV baseline derived from July's reported MoM change (confirm against June close). Fill rate baseline is blended Uber 3P fill rate; Flywheel 1P has no offer/fill-rate concept.</p>
  </div>
  </section>
 
