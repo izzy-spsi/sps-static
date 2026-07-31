@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flywheel — Q3 & H2 2026 Product Goals</title>
+<style>
+ :root{
+ --paper:#FBF9F8; --surface:#FFFFFF; --surface-2:#F5F1EF; --surface-3:#EDE7E3;
+ --ink:#1A1512; --ink-2:#4C443F; --muted:#8B817B; --line:#E7E0DC; --line-2:#D8CFC9;
+ --brand:#F2242E; --brand-ink:#C4121C; --neutral-2:#CFC6C0;
+ --amber:#B8720A; --amber-bg:#FBF0DC;
+ --shadow:0 1px 2px rgba(26,21,18,.06), 0 8px 30px rgba(26,21,18,.06);
+ --sans:-apple-system,"SF Pro Display",system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+ --mono:"SF Mono",ui-monospace,"Cascadia Code","Roboto Mono",Menlo,monospace;
+ }
+ @media (prefers-color-scheme:dark){
+ :root{
+ --paper:#141210; --surface:#1D1815; --surface-2:#241E1A; --surface-3:#2C2521;
+ --ink:#F5EFEC; --ink-2:#C7BBB3; --muted:#93857C; --line:#332A25; --line-2:#3E332D;
+ --brand:#F55058; --brand-ink:#F87074; --neutral-2:#544A43;
+ --amber:#E3A63F; --amber-bg:#332711;
+ --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.34);
+ }
+ }
+ :root[data-theme="light"]{
+ --paper:#FBF9F8; --surface:#FFFFFF; --surface-2:#F5F1EF; --surface-3:#EDE7E3;
+ --ink:#1A1512; --ink-2:#4C443F; --muted:#8B817B; --line:#E7E0DC; --line-2:#D8CFC9;
+ --brand:#F2242E; --brand-ink:#C4121C; --neutral-2:#CFC6C0;
+ --amber:#B8720A; --amber-bg:#FBF0DC;
+ --shadow:0 1px 2px rgba(26,21,18,.06), 0 8px 30px rgba(26,21,18,.06);
+ }
+ :root[data-theme="dark"]{
+ --paper:#141210; --surface:#1D1815; --surface-2:#241E1A; --surface-3:#2C2521;
+ --ink:#F5EFEC; --ink-2:#C7BBB3; --muted:#93857C; --line:#332A25; --line-2:#3E332D;
+ --brand:#F55058; --brand-ink:#F87074; --neutral-2:#544A43;
+ --amber:#E3A63F; --amber-bg:#332711;
+ --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 34px rgba(0,0,0,.34);
+ }
+
+ *{box-sizing:border-box}
+ html,body{margin:0;padding:0;height:100%;overflow:hidden}
+ body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+ -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-variant-numeric:tabular-nums;}
+
+ .deck{position:fixed;inset:0;overflow:hidden}
+ .track{display:flex;height:100%;width:100%;transition:transform .5s cubic-bezier(.7,0,.2,1);will-change:transform}
+ @media (prefers-reduced-motion:reduce){.track{transition:none}}
+ .slide{min-width:100%;width:100%;height:100%;overflow-y:auto;overflow-x:hidden;
+ display:flex;flex-direction:column;justify-content:flex-start;
+ padding:clamp(62px,7vh,92px) clamp(28px,5vw,104px) clamp(84px,10vh,104px);}
+ .inner{width:100%;max-width:1220px;margin:0 auto}
+
+ .topbar{position:fixed;top:0;left:0;right:0;height:52px;z-index:40;display:flex;align-items:center;
+ justify-content:space-between;padding:0 clamp(18px,4vw,40px);background:linear-gradient(var(--paper),rgba(0,0,0,0));pointer-events:none}
+ .wordmark{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.01em;font-size:15px}
+ .wordmark .dot{width:12px;height:12px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 22%,transparent)}
+ .topbar .ctx{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+ .toggle{pointer-events:auto;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);
+ width:34px;height:34px;border-radius:9px;cursor:pointer;display:grid;place-items:center;font-size:15px}
+ .toggle:hover{border-color:var(--brand);color:var(--brand)}
+ .toggle:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+ .botbar{position:fixed;bottom:0;left:0;right:0;height:64px;z-index:40;display:flex;align-items:center;
+ justify-content:space-between;padding:0 clamp(18px,4vw,40px);background:linear-gradient(rgba(0,0,0,0),var(--paper) 60%)}
+ .nav{display:flex;align-items:center;gap:10px}
+ .nav button{border:1px solid var(--line-2);background:var(--surface);color:var(--ink);width:38px;height:38px;
+ border-radius:10px;cursor:pointer;font-size:17px;display:grid;place-items:center;transition:.15s}
+ .nav button:hover:not(:disabled){border-color:var(--brand);color:var(--brand);transform:translateY(-1px)}
+ .nav button:disabled{opacity:.32;cursor:default}
+ .nav button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+ .dots{display:flex;gap:7px;align-items:center}
+ .dots button{width:9px;height:9px;padding:0;border-radius:50%;border:none;cursor:pointer;background:var(--neutral-2);transition:.2s}
+ .dots button[aria-current="true"]{background:var(--brand);width:26px;border-radius:5px}
+ .dots button:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+ .counter{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--muted);font-weight:500}
+ .flyarc{transform:rotate(-90deg)}
+ .flyarc .bg{stroke:var(--line-2)}
+ .flyarc .fg{stroke:var(--brand);transition:stroke-dashoffset .5s cubic-bezier(.7,0,.2,1)}
+
+ .eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);
+ display:flex;align-items:center;gap:10px;margin-bottom:18px}
+ .eyebrow .bar{height:1px;flex:0 0 34px;background:var(--brand);opacity:.5}
+ h1.head{font-size:clamp(1.8rem,3.9vw,3.05rem);line-height:1.03;letter-spacing:-.028em;font-weight:830;margin:0 0 9px;text-wrap:balance;max-width:26ch}
+ .dek{font-size:clamp(1rem,1.5vw,1.22rem);color:var(--ink-2);line-height:1.5;margin:0 0 24px;max-width:74ch;font-weight:450}
+ .accent{color:var(--brand)}
+ .note{font-size:12px;color:var(--muted);margin-top:20px;line-height:1.5;max-width:84ch}
+ .note b{color:var(--ink-2)}
+ .kbd{font-family:var(--mono);font-size:11px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;color:var(--ink-2)}
+
+ /* cover */
+ .cover{display:flex;flex-direction:column;justify-content:center;height:100%}
+ .cover .kick{font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+ .cover h1{font-size:clamp(2.8rem,8.4vw,6.6rem);line-height:.95;letter-spacing:-.04em;font-weight:870;margin:0}
+ .cover h1 .r2{color:var(--brand)}
+ .cover .sub{font-size:clamp(1.1rem,2vw,1.5rem);color:var(--ink-2);max-width:60ch;line-height:1.45;margin-top:24px}
+ .cover .meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:40px;font-size:13px;color:var(--muted);font-family:var(--mono)}
+ .cover .meta b{color:var(--ink);font-weight:700}
+ .hint{position:absolute;bottom:78px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+
+ /* strategy map cards */
+ .smap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+ .tcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;min-width:0}
+ .tcard .th{font-size:.98rem;font-weight:770;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;line-height:1.15}
+ .tcard .th .d{width:8px;height:8px;border-radius:50%;background:var(--brand);flex:0 0 auto}
+ .tcard .chn{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.5;letter-spacing:.01em}
+ .tcard .ini{font-size:12.5px;color:var(--ink-2);line-height:1.45}
+ .tcard .ini b{color:var(--ink);font-weight:680}
+ .tcard .met{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+ .mchip{font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+ .mchip.def{background:transparent;border:1px dashed var(--line-2);color:var(--muted)}
+
+ /* Q3 goal cards */
+ .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ .gcard{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:19px 21px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px;min-width:0}
+ .gcard .gk{width:26px;height:3px;border-radius:2px;background:var(--brand);opacity:.85}
+ .gcard h3{margin:0;font-size:1.1rem;font-weight:780;letter-spacing:-.015em}
+ .gcard p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+
+ /* H2 progression */
+ .proghead{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:0 20px;margin-bottom:4px}
+ .proghead .hh{display:grid;grid-template-columns:1fr 26px 1.35fr;gap:14px;align-items:center}
+ .proghead .l{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+ .proghead .l.dst{color:var(--brand)}
+ .prog{display:flex;flex-direction:column;gap:9px}
+ .prow{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:12px 20px;box-shadow:var(--shadow);
+ display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:center}
+ .prow .pw{font-weight:770;font-size:15px;letter-spacing:-.01em}
+ .prow .arc{display:grid;grid-template-columns:1fr 26px 1.35fr;gap:14px;align-items:center}
+ .prow .q3{font-size:12.5px;color:var(--muted);line-height:1.42}
+ .prow .arr{color:var(--brand);font-size:18px;text-align:center;font-weight:700}
+ .prow .h2s{font-size:13px;color:var(--ink);font-weight:550;line-height:1.42}
+ .prow .h2s b{font-weight:700}
+
+ /* risk slide */
+ .rlist{display:flex;flex-direction:column;gap:12px}
+ .rrow{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 19px;box-shadow:var(--shadow);
+ display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:start}
+ .rrow .rt{font-weight:750;font-size:14px;letter-spacing:-.01em;line-height:1.3}
+ .rrow .rt .tag{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:10px;font-weight:700;
+ padding:2px 7px;border-radius:6px;background:var(--amber-bg);color:var(--amber);letter-spacing:.02em}
+ .rrow .rb{font-size:12.5px;color:var(--ink-2);line-height:1.55}
+ .rrow .rb b{color:var(--ink);font-weight:650}
+ .rrow .mit{margin-top:6px;font-size:12px;color:var(--muted)}
+ .rrow .mit b{color:var(--ink-2);font-weight:650}
+ .closeline{margin-top:18px;font-size:13px;color:var(--ink-2);font-style:italic;border-left:2px solid var(--brand);padding-left:14px}
+
+ /* metrics-define slide */
+ .mdgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+ .mdcard{background:var(--surface);border:1px dashed var(--line-2);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+ .mdcard h3{margin:0;font-size:1rem;font-weight:750;display:flex;align-items:center;gap:8px}
+ .mdcard h3::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+ .mdcard p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+ .mdcard .need{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+
+ /* QA slide */
+ .qalist{display:flex;flex-direction:column;gap:14px}
+ .qa{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 19px;box-shadow:var(--shadow)}
+ .qa .q{font-weight:730;font-size:14.5px;color:var(--ink);margin-bottom:6px}
+ .qa .q::before{content:'Q · ';color:var(--brand);font-weight:800}
+ .qa .a{font-size:13px;color:var(--ink-2);line-height:1.55}
+ .qa .a::before{content:'A · ';color:var(--muted);font-weight:800}
+
+ /* closing */
+ .closing{display:flex;flex-direction:column;justify-content:center;height:100%}
+ .takeaway{font-size:clamp(1.4rem,3vw,2.1rem);font-weight:760;letter-spacing:-.02em;line-height:1.3;max-width:34ch;margin:0 0 30px}
+ .nextsteps{display:flex;flex-direction:column;gap:10px;max-width:60ch}
+ .nextsteps .ns{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ink-2);line-height:1.5}
+ .nextsteps .ns .n{font-family:var(--mono);color:var(--brand);font-weight:800;flex:0 0 22px}
+ .nextsteps .ns b{color:var(--ink);font-weight:650}
+
+ @media (max-width:900px){
+ .smap,.g3,.mdgrid{grid-template-columns:1fr 1fr}
+ .prow{grid-template-columns:1fr;gap:9px} .prow .arc{grid-template-columns:1fr} .prow .arr{display:none} .prow .q3::after{content:' ↓'}
+ .proghead{display:none}
+ .rrow{grid-template-columns:1fr;gap:8px}
+ .topbar .ctx{display:none} h1.head{max-width:none}
+ }
+ @media (max-width:560px){ .smap,.g3,.mdgrid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="topbar">
+ <div class="wordmark"><span class="dot"></span>Flywheel</div>
+ <div class="ctx">Product Direction · 2026</div>
+ <button class="toggle" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
+</div>
+
+<div class="deck">
+ <div class="track" id="track">
+
+ <!-- 1 COVER -->
+ <section class="slide" aria-label="Cover">
+ <div class="inner cover">
+ <div class="kick">Product Direction · 2026</div>
+ <h1>Q3 &amp; H2.<br><span class="r2">Where we're going.</span></h1>
+ <p class="sub">Six coordinated initiatives across the platform — built through Q3, carried to fruition by the end of the year. Every one ladders up to a strategic theme.</p>
+ <div class="meta">
+ <span>SCOPE · <b>Q3 → year-end 2026</b></span>
+ <span>PRESENTED BY · <b>Kartik &amp; Izzy</b></span>
+ </div>
+ </div>
+ <div class="hint">Press <span class="kbd">→</span> to advance</div>
+ </section>
+
+ <!-- 2 STRATEGY MAP -->
+ <section class="slide" aria-label="Strategy map">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>The strategy</div>
+ <h1 class="head">Six themes drive the year.</h1>
+ <p class="dek">Every initiative ladders up through a platform, product, and surface — and moves a metric we track.</p>
+ <div class="smap">
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Marketplace Parity</div>
+ <div class="chn">Core · Supply › Trip Lifecycle, Fleet Experience › Driver App · Fleet Portal</div>
+ <div class="ini"><b>Rider App</b> · <b>Uber 3P Demand</b> · <b>Fleet Portal</b></div>
+ <div class="met"><span class="mchip">Fill Rate</span><span class="mchip">Acceptance Rate</span></div>
+ </div>
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Demand Channel Expansion</div>
+ <div class="chn">Demand › Flywheel for Business, Consumer Demand › Central Portal · Rider App</div>
+ <div class="ini"><b>Flywheel Central</b> · <b>Corporate Accounts</b> · consumer acquisition</div>
+ <div class="met"><span class="mchip">GMV</span><span class="mchip">Trips</span><span class="mchip def">funnel conversion · define</span></div>
+ </div>
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Platform Infrastructure &amp; Scalability</div>
+ <div class="chn">Core › Payments &amp; Financial › Driver App · APIs</div>
+ <div class="ini"><b>Driver Payouts</b> — the accounting ledger</div>
+ <div class="met"><span class="mchip">Net Fare</span><span class="mchip">Tip Rate</span><span class="mchip def">payout accuracy · define</span></div>
+ </div>
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Driver Experience &amp; Earnings</div>
+ <div class="chn">Supply › Driver Experience › Driver App</div>
+ <div class="ini"><b>Uber incentive automation</b> (DxGy · PTB)</div>
+ <div class="met"><span class="mchip">Incentive ROI</span><span class="mchip">Driver Earnings</span></div>
+ </div>
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Marketplace Efficiency &amp; Liquidity</div>
+ <div class="chn">Core › Supply Orchestration › Driver App</div>
+ <div class="ini"><b>Driver Heat Maps</b></div>
+ <div class="met"><span class="mchip">Fill Rate</span><span class="mchip">Offers / Completed Trip</span></div>
+ </div>
+ <div class="tcard">
+ <div class="th"><span class="d"></span>Internal Velocity &amp; Operating System</div>
+ <div class="chn">Internal › Internal Tooling, Analytics Engine › Support / Ops Portal</div>
+ <div class="ini"><b>Support &amp; Ops Portal</b></div>
+ <div class="met"><span class="mchip def">support resolution · define</span></div>
+ </div>
+ </div>
+ <p class="note"><b>Solid</b> metrics are already in our catalog and measured today. <b>Dashed</b> metrics don't exist yet — each needs a definition and a measurement methodology before we report against it.</p>
+ </div>
+ </section>
+
+ <!-- 3 Q3 GOALS -->
+ <section class="slide" aria-label="Q3 goals">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>Q3 · Jul–Sep 2026</div>
+ <h1 class="head">This quarter, it goes live.</h1>
+ <div class="g3">
+ <div class="gcard"><span class="gk"></span><h3>Rider App</h3><p>The new Rider App is live across the US and Mexico, replacing the old app. We measure every social channel — organic and paid — across the full funnel to conversion, and run structured promotion campaigns to acquire new riders and re-engage existing ones.</p></div>
+ <div class="gcard"><span class="gk"></span><h3>Driver Payouts</h3><p>A double-entry accounting ledger records every trip transaction — fare, tips, cancellation fees, incentives — across card and cash, reconciling the full path from rider payment to driver payout, including negative balances.</p></div>
+ <div class="gcard"><span class="gk"></span><h3>Uber 3P Demand</h3><p>We close the feature gap with Uber: editing multiple checkpoints mid-route, mid-trip cancellations, Uber's driver incentives (DxGy and PTB) paid automatically through the API, and Uber Reserve pre-booked trips.</p></div>
+ <div class="gcard"><span class="gk"></span><h3>Flywheel Central</h3><p>An all-in-one portal for government agencies to run their subsidised-ride programs — managing patrons, trips, and reimbursements in one place. Folds in the existing Late Shift Connect program.</p></div>
+ <div class="gcard"><span class="gk"></span><h3>Fleet Portal</h3><p>A complete operating product for fleet owners: real-time live operations, vehicle and driver asset management, reporting and analytics, and corporate-account administration.</p></div>
+ <div class="gcard"><span class="gk"></span><h3>Support Portal</h3><p>One internal portal where Support and Ops can see live activity across every market and resolve any rider, fleet, or driver request — backed by full reporting.</p></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 4 H2 GOALS -->
+ <section class="slide" aria-label="H2 goals">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>H2 · by year-end</div>
+ <h1 class="head">Q3 gets it live. H2 makes it complete.</h1>
+ <p class="dek">Not a new list — the same initiatives, carried from launch to full maturity by the end of the year.</p>
+ <div class="proghead">
+ <span></span>
+ <div class="hh"><span class="l">Q3 · live</span><span></span><span class="l dst">H2 · complete</span></div>
+ </div>
+ <div class="prog">
+ <div class="prow"><span class="pw">Rider App</span><div class="arc"><span class="q3">Live in the US &amp; Mexico; old app retired; socials tracked; promotions running</span><span class="arr">→</span><span class="h2s">A feature-complete rider experience <b>on par with Uber and Lyft</b>, with automated acquisition, retention, and segmentation &amp; targeting across multiple markets</span></div></div>
+ <div class="prow"><span class="pw">Driver Payouts</span><div class="arc"><span class="q3">One ledger for every trip — fare, tips, fees, incentives, card &amp; cash</span><span class="arr">→</span><span class="h2s"><b>Multi-party settlement</b> — driver↔fleet, driver↔Flywheel, fleet↔Flywheel — and Mexico's collections split across rev-share partners, drivers, and government</span></div></div>
+ <div class="prow"><span class="pw">Uber 3P Demand</span><div class="arc"><span class="q3">Checkpoints, mid-trip cancellations, incentives, Reserve</span><span class="arr">→</span><span class="h2s"><b>Fully integrated with Uber's demand engine</b>, plus driver heat maps guiding supply to where demand is</span></div></div>
+ <div class="prow"><span class="pw">Flywheel for Business</span><div class="arc"><span class="q3">Central live for one agency; Fleet Portal shipped</span><span class="arr">→</span><span class="h2s">Central serving <b>every agency and program</b>, fleets deployed at scale with advanced live operations, and <b>corporate accounts launched</b> as a new demand channel</span></div></div>
+ <div class="prow"><span class="pw">Ops &amp; Support</span><div class="arc"><span class="q3">See everything across every market</span><span class="arr">→</span><span class="h2s">A permission-gated portal that also <b>acts</b> — issuing refunds, triggering payouts, and pushing OTA driver-app updates</span></div></div>
+ </div>
+ <p class="note">Next: sequencing, dependencies, and resourcing — the timeline for the rest of the year.</p>
+ </div>
+ </section>
+
+ <!-- 5 SEQUENCING / RISK (NEW) -->
+ <section class="slide" aria-label="Sequencing and risk">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>Sequencing</div>
+ <h1 class="head">Where we're being careful.</h1>
+ <p class="dek">The roadmap is honest about its own pressure points. Here's where capacity is tight, and how we're handling it.</p>
+ <div class="rlist">
+ <div class="rrow">
+ <div class="rt">Rider App → Mexico handoff<span class="tag">5-DAY OVERLAP</span></div>
+ <div class="rb">US launch close-out (through Aug 14) overlaps the start of Mexico operating-mode work (Aug 10) by five days.<div class="mit"><b>Mitigation:</b> dedicated mobile capacity split, or treat Aug 10–14 as discovery-only.</div></div>
+ </div>
+ <div class="rrow">
+ <div class="rt">Legacy Rider App sunset<span class="tag">SEQUENCING</span></div>
+ <div class="rb">Sunset work (Aug 3–31) starts before the US launch target even closes (Aug 14).<div class="mit"><b>Mitigation:</b> mandatory-update work must not assume production approval before Aug 14.</div></div>
+ </div>
+ <div class="rrow">
+ <div class="rt">Ledger v1 → v2<span class="tag">THIN BUFFER</span></div>
+ <div class="rb">v1 (6 weeks, Aug 3–Sep 15) is compressed while Finance/identity policy gates remain open; v2 (multi-party settlement) starts just two weeks after v1 ends.<div class="mit"><b>Mitigation:</b> resolve Finance/identity gates early; treat the 2-week gap as stabilization, not slack.</div></div>
+ </div>
+ <div class="rrow">
+ <div class="rt">v2 + Mexico distribution<span class="tag">RESOURCE CLASH</span></div>
+ <div class="rb">Mexico payment distribution (Oct 15–Nov 30) runs concurrently with v2 on the same Backoffice/payment architecture.<div class="mit"><b>Mitigation:</b> a distinct team, or explicit shared sequencing — not two hard problems on one team at once.</div></div>
+ </div>
+ <div class="rrow">
+ <div class="rt">Uber Reserve<span class="tag">NO BUFFER</span></div>
+ <div class="rb">Starts Aug 15 — one day after Incentives and Mid-Trip Cancellations targets close (Aug 14). Cancellations' end date is Uber-controlled (their admin testing), not fully ours to commit to.<div class="mit"><b>Mitigation:</b> retain contingency beyond Aug 14 in any external commitment.</div></div>
+ </div>
+ <div class="rrow">
+ <div class="rt">Support Portal · Actions<span class="tag">AGGRESSIVE</span></div>
+ <div class="rb">One month (November) for refund, payout, and OTA actions — a meaningfully harder phase than the read-only Intelligence layer.<div class="mit"><b>Mitigation:</b> use October as explicit API/permissions hardening, not just buffer.</div></div>
+ </div>
+ </div>
+ <p class="closeline">Sequencing and resourcing is the next working session with Kunal — this deck sets the what and why; that session sets the when.</p>
+ </div>
+ </section>
+
+ <!-- 6 METRICS TO DEFINE -->
+ <section class="slide" aria-label="Metrics we're still defining">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>Metrics</div>
+ <h1 class="head">What we're still defining.</h1>
+ <p class="dek">A small analytics workstream running alongside the build — not an afterthought.</p>
+ <div class="mdgrid">
+ <div class="mdcard"><h3>Acquisition-funnel conversion</h3><p>Social impression/click → install → first ride, organic and paid.</p><div class="need">Needs: funnel stages + conversion definition. Tracking stack (SDK, Firebase, UTM) already exists.</div></div>
+ <div class="mdcard"><h3>Payout accuracy</h3><p>Correctness/completeness of the ledger's driver payouts.</p><div class="need">Needs: discrepancy/reconciliation rate + tolerance. Only measurable once the ledger is live.</div></div>
+ <div class="mdcard"><h3>New demand accounts</h3><p>Active government agencies / corporate accounts.</p><div class="need">Needs: "active account" definition + source of record (Central portal).</div></div>
+ <div class="mdcard"><h3>Support resolution</h3><p>Speed and quality of Support &amp; Ops request handling.</p><div class="need">Needs: time-to-resolution / resolution-rate definition + ticketing source.</div></div>
+ </div>
+ <p class="note">We don't put a number on a slide until it's real. Defining these is part of the plan, not an afterthought.</p>
+ </div>
+ </section>
+
+ <!-- 7 Q&A -->
+ <section class="slide" aria-label="Anticipated questions">
+ <div class="inner">
+ <div class="eyebrow"><span class="bar"></span>Anticipated questions</div>
+ <h1 class="head">Questions we expect in the room.</h1>
+ <div class="qalist">
+ <div class="qa"><div class="q">Is Demand Channel Expansion just invented structure?</div><div class="a">No — it's a promoted, active theme this cycle. Flywheel-for-Business (government, corporate) genuinely doesn't fit the other five themes; it's about new demand channels, a distinct strategic problem.</div></div>
+ <div class="qa"><div class="q">When does each of these land?</div><div class="a">Sequencing and timing are the next conversation — with Kunal, against engineering capacity. This deck sets the what and why; the when comes next.</div></div>
+ <div class="qa"><div class="q">How much of this is already done vs. net-new?</div><div class="a">Several are in flight (Rider App, Fleet Portal, Uber 3P features in QA); others are net-new (Central, Corporate Accounts, Heat Maps).</div></div>
+ <div class="qa"><div class="q">Why don't the new initiatives have numbers?</div><div class="a">Because we won't put a metric on a slide until it's real. Defining these is part of the plan, not an afterthought.</div></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 8 CLOSING -->
+ <section class="slide" aria-label="Closing">
+ <div class="inner closing">
+ <div class="eyebrow"><span class="bar"></span>Closing</div>
+ <p class="takeaway">By year-end, Flywheel has an owned rider app that competes head-to-head, a real money-movement ledger, full Uber parity, a live Flywheel-for-Business unit, and an Ops team that can act — all tied to six strategic themes.</p>
+ <div class="nextsteps">
+ <div class="ns"><span class="n">01</span><span><b>Roadmap sequencing</b> — with Kunal: dependencies, timing, and eng capacity across Q3/Q4.</span></div>
+ <div class="ns"><span class="n">02</span><span><b>Define the four open metrics</b> — funnel conversion, payout accuracy, active accounts, support resolution.</span></div>
+ <div class="ns"><span class="n">03</span><span><b>Resolve the flagged overlap risks</b> before committing hard dates publicly.</span></div>
+ </div>
+ </div>
+ </section>
+
+ </div>
+</div>
+
+<div class="botbar">
+ <div class="nav">
+ <button id="prev" aria-label="Previous slide">←</button>
+ <button id="next" aria-label="Next slide">→</button>
+ </div>
+ <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+ <div class="counter">
+ <span id="count">1 / 8</span>
+ <svg class="flyarc" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+ <circle class="bg" cx="12" cy="12" r="9" fill="none" stroke-width="2.5"></circle>
+ <circle class="fg" id="arc" cx="12" cy="12" r="9" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="56.55" stroke-dashoffset="56.55"></circle>
+ </svg>
+ </div>
+</div>
+
+<script>
+(function(){
+ var track=document.getElementById('track');
+ var slides=Array.prototype.slice.call(track.children);
+ var total=slides.length, i=0;
+ var prev=document.getElementById('prev'), next=document.getElementById('next');
+ var count=document.getElementById('count'), arc=document.getElementById('arc');
+ var dotsWrap=document.getElementById('dots'); var CIRC=56.55;
+ slides.forEach(function(_,n){
+ var b=document.createElement('button'); b.setAttribute('role','tab');
+ b.setAttribute('aria-label','Go to slide '+(n+1));
+ b.addEventListener('click',function(){go(n)}); dotsWrap.appendChild(b);
+ });
+ var dots=Array.prototype.slice.call(dotsWrap.children);
+ function render(){
+ track.style.transform='translateX(-'+(i*100)+'%)';
+ count.textContent=(i+1)+' / '+total;
+ arc.style.strokeDashoffset=(CIRC*(1-(i+1)/total)).toFixed(2);
+ prev.disabled=(i===0); next.disabled=(i===total-1);
+ dots.forEach(function(d,n){d.setAttribute('aria-current', n===i?'true':'false')});
+ if(location.hash!=='#s'+(i+1)) history.replaceState(null,'','#s'+(i+1));
+ }
+ function go(n){ i=Math.max(0,Math.min(total-1,n)); render(); }
+ function step(d){ go(i+d); }
+ prev.addEventListener('click',function(){step(-1)});
+ next.addEventListener('click',function(){step(1)});
+ document.addEventListener('keydown',function(e){
+ if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();step(1);}
+ else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();step(-1);}
+ else if(e.key==='Home'){e.preventDefault();go(0);}
+ else if(e.key==='End'){e.preventDefault();go(total-1);}
+ });
+ var x0=null;
+ track.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+ track.addEventListener('touchend',function(e){
+ if(x0===null)return; var dx=e.changedTouches[0].clientX-x0;
+ if(Math.abs(dx)>50) step(dx<0?1:-1); x0=null;
+ },{passive:true});
+ document.getElementById('themeBtn').addEventListener('click',function(){
+ var cur=document.documentElement.getAttribute('data-theme');
+ var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme:dark)').matches;
+ document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+ });
+ var m=(location.hash.match(/^#s(\d+)$/));
+ if(m){ i=Math.max(0,Math.min(total-1,parseInt(m[1],10)-1)); }
+ render();
+})();
+</script>
+</body>
+</html>
