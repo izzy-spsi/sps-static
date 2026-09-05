@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe × NHK — Partnership Update (v1.4)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --warm-white: #FDF8F4;
+    --cream: #F5EDD8;
+    --tan: #D4A574;
+    --dark: #1A0800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+
+  .deck { width: 100%; }
+
+  .slide {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 8vw;
+    position: relative;
+    border-bottom: 2px solid rgba(212,165,116,0.15);
+  }
+
+  .slide.cover {
+    background: linear-gradient(160deg, var(--dark) 0%, var(--brown) 100%);
+    text-align: center;
+    align-items: center;
+  }
+
+  .slide.cream { background: var(--cream); color: var(--dark); }
+  .slide.warm { background: var(--warm-white); color: var(--dark); }
+  .slide.dark { background: var(--dark); color: var(--warm-white); }
+  .slide.brown { background: linear-gradient(160deg, var(--brown) 0%, var(--dark) 100%); color: var(--warm-white); }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--tan);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  h1.section-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 52px);
+    line-height: 1.15;
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+
+  .cover h1.section-title { font-size: clamp(40px, 6vw, 68px); max-width: 1000px; }
+
+  .subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(16px, 1.6vw, 20px);
+    color: var(--tan);
+    max-width: 700px;
+    line-height: 1.5;
+  }
+
+  .cover .subtitle { color: var(--warm-white); opacity: 0.85; }
+
+  .body-text {
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.7;
+    max-width: 800px;
+    margin-bottom: 16px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+    max-width: 1100px;
+  }
+
+  .stat-card {
+    background: rgba(139,69,19,0.06);
+    border: 1px solid rgba(139,69,19,0.2);
+    border-radius: 14px;
+    padding: 24px 20px;
+  }
+
+  .slide.dark .stat-card, .slide.brown .stat-card {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.25);
+  }
+
+  .stat-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 38px);
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.75;
+    font-weight: 600;
+  }
+
+  table.data-table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    margin-top: 28px;
+    font-size: 15px;
+  }
+
+  table.data-table th, table.data-table td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(139,69,19,0.2);
+  }
+
+  table.data-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--brown);
+  }
+
+  .slide.dark table.data-table th, .slide.brown table.data-table th { color: var(--tan); }
+  .slide.dark table.data-table td, .slide.brown table.data-table td { border-bottom: 1px solid rgba(212,165,116,0.15); }
+
+  table.data-table td.num { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  table.data-table tr.total td { font-weight: 700; border-top: 2px solid var(--red); }
+
+  .callout {
+    background: rgba(204,34,34,0.08);
+    border-left: 4px solid var(--red);
+    border-radius: 8px;
+    padding: 18px 24px;
+    max-width: 800px;
+    margin-top: 24px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .callout.placeholder {
+    background: rgba(212,165,116,0.1);
+    border-left: 4px solid var(--tan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    max-width: 1000px;
+    margin-top: 28px;
+  }
+
+  .item-card {
+    background: rgba(139,69,19,0.05);
+    border: 1px solid rgba(139,69,19,0.18);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+
+  .slide.dark .item-card, .slide.brown .item-card {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.2);
+  }
+
+  .item-card .cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .item-card .amt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  ol.agenda-list {
+    max-width: 700px;
+    margin-top: 28px;
+    list-style: none;
+    counter-reset: item;
+  }
+
+  ol.agenda-list li {
+    counter-increment: item;
+    padding: 14px 0 14px 50px;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(139,69,19,0.15);
+  }
+
+  ol.agenda-list li::before {
+    content: counter(item);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--red);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-size: 18px;
+  }
+
+  .slide-number {
+    position: absolute;
+    bottom: 24px;
+    right: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  .domo-arigato {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 60px);
+    color: var(--red);
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1. COVER -->
+  <section class="slide cover">
+    <div class="eyebrow">Domo Cafe × NHK &amp; Striker</div>
+    <h1 class="section-title">Partnership Update</h1>
+    <p class="subtitle">September 4, 2026 · Domo Cafe, Buena Park, California</p>
+    <p class="subtitle" style="margin-top:6px; font-size:14px;">Reporting Period: June 13 – September 4, 2026</p>
+    <div class="slide-number">01</div>
+  </section>
+
+  <!-- 2. WHERE WE'VE BEEN -->
+  <section class="slide warm">
+    <div class="eyebrow">Our Story So Far</div>
+    <h1 class="section-title">The Journey From Concept to Cafe</h1>
+    <p class="body-text">It has been an incredible journey since we first connected in Buena Park. On June 13, 2026, Domo Cafe opened its doors — and since then, we've been building something we're proud to bring back to you in person.</p>
+    <div class="callout">This meeting is about sharing where we are, how the numbers look, and where we want to grow together.</div>
+    <div class="slide-number">02</div>
+  </section>
+
+  <!-- 3. A STANDOUT MOMENT -->
+  <section class="slide cream">
+    <div class="eyebrow">A Standout Saturday — Grand Opening, Jun 13</div>
+    <h1 class="section-title">Over 1,800 Guests Waited in Line</h1>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-number">1,800+</div><div class="stat-label">Guests Waited in Line</div></div>
+      <div class="stat-card"><div class="stat-number">710</div><div class="stat-label">Guests Serviced (Covers)</div></div>
+      <div class="stat-card"><div class="stat-number">$29,126</div><div class="stat-label">Total Sales</div></div>
+    </div>
+    <div class="callout">Over 1,800 guests waited in line to be part of our grand opening — our biggest single-day turnout since opening. We serviced over 700 guests that day alone, generating close to $30,000 in sales. Still our single best day, nearly three months later.</div>
+    <div class="slide-number">03</div>
+  </section>
+
+  <!-- 4. PERFORMANCE METRICS -->
+  <section class="slide dark">
+    <div class="eyebrow">Performance Metrics — Since Opening (Jun 13 – Sep 4, 84 Days)</div>
+    <h1 class="section-title">The Numbers Behind the Story</h1>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-number">2,900 sqft</div><div class="stat-label">Cafe Capacity</div></div>
+      <div class="stat-card"><div class="stat-number">11 + 8</div><div class="stat-label">Two-Tops (22) + Four-Tops (32)</div></div>
+      <div class="stat-card"><div class="stat-number">12–15x</div><div class="stat-label">Table Turns Per Day</div></div>
+      <div class="stat-card"><div class="stat-number">40 min</div><div class="stat-label">Average Seating Time</div></div>
+      <div class="stat-card"><div class="stat-number">38,595</div><div class="stat-label">Total Guests Serviced (Covers)</div></div>
+      <div class="stat-card"><div class="stat-number">21,006</div><div class="stat-label">Total Orders / Tickets</div></div>
+      <div class="stat-card"><div class="stat-number">$47.32</div><div class="stat-label">Average Check</div></div>
+      <div class="stat-card"><div class="stat-number">&lt;1 hr</div><div class="stat-label">Typical Wait Time</div></div>
+    </div>
+    <div class="callout">In 2,900 sqft, we run 11 two-top tables (22 guests) and 8 four-top tables (32 guests). Because we turn tables 12–15 times a day with an average seating time of just 40 minutes, we're able to service guests quickly — even on our busiest days, wait times stay under an hour, and most guests are seated in well under 30 minutes.</div>
+    <div class="slide-number">04</div>
+  </section>
+
+  <!-- 5. STRONGEST ITEMS -->
+  <section class="slide cream">
+    <div class="eyebrow">Since Opening — Revenue by Category (Jun 13 – Sep 4)</div>
+    <h1 class="section-title">Our Strongest Categories</h1>
+    <div class="stat-grid" style="margin-top:8px; margin-bottom:8px; max-width:640px;">
+      <div class="stat-card" style="border-color:var(--red); background:rgba(204,34,34,0.08);"><div class="stat-number" style="font-size:clamp(30px,4vw,44px);">$994,086</div><div class="stat-label">Total Sales Since Opening</div></div>
+      <div class="stat-card" style="border-color:var(--red); background:rgba(204,34,34,0.08);"><div class="stat-number" style="font-size:clamp(30px,4vw,44px);">84 Days</div><div class="stat-label">Since Grand Opening</div></div>
+    </div>
+    <div class="item-list">
+      <div class="item-card"><div class="cat">Food</div><div class="amt">$449,028</div></div>
+      <div class="item-card"><div class="cat">Beverage</div><div class="amt">$175,077</div></div>
+      <div class="item-card"><div class="cat">Dessert</div><div class="amt">$35,624</div></div>
+      <div class="item-card"><div class="cat">Licensed Merch</div><div class="amt">$133,154</div></div>
+      <div class="item-card"><div class="cat">House Merch</div><div class="amt">$167,350</div></div>
+    </div>
+    <div class="callout">Merchandise (licensed + house combined) makes up roughly <strong>30% of total revenue</strong> ($300,504 of $994,086 total sales since opening) — an exceptionally strong attach rate for a themed cafe, and proof the merch program continues to work as designed.</div>
+    <div class="slide-number">05</div>
+  </section>
+
+  <!-- 5B. TOP SELLERS -->
+  <section class="slide dark">
+    <div class="eyebrow">Since Opening — Jun 13–Sep 4, 2026 (84 Days)</div>
+    <h1 class="section-title">Our Top Sellers</h1>
+    <div class="item-list">
+      <div class="item-card"><div class="cat">Top Food — Domo Boss Burger</div><div class="amt">$117,200</div><div class="stat-label" style="margin-top:6px;">6,396 units sold</div><div class="stat-label" style="margin-top:10px; opacity:0.6;">[PHOTO NEEDED]</div></div>
+      <div class="item-card"><div class="cat">Top Drink — Mango Lemonade</div><div class="amt">$35,359</div><div class="stat-label" style="margin-top:6px;">4,833 units sold</div><div class="stat-label" style="margin-top:10px; opacity:0.6;">[PHOTO NEEDED]</div></div>
+      <div class="item-card"><div class="cat">Top Merch — Cali Dreamin Pin</div><div class="amt">$25,386</div><div class="stat-label" style="margin-top:6px;">2,077 units sold</div><div class="stat-label" style="margin-top:10px; opacity:0.6;">[PHOTO NEEDED]</div></div>
+    </div>
+    <div class="callout">The Domo Boss Burger is our clear signature dish since opening — nearly double the sales of our next best-selling food item. Mango Lemonade leads our drink menu, and the Cali Dreamin Pin is our #1 merch seller by revenue.</div>
+    <div class="slide-number">05b</div>
+  </section>
+
+  <!-- 5C. PLUSH SOLD OUT -->
+  <section class="slide brown">
+    <div class="eyebrow">Merchandise Demand</div>
+    <h1 class="section-title">Sold Out of Plushies</h1>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-number">7,099</div><div class="stat-label">Total Plush Units Sold Since Opening</div></div>
+      <div class="stat-card"><div class="stat-number">Aug 16</div><div class="stat-label">Last Plush Sale — Zero Stock Since</div></div>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Plush Style</th><th>Units Sold</th></tr></thead>
+      <tbody>
+        <tr><td>Nerd</td><td class="num">1,970</td></tr>
+        <tr><td>Headphones</td><td class="num">1,461</td></tr>
+        <tr><td>Boba</td><td class="num">1,016</td></tr>
+        <tr><td>Flowerpot</td><td class="num">963</td></tr>
+        <tr><td>Standard</td><td class="num">950</td></tr>
+        <tr><td>Backpack</td><td class="num">620</td></tr>
+        <tr><td>Ramen</td><td class="num">119</td></tr>
+        <tr class="total"><td>Total</td><td class="num">7,099</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">We've completely sold through our plush inventory across all 7 styles. Our last plush sale was August 16, 2026 — we've had zero plushies in stock since. This is a clear signal of demand outpacing supply and a strong case for expanding our next production run.</div>
+    <div class="slide-number">05c</div>
+  </section>
+
+  <!-- 6. EXPERIENCES -->
+  <section class="slide dark">
+    <div class="eyebrow">Beyond Food &amp; Merch</div>
+    <h1 class="section-title">Experiences We've Built</h1>
+    <div class="item-list">
+      <div class="item-card"><div class="cat">Photo Booth</div></div>
+      <div class="item-card"><div class="cat">Claw Machine</div></div>
+      <div class="item-card"><div class="cat">Mini Cafe</div><div class="stat-label" style="margin-top:4px;">Photo Op</div></div>
+      <div class="item-card"><div class="cat">Weekly Raffles</div></div>
+      <div class="item-card"><div class="cat">Postcards</div></div>
+      <div class="item-card"><div class="cat">Trinket Exchange</div></div>
+    </div>
+    <div class="callout">These experiences give guests a reason to linger and share Domo Cafe beyond the meal. We want to build more — this is an area we'd love your input and support on as we plan the next chapter.</div>
+    <div class="slide-number">06</div>
+  </section>
+
+  <!-- 6B. SEASONAL SOFTNESS + DELIVERY -->
+  <section class="slide warm">
+    <div class="eyebrow">Looking at the Trend</div>
+    <h1 class="section-title">Adjusting for Back-to-School Season</h1>
+    <p class="body-text">Sales have softened as summer ends and families shift back into the school routine — a normal seasonal pattern for a family-driven concept like ours. We're getting ahead of it rather than waiting it out.</p>
+    <div class="callout">To reach guests beyond walk-in traffic, we're launching delivery through <strong>DoorDash</strong>, with <strong>Uber Eats</strong> to follow — opening up a new demand channel independent of foot traffic and seasonality.</div>
+    <div class="slide-number">06b</div>
+  </section>
+
+  <!-- 6C. COMMUNITY FUNDRAISERS + DOMO-WEEN -->
+  <section class="slide cream">
+    <div class="eyebrow">What's Next</div>
+    <h1 class="section-title">Community Fundraisers &amp; Domo-ween</h1>
+    <div class="item-list">
+      <div class="item-card"><div class="cat">Every Tuesday</div><div class="stat-label" style="margin-top:6px; opacity:1;">Community fundraiser nights — school &amp; club spirit nights with limited-edition apparel, building a more immersive, cause-driven experience</div></div>
+      <div class="item-card"><div class="cat">All October</div><div class="stat-label" style="margin-top:6px; opacity:1;">"Domo-ween" — cafe decorated for Halloween, events running throughout the month</div></div>
+      <div class="item-card"><div class="cat">In Discussion</div><div class="stat-label" style="margin-top:6px; opacity:1;">Exploring a collaboration with Knott's Scary Farm (Knott's Berry Farm) for Domo-ween</div></div>
+    </div>
+    <div class="callout">We want to build real community roots — weekly fundraisers that bring in local schools and clubs, and a full seasonal Domo-ween takeover in October. Open to NHK's read on the Knott's collaboration before we pursue it further.</div>
+    <div class="slide-number">06c</div>
+  </section>
+
+  <!-- 7. ROYALTY REPORTING -->
+  <section class="slide brown">
+    <div class="eyebrow">Reporting Cadence</div>
+    <h1 class="section-title">We Report and Pay Every Quarter</h1>
+    <p class="body-text">Our royalty structure has three streams: F&B at 3%, direct-to-consumer merch at 8%, and wholesale merch at 13% — all against net sales, with licensed merch carrying no royalty since it's paid upstream.</p>
+    <table class="data-table">
+      <thead><tr><th>Period</th><th>Net Sales</th><th>Royalty Earned</th></tr></thead>
+      <tbody>
+        <tr><td>Q2 (Jun 13–Jun 30) — filed</td><td class="num">$292,413.90</td><td class="num">$9,716.53</td></tr>
+        <tr><td>Q3-to-date (Jul 1–Sep 4)</td><td class="num">$661,911.61</td><td class="num">$23,463.38</td></tr>
+        <tr class="total"><td>Cumulative Since Opening</td><td class="num">$944,063.41</td><td class="num">$33,179.91</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">We've now earned <strong>$33,179.91</strong> against our <strong>$35,000 Minimum Guarantee</strong> (less the $10,000 advance already paid) — just <strong>~$1,820 short of clearing the full MG</strong>, well ahead of pace. Reporting transparently every quarter, no surprises.</div>
+    <div class="callout placeholder">Note: Q3 figures are Toast-sync estimates through Sep 4 (partial quarter, not yet formally filed). Full Q3 report (Jul 1–Sep 30) will be finalized after quarter close per the standard reconciliation process.</div>
+    <div class="slide-number">08</div>
+  </section>
+
+  <!-- 7. FAN BASE -->
+  <section class="slide warm">
+    <div class="eyebrow">Who's Showing Up</div>
+    <h1 class="section-title">Our Understanding of the Fan Base</h1>
+    <p class="body-text">Guests are coming for the full experience — the food, the merch, and the connection to Domo. We want to walk through what we're seeing on the floor and get your read on how this compares to other markets you've supported.</p>
+    <div class="callout">Our fans are showing us a clear pattern: they love collectibles, limited-edition merchandise, plushies, and blind boxes. We believe they'd respond just as strongly to merchandise sold in Japan through NHK's own character stores — we'd like to explore bringing those items to Domo Cafe.</div>
+    <div class="slide-number">09</div>
+  </section>
+
+  <!-- 8. WHAT WE NEED HELP WITH -->
+  <section class="slide cream">
+    <div class="eyebrow">Where We Need NHK's Support</div>
+    <h1 class="section-title">Licensed &amp; House Merchandise</h1>
+    <p class="body-text">We'd love to talk through expanding into new product categories and how we can make the wholesale pathway work well for both sides.</p>
+    <div class="callout">To be candid, NHK has turned around SKU approvals faster than any licensor we've worked with — that's real and appreciated. We'd love more guidance from your side on how we can be even more efficient in how we submit and prepare requests, so we can keep pace with your process.</div>
+    <div class="slide-number">10</div>
+  </section>
+
+  <!-- 9. EXPANSION -->
+  <section class="slide dark">
+    <div class="eyebrow">Looking Ahead</div>
+    <h1 class="section-title">Expansion Interest — Hawaii, Las Vegas, New York, Los Angeles</h1>
+    <p class="body-text">We're early-stage on all four, but excited about the potential. We'd love your read on these markets before we commit further.</p>
+    <div class="callout">We're also exploring short-term pop-ups as a lower-risk way to test new markets: opportunities at <strong>Ontario Airport</strong> and <strong>Palm Springs Airport</strong>, plus revisiting <strong>San Diego</strong> as a market we looked at before.</div>
+    <div class="slide-number">11</div>
+  </section>
+
+  <!-- 10. WHOLESALE -->
+  <section class="slide cream">
+    <div class="eyebrow">Growth Channel</div>
+    <h1 class="section-title">Wholesale Opportunities</h1>
+    <p class="body-text">Open discussion on expanding house and licensed merch into wholesale/retail channels beyond the cafe.</p>
+    <div class="slide-number">12</div>
+  </section>
+
+  <!-- 11. LOYALTY -->
+  <section class="slide warm">
+    <div class="eyebrow">Building Long-Term Fans</div>
+    <h1 class="section-title">Loyalty Program Build-Out</h1>
+    <p class="body-text">We've sketched an early concept — "Chomps" — a loyalty program tied to visits and purchases. Before we invest further, we want your take on how this fits the broader Domo brand.</p>
+    <div class="slide-number">13</div>
+  </section>
+
+  <!-- 12. CLOSING -->
+  <section class="slide cover">
+    <div class="eyebrow">Thank You</div>
+    <div class="domo-arigato">Domo Arigato</div>
+    <p class="subtitle">Thank you for your time today — we're looking forward to building the next chapter together.</p>
+    <div class="slide-number">14</div>
+  </section>
+
+</div>
+</body>
+</html>
