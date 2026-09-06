@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domo Cafe Delivery — Striker Update (v1.0)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --brown: #8B4513;
+    --red: #CC2222;
+    --warm-white: #FDF8F4;
+    --cream: #F5EDD8;
+    --tan: #D4A574;
+    --dark: #1A0800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--warm-white);
+    overflow-x: hidden;
+  }
+
+  .deck { width: 100%; }
+
+  .slide {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 8vw;
+    position: relative;
+    border-bottom: 2px solid rgba(212,165,116,0.15);
+  }
+
+  .slide.cover {
+    background: linear-gradient(160deg, var(--dark) 0%, var(--brown) 100%);
+    text-align: center;
+    align-items: center;
+  }
+
+  .slide.cream { background: var(--cream); color: var(--dark); }
+  .slide.warm { background: var(--warm-white); color: var(--dark); }
+  .slide.dark { background: var(--dark); color: var(--warm-white); }
+  .slide.brown { background: linear-gradient(160deg, var(--brown) 0%, var(--dark) 100%); color: var(--warm-white); }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--tan);
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  h1.section-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(30px, 4vw, 52px);
+    line-height: 1.15;
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+
+  .cover h1.section-title { font-size: clamp(40px, 6vw, 68px); max-width: 1000px; }
+
+  .slogan {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    color: var(--red);
+    margin-top: 8px;
+  }
+
+  .subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(16px, 1.6vw, 20px);
+    color: var(--tan);
+    max-width: 700px;
+    line-height: 1.5;
+  }
+
+  .cover .subtitle { color: var(--warm-white); opacity: 0.85; }
+
+  .body-text {
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.7;
+    max-width: 800px;
+    margin-bottom: 16px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+    max-width: 1100px;
+  }
+
+  .stat-card {
+    background: rgba(139,69,19,0.06);
+    border: 1px solid rgba(139,69,19,0.2);
+    border-radius: 14px;
+    padding: 24px 20px;
+  }
+
+  .slide.dark .stat-card, .slide.brown .stat-card {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.25);
+  }
+
+  .stat-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 38px);
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.75;
+    font-weight: 600;
+  }
+
+  .callout {
+    background: rgba(204,34,34,0.08);
+    border-left: 4px solid var(--red);
+    border-radius: 8px;
+    padding: 18px 24px;
+    max-width: 800px;
+    margin-top: 24px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .callout.placeholder {
+    background: rgba(212,165,116,0.1);
+    border-left: 4px solid var(--tan);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    max-width: 1000px;
+    margin-top: 28px;
+  }
+
+  .item-card {
+    background: rgba(139,69,19,0.05);
+    border: 1px solid rgba(139,69,19,0.18);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+
+  .slide.dark .item-card, .slide.brown .item-card {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.2);
+  }
+
+  .item-card .cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .item-card .amt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  ol.agenda-list {
+    max-width: 700px;
+    margin-top: 28px;
+    list-style: none;
+    counter-reset: item;
+  }
+
+  ol.agenda-list li {
+    counter-increment: item;
+    padding: 14px 0 14px 50px;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid rgba(139,69,19,0.15);
+  }
+
+  ol.agenda-list li::before {
+    content: counter(item);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--red);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-size: 18px;
+  }
+
+  .slide-number {
+    position: absolute;
+    bottom: 24px;
+    right: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  .domo-arigato {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 60px);
+    color: var(--red);
+  }
+
+  .slide-with-image {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+    max-width: 1200px;
+  }
+
+  .slide-with-image .text-col { min-width: 0; }
+
+  .product-shot {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  .product-shot-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    opacity: 0.65;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .workflow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    max-width: 1100px;
+    margin-top: 32px;
+    align-items: stretch;
+  }
+
+  .workflow-step {
+    flex: 1 1 200px;
+    background: rgba(139,69,19,0.05);
+    border: 1px solid rgba(139,69,19,0.18);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .slide.dark .workflow-step, .slide.brown .workflow-step {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.2);
+  }
+
+  .workflow-step .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--red);
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .workflow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 24px;
+    color: var(--tan);
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .slide-with-image { grid-template-columns: 1fr; }
+    .workflow-arrow { transform: rotate(90deg); padding: 10px 0; }
+  }
+
+  .goal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin-top: 32px;
+  }
+
+  .goal-card {
+    background: rgba(139,69,19,0.05);
+    border: 1px solid rgba(139,69,19,0.18);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+  }
+
+  .slide.dark .goal-card, .slide.brown .goal-card {
+    background: rgba(253,248,244,0.06);
+    border: 1px solid rgba(212,165,116,0.2);
+  }
+
+  .goal-card .goal-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+
+  .goal-card .goal-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1. COVER -->
+  <section class="slide cover">
+    <div class="eyebrow">Domo Cafe × Striker Entertainment</div>
+    <h1 class="section-title">Domo Cafe Delivery</h1>
+    <div class="slogan">"Domo Delivers!"</div>
+    <p class="subtitle" style="margin-top:16px;">Extending the Domo Experience Beyond Our Walls</p>
+    <div class="slide-number">01</div>
+  </section>
+
+  <!-- 2. WHY DELIVERY, WHY NOW -->
+  <section class="slide warm">
+    <div class="eyebrow">Why Delivery, Why Now</div>
+    <h1 class="section-title">Solving for Seasonality and the Line</h1>
+    <p class="body-text">Domo Cafe is a walk-in-only, line-dependent model — which means our revenue is exposed to two things we can't control: seasonality (back-to-school softening sales as summer ends) and weather (a rainy Saturday can meaningfully hurt a business built on people willing to wait outside).</p>
+    <div class="callout">Delivery gives us a demand channel that doesn't depend on foot traffic, wait times, or weather — a structural fix, not just an add-on.</div>
+    <div class="slide-number">02</div>
+  </section>
+
+  <!-- 3. OUR GOALS -->
+  <section class="slide cream">
+    <div class="eyebrow">What We're Solving For</div>
+    <h1 class="section-title">Our Goals with Delivery</h1>
+    <div class="goal-grid">
+      <div class="goal-card">
+        <div class="goal-num">1</div>
+        <div class="goal-title">Build Awareness of the Cafe</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">2</div>
+        <div class="goal-title">Increase Revenue</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">3</div>
+        <div class="goal-title">Promote the Domo Brand</div>
+      </div>
+    </div>
+    <div class="slide-number">03</div>
+  </section>
+
+  <!-- 4. DELIVERY PARTNERS & ROLLOUT -->
+  <section class="slide dark">
+    <div class="eyebrow">Rollout Plan</div>
+    <h1 class="section-title">Delivery Partners</h1>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">Phase 1</div>
+        <div class="item-card" style="border:none; background:none; padding:0;">
+          <div class="cat">Now Launching</div>
+        </div>
+        <p style="margin-top:8px; font-size:16px;"><strong>DoorDash</strong> — our first delivery partner, live now</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">Phase 2</div>
+        <div class="item-card" style="border:none; background:none; padding:0;">
+          <div class="cat">To Follow</div>
+        </div>
+        <p style="margin-top:8px; font-size:16px;"><strong>Uber Eats</strong> — expanding reach once DoorDash is proven out</p>
+      </div>
+    </div>
+    <div class="callout">Starting with one partner lets us dial in packaging, pricing, and operations before scaling to a second marketplace.</div>
+    <div class="slide-number">04</div>
+  </section>
+
+  <!-- 5. OPERATIONAL WORKFLOW -->
+  <section class="slide cream">
+    <div class="eyebrow">How Orders Flow</div>
+    <h1 class="section-title">Operational Workflow</h1>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">1</div>
+        <p style="font-size:16px;">Guest visits <strong>our own website</strong> first</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">2</div>
+        <p style="font-size:16px;">Chooses <strong>Pickup</strong> or <strong>Dine-In</strong></p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">3</div>
+        <p style="font-size:16px;"><strong>DoorDash / Uber Eats</strong> as broader marketplace reach</p>
+      </div>
+    </div>
+    <div class="callout">We push guests to order directly on our own site first — better margins, direct customer relationship, and full control of the experience. Third-party delivery apps extend our reach to guests we wouldn't otherwise capture.</div>
+    <div class="slide-number">05</div>
+  </section>
+
+  <!-- 6. DELIVERY-ONLY SPECIALS -->
+  <section class="slide dark">
+    <div class="eyebrow">Delivery-Exclusive</div>
+    <h1 class="section-title">Delivery-Only Specials (With Merch)</h1>
+    <p class="body-text">Delivery isn't just food showing up — it's a chance to bundle in merchandise guests can't get any other way, making the delivery channel itself a merch distribution point.</p>
+    <div class="callout placeholder">[SPECIALS TBD — bundle concepts: entrée + small collectible item, delivery-exclusive combo pricing, limited rotating specials]</div>
+    <div class="slide-number">06</div>
+  </section>
+
+  <!-- 7. SUPER DOMO MEAL -->
+  <section class="slide brown">
+    <div class="eyebrow">Flagship Delivery Item</div>
+    <h1 class="section-title">The Super Domo Meal</h1>
+    <p class="body-text">Inspired by NHK's own officially licensed "Super Domo" — a larger, premium-sized Domo-kun plush — we want to bring that "super-sized" concept to the menu as our flagship delivery combo.</p>
+    <div class="callout placeholder">[CONTENTS + PRICE TBD — what's included (entrée/fries/drink/dessert?), portion size/sharing format, and whether it pairs with a Super-Domo-themed item]</div>
+    <div class="slide-number">07</div>
+  </section>
+
+  <!-- 8. COLLECTIBLE PIN -->
+  <section class="slide cream">
+    <div class="eyebrow">Delivery-Exclusive Merch</div>
+    <h1 class="section-title">A New Collectible Pin</h1>
+    <p class="body-text">A pin available only through delivery orders — tying merch collectability directly to the delivery channel and giving guests a reason to order online even when they can't make it into the cafe.</p>
+    <div class="callout placeholder">[PIN DESIGN TBD — new design vs. adapting an existing concept (e.g. Cali Dreamin Pin, "Jumping Joy" anniversary pin)]</div>
+    <div class="slide-number">08</div>
+  </section>
+
+  <!-- 9. BRINGING DOMO HOME -->
+  <section class="slide dark">
+    <div class="eyebrow">Extending the Experience</div>
+    <h1 class="section-title">Bringing Domo Home</h1>
+    <div class="slide-with-image">
+      <div class="text-col">
+        <p class="body-text">Delivery isn't just about reach — it's a chance to bring Domo Cafe's immersive feel into the home or office, not just the food.</p>
+        <div class="item-list" style="margin-top:20px;">
+          <div class="item-card"><div class="cat">Immersive Packaging</div><div class="stat-label" style="margin-top:6px; opacity:1;">Delivery packaging designed to carry the Domo Cafe look and feel beyond our walls</div></div>
+          <div class="item-card"><div class="cat">Delivery-Only Merch</div><div class="stat-label" style="margin-top:6px; opacity:1;">Exclusive small items included with or offered alongside delivery orders</div></div>
+          <div class="item-card"><div class="cat">Clever Marketing</div><div class="stat-label" style="margin-top:6px; opacity:1;">Using the unboxing moment itself as a shareable, on-brand touchpoint</div></div>
+        </div>
+      </div>
+      <div>
+        <img class="product-shot" src="/domo-food/delivery-box.jpg" alt="Domo Cafe delivery box packaging">
+        <div class="product-shot-caption">Domo Cafe delivery box concept</div>
+      </div>
+    </div>
+    <div class="slide-number">09</div>
+  </section>
+
+  <!-- 10. DOMO MASCOT / BRAND PERSONALITY -->
+  <section class="slide warm">
+    <div class="eyebrow">The Face of Delivery</div>
+    <h1 class="section-title">Domo Delivers — In Person Too</h1>
+    <div class="slide-with-image">
+      <div class="text-col">
+        <p class="body-text">Our mascot appearances are already a fan favorite at the cafe. We want "Domo Delivers" to be more than a tagline — with mascot appearances, social content, and delivery-day promotions that make the brand feel present everywhere guests find us.</p>
+      </div>
+      <div>
+        <img class="product-shot" src="/domo-food/domo-mascot-bags.jpg" alt="Domo mascot appearance">
+        <div class="product-shot-caption">Domo mascot at a recent appearance</div>
+      </div>
+    </div>
+    <div class="slide-number">10</div>
+  </section>
+
+  <!-- 11. WHAT WE NEED FROM STRIKER -->
+  <section class="slide brown">
+    <div class="eyebrow">Approvals Needed</div>
+    <h1 class="section-title">What We Need from Striker</h1>
+    <div class="item-list">
+      <div class="item-card"><div class="cat">Pin Design</div><div class="stat-label" style="margin-top:6px; opacity:1;">Approval on new delivery-exclusive collectible pin concept</div></div>
+      <div class="item-card"><div class="cat">Delivery-Only Specials</div><div class="stat-label" style="margin-top:6px; opacity:1;">Naming and likeness use for delivery-exclusive bundles, including the Super Domo Meal</div></div>
+      <div class="item-card"><div class="cat">Packaging</div><div class="stat-label" style="margin-top:6px; opacity:1;">Sign-off on immersive delivery box design carrying Domo branding</div></div>
+    </div>
+    <div class="callout">We want to move fast on delivery — flagging these approval needs early so Striker can weigh in before we finalize designs and specials.</div>
+    <div class="slide-number">11</div>
+  </section>
+
+  <!-- 12. CLOSING -->
+  <section class="slide cover">
+    <div class="eyebrow">Thank You</div>
+    <div class="domo-arigato">Domo Arigato</div>
+    <p class="subtitle">Thank you for partnering with us as we bring Domo Cafe to more fans, everywhere they are.</p>
+    <div class="slide-number">12</div>
+  </section>
+
+</div>
+</body>
+</html>
