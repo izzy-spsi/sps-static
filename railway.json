@@ -1,7 +1,7 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "deploy": {
-    "startCommand": "npx serve@14 public -p ${PORT:-3000} --no-clipboard",
+    "startCommand": "node scripts/render-dashboard.js && npx serve@14 public -p ${PORT:-3000} --no-clipboard",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }

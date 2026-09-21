@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jarvis HQ — SPS Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f5;
+      --muted: #888899;
+      --green: #22c55e;
+      --accent: #7c6af8;
+    }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 64px;
+    }
+    main { max-width: 1100px; margin: 0 auto; }
+    header { margin-bottom: 28px; }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    h1 { font-size: 32px; letter-spacing: -0.6px; line-height: 1.15; }
+    .lede { color: var(--muted); margin-top: 10px; max-width: 640px; line-height: 1.5; }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 8px 0 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card.current { border-color: rgba(34,197,94,0.45); }
+    .card:hover { border-color: rgba(255,255,255,0.28); }
+    .badge {
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+    .badge-live { background: rgba(34,197,94,0.15); color: var(--green); }
+    .badge-prev { background: rgba(255,255,255,0.08); color: var(--muted); }
+    .card h2 { font-size: 18px; line-height: 1.3; }
+    .card p { color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .url { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #a78bfa; word-break: break-all; }
+    .files { margin-top: 36px; }
+    .files ul { list-style: none; columns: 2; gap: 24px; }
+    .files a { color: #d6d6e0; text-decoration: none; font-size: 13px; display: inline-block; padding: 4px 0; }
+    .files a:hover { color: white; text-decoration: underline; }
+    .hq-link { color: var(--accent); }
+    @media (max-width: 700px) {
+      h1 { font-size: 26px; }
+      .files ul { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Jarvis HQ · SPS Dashboard</div>
+      <h1>Domo Cafe</h1>
+      <p class="lede">PRD navigation for the Domo Cafe App and CHOMPS loyalty. v0.2 is the current document. The full project directory also lives on <a class="hq-link" href="https://izzy-spsi.github.io/jarvis-dashboard/">Jarvis HQ</a>.</p>
+    </header>
+
+    <div class="section-title">Domo Cafe</div>
+    <div class="grid">
+      <a class="card current" href="https://sps-production-7dbc.up.railway.app/domo-app-prd-v0.2">
+        <span class="badge badge-live">Current · Live v0.2</span>
+        <h2>Domo Cafe App &amp; CHOMPS Loyalty — PRD v0.2</h2>
+        <p>Current PRD for the Domo Cafe App and CHOMPS loyalty system. Merges the v0.1 app PRD with the CHOMPS v0.2 loyalty mechanic and adds the UX/UI design workflows section.</p>
+        <div class="url">sps-production-7dbc.up.railway.app/domo-app-prd-v0.2</div>
+      </a>
+
+      <a class="card" href="https://sps-production-7dbc.up.railway.app/domo-app-prd-v0.1">
+        <span class="badge badge-prev">Previous v0.1</span>
+        <h2>Domo Cafe App &amp; Chomps Loyalty — PRD v0.1</h2>
+        <p>Full product requirements doc for the Domo Cafe App and Chomps loyalty system. 12 sections: Domo Crew tiers, order-connected surveys, fan engagement, merch drops, events, digital menu, Toast API integration, intelligence layer, off-peak demand levers, and out-of-town fan strategy. Kept for reference. v0.2 is current.</p>
+        <div class="url">sps-production-7dbc.up.railway.app/domo-app-prd-v0.1</div>
+      </a>
+
+      <a class="card" href="https://sps-production-7dbc.up.railway.app/chomps-prd-v0.2">
+        <span class="badge badge-live">CHOMPS · Live v0.2</span>
+        <h2>CHOMPS — PRD v0.2</h2>
+        <p>Standalone product requirements doc for Chomps, the Domo Cafe membership/status platform. No redemption — lifetime score + tier unlocks, rolling annual tier re-qualification, curated Legend tier, automated anti-fraud tracking. IP-touch considerations for NHK.</p>
+        <div class="url">sps-production-7dbc.up.railway.app/chomps-prd-v0.2</div>
+      </a>
+    </div>
+
+    <section class="files">
+      <div class="section-title">All files</div>
+      <ul>
+        <li><a href="/1901-investor-deck-v0.1.0.html">1901-investor-deck-v0.1.0.html</a></li>
+        <li><a href="/1901-investor-deck-v0.2.0.html">1901-investor-deck-v0.2.0.html</a></li>
+        <li><a href="/24hg-proforma.html">24hg-proforma.html</a></li>
+        <li><a href="/7614-investor-deck-v0.1.0.html">7614-investor-deck-v0.1.0.html</a></li>
+        <li><a href="/7614-investor-deck-v0.2.0.html">7614-investor-deck-v0.2.0.html</a></li>
+        <li><a href="/7614-investor-deck-v0.3.0.html">7614-investor-deck-v0.3.0.html</a></li>
+        <li><a href="/9201-google-slides-v1.0.html">9201-google-slides-v1.0.html</a></li>
+        <li><a href="/9201-investor-deck-v0.1.html">9201-investor-deck-v0.1.html</a></li>
+        <li><a href="/9201-investor-deck-v0.2.html">9201-investor-deck-v0.2.html</a></li>
+        <li><a href="/9201-investor-deck-v0.3.html">9201-investor-deck-v0.3.html</a></li>
+        <li><a href="/assets/">assets/</a></li>
+        <li><a href="/blue-parcel-deck-v1.0.html">blue-parcel-deck-v1.0.html</a></li>
+        <li><a href="/blue-parcel-proforma-v1.0.html">blue-parcel-proforma-v1.0.html</a></li>
+        <li><a href="/cardone-proposal-template-v1.0.html">cardone-proposal-template-v1.0.html</a></li>
+        <li><a href="/cardone-service-agreement-v1.0.html">cardone-service-agreement-v1.0.html</a></li>
+        <li><a href="/chef-domo-menu.jpg">chef-domo-menu.jpg</a></li>
+        <li><a href="/chomps-prd-v0.2.html">chomps-prd-v0.2.html</a></li>
+        <li><a href="/chomps-prd-v1.0.html">chomps-prd-v1.0.html</a></li>
+        <li><a href="/domo-analytics-acp-prd-v0.1.html">domo-analytics-acp-prd-v0.1.html</a></li>
+        <li><a href="/domo-app-prd-v0.1.html">domo-app-prd-v0.1.html</a></li>
+        <li><a href="/domo-app-prd-v0.2.html">domo-app-prd-v0.2.html</a></li>
+        <li><a href="/domo-brand-guide-v1.0.html">domo-brand-guide-v1.0.html</a></li>
+        <li><a href="/domo-cafe-delivery-striker-v1.0.html">domo-cafe-delivery-striker-v1.0.html</a></li>
+        <li><a href="/domo-cafe-delivery-striker-v1.1.html">domo-cafe-delivery-striker-v1.1.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.0.html">domo-cafe-nhk-partnership-update-v1.0.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.1.html">domo-cafe-nhk-partnership-update-v1.1.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.2.html">domo-cafe-nhk-partnership-update-v1.2.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.3.html">domo-cafe-nhk-partnership-update-v1.3.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.4.html">domo-cafe-nhk-partnership-update-v1.4.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.5.html">domo-cafe-nhk-partnership-update-v1.5.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.6.html">domo-cafe-nhk-partnership-update-v1.6.html</a></li>
+        <li><a href="/domo-cafe-nhk-partnership-update-v1.7.html">domo-cafe-nhk-partnership-update-v1.7.html</a></li>
+        <li><a href="/domo-cafe-staff-meeting-final-v1.0.html">domo-cafe-staff-meeting-final-v1.0.html</a></li>
+        <li><a href="/domo-cafe-values-leadership-deck-v1.0.html">domo-cafe-values-leadership-deck-v1.0.html</a></li>
+        <li><a href="/domo-cashless-sign-v2.html">domo-cashless-sign-v2.html</a></li>
+        <li><a href="/domo-end-of-line-sign.html">domo-end-of-line-sign.html</a></li>
+        <li><a href="/domo-food/">domo-food/</a></li>
+        <li><a href="/domo-founding-fan-registration.html">domo-founding-fan-registration.html</a></li>
+        <li><a href="/domo-grand-opening-menu-GO-v1.0-print.html">domo-grand-opening-menu-GO-v1.0-print.html</a></li>
+        <li><a href="/domo-grand-opening-menu-GO-v1.1-print.html">domo-grand-opening-menu-GO-v1.1-print.html</a></li>
+        <li><a href="/domo-grand-opening-menu-GO-v1.2-print.html">domo-grand-opening-menu-GO-v1.2-print.html</a></li>
+        <li><a href="/domo-grand-opening-menu-GO-v2.0-print.html">domo-grand-opening-menu-GO-v2.0-print.html</a></li>
+        <li><a href="/domo-grand-opening-menu-v1.0.html">domo-grand-opening-menu-v1.0.html</a></li>
+        <li><a href="/domo-grand-opening-menu-v2.0.html">domo-grand-opening-menu-v2.0.html</a></li>
+        <li><a href="/domo-grand-opening-menu-v3.0.html">domo-grand-opening-menu-v3.0.html</a></li>
+        <li><a href="/domo-grand-opening-run-of-show-v3.html">domo-grand-opening-run-of-show-v3.html</a></li>
+        <li><a href="/domo-grand-opening-staging.html">domo-grand-opening-staging.html</a></li>
+        <li><a href="/domo-marketing-prd-v1.0.html">domo-marketing-prd-v1.0.html</a></li>
+        <li><a href="/domo-merch-prd-v1.0.html">domo-merch-prd-v1.0.html</a></li>
+        <li><a href="/domo-merch-process-prd-v1.0.html">domo-merch-process-prd-v1.0.html</a></li>
+        <li><a href="/domo-merch-system-prd-v0.1.html">domo-merch-system-prd-v0.1.html</a></li>
+        <li><a href="/domo-pricing-signs-2x2.html">domo-pricing-signs-2x2.html</a></li>
+        <li><a href="/domo-proforma-serve.html">domo-proforma-serve.html</a></li>
+        <li><a href="/domo-proforma.html">domo-proforma.html</a></li>
+        <li><a href="/domo-run-of-show.html">domo-run-of-show.html</a></li>
+        <li><a href="/domo-service-animal-training.html">domo-service-animal-training.html</a></li>
+        <li><a href="/domo-speech-deck.html">domo-speech-deck.html</a></li>
+        <li><a href="/domo-speech-v1.html">domo-speech-v1.html</a></li>
+        <li><a href="/domo-staff-handbook.html">domo-staff-handbook.html</a></li>
+        <li><a href="/domo-staff-os-prd-v0.1.html">domo-staff-os-prd-v0.1.html</a></li>
+        <li><a href="/domo-tv-slideshow-GO-v1.0.html">domo-tv-slideshow-GO-v1.0.html</a></li>
+        <li><a href="/domo-tv-slideshow-GO-v2.0.html">domo-tv-slideshow-GO-v2.0.html</a></li>
+        <li><a href="/domo-tv-slideshow-v1.0.html">domo-tv-slideshow-v1.0.html</a></li>
+        <li><a href="/domo-waitlist-sign-v1.0.html">domo-waitlist-sign-v1.0.html</a></li>
+        <li><a href="/domo-waitlist-signs.html">domo-waitlist-signs.html</a></li>
+        <li><a href="/domokuncafe-website-prd-v2.html">domokuncafe-website-prd-v2.html</a></li>
+        <li><a href="/ezliving-admin.html">ezliving-admin.html</a></li>
+        <li><a href="/ezliving-investor-access.html">ezliving-investor-access.html</a></li>
+        <li><a href="/ezliving-investor-deck-v1.0.html">ezliving-investor-deck-v1.0.html</a></li>
+        <li><a href="/ezliving-laas-prd-v1.0.html">ezliving-laas-prd-v1.0.html</a></li>
+        <li><a href="/ezliving-platform-guide-v1.0.html">ezliving-platform-guide-v1.0.html</a></li>
+        <li><a href="/ezliving-storyboard-v0.1.1.html">ezliving-storyboard-v0.1.1.html</a></li>
+        <li><a href="/ezliving-storyboard-v0.1.2.html">ezliving-storyboard-v0.1.2.html</a></li>
+        <li><a href="/ezliving-storyboard-v0.1.html">ezliving-storyboard-v0.1.html</a></li>
+        <li><a href="/ezliving-storyboard-v0.2.0.html">ezliving-storyboard-v0.2.0.html</a></li>
+        <li><a href="/ezliving-storyboard-v0.4.0.html">ezliving-storyboard-v0.4.0.html</a></li>
+        <li><a href="/ezliving-storyboard.html">ezliving-storyboard.html</a></li>
+        <li><a href="/ezliving-video-storyboards-v1.0.html">ezliving-video-storyboards-v1.0.html</a></li>
+        <li><a href="/flywheel-all-hands-may-2026.html">flywheel-all-hands-may-2026.html</a></li>
+        <li><a href="/flywheel-allhands-2026-07-combined.html">flywheel-allhands-2026-07-combined.html</a></li>
+        <li><a href="/flywheel-allhands-june-2026.html">flywheel-allhands-june-2026.html</a></li>
+        <li><a href="/flywheel-allhands-q3h2-2026-deck.html">flywheel-allhands-q3h2-2026-deck.html</a></li>
+        <li><a href="/flywheel-cancun-launch-deck.html">flywheel-cancun-launch-deck.html</a></li>
+        <li><a href="/flywheel-cancun-launch-v2.0.html">flywheel-cancun-launch-v2.0.html</a></li>
+        <li><a href="/flywheel-cancun-leadership-deck-v0.1.html">flywheel-cancun-leadership-deck-v0.1.html</a></li>
+        <li><a href="/flywheel-company-timeline-v1.0.html">flywheel-company-timeline-v1.0.html</a></li>
+        <li><a href="/flywheel-icon-red-transparent.png">flywheel-icon-red-transparent.png</a></li>
+        <li><a href="/flywheel-investor-charts-v1.0.html">flywheel-investor-charts-v1.0.html</a></li>
+        <li><a href="/flywheel-investor-deck-v1.0.html">flywheel-investor-deck-v1.0.html</a></li>
+        <li><a href="/flywheel-investor-deck-v2.0.html">flywheel-investor-deck-v2.0.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.0.html">flywheel-investor-deck-v3.0.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.1.1.html">flywheel-investor-deck-v3.1.1.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.1.2.html">flywheel-investor-deck-v3.1.2.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.1.3.html">flywheel-investor-deck-v3.1.3.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.1.html">flywheel-investor-deck-v3.1.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.2.html">flywheel-investor-deck-v3.2.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.3.html">flywheel-investor-deck-v3.3.html</a></li>
+        <li><a href="/flywheel-investor-deck-v3.4.html">flywheel-investor-deck-v3.4.html</a></li>
+        <li><a href="/flywheel-investor-deck-v4.0.html">flywheel-investor-deck-v4.0.html</a></li>
+        <li><a href="/flywheel-june-2026-allhands.html">flywheel-june-2026-allhands.html</a></li>
+        <li><a href="/flywheel-kaptyn-uber-support-brief.html">flywheel-kaptyn-uber-support-brief.html</a></li>
+        <li><a href="/flywheel-logo-red-transparent.png">flywheel-logo-red-transparent.png</a></li>
+        <li><a href="/flywheel-logo.jpg">flywheel-logo.jpg</a></li>
+        <li><a href="/flywheel-lv-market-report-2026-06-17.html">flywheel-lv-market-report-2026-06-17.html</a></li>
+        <li><a href="/flywheel-market-proforma-v2.0.html">flywheel-market-proforma-v2.0.html</a></li>
+        <li><a href="/flywheel-may-2026-allhands.html">flywheel-may-2026-allhands.html</a></li>
+        <li><a href="/Flywheel-Mexico-Opportunity.html">Flywheel-Mexico-Opportunity.html</a></li>
+        <li><a href="/flywheel-pair-and-pay-flow-v1.0.html">flywheel-pair-and-pay-flow-v1.0.html</a></li>
+        <li><a href="/flywheel-pair-and-pay-uber-doc-v1.0.html">flywheel-pair-and-pay-uber-doc-v1.0.html</a></li>
+        <li><a href="/flywheel-partner-deck-v1.0.html">flywheel-partner-deck-v1.0.html</a></li>
+        <li><a href="/flywheel-platform-overview-v1.0.html">flywheel-platform-overview-v1.0.html</a></li>
+        <li><a href="/flywheel-proforma.html">flywheel-proforma.html</a></li>
+        <li><a href="/flywheel-radd-ghostrocket-deck-v1.0.html">flywheel-radd-ghostrocket-deck-v1.0.html</a></li>
+        <li><a href="/flywheel-radd-ghostrocket-slide-v1.0.html">flywheel-radd-ghostrocket-slide-v1.0.html</a></li>
+        <li><a href="/flywheel-simulator-v1.0.html">flywheel-simulator-v1.0.html</a></li>
+        <li><a href="/flywheel-timeline-slide-v1.1.html">flywheel-timeline-slide-v1.1.html</a></li>
+        <li><a href="/flywheel-timeline-slide-v1.2.html">flywheel-timeline-slide-v1.2.html</a></li>
+        <li><a href="/flywheel-timeline-slide-v1.3.html">flywheel-timeline-slide-v1.3.html</a></li>
+        <li><a href="/flywheel-tulum-playa-project-plan-v1.0.html">flywheel-tulum-playa-project-plan-v1.0.html</a></li>
+        <li><a href="/flywheel-uber-radd-ghostrocket-slide-v1.0.html">flywheel-uber-radd-ghostrocket-slide-v1.0.html</a></li>
+        <li><a href="/flywheel-uber-roi-slide-v1.0.html">flywheel-uber-roi-slide-v1.0.html</a></li>
+        <li><a href="/geopulse-deck-v0.1.html">geopulse-deck-v0.1.html</a></li>
+        <li><a href="/jarvis-openclaw-config.html">jarvis-openclaw-config.html</a></li>
+        <li><a href="/marketing-prd-v0.1.html">marketing-prd-v0.1.html</a></li>
+        <li><a href="/media-day-run-of-show-v3.html">media-day-run-of-show-v3.html</a></li>
+        <li><a href="/merch-prd-v0.1.html">merch-prd-v0.1.html</a></li>
+        <li><a href="/nhk-striker-run-of-show-pdf.html">nhk-striker-run-of-show-pdf.html</a></li>
+        <li><a href="/nhk-striker-run-of-show-v3.html">nhk-striker-run-of-show-v3.html</a></li>
+        <li><a href="/nhk-striker-run-of-show.html">nhk-striker-run-of-show.html</a></li>
+        <li><a href="/nhk-striker-welcome-deck-v1.0.html">nhk-striker-welcome-deck-v1.0.html</a></li>
+        <li><a href="/Northfield-CardONE-Proposal.html">Northfield-CardONE-Proposal.html</a></li>
+        <li><a href="/Northfield-CardONE-Questionnaire.html">Northfield-CardONE-Questionnaire.html</a></li>
+        <li><a href="/paro-brand-guide-v1.0.html">paro-brand-guide-v1.0.html</a></li>
+        <li><a href="/paro-exec-summary-v1.0.html">paro-exec-summary-v1.0.html</a></li>
+        <li><a href="/paro-investor-deck-v1.0.html">paro-investor-deck-v1.0.html</a></li>
+        <li><a href="/paro-landing-v1.0.html">paro-landing-v1.0.html</a></li>
+        <li><a href="/paro-license-v1.0.html">paro-license-v1.0.html</a></li>
+        <li><a href="/paro-proforma-v1.0.html">paro-proforma-v1.0.html</a></li>
+        <li><a href="/SPS_KISS_Tim_Ziss_250K_2026.html">SPS_KISS_Tim_Ziss_250K_2026.html</a></li>
+        <li><a href="/sps-book-a-call.html">sps-book-a-call.html</a></li>
+        <li><a href="/sps-business-model.html">sps-business-model.html</a></li>
+        <li><a href="/sps-command-center-prd-v1.0.html">sps-command-center-prd-v1.0.html</a></li>
+        <li><a href="/sps-financial-model-v1.0.html">sps-financial-model-v1.0.html</a></li>
+        <li><a href="/sps-font-preview.html">sps-font-preview.html</a></li>
+        <li><a href="/sps-ideation-agent-prd-v1.0.html">sps-ideation-agent-prd-v1.0.html</a></li>
+        <li><a href="/sps-investor-deck-2026.html">sps-investor-deck-2026.html</a></li>
+        <li><a href="/sps-investor-portal-v1.0.html">sps-investor-portal-v1.0.html</a></li>
+        <li><a href="/sps-membership-platform-prd-v1.0.html">sps-membership-platform-prd-v1.0.html</a></li>
+        <li><a href="/sps-methodology-flow.html">sps-methodology-flow.html</a></li>
+        <li><a href="/sps-safe-$50m-2026.html">sps-safe-$50m-2026.html</a></li>
+        <li><a href="/sps-safe-50m-2026.html">sps-safe-50m-2026.html</a></li>
+        <li><a href="/sps-safe-sign.html">sps-safe-sign.html</a></li>
+        <li><a href="/sps-safe-tim-castellaw-2026.html">sps-safe-tim-castellaw-2026.html</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
